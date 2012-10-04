@@ -1,3 +1,7 @@
+
 $(function(){
-	alert('go!');
+	$(".bar-button").on("click",function(){
+		alert("go!");
+	});
+
 });
