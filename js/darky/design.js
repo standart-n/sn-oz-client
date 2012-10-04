@@ -18,3 +18,23 @@ $(function(){
 		}
 	});
 });
+
+$(function(){
+	$(".side-box-link").on("click",function(){
+		$(".side-box-link").removeClass("side-box-link-active").removeClass("side-box-link-hover").addClass("side-box-link-normal");
+		$(this).removeClass("side-box-link-normal").removeClass("side-box-link-hover").addClass("side-box-link-active");
+		$(this).blur();
+	});
+	$(".side-box-link").on("mouseover",function(){
+		if (!$(this).hasClass("side-box-link-active")) {
+			$(this).removeClass("side-box-link-normal");
+			$(this).addClass("side-box-link-hover");
+		}
+	});
+	$(".side-box-link").on("mouseleave",function(){
+		if (!$(this).hasClass("side-box-link-active")) {
+			$(this).removeClass("side-box-link-hover");
+			$(this).addClass("side-box-link-normal");
+		}
+	});
+});

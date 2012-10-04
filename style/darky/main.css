@@ -2,23 +2,26 @@
 html, body {
 padding:0;
 margin:0;
+width:auto;
+min-width:100%;
 background:#addcee;
 }
 
 #header {
 display:block;
 float:left;
-width:100%;
+width:auto;
 min-width:100%;
 }
 
 #content {
 display:block;
 float:left;
-width:100%;
+width:auto;
 min-width:100%;
 }
 
 #table-content {
 max-width:900px;
+min-width:300px;
 }
