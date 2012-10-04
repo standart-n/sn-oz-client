@@ -1,0 +1,25 @@
+
+.side-box-outer {
+display:block;
+float:left;
+width:100%;
+height:auto;
+padding:0 0 2% 0;
+margin:10px 0 0 0;
+background:#f9f9f9;
+border-top:#ddd solid 1px;
+border-left:#ccc solid 1px;
+border-right:#ccc solid 1px;
+border-bottom:#bbb solid 1px;
+}
+
+.side-box {
+display:block;
+float:left;
+width:96%;
+height:100px;
+margin:2% 0 0 2%;
+background:#f9f9f9;
+}
+
+

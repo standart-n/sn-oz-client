@@ -5,3 +5,20 @@ margin:0;
 background:#addcee;
 }
 
+#header {
+display:block;
+float:left;
+width:100%;
+min-width:100%;
+}
+
+#content {
+display:block;
+float:left;
+width:100%;
+min-width:100%;
+}
+
+#table-content {
+max-width:900px;
+}
