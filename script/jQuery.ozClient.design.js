@@ -14,27 +14,29 @@
 		{
 			var s="";
 			var sn=$(this).data('ozClient');
-			if (sn.design.side) {
-				$.each(sn.design.side,function(i){
-					if (this.type=="box") {
-						s+='<div class="side-box-outer">';
-						s+='<div class="side-box">';
-						$.each(this.links,function(i){
-							if (this.type=="simple-link") {
-								this.cl="side-box-link";
-								if (!this.active) { this.active=false; }
-								if (!this.underline) { this.underline=false; }
-								if (this.active) { this.cl+=" side-box-link-active"; } else { this.cl+=" side-box-link-normal"; }
-								s+='<a href="'+this.href+'" class="'+this.cl+'">'+this.caption+'</a>';
-								if (this.underline) {
-									s+='<div class="side-box-line"></div>';
+			if (sn.design.main) {
+				if (sn.design.main.side) {
+					$.each(sn.design.main.side,function(i){
+						if ((this.type=="box") && (!this.hidden)) {
+							s+='<div class="side-box-outer">';
+							s+='<div class="side-box">';
+							$.each(this.links,function(i){
+								if ((this.type=="simple-link") && (!this.hidden)) {
+									this.cl="side-box-link";
+									if (!this.active) { this.active=false; }
+									if (!this.underline) { this.underline=false; }
+									if (this.active) { this.cl+=" side-box-link-active"; } else { this.cl+=" side-box-link-normal"; }
+									s+='<a href="'+this.href+'" class="'+this.cl+'">'+this.caption+'</a>';
+									if (this.underline) {
+										s+='<div class="side-box-line"></div>';
+									}
 								}
-							}
-						});						
-						s+='</div>';
-						s+='</div>';
-					}
-				});
+							});						
+							s+='</div>';
+							s+='</div>';
+						}
+					});
+				}
 			}
 			if (s!="") {
 				$("#side-content").html(s);
@@ -49,7 +51,7 @@
 		} else if (typeof sn==='object' || !method) {
 			return methods.init.apply(this,arguments);
 		} else {
-			$.error('Метод '+sn+' в jQuery.ozClient не существует');
+			$.error('Метод '+sn+' не существует');
 		}    
 		
 	};		

@@ -4,22 +4,12 @@
 		init:function(options)
 		{
 			return this.each(function(){
-				$(this).data('ozClient',{});
-				$(this).ozClientConf();
-				$(this).ozClientDesign();
-				$(this).ozClientTriggers();
-				var sn=$(this).data('ozClient');
-				
-				//$(window).hashChange(function(){
-				//	var link=window.location.hash.replace("#","");
-				//	$(this).ozClientEvents({'link':link});
-				//});
-
+				alert(options.link);				
 			});
 		}
 	};		
 
-	$.fn.ozClient=function(sn){
+	$.fn.ozClientEvents=function(sn){
 		if (!sn) { var sn={}; }
 		if ( methods[sn]) {
 			return methods[sn].apply(this,Array.prototype.slice.call(arguments,1));

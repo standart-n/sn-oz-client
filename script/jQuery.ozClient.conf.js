@@ -93,7 +93,7 @@
 		} else if (typeof sn==='object' || !method) {
 			return methods.init.apply(this,arguments);
 		} else {
-			$.error('Метод '+sn+' в jQuery.ozClient не существует');
+			$.error('Метод '+sn+' не существует');
 		}    
 		
 	};		
