@@ -1,12 +1,10 @@
 {
-	"api":
+	"region":
 	{
-		"name":"Общий Заказ",
-		"version":"1.0"
+		"name":"kirov"
 	},
-	"packet":
+	"theme":
 	{
-		"region":"Киров",
-		"version":"1.0"
+		"name":"darky"
 	}
 }

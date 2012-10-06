@@ -1,0 +1,16 @@
+{
+	"darky":
+	{
+		"css":
+		[
+			"style/darky/main.css",
+			"style/darky/bar.css",
+			"style/darky/primary.css",
+			"style/darky/side.css"
+		],
+		"js":
+		[
+			"js/darky/switching.js"
+		]
+	}
+}
