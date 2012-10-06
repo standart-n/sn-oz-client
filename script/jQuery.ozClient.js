@@ -6,6 +6,7 @@
 			return this.each(function(){
 				$(this).data('ozClient',{});
 				$(this).ozClientConf();
+				$(this).ozClientDesign();
 				var sn=$(this).data('ozClient');
 			});
 		}

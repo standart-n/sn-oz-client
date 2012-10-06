@@ -68,7 +68,7 @@
 		},
 		settings:function()
 		{
-			//$(this).ozClientConf('design');
+			$(this).ozClientConf('design');
 		},
 		design:function()
 		{
