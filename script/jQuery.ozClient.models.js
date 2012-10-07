@@ -4,20 +4,18 @@
 		init:function(options)
 		{
 			return this.each(function(){
-				//alert('triggers');
-				$(this).ozClientTriggers('links');
+
 			});
 		},
-		links:function()
+		load:function()
 		{
-			var el=$(this);
-			$("a").on("click",function(){
-				el.ozClientEvents({'href':$(this).attr("href")});
-			});
-		}
+			var sn=$(this).data('ozClient');
+			
+			
+		}		
 	};		
 
-	$.fn.ozClientTriggers=function(sn){
+	$.fn.ozClientModels=function(sn){
 		if (!sn) { var sn={}; }
 		if ( methods[sn]) {
 			return methods[sn].apply(this,Array.prototype.slice.call(arguments,1));

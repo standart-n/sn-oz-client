@@ -8,6 +8,7 @@
 				$(this).ozClientConf();
 				$(this).ozClientDesign();
 				$(this).ozClientTriggers();
+				$(this).ozClientEvents({'href':'#main'});
 				var sn=$(this).data('ozClient');
 				
 				//$(window).hashChange(function(){
@@ -23,7 +24,7 @@
 		if (!sn) { var sn={}; }
 		if ( methods[sn]) {
 			return methods[sn].apply(this,Array.prototype.slice.call(arguments,1));
-		} else if (typeof sn==='object' || !method) {
+		} else if (typeof sn==='object' || !sn) {
 			return methods.init.apply(this,arguments);
 		} else {
 			$.error('Метод '+sn+' не существует');
