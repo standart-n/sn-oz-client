@@ -6,16 +6,10 @@
 			return this.each(function(){
 				$(this).data('ozClient',{});
 				$(this).ozClientConf();
-				$(this).ozClientDesign();
+				$(this).ozClientLayout();
 				$(this).ozClientTriggers();
 				$(this).ozClientEvents({'href':'#main'});
 				var sn=$(this).data('ozClient');
-				
-				//$(window).hashChange(function(){
-				//	var link=window.location.hash.replace("#","");
-				//	$(this).ozClientEvents({'link':link});
-				//});
-
 			});
 		}
 	};		

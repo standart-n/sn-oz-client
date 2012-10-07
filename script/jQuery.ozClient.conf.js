@@ -67,21 +67,7 @@
 		},
 		settings:function()
 		{
-			$(this).ozClientConf('design');
-		},
-		design:function()
-		{
-			var sn=$(this).data('ozClient');
-			sn.design={};
-			$.ajax({
-				url:'settings/'+sn.region.name+'/design.json',
-				async:false,
-				dataType:"json",
-				success:function(s){
-					$.extend(sn.design,s);
-					$(this).data('ozClient',sn);
-				}
-			});
+			//$(this).ozClientConf('design');
 		}
 	};
 

@@ -4,7 +4,6 @@
 		init:function(options)
 		{
 			return this.each(function(){
-				//alert('triggers');
 				$(this).ozClientTriggers('links');
 			});
 		},
@@ -12,7 +11,7 @@
 		{
 			var el=$(this);
 			$("a").on("click",function(){
-				el.ozClientEvents({'href':$(this).attr("href")});
+				el.ozClientEvents({'href':$(this).attr("href")});				
 			});
 		}
 	};		
