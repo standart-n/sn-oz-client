@@ -5,28 +5,30 @@
 		{
 			return this.each(function(){
 				var def={
-					'href':"#none"
+					'href':"none"
 				};
 				$.extend(def,options);
-				switch (def.href){
-					case "#main":
+				var re=/(.*)#(.*)/;
+				var href=def.href;
+				switch (href.replace(re,"$2")){
+					case "main":
 						$(this).ozClientModels('primary',{'file':'main.html'});
-						$(this).ozClientModels('side',{'file':'side_main.html'});
+						$(this).ozClientModels('side',{'file':'main.html'});
 						$(this).ozClientTriggers();
 					break;
-					case "#above":
-						$(this).ozClientModels('primary',{'file':'main.html'});
+					case "above":
+						$(this).ozClientModels('primary',{'file':'main.html'});						
 					break;
-					case "#apteki":
+					case "apteki":
 						$(this).ozClientModels('primary',{'file':'apteki.html'});
 					break;
-					case "#dealers":
+					case "dealers":
 						$(this).ozClientModels('primary',{'file':'dealers.html'});
 					break;
-					case "#orders":
+					case "orders":
 						$(this).ozClientModels('primary',{'file':'orders.html'});
 					break;
-					case "#contacts":
+					case "contacts":
 						$(this).ozClientModels('primary',{'file':'contacts.html'});
 					break;
 					//case ""

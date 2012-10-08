@@ -31,7 +31,7 @@
 			};
 			$.extend(def,options);
 			$.ajax({
-				url:'layout/'+sn.region.name+'/'+def.file,
+				url:'layout/'+sn.region.name+'/side_'+def.file,
 				async:false,
 				dataType:'html',
 				success:function(s){
