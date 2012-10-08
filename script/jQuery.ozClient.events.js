@@ -6,16 +6,34 @@
 			return this.each(function(){
 				var def={
 					'href':"#none"
-				};				
+				};
 				$.extend(def,options);
 				switch (def.href){
 					case "#main":
-						//alert('go to main');
+						$(this).ozClientModels('primary',{'file':'main.html'});
+						$(this).ozClientModels('side',{'file':'side_main.html'});
+						$(this).ozClientTriggers();
 					break;
+					case "#above":
+						$(this).ozClientModels('primary',{'file':'main.html'});
+					break;
+					case "#apteki":
+						$(this).ozClientModels('primary',{'file':'apteki.html'});
+					break;
+					case "#dealers":
+						$(this).ozClientModels('primary',{'file':'dealers.html'});
+					break;
+					case "#orders":
+						$(this).ozClientModels('primary',{'file':'orders.html'});
+					break;
+					case "#contacts":
+						$(this).ozClientModels('primary',{'file':'contacts.html'});
+					break;
+					//case ""
 				}
 			});
 		}
-	};		
+	};
 
 	$.fn.ozClientEvents=function(sn){
 		if (!sn) { var sn={}; }
