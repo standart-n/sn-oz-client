@@ -11,10 +11,22 @@
 				var re=/(.*)#(.*)/;
 				var href=def.href;
 				switch (href.replace(re,"$2")){
-					case "main":
+					case "autoload":
 						$(this).ozClientModels('primary',{'file':'main.html'});
 						$(this).ozClientModels('side',{'file':'main.html'});
 						$(this).ozClientTriggers();
+					break;
+					case "main":
+						$(this).ozClientModels('primary',{'file':'main.html'});
+						$(this).ozClientModels('side',{'file':'main.html'});
+						$(this).ozClientTriggers('links');
+						$(this).ozClientTriggers('switcherSide');
+					break;
+					case "news":
+						$(this).ozClientModels('primary',{'file':'news.html'});
+						$(this).ozClientModels('side',{'file':'news.html'});
+						$(this).ozClientTriggers('links');
+						$(this).ozClientTriggers('switcherSide');
 					break;
 					case "above":
 						$(this).ozClientModels('primary',{'file':'main.html'});						
