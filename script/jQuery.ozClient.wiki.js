@@ -8,7 +8,8 @@
 		},
 		parse:function()
 		{
-			//
+			//$text = preg_replace("#\[\[(https?://[a-zA-Z0-9\-\./\?%\#_]+)\|(.+)\]\]#", '<a href="$1">$2</a>', $text);
+    
 		}
 	};		
 
