@@ -24,6 +24,7 @@
 					text=$(this).ozClientWiki('headings',{'text':text});
 					text=$(this).ozClientWiki('externalLinks',{'text':text});
 					text=$(this).ozClientWiki('internalLinks',{'text':text});
+					text=$(this).ozClientWiki('indention',{'text':text});
 					$('#primary-content').html(text);
 				}
 			});			

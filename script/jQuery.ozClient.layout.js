@@ -9,6 +9,7 @@
 				$(this).ozClientLayout('load',{'div':'main','file':'main.html'});
 				$(this).ozClientLayout('load',{'div':'header','file':'header.html'});
 				$(this).ozClientLayout('load',{'div':'content','file':'content.html'});
+				$(".bar-caption").html(sn.region.caption);
 			});
 		},
 		load:function(options)

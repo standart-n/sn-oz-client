@@ -1,10 +1,12 @@
 {
 	"region":
 	{
+		"caption":"Киров",
 		"name":"kirov"
 	},
 	"theme":
 	{
+		"caption":"Тёмная",
 		"name":"darky"
 	}
 }

@@ -54,6 +54,17 @@
 			text=text.replace(/\[([a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="#$1">$2</a>');
 			text=text.replace(/\[([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="#$1">$1</a>');
 			return text;
+		},
+		indention:function(options)
+		{
+			var def={
+				'text':''
+			};
+			$.extend(def,options);
+			var text=def.text;
+			text=text.replace(/<<</g,'<div class="primary-box-outer"><div class="primary-box">');
+			text=text.replace(/>>>/g,'</div></div>');
+			return text;
 		}
 	};		
 

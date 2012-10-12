@@ -31,7 +31,6 @@
 						$(this).ozClientTriggers('linksPrimary');
 						$(this).ozClientTriggers('switcherSide');
 						$(this).ozClientTriggers('switchBar',{'link':'news'});
-						//$(this).ozClientTriggers('switchSide',{'link':'above'});
 					break;
 					case "above":
 						$(this).ozClientModels('primary',{'file':'main.html'});						
@@ -58,7 +57,13 @@
 						$(this).ozClientTriggers('linksPrimary');
 						$(this).ozClientTriggers('switchSide',{'link':'contacts'});
 					break;
-					//case ""
+					/*default:
+						switch (href.replace(/(.*)#main-(.*)/,"$2")){
+							default:
+								$(this).ozClientModels('primary',{'file':'contacts.html'});
+								$(this).ozClientTriggers('linksPrimary');
+								$(this).ozClientTriggers('switchSide',{'link':'contacts'});
+						}*/
 				}
 			});
 		}
