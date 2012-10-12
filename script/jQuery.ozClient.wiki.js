@@ -9,7 +9,6 @@
 		},
 		formating:function(options)
 		{
-			var sn=$(this).data('ozClient');
 			var def={
 				'text':''
 			};
@@ -22,7 +21,6 @@
 		},
 		headings:function(options)
 		{
-			var sn=$(this).data('ozClient');
 			var def={
 				'text':''
 			};
@@ -33,7 +31,29 @@
 			text=text.replace(/====(.*?)====/mg,"<h4>$1</h4>");
 			text=text.replace(/===(.*?)===/mg,"<h3>$1</h3>");
 			text=text.replace(/==(.*?)==/mg,"<h2>$1</h2>");
-			return text;			
+			return text;
+		},
+		externalLinks:function(options)
+		{
+			var def={
+				'text':''
+			};
+			$.extend(def,options);
+			var text=def.text;
+			text=text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="$1" target="_blank">$2</a>');
+			text=text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="$1" target="_blank">$1</a>');
+			return text;
+		},
+		internalLinks:function(options)
+		{
+			var def={
+				'text':''
+			};
+			$.extend(def,options);
+			var text=def.text;
+			text=text.replace(/\[([a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="#$1">$2</a>');
+			text=text.replace(/\[([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="#$1">$1</a>');
+			return text;
 		}
 	};		
 

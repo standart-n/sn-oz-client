@@ -6,6 +6,7 @@
 			return this.each(function(){
 				$(this).ozClientTriggers('linksBar');
 				$(this).ozClientTriggers('linksSide');
+				$(this).ozClientTriggers('linksPrimary');
 				$(this).ozClientTriggers('switcherBar');
 				$(this).ozClientTriggers('switcherSide');
 			});
@@ -21,6 +22,13 @@
 		{
 			var oz=$(this);
 			$(".side-box-link").on("click",function(){
+				oz.ozClientEvents({'href':$(this).attr("href")});
+			});
+		},
+		linksPrimary:function()
+		{
+			var oz=$(this);
+			$(".primary-box a").on("click",function(){
 				oz.ozClientEvents({'href':$(this).attr("href")});
 			});
 		},

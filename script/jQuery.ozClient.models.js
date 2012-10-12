@@ -17,10 +17,13 @@
 			$.ajax({
 				url:'content/'+sn.region.name+'/'+def.file,
 				async:false,
+				cache:false,
 				dataType:'html',
 				success:function(text){
 					text=$(this).ozClientWiki('formating',{'text':text});
 					text=$(this).ozClientWiki('headings',{'text':text});
+					text=$(this).ozClientWiki('externalLinks',{'text':text});
+					text=$(this).ozClientWiki('internalLinks',{'text':text});
 					$('#primary-content').html(text);
 				}
 			});			
@@ -35,6 +38,7 @@
 			$.ajax({
 				url:'layout/'+sn.region.name+'/side_'+def.file,
 				async:false,
+				cache:false,
 				dataType:'html',
 				success:function(text){
 					$('#side-content').html(text);
