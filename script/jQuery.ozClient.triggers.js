@@ -4,7 +4,8 @@
 		init:function(options)
 		{
 			return this.each(function(){
-				$(this).ozClientTriggers('links');
+				$(this).ozClientTriggers('linksBar');
+				$(this).ozClientTriggers('linksSide');
 				$(this).ozClientTriggers('switcherBar');
 				$(this).ozClientTriggers('switcherSide');
 			});
@@ -13,8 +14,22 @@
 		{
 			/*var el=$(this);
 			$("a").on("click",function(){
-				el.ozClientEvents({'href':$(this).attr("href")});				
+				el.ozClientEvents({'href':$(this).attr("href")});
 			});*/
+		},
+		linksSide:function()
+		{
+			var oz=$(this);
+			$(".side-box-link").on("click",function(){
+				oz.ozClientEvents({'href':$(this).attr("href")});
+			});
+		},
+		linksBar:function()
+		{
+			var oz=$(this);
+			$(".bar-button").on("click",function(){
+				oz.ozClientEvents({'href':$(this).attr("href")});
+			});
 		},
 		switcherBar:function()
 		{
