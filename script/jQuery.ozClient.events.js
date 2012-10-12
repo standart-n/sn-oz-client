@@ -8,9 +8,8 @@
 					'href':"none"
 				};
 				$.extend(def,options);
-				var re=/(.*)#(.*)/;
 				var href=def.href;
-				switch (href.replace(re,"$2")){
+				switch (href.replace(/(.*)#(.*)/,"$2")){
 					case "autoload":
 						$(this).ozClientModels('primary',{'file':'main.html'});
 						$(this).ozClientModels('side',{'file':'main.html'});
@@ -19,31 +18,52 @@
 					case "main":
 						$(this).ozClientModels('primary',{'file':'main.html'});
 						$(this).ozClientModels('side',{'file':'main.html'});
-						$(this).ozClientTriggers('links');
+						$(this).ozClientTriggers('linksSide');
+						$(this).ozClientTriggers('linksPrimary');
 						$(this).ozClientTriggers('switcherSide');
+						$(this).ozClientTriggers('switchBar',{'link':'main'});
+						$(this).ozClientTriggers('switchSide',{'link':'above'});
 					break;
 					case "news":
 						$(this).ozClientModels('primary',{'file':'news.html'});
 						$(this).ozClientModels('side',{'file':'news.html'});
-						$(this).ozClientTriggers('links');
+						$(this).ozClientTriggers('linksSide');
+						$(this).ozClientTriggers('linksPrimary');
 						$(this).ozClientTriggers('switcherSide');
+						$(this).ozClientTriggers('switchBar',{'link':'news'});
 					break;
 					case "above":
 						$(this).ozClientModels('primary',{'file':'main.html'});						
+						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'above'});
 					break;
 					case "apteki":
 						$(this).ozClientModels('primary',{'file':'apteki.html'});
+						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'apteki'});
 					break;
 					case "dealers":
 						$(this).ozClientModels('primary',{'file':'dealers.html'});
+						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'dealers'});
 					break;
 					case "orders":
 						$(this).ozClientModels('primary',{'file':'orders.html'});
+						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'orders'});
 					break;
 					case "contacts":
 						$(this).ozClientModels('primary',{'file':'contacts.html'});
+						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'contacts'});
 					break;
-					//case ""
+					/*default:
+						switch (href.replace(/(.*)#main-(.*)/,"$2")){
+							default:
+								$(this).ozClientModels('primary',{'file':'contacts.html'});
+								$(this).ozClientTriggers('linksPrimary');
+								$(this).ozClientTriggers('switchSide',{'link':'contacts'});
+						}*/
 				}
 			});
 		}
