@@ -39,15 +39,33 @@
 				oz.ozClientEvents({'href':$(this).attr("href")});
 			});
 		},
+		switchBar:function(options)
+		{
+			var def={
+				'link':'main'
+			};
+			$.extend(def,options);
+			$(".bar-button").removeClass("bar-button-active").removeClass("bar-button-hover").addClass("bar-button-normal");
+			$("[href=#"+def.link+"]").removeClass("bar-button-normal").removeClass("bar-button-hover").addClass("bar-button-active");
+		},		
+		switchSide:function(options)
+		{
+			var def={
+				'link':'above'
+			};
+			$.extend(def,options);
+			$(".side-box-link").removeClass("side-box-link-active").removeClass("side-box-link-hover").addClass("side-box-link-normal");
+			$("[href=#"+def.link+"]").removeClass("side-box-link-normal").removeClass("side-box-link-hover").addClass("side-box-link-active");
+		},		
 		switcherBar:function()
 		{
-			$(".bar-button").on("click",function(){
+			/*$(".bar-button").on("click",function(){
 				if (!$(this).hasClass("bar-button-active")) {
 					$(".bar-button").removeClass("bar-button-active").removeClass("bar-button-hover").addClass("bar-button-normal");
 					$(this).removeClass("bar-button-normal").removeClass("bar-button-hover").addClass("bar-button-active");
 					$(this).blur();
 				}
-			});
+			});*/
 			$(".bar-button").on("mouseover",function(){
 				if (!$(this).hasClass("bar-button-active")) {
 					$(this).removeClass("bar-button-normal");
@@ -63,13 +81,13 @@
 		},
 		switcherSide:function()
 		{
-			$(".side-box-link").on("click",function(){
+			/*$(".side-box-link").on("click",function(){
 				if (!$(this).hasClass("side-box-link-active")) {
 					$(".side-box-link").removeClass("side-box-link-active").removeClass("side-box-link-hover").addClass("side-box-link-normal");
 					$(this).removeClass("side-box-link-normal").removeClass("side-box-link-hover").addClass("side-box-link-active");
 					$(this).blur();
 				}
-			});
+			});*/
 			$(".side-box-link").on("mouseover",function(){
 				if (!$(this).hasClass("side-box-link-active")) {
 					$(this).removeClass("side-box-link-normal");

@@ -21,6 +21,8 @@
 						$(this).ozClientTriggers('linksSide');
 						$(this).ozClientTriggers('linksPrimary');
 						$(this).ozClientTriggers('switcherSide');
+						$(this).ozClientTriggers('switchBar',{'link':'main'});
+						$(this).ozClientTriggers('switchSide',{'link':'above'});
 					break;
 					case "news":
 						$(this).ozClientModels('primary',{'file':'news.html'});
@@ -28,26 +30,33 @@
 						$(this).ozClientTriggers('linksSide');
 						$(this).ozClientTriggers('linksPrimary');
 						$(this).ozClientTriggers('switcherSide');
+						$(this).ozClientTriggers('switchBar',{'link':'news'});
+						//$(this).ozClientTriggers('switchSide',{'link':'above'});
 					break;
 					case "above":
 						$(this).ozClientModels('primary',{'file':'main.html'});						
 						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'above'});
 					break;
 					case "apteki":
 						$(this).ozClientModels('primary',{'file':'apteki.html'});
 						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'apteki'});
 					break;
 					case "dealers":
 						$(this).ozClientModels('primary',{'file':'dealers.html'});
 						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'dealers'});
 					break;
 					case "orders":
 						$(this).ozClientModels('primary',{'file':'orders.html'});
 						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'orders'});
 					break;
 					case "contacts":
 						$(this).ozClientModels('primary',{'file':'contacts.html'});
 						$(this).ozClientTriggers('linksPrimary');
+						$(this).ozClientTriggers('switchSide',{'link':'contacts'});
 					break;
 					//case ""
 				}
