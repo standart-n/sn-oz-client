@@ -10,6 +10,7 @@
 		primary:function(options)
 		{
 			var sn=$(this).data('ozClient');
+			var oz=$(this);
 			var def={
 				'file':'main.html'
 			};
@@ -19,12 +20,16 @@
 				async:false,
 				cache:false,
 				dataType:'html',
-				success:function(text){
-					text=$(this).ozClientWiki('formating',{'text':text});
-					text=$(this).ozClientWiki('headings',{'text':text});
-					text=$(this).ozClientWiki('externalLinks',{'text':text});
-					text=$(this).ozClientWiki('internalLinks',{'text':text});
-					text=$(this).ozClientWiki('indention',{'text':text});
+				success:function(text){					
+					text=oz.ozClientWiki('formating',{'text':text});
+					text=oz.ozClientWiki('headings',{'text':text});
+					text=oz.ozClientWiki('externalLinks',{'text':text});
+					text=oz.ozClientWiki('fileLinks',{'text':text});
+					text=oz.ozClientWiki('internalLinks',{'text':text});
+					text=oz.ozClientWiki('mailTo',{'text':text});
+					text=oz.ozClientWiki('photo',{'text':text});
+					text=oz.ozClientWiki('indention',{'text':text});
+					text=oz.ozClientWiki('spaces',{'text':text});					
 					$('#primary-content').html(text);
 				}
 			});			
