@@ -18,6 +18,7 @@ min-width:100%;
 display:block;
 float:left;
 width:auto;
+clear:both;
 min-width:100%;
 }
 
