@@ -99,6 +99,8 @@
 			var text=def.text;
 			text=text.replace(/<<<\r\n/g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
 			text=text.replace(/>>>\r\n/g,'</div></div>');
+			text=text.replace(/<<</g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
+			text=text.replace(/>>>/g,'</div></div>');
 			return text;
 		},
 		spaces:function(options)
