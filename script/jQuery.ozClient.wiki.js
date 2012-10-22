@@ -32,6 +32,11 @@
 			text=text.replace(/====(.*?)====\r\n/mg,"<h4>$1</h4>");
 			text=text.replace(/===(.*?)===\r\n/mg,"<h3>$1</h3>");
 			text=text.replace(/==(.*?)==\r\n/mg,"<h2>$1</h2>");
+			text=text.replace(/======(.*?)======/mg,"<h6>$1</h6>");
+			text=text.replace(/=====(.*?)=====/mg,"<h5>$1</h5>");
+			text=text.replace(/====(.*?)====/mg,"<h4>$1</h4>");
+			text=text.replace(/===(.*?)===/mg,"<h3>$1</h3>");
+			text=text.replace(/==(.*?)==/mg,"<h2>$1</h2>");
 			return text;
 		},
 		externalLinks:function(options)
