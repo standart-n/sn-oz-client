@@ -58,8 +58,8 @@
 			};
 			$.extend(def,options);			
 			var text=def.text;
-			text=text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="files/'+sn.region.name+'/$1" target="_blank">$2</a>');
-			text=text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="files/'+sn.region.name+'/$1" target="_blank">$1</a>');
+			text=text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="http://oz.st-n.ru/publish/files/'+sn.region.name+'/$1" target="_blank">$2</a>');
+			text=text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="http://oz.st-n.ru/publish/files/'+sn.region.name+'/$1" target="_blank">$1</a>');
 			return text;
 		},
 		mailTo:function(options)
