@@ -116,6 +116,8 @@
 			$.extend(def,options);
 			var text=def.text;
 			text=text.replace(/\r\n\r\n/g,"<br><br>");
+			text=text.replace(/\r\r/g,"<br><br>");
+			text=text.replace(/\n\n/g,"<br><br>");
 			return text;
 		}
 	};		
