@@ -20,7 +20,7 @@
 				async:false,
 				cache:false,
 				dataType:'html',
-				success:function(text){					
+				success:function(text){
 					text=oz.ozClientWiki('formating',{'text':text});
 					text=oz.ozClientWiki('headings',{'text':text});
 					text=oz.ozClientWiki('externalLinks',{'text':text});
@@ -29,8 +29,10 @@
 					text=oz.ozClientWiki('mailTo',{'text':text});
 					text=oz.ozClientWiki('photo',{'text':text});
 					text=oz.ozClientWiki('indention',{'text':text});
-					text=oz.ozClientWiki('spaces',{'text':text});					
+					text=oz.ozClientWiki('spoiler',{'text':text});
+					text=oz.ozClientWiki('spaces',{'text':text});
 					$('#primary-content').html(text);
+					oz.ozClientTriggers('spoiler');
 				}
 			});			
 		},

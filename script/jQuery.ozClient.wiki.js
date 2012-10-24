@@ -108,6 +108,23 @@
 			text=text.replace(/>>>/g,'</div></div>');
 			return text;
 		},
+		spoiler:function(options)
+		{
+			var def={
+				'text':''
+			};
+			$.extend(def,options);
+			var text=def.text;
+			text=text.replace(/<<\[(.+)\]\r\n/g,'<div class="primary-box-spoiler">'+
+												'<a href="#spoiler" class="primary-box-spoiler-caption primary-box-spoiler-caption-close">$1</a>'+
+												'<div class="primary-box-spoiler-body">');
+			text=text.replace(/>>\r\n/g,'</div></div>');
+			text=text.replace(/<<\[(.+)\]/g,'<div class="primary-box-spoiler">'+
+											'<a href="#spoiler" class="primary-box-spoiler-caption">$1</a>'+
+											'<div class="primary-box-spoiler-body">');
+			text=text.replace(/>>/g,'</div></div>');
+			return text;
+		},
 		spaces:function(options)
 		{
 			var def={

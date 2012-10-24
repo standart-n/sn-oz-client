@@ -1,0 +1,47 @@
+
+.primary-box-spoiler {
+display:block;
+float:left;
+width:96%;
+height:auto;
+padding:0 0 5px 0;
+margin:5px 0 0 2%;
+}
+
+.primary-box-spoiler-caption {
+/*font-family:Verdana;
+font-size:12px;
+color:#333;*/
+display:block;
+float:left;
+line-height:22px;
+padding:0 0 0 28px;
+margin:0 0 5px 0;
+clear:both;
+background-image:url(../../img/darky/darky-spoiler-down.png);
+background-repeat:no-repeat;
+background-position:0 0;
+}
+
+.primary-box-spoiler-caption-open {
+background-image:url(../../img/darky/darky-spoiler-up.png);
+background-repeat:no-repeat;
+background-position:0 0;
+}
+
+.primary-box-spoiler-caption-close {
+background-image:url(../../img/darky/darky-spoiler-down.png);
+background-repeat:no-repeat;
+background-position:0 0;
+}
+
+.primary-box-spoiler-body {
+display:none;
+float:left;
+clear:both;
+padding:5px 0 10px 4%;
+width:92%;
+background:#f7f7f7;
+border-top:#aaa dashed 1px;
+border-bottom:#aaa dashed 1px;
+}

@@ -59,13 +59,6 @@
 		},		
 		switcherBar:function()
 		{
-			/*$(".bar-button").on("click",function(){
-				if (!$(this).hasClass("bar-button-active")) {
-					$(".bar-button").removeClass("bar-button-active").removeClass("bar-button-hover").addClass("bar-button-normal");
-					$(this).removeClass("bar-button-normal").removeClass("bar-button-hover").addClass("bar-button-active");
-					$(this).blur();
-				}
-			});*/
 			$(".bar-button").on("mouseover",function(){
 				if (!$(this).hasClass("bar-button-active")) {
 					$(this).removeClass("bar-button-normal");
@@ -81,13 +74,6 @@
 		},
 		switcherSide:function()
 		{
-			/*$(".side-box-link").on("click",function(){
-				if (!$(this).hasClass("side-box-link-active")) {
-					$(".side-box-link").removeClass("side-box-link-active").removeClass("side-box-link-hover").addClass("side-box-link-normal");
-					$(this).removeClass("side-box-link-normal").removeClass("side-box-link-hover").addClass("side-box-link-active");
-					$(this).blur();
-				}
-			});*/
 			$(".side-box-link").on("mouseover",function(){
 				if (!$(this).hasClass("side-box-link-active")) {
 					$(this).removeClass("side-box-link-normal");
@@ -100,8 +86,25 @@
 					$(this).addClass("side-box-link-normal");
 				}
 			});
+		},
+		spoiler:function()
+		{
+			$(".primary-box-spoiler-caption").on("click",function(){
+				if ($(this).hasClass("primary-box-spoiler-caption-open")){
+					$(this).removeClass("primary-box-spoiler-caption-open").addClass("primary-box-spoiler-caption-close");
+				} else {						
+					$(this).removeClass("primary-box-spoiler-caption-close").addClass("primary-box-spoiler-caption-open");
+				}
+				$(this).parent(".primary-box-spoiler").children(".primary-box-spoiler-body").each(function(){
+					if ($(this).hasClass("spoiler-status-open")){
+						$(this).removeClass("spoiler-status-open").addClass("spoiler-status-close").hide();
+					} else {						
+						$(this).removeClass("spoiler-status-close").addClass("spoiler-status-open").show();
+					}
+				});
+			});
 		}
-	};		
+	};
 
 	$.fn.ozClientTriggers=function(sn){
 		if (!sn) { var sn={}; }

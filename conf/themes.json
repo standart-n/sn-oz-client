@@ -7,7 +7,8 @@
 			"style/darky/bar.css",
 			"style/darky/primary.css",
 			"style/darky/side.css",
-			"style/darky/wiki.css"
+			"style/darky/wiki.css",
+			"style/darky/spoiler.css"
 		],
 		"js":
 		[
