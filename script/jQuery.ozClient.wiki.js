@@ -27,11 +27,11 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/======(.*?)======\r\n/mg,"<h6>$1</h6>");
-			text=text.replace(/=====(.*?)=====\r\n/mg,"<h5>$1</h5>");
-			text=text.replace(/====(.*?)====\r\n/mg,"<h4>$1</h4>");
-			text=text.replace(/===(.*?)===\r\n/mg,"<h3>$1</h3>");
-			text=text.replace(/==(.*?)==\r\n/mg,"<h2>$1</h2>");
+			text=text.replace(/======(.*?)======\n/mg,"<h6>$1</h6>");
+			text=text.replace(/=====(.*?)=====\n/mg,"<h5>$1</h5>");
+			text=text.replace(/====(.*?)====\n/mg,"<h4>$1</h4>");
+			text=text.replace(/===(.*?)===\n/mg,"<h3>$1</h3>");
+			text=text.replace(/==(.*?)==\n/mg,"<h2>$1</h2>");
 			text=text.replace(/======(.*?)======/mg,"<h6>$1</h6>");
 			text=text.replace(/=====(.*?)=====/mg,"<h5>$1</h5>");
 			text=text.replace(/====(.*?)====/mg,"<h4>$1</h4>");
@@ -102,8 +102,8 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/<<<\r\n/g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
-			text=text.replace(/>>>\r\n/g,'</div></div>');
+			text=text.replace(/<<<\n/g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
+			text=text.replace(/>>>\n/g,'</div></div>');
 			text=text.replace(/<<</g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
 			text=text.replace(/>>>/g,'</div></div>');
 			return text;
@@ -115,10 +115,10 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/<<\[(.+)\]\r\n/g,'<div class="primary-box-spoiler">'+
+			text=text.replace(/<<\[(.+)\]\n/g,'<div class="primary-box-spoiler">'+
 												'<a href="#spoiler" class="primary-box-spoiler-caption primary-box-spoiler-caption-close">$1</a>'+
 												'<div class="primary-box-spoiler-body">');
-			text=text.replace(/>>\r\n/g,'</div></div>');
+			text=text.replace(/>>\n/g,'</div></div>');
 			text=text.replace(/<<\[(.+)\]/g,'<div class="primary-box-spoiler">'+
 											'<a href="#spoiler" class="primary-box-spoiler-caption">$1</a>'+
 											'<div class="primary-box-spoiler-body">');
@@ -135,6 +135,9 @@
 			text=text.replace(/\r\n\r\n/g,"<br><br>");
 			text=text.replace(/\r\r/g,"<br><br>");
 			text=text.replace(/\n\n/g,"<br><br>");
+			text=text.replace(/\r\n/g,"<br>");
+			text=text.replace(/\r/g,"<br>");
+			text=text.replace(/\n/g,"<br>");
 			return text;
 		}
 	};		
