@@ -11,6 +11,9 @@ border-left:#ccc solid 1px;
 border-right:#ccc solid 1px;
 border-bottom:#bbb solid 1px;
 background:#fcfcfc;
+}
+
+div[class="primary-box-outer"] {
 -moz-border-radius: 7px;
 -webkit-border-radius: 7px;
 border-radius: 7px;
@@ -24,3 +27,6 @@ height:auto;
 margin:5px 0 0 2%;
 }
 
+* html .primary-box {
+margin:5px 0 0 1%;
+}

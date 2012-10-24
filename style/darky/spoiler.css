@@ -8,10 +8,11 @@ padding:0 0 5px 0;
 margin:5px 0 0 2%;
 }
 
+* html .primary-box-spoiler {
+margin:5px 0 0 1%;
+}
+
 .primary-box-spoiler-caption {
-/*font-family:Verdana;
-font-size:12px;
-color:#333;*/
 display:block;
 float:left;
 line-height:22px;
@@ -21,6 +22,10 @@ clear:both;
 background-image:url(../../img/darky/darky-spoiler-down.png);
 background-repeat:no-repeat;
 background-position:0 0;
+}
+
+* html .primary-box-spoiler-caption {
+padding:0 0 0 14px;
 }
 
 .primary-box-spoiler-caption-open {
@@ -40,8 +45,14 @@ display:none;
 float:left;
 clear:both;
 padding:5px 0 10px 4%;
-width:92%;
+width:96%;
 background:#f7f7f7;
 border-top:#aaa dashed 1px;
 border-bottom:#aaa dashed 1px;
 }
+
+* html .primary-box-spoiler-body {
+padding:5px 0 10px 2%;
+}
+
+
