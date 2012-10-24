@@ -24,10 +24,6 @@ background-repeat:no-repeat;
 background-position:0 0;
 }
 
-* html .primary-box-spoiler-caption {
-padding:0 0 0 14px;
-}
-
 .primary-box-spoiler-caption-open {
 background-image:url(../../img/darky/darky-spoiler-up.png);
 background-repeat:no-repeat;
