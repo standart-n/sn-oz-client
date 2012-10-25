@@ -4,12 +4,20 @@ padding:0;
 margin:0;
 width:auto;
 min-width:100%;
-background:#addcee;
+/*background:#addcee;*/
+background-color:#d1ecf2;
+background-image:url(../../img/darky/darky-sky.png);
+background-repeat:repeat-x;
+background-position:0 54px;
+background-attachment:fixed;
 }
 
 #header {
+position:fixed;
 display:block;
 float:left;
+top:0;
+left:0;
 width:auto;
 min-width:100%;
 }
@@ -19,7 +27,12 @@ display:block;
 float:left;
 width:auto;
 clear:both;
+margin:54px 0 0 0;
 min-width:100%;
+}
+
+* html #content {
+margin:5px 0 0 0;
 }
 
 #table-content {
