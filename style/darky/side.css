@@ -11,9 +11,6 @@ border-left:#ccc solid 1px;
 border-right:#ccc solid 1px;
 border-bottom:#bbb solid 1px;
 background: #fcfcfc;
-}
-
-div[class="side-box-outer"] {
 -moz-border-radius: 7px;
 -webkit-border-radius: 7px;
 border-radius: 7px;
