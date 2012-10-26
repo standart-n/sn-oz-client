@@ -132,12 +132,10 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/\r\n\r\n/g,"<br><br>");
-			text=text.replace(/\r\r/g,"<br><br>");
 			text=text.replace(/\n\n/g,"<br><br>");
-			text=text.replace(/\r\n/g,"<br>");
-			text=text.replace(/\r/g,"<br>");
 			text=text.replace(/\n/g,"<br>");
+			text=text.replace(/<br>\n<div class=\"primary-box-outer\">/g,"<div class=\"primary-box-outer\">");
+			text=text.replace(/<br><div class=\"primary-box-outer\">/g,"<div class=\"primary-box-outer\">");
 			return text;
 		}
 	};		
