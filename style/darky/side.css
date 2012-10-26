@@ -13,7 +13,9 @@ border-bottom:#bbb solid 1px;
 background: #fcfcfc;
 -moz-border-radius: 7px;
 -webkit-border-radius: 7px;
+-khtml-border-radius: 7px;
 border-radius: 7px;
+behavior:url(border-radius.htc);
 }
 
 .side-box {
