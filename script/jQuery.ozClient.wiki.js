@@ -84,6 +84,17 @@
 			text=text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<img align="center" width="100%" src="http://oz.st-n.ru/publish/photo/'+sn.region.name+'/$1">');
 			return text;
 		},
+		image:function(options)
+		{
+			var sn=$(this).data('ozClient');
+			var def={
+				'text':''
+			};
+			$.extend(def,options);			
+			var text=def.text;
+			text=text.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<img align="center" src="http://oz.st-n.ru/publish/photo/'+sn.region.name+'/$1">');
+			return text;
+		},
 		internalLinks:function(options)
 		{
 			var def={

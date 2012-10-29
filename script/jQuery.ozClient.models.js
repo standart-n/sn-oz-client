@@ -28,6 +28,7 @@
 					text=oz.ozClientWiki('internalLinks',{'text':text});
 					text=oz.ozClientWiki('mailTo',{'text':text});
 					text=oz.ozClientWiki('photo',{'text':text});
+					text=oz.ozClientWiki('image',{'text':text});
 					text=oz.ozClientWiki('indention',{'text':text});
 					text=oz.ozClientWiki('spoiler',{'text':text});
 					text=oz.ozClientWiki('spaces',{'text':text});
