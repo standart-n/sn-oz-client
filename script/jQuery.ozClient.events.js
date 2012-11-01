@@ -68,8 +68,12 @@
 				$(this).data('ozClient',sn);
 				var anchor=href.replace(/(.*)\:(.*?)\/(.*)/,"$2");
 				if (anchor!="") {
-					var height=$('#anchor-'+anchor).offset().top-73;
+					var height=$('#anchor-'+anchor).offset().top-87;
 					if (height>0) {
+						
+						if ($("#side-"+anchor).length) {
+							$(this).ozClientTriggers('switchSide',{'link':anchor});
+						}
 						$("html,body").animate({scrollTop:height},"slow");
 					}
 				}

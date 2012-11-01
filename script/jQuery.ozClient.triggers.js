@@ -9,7 +9,10 @@
 		linksSide:function()
 		{
 			var oz=$(this);
-			$(".side-box-link").on("click",function(){
+			/*$(".side-box-link").on("click",function(){
+				oz.ozClientEvents({'href':$(this).attr("href")});
+			});*/
+			$(".side-box a").on("click",function(){
 				oz.ozClientEvents({'href':$(this).attr("href")});
 			});
 		},

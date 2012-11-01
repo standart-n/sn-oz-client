@@ -46,7 +46,7 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="$1" target="_blank">$2</a>');
+			text=text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/mg,'<a href="$1" target="_blank">$2</a>');
 			text=text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="$1" target="_blank">$1</a>');
 			return text;
 		},
@@ -58,7 +58,7 @@
 			};
 			$.extend(def,options);			
 			var text=def.text;
-			text=text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="http://oz.st-n.ru/publish/files/'+sn.region.name+'/$1" target="_blank">$2</a>');
+			text=text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/mg,'<a href="http://oz.st-n.ru/publish/files/'+sn.region.name+'/$1" target="_blank">$2</a>');
 			text=text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="http://oz.st-n.ru/publish/files/'+sn.region.name+'/$1" target="_blank">$1</a>');
 			return text;
 		},
@@ -69,7 +69,7 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="mailto:$1">$2</a>');
+			text=text.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+) (.*?)\]/mg,'<a href="mailto:$1">$2</a>');
 			text=text.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/mg,'<a href="mailto:$1">$1</a>');
 			return text;
 		},
@@ -102,7 +102,7 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.+)\]/mg,'<a href="#$1">$2</a>');
+			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.*?)\]/mg,'<a href="#$1">$2</a>');
 			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/mg,'<a href="#$1">$1</a>');
 			return text;
 		},
@@ -157,7 +157,7 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.+) (.+)\]/mg,'<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
+			text=text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_\:]+) ([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/mg,'<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
 			return text;
 		},
 		gismeteo:function(options)
