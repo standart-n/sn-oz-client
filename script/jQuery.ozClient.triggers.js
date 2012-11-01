@@ -44,10 +44,10 @@
 			var def={
 				'link':'main'
 			};
-			$.extend(def,options);			
+			$.extend(def,options);
 			$(".bar-button").removeClass("bar-button-active").removeClass("bar-button-hover").addClass("bar-button-normal");
 			$("#bar-"+def.link+"").removeClass("bar-button-normal").removeClass("bar-button-hover").addClass("bar-button-active").blur();
-		},		
+		},
 		switchSide:function(options)
 		{
 			var def={
@@ -56,7 +56,7 @@
 			$.extend(def,options);
 			$(".side-box-link").removeClass("side-box-link-active").removeClass("side-box-link-hover").addClass("side-box-link-normal");
 			$("#side-"+def.link+"").removeClass("side-box-link-normal").removeClass("side-box-link-hover").addClass("side-box-link-active").blur();
-		},		
+		},
 		switcherBar:function()
 		{
 			$(".bar-button").on("mouseover",function(){

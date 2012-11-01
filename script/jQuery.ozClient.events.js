@@ -8,73 +8,57 @@
 					'href':"none"
 				};
 				$.extend(def,options);
-				var href=def.href;
-				switch (href.replace(/(.*)#(.*)/,"$2")){
+				var sn=$(this).data('ozClient');
+				var href=def.href+"/";
+				var l_one=href.replace(/(.*)#(.*?)\/(.*)/,"$2");
+				switch (l_one){
 					case "autoload":
 						$(this).ozClientModels('primary',{'file':'main.html'});
 						$(this).ozClientModels('side',{'file':'main.html'});						
 						$(this).ozClientTriggers();
+						sn.part="main";
 						setTimeout('$(this).ozClientDesign("pie_all");',1);
 					break;
 					case "main":
-						$(this).ozClientModels('primary',{'file':'main.html'});
-						$(this).ozClientModels('side',{'file':'main.html'});
-						$(this).ozClientTriggers('linksSide');
-						$(this).ozClientTriggers('linksPrimary');
-						$(this).ozClientTriggers('switcherSide');
-						$(this).ozClientTriggers('switchBar',{'link':'main'});
-						$(this).ozClientTriggers('switchSide',{'link':'above'});
-						$(this).ozClientDesign('pie_all');
-						setTimeout('$(this).ozClientDesign("pie_all");',1);
+						var l_two=href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/,"$3");
+						switch (l_two) {
+							case "text":
+								var l_three=href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/,"$4");
+								$(this).ozClientTriggers('switchSide',{'link':l_three});
+								$(this).ozClientModels('primary',{'file':l_three+'.html'});
+								setTimeout('$(this).ozClientDesign("pie_primary");',1);
+							break;
+						}
+						if (l_one!=sn.part) {
+							$(this).ozClientTriggers('switchBar',{'link':l_one});
+							$(this).ozClientModels('side',{'file':l_one+'.html'});
+							$(this).ozClientTriggers('linksSide');
+							$(this).ozClientTriggers('switcherSide');
+							sn.part="main";
+							setTimeout('$(this).ozClientDesign("pie_side");',1);
+						}						
 					break;
 					case "news":
-						$(this).ozClientModels('primary',{'file':'news.html'});
-						$(this).ozClientModels('side',{'file':'news.html'});
-						$(this).ozClientTriggers('linksSide');
-						$(this).ozClientTriggers('linksPrimary');
-						$(this).ozClientTriggers('switcherSide');
-						$(this).ozClientTriggers('switchBar',{'link':'news'});
-						$(this).ozClientDesign('pie_all');
-						setTimeout('$(this).ozClientDesign("pie_all");',1);
+						var l_two=href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/,"$3");
+						switch (l_two) {
+							case "text":
+								var l_three=href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/,"$4");
+								$(this).ozClientTriggers('switchSide',{'link':l_three});
+								$(this).ozClientModels('primary',{'file':l_three+'.html'});
+								setTimeout('$(this).ozClientDesign("pie_primary");',1);
+							break;
+						}
+						if (l_one!=sn.part) {
+							$(this).ozClientTriggers('switchBar',{'link':l_one});
+							$(this).ozClientModels('side',{'file':l_one+'.html'});
+							$(this).ozClientTriggers('linksSide');
+							$(this).ozClientTriggers('switcherSide');
+							sn.part="news";
+							setTimeout('$(this).ozClientDesign("pie_side");',1);
+						}						
 					break;
-					case "above":
-						$(this).ozClientModels('primary',{'file':'main.html'});						
-						$(this).ozClientTriggers('linksPrimary');
-						$(this).ozClientTriggers('switchSide',{'link':'above'});
-						setTimeout('$(this).ozClientDesign("pie_primary");',1);
-					break;
-					case "apteki":
-						$(this).ozClientModels('primary',{'file':'apteki.html'});
-						$(this).ozClientTriggers('linksPrimary');
-						$(this).ozClientTriggers('switchSide',{'link':'apteki'});
-						setTimeout('$(this).ozClientDesign("pie_primary");',1);
-					break;
-					case "dealers":
-						$(this).ozClientModels('primary',{'file':'dealers.html'});
-						$(this).ozClientTriggers('linksPrimary');
-						$(this).ozClientTriggers('switchSide',{'link':'dealers'});
-						setTimeout('$(this).ozClientDesign("pie_primary");',1);
-					break;
-					case "orders":
-						$(this).ozClientModels('primary',{'file':'orders.html'});
-						$(this).ozClientTriggers('linksPrimary');
-						$(this).ozClientTriggers('switchSide',{'link':'orders'});
-						setTimeout('$(this).ozClientDesign("pie_primary");',1);
-					break;
-					case "contacts":
-						$(this).ozClientModels('primary',{'file':'contacts.html'});
-						$(this).ozClientTriggers('linksPrimary');
-						$(this).ozClientTriggers('switchSide',{'link':'contacts'});
-						setTimeout('$(this).ozClientDesign("pie_primary");',1);
-					break;
-					/*default:
-						switch (href.replace(/(.*)#main-(.*)/,"$2")){
-							default:
-								$(this).ozClientModels('primary',{'file':'contacts.html'});
-								$(this).ozClientTriggers('linksPrimary');
-								$(this).ozClientTriggers('switchSide',{'link':'contacts'});
-						}*/
 				}
+				$(this).data('ozClient',sn);
 			});
 		}
 	};

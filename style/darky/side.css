@@ -1,5 +1,6 @@
 
 .side-box-outer {
+position:relative;
 display:block;
 float:left;
 width:100%;

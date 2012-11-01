@@ -4,7 +4,6 @@
 		init:function(options)
 		{
 			return this.each(function(){
-				//alert('go!');
 				var sn=$(this).data('ozClient');				
 				$(this).ozClientLayout('load',{'div':'main','file':'main.html'});
 				$(this).ozClientLayout('load',{'div':'header','file':'header.html'});

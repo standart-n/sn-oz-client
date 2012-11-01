@@ -7,7 +7,6 @@
 				$(this).data('ozClient',{});
 				$(this).ozClientConf();
 				$(this).ozClientLayout();
-				$(this).ozClientTriggers();
 				$(this).ozClientEvents({'href':'#autoload'});
 				var sn=$(this).data('ozClient');
 			});

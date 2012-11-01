@@ -41,7 +41,7 @@
 		{
 			var sn=$(this).data('ozClient');
 			var def={
-				'file':'main.html'
+				'file':'news.html'
 			};
 			$.extend(def,options);
 			$.ajax({
