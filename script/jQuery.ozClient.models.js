@@ -30,6 +30,7 @@
 					text=oz.ozClientWiki('photo',{'text':text});
 					text=oz.ozClientWiki('image',{'text':text});
 					text=oz.ozClientWiki('indPrimary',{'text':text});
+					text=oz.ozClientWiki('tags',{'text':text});
 					text=oz.ozClientWiki('spoiler',{'text':text});
 					text=oz.ozClientWiki('spaces',{'text':text});
 					$('#primary-content').html(text);
@@ -46,7 +47,7 @@
 			};
 			$.extend(def,options);
 			$.ajax({
-				url:'layout/'+sn.region.name+'/side_'+def.file,
+				url:'content/'+sn.region.name+'/side_'+def.file,
 				async:false,
 				cache:false,
 				dataType:'html',
@@ -61,7 +62,7 @@
 					text=oz.ozClientWiki('photo',{'text':text});
 					text=oz.ozClientWiki('image',{'text':text});
 					text=oz.ozClientWiki('gismeteo',{'text':text});
-					text=oz.ozClientWiki('hr',{'text':text});
+					text=oz.ozClientWiki('tags',{'text':text});
 					text=oz.ozClientWiki('indSide',{'text':text});
 					text=oz.ozClientWiki('spaces',{'text':text});
 					$('#side-content').html(text);

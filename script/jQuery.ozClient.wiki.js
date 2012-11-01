@@ -102,8 +102,8 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="#$1">$2</a>');
-			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="#$1">$1</a>');
+			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.+)\]/mg,'<a href="#$1">$2</a>');
+			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/mg,'<a href="#$1">$1</a>');
 			return text;
 		},
 		indPrimary:function(options)
@@ -134,7 +134,7 @@
 			text=text.replace(/>>>/g,'</div></div>');
 			return text;
 		},
-		hr:function(options)
+		tags:function(options)
 		{
 			var def={
 				'text':''
@@ -143,6 +143,11 @@
 			var text=def.text;
 			text=text.replace(/<hr>\n/g,'<hr>');
 			text=text.replace(/<hr>\r\n/g,'<hr>');
+			text=text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]\n/g,'<a id="anchor-$1"></a>');
+			text=text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]\r\n/g,'<a id="anchor-$1"></a>');
+			text=text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g,'<a id="anchor-$1"></a>');
+			/*text=text.replace(/\>\n/g,'>');
+			text=text.replace(/\>\r\n/g,'>');*/
 			return text;
 		},
 		sideMenu:function(options)
@@ -152,7 +157,7 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_]+) (.+) (.+)\]/mg,'<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
+			text=text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.+) (.+)\]/mg,'<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
 			return text;
 		},
 		gismeteo:function(options)

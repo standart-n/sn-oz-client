@@ -18,6 +18,9 @@ height:54px;
 background-image:url(../../img/silver/silver-bar-logo.png);
 background-repeat:no-repeat;
 background-position:0 0;
+outline:none;
+border:none;
+text-decoration:none;
 }
 
 .bar-caption {
