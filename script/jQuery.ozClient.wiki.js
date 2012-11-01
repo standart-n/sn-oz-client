@@ -102,11 +102,11 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/\[([a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="#$1">$2</a>');
-			text=text.replace(/\[([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="#$1">$1</a>');
+			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_]+) (.+)\]/mg,'<a href="#$1">$2</a>');
+			text=text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<a href="#$1">$1</a>');
 			return text;
 		},
-		indention:function(options)
+		indPrimary:function(options)
 		{
 			var def={
 				'text':''
@@ -114,11 +114,58 @@
 			$.extend(def,options);
 			var text=def.text;
 			text=text.replace(/<<<\n/g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
+			text=text.replace(/<<<\r\n/g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
 			text=text.replace(/>>>\n/g,'</div></div>');
 			text=text.replace(/<<</g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
 			text=text.replace(/>>>/g,'</div></div>');
 			return text;
 		},
+		indSide:function(options)
+		{
+			var def={
+				'text':''
+			};
+			$.extend(def,options);
+			var text=def.text;
+			text=text.replace(/<<<\n/g,'<div class="side-box-outer"><div class="side-box wiki-text">');
+			text=text.replace(/<<<\r\n/g,'<div class="side-box-outer"><div class="side-box wiki-text">');
+			text=text.replace(/>>>\n/g,'</div></div>');
+			text=text.replace(/<<</g,'<div class="side-box-outer"><div class="side-box wiki-text">');
+			text=text.replace(/>>>/g,'</div></div>');
+			return text;
+		},
+		hr:function(options)
+		{
+			var def={
+				'text':''
+			};
+			$.extend(def,options);
+			var text=def.text;
+			text=text.replace(/<hr>\n/g,'<hr>');
+			text=text.replace(/<hr>\r\n/g,'<hr>');
+			return text;
+		},
+		sideMenu:function(options)
+		{
+			var def={
+				'text':''
+			};
+			$.extend(def,options);
+			var text=def.text;
+			text=text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_]+) (.+) (.+)\]/mg,'<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
+			return text;
+		},
+		gismeteo:function(options)
+		{
+			var def={
+				'text':''
+			};
+			$.extend(def,options);
+			var sn=$(this).data('ozClient');
+			var text=def.text;
+			text=text.replace(/\[gismeteo\]/mg,'<iframe src="http://oz.st-n.ru/gismeteo/'+sn.region.name+'/" width="98%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>');
+			return text;
+		},		
 		spoiler:function(options)
 		{
 			var def={

@@ -29,7 +29,7 @@
 					text=oz.ozClientWiki('mailTo',{'text':text});
 					text=oz.ozClientWiki('photo',{'text':text});
 					text=oz.ozClientWiki('image',{'text':text});
-					text=oz.ozClientWiki('indention',{'text':text});
+					text=oz.ozClientWiki('indPrimary',{'text':text});
 					text=oz.ozClientWiki('spoiler',{'text':text});
 					text=oz.ozClientWiki('spaces',{'text':text});
 					$('#primary-content').html(text);
@@ -40,6 +40,7 @@
 		side:function(options)
 		{
 			var sn=$(this).data('ozClient');
+			var oz=$(this);
 			var def={
 				'file':'news.html'
 			};
@@ -50,7 +51,21 @@
 				cache:false,
 				dataType:'html',
 				success:function(text){
+					text=oz.ozClientWiki('formating',{'text':text});
+					text=oz.ozClientWiki('headings',{'text':text});
+					text=oz.ozClientWiki('externalLinks',{'text':text});
+					text=oz.ozClientWiki('fileLinks',{'text':text});
+					text=oz.ozClientWiki('internalLinks',{'text':text});
+					text=oz.ozClientWiki('mailTo',{'text':text});
+					text=oz.ozClientWiki('sideMenu',{'text':text});
+					text=oz.ozClientWiki('photo',{'text':text});
+					text=oz.ozClientWiki('image',{'text':text});
+					text=oz.ozClientWiki('gismeteo',{'text':text});
+					text=oz.ozClientWiki('hr',{'text':text});
+					text=oz.ozClientWiki('indSide',{'text':text});
+					text=oz.ozClientWiki('spaces',{'text':text});
 					$('#side-content').html(text);
+					//alert("!"+text+"!");
 				}
 			});			
 		}

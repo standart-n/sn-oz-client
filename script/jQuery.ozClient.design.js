@@ -9,22 +9,30 @@
 		pie_all:function(options)
 		{
 			$('.side-box-outer').each(function(){
-				PIE.attach(this);
+				if (window.PIE) {
+					PIE.attach(this);
+				}
 			});
 			$('.primary-box-outer').each(function(){
-				PIE.attach(this);
+				if (window.PIE) {
+					PIE.attach(this);
+				}
 			});
 		},
 		pie_side:function(options)
 		{
 			$('.side-box-outer').each(function(){
-				PIE.attach(this);
+				if (window.PIE) {
+					PIE.attach(this);
+				}
 			});
 		},
 		pie_primary:function(options)
 		{
 			$('.primary-box-outer').each(function(){
-				PIE.attach(this);
+				if (window.PIE) {
+					PIE.attach(this);
+				}
 			});
 		}
 	};		
