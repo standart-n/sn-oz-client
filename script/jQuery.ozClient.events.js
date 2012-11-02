@@ -47,13 +47,15 @@
 				$(this).data('ozClient',sn);
 				var anchor=href.replace(/(.*)\:(.*?)\/(.*)/,"$2");
 				if (anchor!="") {
-					var height=$('#anchor-'+anchor).offset().top-87;
-					if (height) {
-						//alert(anchor);
-						if ($("#side-"+anchor).length) {
-							$(this).ozClientTriggers('switchSide',{'link':anchor});
+					if ($('#anchor-'+anchor).length) {
+						var height=$('#anchor-'+anchor).offset().top-87;
+						if (height) {
+							//alert(anchor);
+							if ($("#side-"+anchor).length) {
+								$(this).ozClientTriggers('switchSide',{'link':anchor});
+							}
+							$("html,body").animate({scrollTop:height},"slow");						
 						}
-						$("html,body").animate({scrollTop:height},"slow");
 					}
 				}
 			});
