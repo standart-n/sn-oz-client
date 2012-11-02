@@ -5,51 +5,6 @@
 		{
 			return this.each(function(){
 			});
-		},
-		pie_all:function(options)
-		{
-			$('.side-box-outer').each(function(){
-				/*
-				$(function(){
-					if (window.PIE) {
-						PIE.attach(this);
-					}
-				});
-				*/
-			});
-			$('.primary-box-outer').each(function(){
-				/*
-				$(function(){
-					if (window.PIE) {
-						PIE.attach(this);
-					}
-				});
-				*/
-			});
-		},
-		pie_side:function(options)
-		{
-			$('.side-box-outer').each(function(){
-				/*
-				$(function(){
-					if (window.PIE) {
-						PIE.attach(this);
-					}
-				});
-				*/
-			});
-		},
-		pie_primary:function(options)
-		{
-			$('.primary-box-outer').each(function(){
-				/*
-				$(function(){
-					if (window.PIE) {
-						PIE.attach(this);
-					}
-				});
-				*/
-			});
 		}
 	};		
 
