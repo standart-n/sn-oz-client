@@ -11,7 +11,7 @@
 			$('.side-box-outer').each(function(){
 				try {
 					if (PIE) {
-						PIE.attach(this);
+						//PIE.attach(this);
 					}
 				}
 				catch(err) {
@@ -20,7 +20,7 @@
 			$('.primary-box-outer').each(function(){
 				try {
 					if (PIE) {
-						PIE.attach(this);
+						//PIE.attach(this);
 					}
 				}
 				catch(err) {
@@ -32,7 +32,7 @@
 			$('.side-box-outer').each(function(){
 				try {
 					if (PIE) {
-						PIE.attach(this);
+						//PIE.attach(this);
 					}
 				}
 				catch(err) {
@@ -44,7 +44,7 @@
 			$('.primary-box-outer').each(function(){
 				try {
 					if (PIE) {
-						PIE.attach(this);
+						//PIE.attach(this);
 					}
 				}
 				catch(err) {
