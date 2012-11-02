@@ -9,29 +9,37 @@
 		pie_all:function(options)
 		{
 			$('.side-box-outer').each(function(){
-				if (window.PIE) {
-					PIE.attach(this);
+				if (PIE) {
+					if (PIE!=undefined) {
+						PIE.attach(this);
+					}
 				}
 			});
 			$('.primary-box-outer').each(function(){
-				if (window.PIE) {
-					PIE.attach(this);
+				if (PIE) {
+					if (PIE!=undefined) {
+						PIE.attach(this);
+					}
 				}
 			});
 		},
 		pie_side:function(options)
 		{
 			$('.side-box-outer').each(function(){
-				if (window.PIE) {
-					PIE.attach(this);
+				if (PIE) {
+					if (PIE!=undefined) {
+						PIE.attach(this);
+					}
 				}
 			});
 		},
 		pie_primary:function(options)
 		{
 			$('.primary-box-outer').each(function(){
-				if (window.PIE) {
-					PIE.attach(this);
+				if (PIE) {
+					if (PIE!=undefined) {
+						PIE.attach(this);
+					}
 				}
 			});
 		}
