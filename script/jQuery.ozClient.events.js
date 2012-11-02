@@ -22,7 +22,6 @@
 						$(this).ozClientTriggers('switcherBar');
 						$(this).ozClientTriggers('switcherSide');
 						sn.part="main";
-						setTimeout('$(this).ozClientDesign("pie_all");',1);
 					break;
 					default:
 						var l_two=href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/,"$3");
@@ -33,14 +32,12 @@
 							$(this).ozClientTriggers('linksSide');
 							$(this).ozClientTriggers('switcherSide');
 							sn.part=l_one;
-							setTimeout('$(this).ozClientDesign("pie_side");',1);
 						}						
 						switch (l_two) {
 							case "text":
 								var l_three=href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/,"$4");
 								$(this).ozClientTriggers('switchSide',{'link':l_three});
 								$(this).ozClientModels('primary',{'file':l_three+'.html'});
-								setTimeout('$(this).ozClientDesign("pie_primary");',1);
 							break;
 						}
 				}
