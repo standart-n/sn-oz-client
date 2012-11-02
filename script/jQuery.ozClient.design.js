@@ -9,46 +9,46 @@
 		pie_all:function(options)
 		{
 			$('.side-box-outer').each(function(){
-				try {
-					if (PIE) {
-						//PIE.attach(this);
+				/*
+				$(function(){
+					if (window.PIE) {
+						PIE.attach(this);
 					}
-				}
-				catch(err) {
-				}				
+				});
+				*/
 			});
 			$('.primary-box-outer').each(function(){
-				try {
-					if (PIE) {
-						//PIE.attach(this);
+				/*
+				$(function(){
+					if (window.PIE) {
+						PIE.attach(this);
 					}
-				}
-				catch(err) {
-				}				
+				});
+				*/
 			});
 		},
 		pie_side:function(options)
 		{
 			$('.side-box-outer').each(function(){
-				try {
-					if (PIE) {
-						//PIE.attach(this);
+				/*
+				$(function(){
+					if (window.PIE) {
+						PIE.attach(this);
 					}
-				}
-				catch(err) {
-				}				
+				});
+				*/
 			});
 		},
 		pie_primary:function(options)
 		{
 			$('.primary-box-outer').each(function(){
-				try {
-					if (PIE) {
-						//PIE.attach(this);
+				/*
+				$(function(){
+					if (window.PIE) {
+						PIE.attach(this);
 					}
-				}
-				catch(err) {
-				}				
+				});
+				*/
 			});
 		}
 	};		
