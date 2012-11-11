@@ -7,7 +7,7 @@
 				var def={
 					'href':"none"
 				};
-				$.extend(def,options);
+				$.extend(true,def,options);
 				var sn=$(this).data('ozClient');
 				var href=def.href+"/:";
 				var l_one=href.replace(/(.*)#(.*?)\/(.*)/,"$2");
@@ -38,6 +38,11 @@
 								var l_three=href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/,"$4");
 								$(this).ozClientTriggers('switchSide',{'link':l_three});
 								$(this).ozClientModels('primary',{'file':l_three+'.html'});
+							break;
+							case "horoscope":
+								$(this).ozClientTriggers('switchSide',{'link':'horoscope'});
+								$(this).ozClientModels('primary',{'file':'horoscope.html'});
+								$(this).ozClientHoroscope();
 							break;
 						}
 				}
