@@ -1,0 +1,58 @@
+
+.hscope-icons {
+display:block;
+float:left;
+width:67px;
+height:65px;
+background-image:url(../../img/horoscope/hscope-icons.png);
+background-repeat:no-repeat;
+}
+
+#hscope-icon-vodoley {
+background-position:0 0;
+}
+
+#hscope-icon-oven {
+background-position:-67px 0;
+}
+
+#hscope-icon-rak {
+background-position:-133px 0;
+}
+
+#hscope-icon-kozerog {
+background-position:-199px 0;
+}
+
+#hscope-icon-bliznecu {
+background-position:0 -65px;
+}
+
+#hscope-icon-lev {
+background-position:-67px -65px;
+}
+
+#hscope-icon-vesu {
+background-position:-133px -65px;
+}
+
+#hscope-icon-rubu {
+background-position:-199px -65px;
+}
+
+#hscope-icon-strelec {
+background-position:0 -130px;
+}
+
+#hscope-icon-rak {
+background-position:-67px -130px;
+}
+
+#hscope-icon-telec {
+background-position:-133px -130px;
+}
+
+#hscope-icon-deva {
+background-position:-199px -130px;
+}
+

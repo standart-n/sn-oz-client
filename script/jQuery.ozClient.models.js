@@ -21,6 +21,7 @@
 				cache:false,
 				dataType:'html',
 				success:function(text){
+					text=oz.ozClientWiki('tags',{'text':text});
 					text=oz.ozClientWiki('formating',{'text':text});
 					text=oz.ozClientWiki('headings',{'text':text});
 					text=oz.ozClientWiki('externalLinks',{'text':text});
@@ -30,7 +31,6 @@
 					text=oz.ozClientWiki('photo',{'text':text});
 					text=oz.ozClientWiki('image',{'text':text});
 					text=oz.ozClientWiki('indPrimary',{'text':text});
-					text=oz.ozClientWiki('tags',{'text':text});
 					text=oz.ozClientWiki('spoiler',{'text':text});
 					text=oz.ozClientWiki('spaces',{'text':text});
 					$('#primary-content').html(text);
@@ -52,6 +52,7 @@
 				cache:false,
 				dataType:'html',
 				success:function(text){
+					text=oz.ozClientWiki('tags',{'text':text});
 					text=oz.ozClientWiki('formating',{'text':text});
 					text=oz.ozClientWiki('headings',{'text':text});
 					text=oz.ozClientWiki('externalLinks',{'text':text});
@@ -62,7 +63,6 @@
 					text=oz.ozClientWiki('photo',{'text':text});
 					text=oz.ozClientWiki('image',{'text':text});
 					text=oz.ozClientWiki('gismeteo',{'text':text});
-					text=oz.ozClientWiki('tags',{'text':text});
 					text=oz.ozClientWiki('indSide',{'text':text});
 					text=oz.ozClientWiki('spaces',{'text':text});
 					$('#side-content').html(text);

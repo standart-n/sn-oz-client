@@ -114,7 +114,6 @@
 			$.extend(def,options);
 			var text=def.text;
 			text=text.replace(/<<<\n/g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
-			text=text.replace(/<<<\r\n/g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
 			text=text.replace(/>>>\n/g,'</div></div>');
 			text=text.replace(/<<</g,'<div class="primary-box-outer"><div class="primary-box wiki-text">');
 			text=text.replace(/>>>/g,'</div></div>');
@@ -128,7 +127,6 @@
 			$.extend(def,options);
 			var text=def.text;
 			text=text.replace(/<<<\n/g,'<div class="side-box-outer"><div class="side-box wiki-text">');
-			text=text.replace(/<<<\r\n/g,'<div class="side-box-outer"><div class="side-box wiki-text">');
 			text=text.replace(/>>>\n/g,'</div></div>');
 			text=text.replace(/<<</g,'<div class="side-box-outer"><div class="side-box wiki-text">');
 			text=text.replace(/>>>/g,'</div></div>');
@@ -141,13 +139,11 @@
 			};
 			$.extend(def,options);
 			var text=def.text;
-			text=text.replace(/<hr>\n/g,'<hr>');
-			text=text.replace(/<hr>\r\n/g,'<hr>');
+			//text=text.replace(/<hr>\n/g,'<hr>');
+			text=text.replace(/<(.*?)>\n/g,'<$1>');
+			text=text.replace(/<\/(.*?)>\n/g,'</$1>');
 			text=text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]\n/g,'<a id="anchor-$1"></a>');
-			text=text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]\r\n/g,'<a id="anchor-$1"></a>');
 			text=text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g,'<a id="anchor-$1"></a>');
-			/*text=text.replace(/\>\n/g,'>');
-			text=text.replace(/\>\r\n/g,'>');*/
 			return text;
 		},
 		sideMenu:function(options)
