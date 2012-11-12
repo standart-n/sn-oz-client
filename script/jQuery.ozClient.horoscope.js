@@ -11,9 +11,15 @@
 				var sn=$(this).data('ozClient');
 				$.ajax({
 					url:'http://oz.st-n.ru/horoscope/',
-					dataType:"text",
+					dataType:"json",
 					success:function(s){
-						//$(def.el).html(s);
+						if (s.hscope) {
+							$.each(s.hscope,function(key,value){
+								if (value.description) {
+									$("#hscope-description-"+key).html(value.description);
+								}
+							});							
+						}
 					}
 				});			
 			});
