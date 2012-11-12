@@ -10,21 +10,21 @@
 				$.extend(true,def,options);
 				var sn=$(this).data('ozClient');
 				$.ajax({
-					url:'http://oz.st-n.ru/horoscope/',
-					dataType:"json",
+					url:'http://oz.st-n.ru/horoscope/?callback=?',
+					dataType:"jsonp",
 					success:function(s){
 						if (s.hscope) {
 							$.each(s.hscope,function(key,value){
 								if (value.description) {
 									$("#hscope-description-"+key).html(value.description);
 								}
-							});							
+							});
 						}
 					}
-				});			
+				});
 			});
 		}
-	};		
+	};
 
 	$.fn.ozClientHoroscope=function(sn){
 		if (!sn) { var sn={}; }
@@ -34,7 +34,7 @@
 			return methods.init.apply(this,arguments);
 		} else {
 			$.error('Метод '+sn+' не существует');
-		}    
+		}
 		
-	};		
+	};
 })(jQuery);
