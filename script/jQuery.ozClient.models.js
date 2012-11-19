@@ -30,6 +30,7 @@
 					text=oz.ozClientWiki('mailTo',{'text':text});
 					text=oz.ozClientWiki('photo',{'text':text});
 					text=oz.ozClientWiki('image',{'text':text});
+					text=oz.ozClientWiki('fonts',{'text':text});
 					text=oz.ozClientWiki('indPrimary',{'text':text});
 					text=oz.ozClientWiki('spoiler',{'text':text});
 					text=oz.ozClientWiki('spaces',{'text':text});
@@ -62,6 +63,7 @@
 					text=oz.ozClientWiki('sideMenu',{'text':text});
 					text=oz.ozClientWiki('photo',{'text':text});
 					text=oz.ozClientWiki('image',{'text':text});
+					text=oz.ozClientWiki('fonts',{'text':text});
 					text=oz.ozClientWiki('gismeteo',{'text':text});
 					text=oz.ozClientWiki('indSide',{'text':text});
 					text=oz.ozClientWiki('spaces',{'text':text});

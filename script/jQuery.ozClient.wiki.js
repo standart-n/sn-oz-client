@@ -92,7 +92,22 @@
 			};
 			$.extend(def,options);			
 			var text=def.text;
+			text=text.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) left\]/mg,'<img align="center" class="wiki-image-left" src="http://oz.st-n.ru/publish/photo/'+sn.region.name+'/$1">');
+			text=text.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) right\]/mg,'<img align="center" class="wiki-image-right" src="http://oz.st-n.ru/publish/photo/'+sn.region.name+'/$1">');
 			text=text.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg,'<img align="center" src="http://oz.st-n.ru/publish/photo/'+sn.region.name+'/$1">');
+			return text;
+		},
+		fonts:function(options)
+		{
+			var sn=$(this).data('ozClient');
+			var def={
+				'text':''
+			};
+			$.extend(def,options);			
+			var text=def.text;
+			text=text.replace(/\[\[color:red\](.*?)\]/mg,'<font style="color:#ff0000;">$1</font>');
+			text=text.replace(/\[\[color:silver\](.*?)\]/mg,'<font style="color:#666;">$1</font>');
+			text=text.replace(/\[\[color:([a-zA-Z0-9\-\.\/\?%\#_]+)\](.*?)\]/mg,'<font style="color:$1;">$2</font>');
 			return text;
 		},
 		internalLinks:function(options)

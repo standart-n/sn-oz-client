@@ -40,3 +40,19 @@ color:#333;
 padding:5px 0 5px 0;
 margin:0;
 }
+
+.wiki-image-left {
+float:left;
+margin:5px 10px 5px 0;
+}
+
+.wiki-image-right {
+float:right;
+margin:5px 0 5px 10px;
+}
+
+/*.primary-box-outer .wiki-text img{
+float:right;
+margin:5px 10px 5px 0;
+}*/
+
