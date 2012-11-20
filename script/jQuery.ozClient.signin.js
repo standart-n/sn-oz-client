@@ -8,7 +8,21 @@
 					'el':'#primary-content'
 				};
 				$.extend(true,def,options);
+				$(this).ozClientSignin('triggers',def);
 				var sn=$(this).data('ozClient');
+			});
+		},
+		triggers:function(def)
+		{
+			$(".signin-input").on("focus",function(){
+				if (($(this).val()==$(this).data("def-value")) || ($(this).val()=="")) {
+					$(this).removeClass("signin-input-blur").addClass("signin-input-focus").val("").select();
+				}
+			});
+			$(".signin-input").on("blur",function(){
+				if (($(this).val()==$(this).data("def-value")) || ($(this).val()=="")) {
+					$(this).removeClass("signin-input-focus").addClass("signin-input-blur").val($(this).data("def-value"));
+				}
 			});
 		}
 	};

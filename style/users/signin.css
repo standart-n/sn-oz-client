@@ -14,7 +14,7 @@ border-bottom:#ddd solid 1px;
 .signin-caption {
 font-family:Verdana;
 font-size:18px;
-color:#666;
+color:#333;
 margin:0 0 4px 0;
 }
 
@@ -106,3 +106,31 @@ font-size:16px;
 color:#036;
 text-decoration:none;
 }
+
+.signin-form-check {
+display:block;
+float:left;
+width:16px;
+height:16px;
+margin:12px 0 0 4px;
+background-image:url(../../img/signin/check.png);
+background-repeat:no-repeat;
+background-color:none;
+}
+
+* html .signin-form-check {
+margin:0 0 0 2px;
+}
+
+.signin-form-check-clear {
+background-position:16px 0;
+}
+
+.signin-form-check-true {
+background-position:0 0;
+}
+
+.signin-form-check-false {
+background-position:-16px 0;
+}
+

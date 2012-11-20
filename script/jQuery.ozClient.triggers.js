@@ -9,9 +9,6 @@
 		linksSide:function()
 		{
 			var oz=$(this);
-			/*$(".side-box-link").on("click",function(){
-				oz.ozClientEvents({'href':$(this).attr("href")});
-			});*/
 			$(".side-box a").on("click",function(){
 				oz.ozClientEvents({'href':$(this).attr("href")});
 			});
@@ -26,9 +23,6 @@
 		linksBar:function()
 		{
 			var oz=$(this);
-			/*$(".bar-logo").on("click",function(){
-				oz.ozClientEvents({'href':$(this).attr("href")});
-			});*/
 			$("a").on("click",function(){
 				oz.ozClientEvents({'href':$(this).attr("href")});
 			});
