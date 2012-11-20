@@ -29,8 +29,8 @@ font-size:16px;
 color:#134278;
 display:block;
 float:left;
-width:140px;
-min-width:140px;
+width:100px;
+min-width:100px;
 height:34px;
 padding:20px 0 0 0;
 text-align:center;
@@ -69,4 +69,24 @@ color:#fcfcfc;
 background-image:url(../../img/silver/silver-bar-button-hover.png);
 background-repeat:no-repeat;
 background-position:0 0;
+}
+
+.bar-link:hover {
+color:#024;
+border-bottom:#024 dotted 1px;
+}
+
+.bar-link {
+font-family:Verdana;
+font-size:14px;
+color:#036;
+display:block;
+float:left;
+width:50px;
+min-width:50px;
+padding:20px 0 1px 0;
+text-align:center;
+text-decoration:none;
+outline:none;
+border-bottom:#036 dotted 1px;
 }

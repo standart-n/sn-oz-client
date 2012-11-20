@@ -1,0 +1,108 @@
+
+.signin-header {
+font-family:Verdana;
+font-size:12px;
+color:#ff3300;
+display:block;
+float:left;
+width:100%;
+padding:0 0 2px 0;
+margin:0 0 6px 0;
+border-bottom:#ddd solid 1px;
+}
+
+.signin-caption {
+font-family:Verdana;
+font-size:18px;
+color:#666;
+margin:0 0 4px 0;
+}
+
+.signin-hint {
+font-family:Verdana;
+font-size:12px;
+color:#f35f0f;
+margin:5px 0 1px 0;
+}
+
+.signin-input-outer {
+display:block;
+float:left;
+padding:3px 4% 3px 4%;
+margin:3px 0 0 0;
+width:92%;
+background:#fff;
+border-top:#ccc solid 1px;
+border-left:#bbb solid 1px;
+border-right:#bbb solid 1px;
+border-bottom:#aaa solid 1px;
+}
+
+* html .signin-input-outer {
+padding:3px 2% 3px 4%;
+}
+
+.signin-input {
+font-family:Verdana;
+font-size:16px;
+outline:none;
+width:100%;
+background:none;
+border:none;
+}
+
+.signin-input-blur {
+color:#777;
+}
+
+.signin-input-focus {
+color:#222;
+}
+
+a.signin-button {
+display:block;
+float:left;
+padding:6px 4% 6px 4%;
+margin:8px 0 0 0;
+width:92%;
+outline:none;
+text-align:center;
+background: #ffffff;
+background: -moz-linear-gradient(top,  #ffffff 0%, #e5e5e5 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e5e5e5));
+background: -webkit-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%);
+background: -o-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%);
+background: -ms-linear-gradient(top,  #ffffff 0%,#e5e5e5 100%);
+background: linear-gradient(to bottom,  #ffffff 0%,#e5e5e5 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 );
+border-top:#ccc solid 1px;
+border-left:#bbb solid 1px;
+border-right:#bbb solid 1px;
+border-bottom:#aaa solid 1px;
+}
+
+* html a.signin-button {
+padding:6px 2% 6px 4%;
+}
+
+a#signin-button-enter:hover {
+color:#ff0000;
+}
+
+a#signin-button-enter {
+font-family:Verdana;
+font-size:16px;
+color:#036;
+text-decoration:none;
+}
+
+a#signin-button-reg:hover {
+color:#ff0000;
+}
+
+a#signin-button-reg {
+font-family:Verdana;
+font-size:16px;
+color:#036;
+text-decoration:none;
+}

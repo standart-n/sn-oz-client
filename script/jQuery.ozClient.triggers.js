@@ -26,10 +26,10 @@
 		linksBar:function()
 		{
 			var oz=$(this);
-			$(".bar-logo").on("click",function(){
+			/*$(".bar-logo").on("click",function(){
 				oz.ozClientEvents({'href':$(this).attr("href")});
-			});
-			$(".bar-button").on("click",function(){
+			});*/
+			$("a").on("click",function(){
 				oz.ozClientEvents({'href':$(this).attr("href")});
 			});
 		},

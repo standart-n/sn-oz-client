@@ -12,6 +12,11 @@ background-position:0 54px;
 background-attachment:fixed;*/
 }
 
+form {
+padding:0;
+margin:0;
+}
+
 #header {
 position:fixed;
 display:block;
@@ -39,4 +44,8 @@ margin:5px 0 0 0;
 #table-content {
 max-width:900px;
 min-width:300px;
+}
+
+.hidden {
+display:none;
 }

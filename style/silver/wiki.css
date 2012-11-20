@@ -5,11 +5,11 @@ font-size:14px;
 color:#030303;
 }
 
-.wiki-text a:hover{
+.wiki-text a.wiki-link:hover{
 color:#f30021;
 }
 
-.wiki-text a{
+.wiki-text a.wiki-link{
 font-family:Verdana;
 font-size:14px;
 color:#0c5da5;

@@ -39,6 +39,16 @@
 								$(this).ozClientTriggers('switchSide',{'link':l_three});
 								$(this).ozClientModels('primary',{'file':l_three+'.html'});
 							break;
+							case "signin":
+								$(this).ozClientTriggers('switchSide',{'link':'signin'});
+								$(this).ozClientModels('primary',{'file':'signin.html'});
+								$(this).ozClientSignin();
+							break;
+							case "registration":
+								$(this).ozClientTriggers('switchSide',{'link':'registration'});
+								$(this).ozClientModels('primary',{'file':'registration.html'});
+								$(this).ozClientSignin();
+							break;
 							case "horoscope":
 								$(this).ozClientTriggers('switchSide',{'link':'horoscope'});
 								$(this).ozClientModels('primary',{'file':'horoscope.html'});
