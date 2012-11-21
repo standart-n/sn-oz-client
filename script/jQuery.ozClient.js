@@ -3,13 +3,17 @@
 	var methods={
 		init:function(options)
 		{
-			return this.each(function(){
-				$(this).data('ozClient',{});
-				$(this).ozClientConf();
-				$(this).ozClientLayout();
-				$(this).ozClientEvents({'href':'#autoload'});
-				var sn=$(this).data('ozClient');
-			});
+			if (!options) { var options={}; }
+			var def={
+				'content':{},
+				'result':{}
+			}
+			$.extend(true,def,options);
+			$(this).data('ozClient',def);
+			$(this).ozClientConf();
+			$(this).ozClientLayout();
+			$(this).ozClientEvents({'href':'#autoload'});
+			var sn=$(this).data('ozClient');
 		}
 	};		
 

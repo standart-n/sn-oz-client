@@ -214,11 +214,59 @@
 						}
 					}
 				});				
-				
-			});
+			});			
 			
-			
+			if (def.error) {
+				$(this).ozClientSignin('regOnServer');					
+			}							
 			return false;
+		},
+		regOnServer:function(options)
+		{
+			var def={
+				'debug':false,
+				'type':'jsonp',
+				'firstname':$("#signin-input-firstname").val(),
+				'lastname':$("#signin-input-lastname").val(),
+				'patronymic':$("#signin-input-patronymic").val(),
+				'email':$("#signin-input-email").val(),
+				'phone':$("#signin-input-phone").val(),
+				'company':$("#signin-input-company").val(),
+				'post':$("#signin-input-post").val(),
+				'error':false
+			};
+			var oz=$(this);
+			$.extend(true,def,options);
+			if (def.debug) { def.type='text'; }
+			var sn=$(this).data('ozClient');			
+
+			$.ajax({
+				url:'http://oz.st-n.ru/server-dev/?callback=?',
+				async:true,
+				type:'POST',
+				data:{
+					action:'registration',
+					region:sn.region.name,
+					theme:sn.theme.name,
+					firstname:def.firstname,
+					lastname:def.lastname,
+					patronymic:def.patronymic,
+					email:def.email,
+					phone:def.phone,
+					company:def.company,
+					post:def.post
+				},
+				dataType:def.type,
+				timeout:10000,
+				success:function(s){
+					$.extend(true,sn.result,s);
+					if (def.debug) { alert("["+s+"]"); }
+					$(this).data('ozClient',sn);
+					if (sn.result.alert) { alert(sn.result.alert); }
+				},
+				error:function(XMLHttpRequest,textStatus,error){ alert(error); }
+			});			
+			
 		}
 	};
 
