@@ -63,7 +63,7 @@ a.signin-button {
 display:block;
 float:left;
 padding:6px 4% 6px 4%;
-margin:8px 0 0 0;
+margin:2px 0 0 0;
 width:92%;
 outline:none;
 text-align:center;
@@ -93,6 +93,7 @@ a#signin-button-enter {
 font-family:Verdana;
 font-size:16px;
 color:#036;
+margin:8px 0 0 0;
 text-decoration:none;
 }
 
@@ -133,4 +134,42 @@ background-position:0 0;
 .signin-form-check-false {
 background-position:-16px 0;
 }
+
+.signin-warning-outer {
+display:block;
+float:left;
+width:100%;
+margin:0 0 0 0;
+}
+
+.signin-warning {
+font-family:Verdana;
+font-size:12px;
+color:#ff0000;
+display:none;
+float:left;
+width:100%;
+padding:2px 0 2px 0;
+}
+
+.signin-form-warning {
+display:none;
+float:left;
+width:16px;
+height:16px;
+margin:2px 4px 0 0;
+background-image:url(../../img/signin/check.png);
+background-repeat:no-repeat;
+background-color:none;
+}
+
+.signin-form-warning-clear {
+background-position:16px 0;
+}
+
+.signin-form-warning-error {
+background-position:-32px 0;
+}
+
+
 
