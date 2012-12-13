@@ -182,11 +182,15 @@
 							'caption':$(this).data("def-value")
 						}
 				);
+				if (check.error!=undefined) {
+					if (check.error) {
+						def.error=true;
+					}
+				}
 				$(".signin-warning").each(function(){
 					if ($(this).data("check-type")==th.data("check-type")) {
 						if (check.error!=undefined) {
 							if (check.error) {
-								def.error=true;
 								$(this).html(check.start+' "'+check.caption+'" '+check.exp).show();
 							}
 						}
@@ -213,9 +217,8 @@
 							}
 						}
 					}
-				});				
+				});
 			});			
-			alert('error?');
 			$(this).ozClientSignin('afterCheckRegForm',def);
 			return false;
 		},
@@ -226,9 +229,10 @@
 			};
 			$.extend(true,def,options);
 			if (def.error) {
-				$(this).ozClientSignin('regOnServer');
+				alert('yest error');
 			} else {
 				alert('bez oshibok');
+				$(this).ozClientSignin('regOnServer');
 			}
 		},		
 		regOnServer:function(options)
@@ -270,13 +274,16 @@
 				timeout:10000,
 				success:function(s){
 					$.extend(true,sn.result,s);
-					if (def.debug) { alert("["+s+"]"); }
+					if (def.debug) { alert(s); }
 					$(this).data('ozClient',sn);
 					if (sn.result.alert) { alert(sn.result.alert); }
 					if (!s.reg) {						
 						if (s.valid) {
 							oz.ozClientSignin('afterCheckRegFormOnServer',s);
 						}
+					} else {
+						//
+						alert('go!');
 					}
 				},
 				error:function(XMLHttpRequest,textStatus,error){ alert(error); }
@@ -285,34 +292,25 @@
 		},
 		afterCheckRegFormOnServer:function(options){
 			var def={
-				'error':false
+				'error':false,
+				'start':'В поле'
 			};
-			var oz=$(this);
-			alert('response from server');
 			$.extend(true,def,options);
-			if (!s.reg) {
-				if (s.valid) {
-					$.each(s.valid,function(field,val) {
-						var th=$(this);
-						var check=oz.ozClientSignin('check',
-								{
-									'type':$(this).data("check-type"),
-									'value':$(this).val(),
-									'caption':$(this).data("def-value")
-								}
-						);
+			var sn=$(this).data('ozClient');
+			if (!sn.result.reg) { def.error=true;
+				if (sn.result.valid) {
+					$.each(sn.result.valid,function(field,check) {
 						$(".signin-warning").each(function(){
-							if ($(this).data("check-type")==th.data("check-type")) {
+							if ($(this).data("check-type")==field) {
 								if (check.error!=undefined) {
 									if (check.error) {
-										def.error=true;
-										$(this).html(check.start+' "'+check.caption+'" '+check.exp).show();
+										$(this).html(def.start+' "'+check.def+'" '+check.exp).show();
 									}
 								}
 							}
 						});
 						$(".signin-form-warning").each(function(){
-							if ($(this).data("check-type")==th.data("check-type")) {
+							if ($(this).data("check-type")==field) {
 								if (check.error!=undefined) {
 									if (check.error) {
 										$(this).show();
@@ -322,7 +320,7 @@
 						});
 		
 						$(".signin-form-check").each(function(){
-							if ($(this).data("check-type")==th.data("check-type")) {
+							if ($(this).data("check-type")==field) {
 								if (check.error!=undefined) {
 									if ($(this).hasClass("signin-form-check-clear")) { $(this).removeClass("signin-form-check-clear"); }
 									if (check.error) {
