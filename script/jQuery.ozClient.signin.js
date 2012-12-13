@@ -27,23 +27,23 @@
 			});
 			$("#signin-form-enter").on("submit",function(e){
 				e.preventDefault();
-				oz.ozClientSignin('enter');
+				oz.ozClientSignin('checkEnterForm');
 			});
 			$("#signin-button-enter").on("click",function(e){
 				e.preventDefault();
-				oz.ozClientSignin('enter');
+				oz.ozClientSignin('checkEnterForm');
 			});
 			$("#signin-form-reg").on("submit",function(e){
 				e.preventDefault();
-				oz.ozClientSignin('reg');
+				oz.ozClientSignin('checkRegForm');
 			});
 			$("#signin-button-reg").on("click",function(e){
 				e.preventDefault();
-				oz.ozClientSignin('reg');
+				oz.ozClientSignin('checkRegForm');
 			});
 			$(".signin-type-reg").on("keyup",function(){
 				var th=$(this);
-				var check=oz.ozClientSignin('check',
+				var check=oz.ozClientSignin('checkField',
 						{
 							'type':$(this).data("check-type"),
 							'value':$(this).val(),
@@ -64,7 +64,7 @@
 				});
 			});
 		},
-		check:function(options)
+		checkField:function(options)
 		{
 			var def={
 				'type':'post',
@@ -159,12 +159,12 @@
 			}
 			return def;
 		},
-		enter:function(options)
+		checkEnterForm:function(options)
 		{			
 			alert('enter');
 			return false;
 		},
-		reg:function(options)
+		checkRegForm:function(options)
 		{			
 			var def={
 				'error':false
@@ -175,7 +175,7 @@
 			$(".signin-form-warning").hide();
 			$(".signin-type-reg").each(function(){
 				var th=$(this);
-				var check=oz.ozClientSignin('check',
+				var check=oz.ozClientSignin('checkField',
 						{
 							'type':$(this).data("check-type"),
 							'value':$(this).val(),
@@ -215,12 +215,22 @@
 					}
 				});				
 			});			
-			
-			if (def.error) {
-				$(this).ozClientSignin('regOnServer');					
-			}							
+			alert('error?');
+			$(this).ozClientSignin('afterCheckRegForm',def);
 			return false;
 		},
+		afterCheckRegForm:function(options)
+		{
+			var def={
+				'error':false
+			};
+			$.extend(true,def,options);
+			if (def.error) {
+				$(this).ozClientSignin('regOnServer');
+			} else {
+				alert('bez oshibok');
+			}
+		},		
 		regOnServer:function(options)
 		{
 			var def={
@@ -263,10 +273,69 @@
 					if (def.debug) { alert("["+s+"]"); }
 					$(this).data('ozClient',sn);
 					if (sn.result.alert) { alert(sn.result.alert); }
+					if (!s.reg) {						
+						if (s.valid) {
+							oz.ozClientSignin('afterCheckRegFormOnServer',s);
+						}
+					}
 				},
 				error:function(XMLHttpRequest,textStatus,error){ alert(error); }
 			});			
 			
+		},
+		afterCheckRegFormOnServer:function(options){
+			var def={
+				'error':false
+			};
+			var oz=$(this);
+			alert('response from server');
+			$.extend(true,def,options);
+			if (!s.reg) {
+				if (s.valid) {
+					$.each(s.valid,function(field,val) {
+						var th=$(this);
+						var check=oz.ozClientSignin('check',
+								{
+									'type':$(this).data("check-type"),
+									'value':$(this).val(),
+									'caption':$(this).data("def-value")
+								}
+						);
+						$(".signin-warning").each(function(){
+							if ($(this).data("check-type")==th.data("check-type")) {
+								if (check.error!=undefined) {
+									if (check.error) {
+										def.error=true;
+										$(this).html(check.start+' "'+check.caption+'" '+check.exp).show();
+									}
+								}
+							}
+						});
+						$(".signin-form-warning").each(function(){
+							if ($(this).data("check-type")==th.data("check-type")) {
+								if (check.error!=undefined) {
+									if (check.error) {
+										$(this).show();
+									}
+								}
+							}
+						});
+		
+						$(".signin-form-check").each(function(){
+							if ($(this).data("check-type")==th.data("check-type")) {
+								if (check.error!=undefined) {
+									if ($(this).hasClass("signin-form-check-clear")) { $(this).removeClass("signin-form-check-clear"); }
+									if (check.error) {
+										$(this).removeClass("signin-form-check-true").addClass("signin-form-check-false");
+									} else {
+										$(this).removeClass("signin-form-check-false").addClass("signin-form-check-true");
+									}
+								}
+							}
+						});				
+					});					
+				}
+			}
 		}
 	};
 
