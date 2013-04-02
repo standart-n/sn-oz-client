@@ -1,34 +1,12 @@
 {
-	"darky":
-	{
-		"css":
-		[
-			"style/darky/main.css",
-			"style/darky/bar.css",
-			"style/darky/primary.css",
-			"style/darky/side.css",
-			"style/darky/wiki.css",
-			"style/darky/spoiler.css"
-		],
-		"js":
-		[
-			"js/darky/switching.js"
-		]
-	},
 	"silver":
 	{
 		"css":
 		[
-			"style/silver/main.css",
-			"style/silver/bar.css",
-			"style/silver/primary.css",
-			"style/silver/side.css",
-			"style/silver/wiki.css",
-			"style/silver/spoiler.css"
+			"style/silver/theme.css"
 		],
 		"js":
 		[
-			"js/silver/switching.js"
 		]
 	}
 }

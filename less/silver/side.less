@@ -1,0 +1,72 @@
+
+.side-box-outer {
+	position:relative;
+	display:block;
+	float:left;
+	width:100%;
+	height:auto;
+	padding:0 0 0 0;
+	margin:10px 0 0 0;
+	background: #fcfcfc;
+	.border-block;
+	.border-radius(7px);
+}
+
+.side-box {
+	display:block;
+	float:left;
+	width:92%;
+	height:auto;
+	padding:0 0 5px 0;
+	margin:5px 0 1px 4%;
+}
+
+* html .side-box {
+	margin:5px 0 1px 2%;
+}
+
+.side-box hr{
+	color:#e5e5e5;
+	height:1px;
+	padding:0;
+	margin:0;
+	clear:both;
+	margin:0;
+	background-color:#e5e5e5;
+	border:none;
+}
+
+a.side-box-link {
+	font-family:Verdana;
+	font-size:14px;
+	display:block;
+	float:left;
+	width:100%;
+	min-width:100px;
+	padding:6px 0 7px 0;
+	text-align:left;
+	text-decoration:none;
+	outline:none;
+}
+
+* html a.side-box-link {
+	padding:1px 0 2px 0;
+}
+
+a.side-box-link-active {
+	font-weight:bold;
+	color:#333;
+	.image('@{img}/silver-side-link-arrow.png',no-repeat,right center);
+}
+
+a.side-box-link-normal {
+	font-weight:normal;
+	color:#036;
+	.image('@{img}/silver-side-link-arrow-10pr.png',no-repeat,right center);
+}
+
+a.side-box-link-hover {
+	font-weight:normal;
+	color:#555;
+	.image('@{img}/silver-side-link-arrow-70pr.png',no-repeat,right center);
+}
