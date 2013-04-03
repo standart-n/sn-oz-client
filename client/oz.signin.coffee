@@ -284,7 +284,7 @@ $ ->
 				dataType: def.type
 				timeout: 10000
 				success: (s) ->
-					$.extend true, sn.result, s
+					$.extend true, sn.result, s.registration
 
 					alert s if def.debug
 					$(this).data 'oz', sn
