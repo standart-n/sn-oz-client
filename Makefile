@@ -15,7 +15,7 @@ all: client finish
 client: client-js css
 
 client-js:
-	@coffee -cbjvp ./client/oz*.coffee > ./script/oz.js
+	@coffee -cbjvp ./client/* > ./script/oz.js
 
 css:
 	@recess --compile ./less/silver/index.less > ./style/silver/theme.css
