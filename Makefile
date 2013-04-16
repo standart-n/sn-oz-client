@@ -12,10 +12,13 @@ def: all
 
 all: client finish
 
-client: client-js css
+client: client-js css templates
+
+templates:
+	@jade --pretty ./jade/users/* -O ./view/
 
 client-js:
-	@coffee -cbjvp ./client/* > ./script/oz.js
+	@coffee -cbjvp ./client/* > ./script/sn.js
 
 css:
 	@recess --compile ./less/silver/index.less > ./style/silver/theme.css
