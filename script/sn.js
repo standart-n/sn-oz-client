@@ -41,11 +41,6 @@ $(function() {
         content: {},
         result: {}
       };
-      if (!$.cookie('test')) {
-        $.cookie('test', 'asfa');
-      } else {
-        alert($.cookie('test'));
-      }
       $.extend(true, def, options);
       $(this).data('sn', def);
       $(this).snConf();
@@ -1044,7 +1039,7 @@ $(function() {
         var check, __this;
 
         __this = this;
-        check = $(_this).snSignin('checkField', {
+        check = $(_this).snValidation('checkField', {
           type: $(this).data('check-type'),
           value: $(this).val(),
           caption: $(this).data('def-value')
@@ -1066,161 +1061,6 @@ $(function() {
           }
         });
       });
-    },
-    checkField: function(options) {
-      var def, value;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        type: 'post',
-        value: '',
-        caption: '',
-        error: true,
-        start: 'В поле',
-        exp: ''
-      };
-      $.extend(true, def, options);
-      value = def.value.toString();
-      switch (def.type) {
-        case 'firstname':
-          if (value === '' || value === def.caption) {
-            def.exp = 'ничего не указано!';
-          } else {
-            if (value.length < 3) {
-              def.exp = 'слишком короткое значение!';
-            } else {
-              if (value.length > 28) {
-                def.exp = 'слишком длинное значение!';
-              } else {
-                if (!value.match(/^([а-я\-\.]+)$/gi)) {
-                  def.exp = 'некорректное значение!';
-                } else {
-                  def.error = false;
-                }
-              }
-            }
-          }
-          break;
-        case 'lastname':
-          if (value === '' || value === def.caption) {
-            def.exp = 'ничего не указано!';
-          } else {
-            if (value.length < 3) {
-              def.exp = 'слишком короткое значение!';
-            } else {
-              if (value.length > 28) {
-                def.exp = 'слишком длинное значение!';
-              } else {
-                if (!value.match(/^([а-я\-\.]+)$/gi)) {
-                  def.exp = 'некорректное значение!';
-                } else {
-                  def.error = false;
-                }
-              }
-            }
-          }
-          break;
-        case 'patronymic':
-          if (value === '' || value === def.caption) {
-            def.exp = 'ничего не указано!';
-          } else {
-            if (value.length < 3) {
-              def.exp = 'слишком короткое значение!';
-            } else {
-              if (value.length > 28) {
-                def.exp = 'слишком длинное значение!';
-              } else {
-                if (!value.match(/^([а-я\-\.]+)$/gi)) {
-                  def.exp = 'некорректное значение!';
-                } else {
-                  def.error = false;
-                }
-              }
-            }
-          }
-          break;
-        case 'email':
-          if (value === '' || value === def.caption) {
-            def.exp = 'ничего не указано!';
-          } else {
-            if (value.length < 3) {
-              def.exp = 'слишком короткое значение!';
-            } else {
-              if (value.length > 28) {
-                def.exp = 'слишком длинное значение!';
-              } else {
-                if (!value.match(/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi)) {
-                  def.exp = 'некорректное значение!';
-                } else {
-                  def.error = false;
-                }
-              }
-            }
-          }
-          break;
-        case 'phone':
-          if (value === '' || value === def.caption) {
-            def.exp = 'ничего не указано!';
-          } else {
-            if (value.length < 3) {
-              def.exp = 'слишком короткое значение!';
-            } else {
-              if (value.length > 28) {
-                def.exp = 'слишком длинное значение!';
-              } else {
-                if (!value.match(/\+?\d{1,3}(?:\s*\(\d+\)\s*)?(?:(?:\-\d{1,3})+\d|[\d\-]{6,}|(?:\s\d{1,3})+\d)/gi)) {
-                  def.exp = 'некорректное значение!';
-                } else {
-                  def.error = false;
-                }
-              }
-            }
-          }
-          break;
-        case 'company':
-          if (value === '' || value === def.caption) {
-            def.exp = 'ничего не указано!';
-          } else {
-            if (value.length < 3) {
-              def.exp = 'слишком короткое значение!';
-            } else {
-              if (value.length > 28) {
-                def.exp = 'слишком длинное значение!';
-              } else {
-                if (!value.match(/^([а-яa-z0-9\-\.\,\'\'\<\>\ ]+)$/gi)) {
-                  def.exp = 'некорректное значение!';
-                } else {
-                  def.error = false;
-                }
-              }
-            }
-          }
-          break;
-        case 'post':
-          if (value === '' || value === def.caption) {
-            def.exp = 'ничего не указано!';
-          } else {
-            if (value.length < 3) {
-              def.exp = 'слишком короткое значение!';
-            } else {
-              if (value.length > 28) {
-                def.exp = 'слишком длинное значение!';
-              } else {
-                if (!value.match(/^([а-яa-z0-9\-\.\,\'\'\ ]+)$/gi)) {
-                  def.exp = 'некорректное значение!';
-                } else {
-                  def.error = false;
-                }
-              }
-            }
-          }
-      }
-      if (!def.error) {
-        console.warn('validatation', def.type, def.exp);
-      }
-      return def;
     },
     checkEnterForm: function(options) {
       var sn;
@@ -1250,7 +1090,7 @@ $(function() {
         var check, __this;
 
         __this = this;
-        check = $(_this).snSignin('checkField', {
+        check = $(_this).snValidation('checkField', {
           type: $(this).data('check-type'),
           value: $(this).val(),
           caption: $(this).data('def-value')
@@ -1436,6 +1276,189 @@ $(function() {
     }
   };
   $.fn.snSignin = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      if (typeof sn === 'object' || !sn) {
+        return methods.init.apply(this, arguments);
+      } else {
+        return $.error('Метод ' + sn + ' не существует');
+      }
+    }
+  };
+  return $('#sn').snSignin();
+});
+
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
+      if (options == null) {
+        options = {};
+      }
+      return $(this).snValidation('checkField', options);
+    },
+    checkField: function(options) {
+      var def, value;
+
+      if (options == null) {
+        options = {};
+      }
+      def = {
+        type: 'post',
+        value: '',
+        caption: '',
+        error: true,
+        start: 'В поле',
+        exp: ''
+      };
+      $.extend(true, def, options);
+      value = def.value.toString();
+      switch (def.type) {
+        case 'firstname':
+          if (value === '' || value === def.caption) {
+            def.exp = 'ничего не указано!';
+          } else {
+            if (value.length < 3) {
+              def.exp = 'слишком короткое значение!';
+            } else {
+              if (value.length > 28) {
+                def.exp = 'слишком длинное значение!';
+              } else {
+                if (!value.match(/^([а-я\-\.]+)$/gi)) {
+                  def.exp = 'некорректное значение!';
+                } else {
+                  def.error = false;
+                }
+              }
+            }
+          }
+          break;
+        case 'lastname':
+          if (value === '' || value === def.caption) {
+            def.exp = 'ничего не указано!';
+          } else {
+            if (value.length < 3) {
+              def.exp = 'слишком короткое значение!';
+            } else {
+              if (value.length > 28) {
+                def.exp = 'слишком длинное значение!';
+              } else {
+                if (!value.match(/^([а-я\-\.]+)$/gi)) {
+                  def.exp = 'некорректное значение!';
+                } else {
+                  def.error = false;
+                }
+              }
+            }
+          }
+          break;
+        case 'patronymic':
+          if (value === '' || value === def.caption) {
+            def.exp = 'ничего не указано!';
+          } else {
+            if (value.length < 3) {
+              def.exp = 'слишком короткое значение!';
+            } else {
+              if (value.length > 28) {
+                def.exp = 'слишком длинное значение!';
+              } else {
+                if (!value.match(/^([а-я\-\.]+)$/gi)) {
+                  def.exp = 'некорректное значение!';
+                } else {
+                  def.error = false;
+                }
+              }
+            }
+          }
+          break;
+        case 'email':
+          if (value === '' || value === def.caption) {
+            def.exp = 'ничего не указано!';
+          } else {
+            if (value.length < 3) {
+              def.exp = 'слишком короткое значение!';
+            } else {
+              if (value.length > 28) {
+                def.exp = 'слишком длинное значение!';
+              } else {
+                if (!value.match(/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi)) {
+                  def.exp = 'некорректное значение!';
+                } else {
+                  def.error = false;
+                }
+              }
+            }
+          }
+          break;
+        case 'phone':
+          if (value === '' || value === def.caption) {
+            def.exp = 'ничего не указано!';
+          } else {
+            if (value.length < 3) {
+              def.exp = 'слишком короткое значение!';
+            } else {
+              if (value.length > 28) {
+                def.exp = 'слишком длинное значение!';
+              } else {
+                if (!value.match(/\+?\d{1,3}(?:\s*\(\d+\)\s*)?(?:(?:\-\d{1,3})+\d|[\d\-]{4,}|(?:\s\d{1,3})+\d)/gi)) {
+                  def.exp = 'некорректное значение!';
+                } else {
+                  def.error = false;
+                }
+              }
+            }
+          }
+          break;
+        case 'company':
+          if (value === '' || value === def.caption) {
+            def.exp = 'ничего не указано!';
+          } else {
+            if (value.length < 3) {
+              def.exp = 'слишком короткое значение!';
+            } else {
+              if (value.length > 28) {
+                def.exp = 'слишком длинное значение!';
+              } else {
+                if (!value.match(/^([а-яa-z0-9\-\.\,\'\'\<\>\ ]+)$/gi)) {
+                  def.exp = 'некорректное значение!';
+                } else {
+                  def.error = false;
+                }
+              }
+            }
+          }
+          break;
+        case 'post':
+          if (value === '' || value === def.caption) {
+            def.exp = 'ничего не указано!';
+          } else {
+            if (value.length < 3) {
+              def.exp = 'слишком короткое значение!';
+            } else {
+              if (value.length > 28) {
+                def.exp = 'слишком длинное значение!';
+              } else {
+                if (!value.match(/^([а-яa-z0-9\-\.\,\'\'\ ]+)$/gi)) {
+                  def.exp = 'некорректное значение!';
+                } else {
+                  def.error = false;
+                }
+              }
+            }
+          }
+      }
+      if (!def.error) {
+        console.warn('validatation', def.type, def.exp);
+      }
+      return def;
+    }
+  };
+  $.fn.snValidation = function(sn) {
     if (sn == null) {
       sn = {};
     }
