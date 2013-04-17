@@ -3,6 +3,16 @@ $ ->
 	methods =
 		init: (options = {}) ->
 
+		main: (options = {}) ->
+			_this = this
+			sn = $(this).data 'sn'
+			def =
+				elem: '#main'
+				type: 'main'
+				text: ''
+			$.extend def, options
+			$(def.elem).html def.text
+
 		primary: (options = {}) ->
 
 			_this = this
@@ -10,12 +20,17 @@ $ ->
 			def =
 				elem: '#primary-content'
 				type: 'primary'
-				file: 'main.html'
 			$.extend def, options
 			
-			$(this).snModels 'load', def, (s) ->
-				$(def.elem).html $(_this).snWiki('primary', text: s)
-				$(_this).snTriggers 'spoiler'
+			if def.file
+				$(this).snModels 'load', def, (s) ->
+					$(def.elem).html $(_this).snWiki('primary', text: s)
+					$(_this).snTriggers 'spoiler'
+			else
+				if def.text
+					$(def.elem).html $(_this).snWiki('primary', text: def.text)
+					$(_this).snTriggers 'spoiler'
+
 
 		side: (options = {}) ->		
 
@@ -24,11 +39,14 @@ $ ->
 			def =
 				elem: '#side-content'
 				type: 'side'
-				file: 'news.html'
 			$.extend def, options
 			
-			$(this).snModels 'load', def, (s) ->
-				$(def.elem).html $(_this).snWiki('side', text: s)
+			if def.file
+				$(this).snModels 'load', def, (s) ->
+					$(def.elem).html $(_this).snWiki('side', text: s)
+			else
+				if def.text				
+					$(def.elem).html $(_this).snWiki('side', text: text)
 
 		load: (options = {},callback) ->
 			sn = $(this).data 'sn'

@@ -41,6 +41,11 @@ $(function() {
         content: {},
         result: {}
       };
+      if (!$.cookie('test')) {
+        $.cookie('test', 'asfa');
+      } else {
+        alert($.cookie('test'));
+      }
       $.extend(true, def, options);
       $(this).data('sn', def);
       $(this).snConf();
@@ -426,7 +431,9 @@ $(function() {
           ext: '.html'
         }).render()
       });
-      return $('#main').html(main);
+      return $(this).snModels('main', {
+        text: main
+      });
     }
   };
   return $.fn.snLayout = function(sn) {
@@ -454,6 +461,22 @@ $(function() {
         options = {};
       }
     },
+    main: function(options) {
+      var def, sn, _this;
+
+      if (options == null) {
+        options = {};
+      }
+      _this = this;
+      sn = $(this).data('sn');
+      def = {
+        elem: '#main',
+        type: 'main',
+        text: ''
+      };
+      $.extend(def, options);
+      return $(def.elem).html(def.text);
+    },
     primary: function(options) {
       var def, sn, _this;
 
@@ -464,16 +487,24 @@ $(function() {
       sn = $(this).data('sn');
       def = {
         elem: '#primary-content',
-        type: 'primary',
-        file: 'main.html'
+        type: 'primary'
       };
       $.extend(def, options);
-      return $(this).snModels('load', def, function(s) {
-        $(def.elem).html($(_this).snWiki('primary', {
-          text: s
-        }));
-        return $(_this).snTriggers('spoiler');
-      });
+      if (def.file) {
+        return $(this).snModels('load', def, function(s) {
+          $(def.elem).html($(_this).snWiki('primary', {
+            text: s
+          }));
+          return $(_this).snTriggers('spoiler');
+        });
+      } else {
+        if (def.text) {
+          $(def.elem).html($(_this).snWiki('primary', {
+            text: def.text
+          }));
+          return $(_this).snTriggers('spoiler');
+        }
+      }
     },
     side: function(options) {
       var def, sn, _this;
@@ -485,15 +516,22 @@ $(function() {
       sn = $(this).data('sn');
       def = {
         elem: '#side-content',
-        type: 'side',
-        file: 'news.html'
+        type: 'side'
       };
       $.extend(def, options);
-      return $(this).snModels('load', def, function(s) {
-        return $(def.elem).html($(_this).snWiki('side', {
-          text: s
-        }));
-      });
+      if (def.file) {
+        return $(this).snModels('load', def, function(s) {
+          return $(def.elem).html($(_this).snWiki('side', {
+            text: s
+          }));
+        });
+      } else {
+        if (def.text) {
+          return $(def.elem).html($(_this).snWiki('side', {
+            text: text
+          }));
+        }
+      }
     },
     load: function(options, callback) {
       var def, sn;
@@ -935,31 +973,32 @@ $(function() {
       }
       _this = this;
       return $(this).on('click', function() {
-        var def, signin, sn;
+        var def, sn;
 
         sn = $(_this).data('sn');
         if (sn.levels.two === 'signin') {
           def = {
-            elem: '#primary-content'
+            view: {
+              signin: new EJS({
+                url: 'view/signin.html',
+                ext: '.html'
+              }).render({
+                signinFormEnter: new EJS({
+                  url: 'view/signinFormEnter.html',
+                  ext: '.html'
+                }).render(),
+                signinFormReg: new EJS({
+                  url: 'view/signinFormReg.html',
+                  ext: '.html'
+                }).render()
+              })
+            }
           };
           $.extend(true, def, options);
-          signin = new EJS({
-            url: 'view/signin.html',
-            ext: '.html'
-          }).render({
-            signinFormEnter: new EJS({
-              url: 'view/signinFormEnter.html',
-              ext: '.html'
-            }).render(),
-            signinFormReg: new EJS({
-              url: 'view/signinFormReg.html',
-              ext: '.html'
-            }).render()
+          $(_this).snModels('primary', {
+            text: def.view.signin
           });
-          $(def.elem).html($(_this).snWiki('primary', {
-            'text': signin
-          }));
-          return $(this).snSignin('triggers', def);
+          return $(_this).snSignin('triggers', def);
         }
       });
     },

@@ -7,17 +7,15 @@ $ ->
 				sn = $(_this).data 'sn'
 				if sn.levels.two is 'signin'
 					def =
-						elem: '#primary-content'
-
+						view: 
+							signin: new EJS(url: 'view/signin.html', ext: '.html').render
+									signinFormEnter:	new EJS(url: 'view/signinFormEnter.html', ext: '.html').render()
+									signinFormReg:		new EJS(url: 'view/signinFormReg.html', ext: '.html').render()
+						
 					$.extend true, def, options
 
-
-					signin = new EJS(url: 'view/signin.html', ext: '.html').render
-							signinFormEnter:	new EJS(url: 'view/signinFormEnter.html', ext: '.html').render()
-							signinFormReg:		new EJS(url: 'view/signinFormReg.html', ext: '.html').render()
-					#$(this).snModels 'load', file: 'signin.html', (tpl) ->
-					$(def.elem).html $(_this).snWiki('primary', 'text': signin)
-					$(this).snSignin 'triggers', def
+					$(_this).snModels 'primary', text: def.view.signin
+					$(_this).snSignin 'triggers', def
 
 		triggers: (def = {}) ->
 			_this = this

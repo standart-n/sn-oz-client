@@ -7,7 +7,7 @@ $ ->
 					header:		new EJS(url: 'layout/' + sn.region.name + '/header.html', ext: '.html').render
 						caption: sn.region.caption
 					content:	new EJS(url: 'layout/' + sn.region.name + '/content.html', ext: '.html').render()
-			$('#main').html main
+			$(this).snModels 'main', text: main
 
 
 	$.fn.snLayout = (sn = {}) ->
