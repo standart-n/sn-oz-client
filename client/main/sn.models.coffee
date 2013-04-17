@@ -8,13 +8,13 @@ $ ->
 			_this = this
 			sn = $(this).data 'sn'
 			def =
-				'elem':'#primary-content'
-				'type':'primary'
-				'file':'main.html'
+				elem: '#primary-content'
+				type: 'primary'
+				file: 'main.html'
 			$.extend def, options
 			
-			$(this).snModels 'load', def, (text) ->
-				$(def.elem).html $(_this).snWiki('primary', 'text':text)
+			$(this).snModels 'load', def, (s) ->
+				$(def.elem).html $(_this).snWiki('primary', text: s)
 				$(_this).snTriggers 'spoiler'
 
 		side: (options = {}) ->		
@@ -22,20 +22,20 @@ $ ->
 			_this = this
 			sn = $(this).data 'sn'
 			def =
-				'elem':'#side-content'
-				'type':'side'
-				'file':'news.html'
+				elem: '#side-content'
+				type: 'side'
+				file: 'news.html'
 			$.extend def, options
 			
-			$(this).snModels 'load', def, (text) ->
-				$(def.elem).html $(_this).snWiki('side', 'text':text)
+			$(this).snModels 'load', def, (s) ->
+				$(def.elem).html $(_this).snWiki('side', text: s)
 
 		load: (options = {},callback) ->
 			sn = $(this).data 'sn'
 			def =
-				'url':''
-				'type':'view'
-				'file':'news.html'
+				url: ''
+				type: 'view'
+				file: 'news.html'
 			$.extend def, options
 
 			switch def.type
@@ -48,8 +48,8 @@ $ ->
 
 			$.ajax
 				url: def.url
-				async: false
-				cache: false
+				async: off
+				cache: off
 				dataType: 'html'
 				success: (text) ->
 					callback(text) if callback

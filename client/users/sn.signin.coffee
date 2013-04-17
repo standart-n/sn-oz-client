@@ -2,30 +2,34 @@ $ ->
 
 	methods =
 		init: (options = {}) ->
+			_this = this
 			$(this).on 'click', () ->
-				sn = $(this).data 'sn'
+				sn = $(_this).data 'sn'
 				if sn.levels.two is 'signin'
 					def =
-						'elem':'#primary-content'
+						elem: '#primary-content'
 
 					$.extend true, def, options
 
-					#$(this).snModels 'load', 'file':'signin.html', (text) ->
-					view = new EJS (url:'view/signin.html',ext:'.html')
-					$(def.elem).html $(this).snWiki('primary','text':view.text)
+
+					signin = new EJS(url: 'view/signin.html', ext: '.html').render
+							signinFormEnter:	new EJS(url: 'view/signinFormEnter.html', ext: '.html').render()
+							signinFormReg:		new EJS(url: 'view/signinFormReg.html', ext: '.html').render()
+					#$(this).snModels 'load', file: 'signin.html', (tpl) ->
+					$(def.elem).html $(_this).snWiki('primary', 'text': signin)
 					$(this).snSignin 'triggers', def
 
 		triggers: (def = {}) ->
 			_this = this
 			$('.signin-input').on 'focus', () ->
-				if $(this).val() == $(this).data('def-value') || $(this).val() == ''
+				if $(this).val() is $(this).data('def-value') or $(this).val() is ''
 					$(this).removeClass('signin-input-blur')
 					$(this).addClass('signin-input-focus')
 					$(this).val('')
 					$(this).select()
 
 			$('.signin-input').on 'blur', () ->
-				if $(this).val() == $(this).data('def-value') || $(this).val() == ''
+				if $(this).val() is $(this).data('def-value') or $(this).val() is ''
 					$(this).removeClass('signin-input-focus')
 					$(this).addClass('signin-input-blur')
 					$(this).val($(this).data('def-value'))
@@ -49,14 +53,14 @@ $ ->
 			$('.signin-type-reg').on 'keyup', () ->
 				__this = this
 				check = $(_this).snSignin('checkField',
-						'type': $(this).data('check-type')
-						'value': $(this).val()
-						'caption': $(this).data('def-value')
+						type:		$(this).data('check-type')
+						value:		$(this).val()
+						caption:	$(this).data('def-value')
 					)
 
 				$('.signin-form-check').each () ->
-					if $(this).data('check-type') == $(__this).data('check-type')
-						if check.error != undefined
+					if $(this).data('check-type') is $(__this).data('check-type')
+						if check.error isnt undefined
 							if $(this).hasClass 'signin-form-check-clear'
 								$(this).removeClass 'signin-form-check-clear'
 
@@ -71,19 +75,19 @@ $ ->
 		checkField: (options = {}) ->
 
 			def =
-				'type': 'post'
-				'value': ''
-				'caption': ''
-				'error': true
-				'start': 'В поле'
-				'exp': ''
+				type:		'post'
+				value:		''
+				caption:	''
+				error:		true
+				start:		'В поле'
+				exp:		''
 
 			$.extend true, def, options
 			value = def.value.toString()
 
 			switch def.type
 				when 'firstname'
-					if value == '' || value == def.caption 
+					if value is '' or value is def.caption 
 						def.exp = 'ничего не указано!'
 					else
 						if value.length < 3 
@@ -98,7 +102,7 @@ $ ->
 									def.error = false
 
 				when 'lastname'
-					if value == '' || value == def.caption
+					if value is '' or value is def.caption
 						def.exp = 'ничего не указано!'
 					else
 						if value.length < 3
@@ -113,7 +117,7 @@ $ ->
 									def.error = false
 
 				when 'patronymic'
-					if value == '' || value == def.caption
+					if value is '' or value is def.caption
 						def.exp = 'ничего не указано!'
 					else
 						if value.length < 3
@@ -128,7 +132,7 @@ $ ->
 									def.error = false
 
 				when 'email'
-					if value == '' || value == def.caption
+					if value is '' or value is def.caption
 						def.exp = 'ничего не указано!'
 					else
 						if value.length < 3
@@ -143,7 +147,7 @@ $ ->
 									def.error = false
 
 				when 'phone'
-					if value == '' || value == def.caption
+					if value is '' or value is def.caption
 						def.exp = 'ничего не указано!'
 					else
 						if value.length < 3 
@@ -158,7 +162,7 @@ $ ->
 									def.error = false
 
 				when 'company'
-					if value == '' || value == def.caption
+					if value is '' or value is def.caption
 						def.exp = 'ничего не указано!'
 					else
 						if value.length < 3
@@ -173,7 +177,7 @@ $ ->
 									def.error = false
 
 				when 'post'
-					if value == '' || value == def.caption
+					if value is '' or value is def.caption
 						def.exp = 'ничего не указано!'
 					else
 						if value.length < 3
@@ -198,7 +202,7 @@ $ ->
 
 		checkRegForm: (options = {}) ->
 			def =
-				'error': false
+				error: false
 			_this = this
 			$.extend true, def, options
 
@@ -207,29 +211,29 @@ $ ->
 			$('.signin-type-reg').each () ->
 				__this = this
 				check = $(_this).snSignin('checkField',
-						'type':$(this).data('check-type')
-						'value':$(this).val()
-						'caption':$(this).data('def-value')
+						type:		$(this).data('check-type')
+						value:		$(this).val()
+						caption:	$(this).data('def-value')
 					)
-				if check.error != undefined
+				if check.error isnt undefined
 					if check.error
 						def.error = true
 
 				$('.signin-warning').each () ->
-					if $(this).data('check-type') == $(__this).data('check-type')
-						if check.error != undefined
+					if $(this).data('check-type') is $(__this).data('check-type')
+						if check.error isnt undefined
 							if check.error
 								$(this).html(check.start + ' ' + check.caption + ' ' + check.exp).show()
 
 				$('.signin-form-warning').each () ->
-					if $(this).data('check-type') == $(__this).data('check-type')
-						if check.error != undefined
+					if $(this).data('check-type') is $(__this).data('check-type')
+						if check.error isnt undefined
 							if check.error
 								$(this).show()
 
 				$('.signin-form-check').each () ->
-					if $(this).data('check-type') == $(__this).data('check-type')
-						if check.error != undefined
+					if $(this).data('check-type') is $(__this).data('check-type')
+						if check.error isnt undefined
 							if $(this).hasClass('signin-form-check-clear')
 								$(this).removeClass('signin-form-check-clear')
 
@@ -247,7 +251,7 @@ $ ->
 		afterCheckRegForm: (options = {}) ->
 
 			def =
-				'error':false
+				error: false
 			$.extend true, def, options
 			if def.error
 				# alert 'yest error'
@@ -260,38 +264,37 @@ $ ->
 		regOnServer: (options = {}) ->
 
 			def =
-				'debug': false
-				'type': 'jsonp'
-				'firstname': $('#signin-input-firstname').val()
-				'lastname': $('#signin-input-lastname').val()
-				'patronymic': $('#signin-input-patronymic').val()
-				'email': $('#signin-input-email').val()
-				'phone': $('#signin-input-phone').val()
-				'company': $('#signin-input-company').val()
-				'post': $('#signin-input-post').val()
-				'error': false
+				debug:				off
+				type:				'jsonp'
+				firstname:			$('#signin-input-firstname').val()
+				lastname:			$('#signin-input-lastname').val()
+				patronymic:			$('#signin-input-patronymic').val()
+				email:				$('#signin-input-email').val()
+				phone:				$('#signin-input-phone').val()
+				company:			$('#signin-input-company').val()
+				post:				$('#signin-input-post').val()
+				error:				off
 
 			_this = this
-			$.extend true, def, options
-			if def.debug
-				def.type = 'text'
+			$.extend true, def, options			
+			def.type = 'text' if def.debug
 			sn = $(this).data 'sn'
 
 			$.ajax
 				url: 'http://oz.st-n.ru/server-dev/?callback=?'
-				async: true
+				async: off
 				type: 'POST'
 				data:
-					action: 'registration'
-					region: sn.region.name
-					theme: sn.theme.name
-					firstname: def.firstname
-					lastname: def.lastname
-					patronymic: def.patronymic
-					email: def.email
-					phone: def.phone
-					company: def.company
-					post: def.post
+					action:			'registration'
+					region:			sn.region.name
+					theme:			sn.theme.name
+					firstname:		def.firstname
+					lastname:		def.lastname
+					patronymic:		def.patronymic
+					email:			def.email
+					phone:			def.phone
+					company:		def.company
+					post:			def.post
 
 				dataType: def.type
 				timeout: 10000
@@ -323,20 +326,20 @@ $ ->
 				if sn.result.valid
 					$.each sn.result.valid, (field,check) ->
 						$('.signin-warning').each () ->
-							if $(this).data('check-type') == field
-								if check.error != undefined
+							if $(this).data('check-type') is field
+								if check.error isnt undefined
 									if check.error
 										$(this).html(def.start + ' ' + check.def + ' ' + check.exp).show()
 
 						$('.signin-form-warning').each () ->
-							if $(this).data('check-type') == field
-								if check.error != undefined
+							if $(this).data('check-type') is field
+								if check.error isnt undefined
 									if check.error
 										$(this).show()
 		
 						$('.signin-form-check').each () ->
-							if $(this).data('check-type') == field
-								if check.error != undefined
+							if $(this).data('check-type') is field
+								if check.error isnt undefined
 									if $(this).hasClass('signin-form-check-clear')
 										$(this).removeClass('signin-form-check-clear')
 									

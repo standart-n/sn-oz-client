@@ -7,24 +7,24 @@ $ ->
 
 			_this = this
 			$('.side-box a').on 'click', () ->
-				$(_this).snEvents 'href':$(this).attr('href')
+				$(_this).snEvents href: $(this).attr('href')
 
 		linksPrimary: () ->
 
 			_this = this
 			$('.primary-box a').on 'click', () ->
-				$(_this).snEvents 'href':$(this).attr('href')
+				$(_this).snEvents href: $(this).attr('href')
 
 		linksBar: () ->
 
 			_this = this
 			$('a').on 'click', () ->
-				$(_this).snEvents 'href':$(this).attr('href')
+				$(_this).snEvents href: $(this).attr('href')
 
 		switchBar: (options = {}) ->
 
 			def =
-				'link':'main'
+				link: 'main'
 
 			$.extend def, options
 
@@ -42,7 +42,7 @@ $ ->
 		switchSide: (options = {}) ->
 
 			def=
-				'link':'above'
+				link: 'above'
 
 			$.extend(def,options)
 

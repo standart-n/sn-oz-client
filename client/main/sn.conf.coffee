@@ -12,7 +12,7 @@ $ ->
 			sn = $(this).data 'sn'
 			$.ajax
 				url: 'conf/main.json'
-				async: false
+				async: off
 				dataType: 'json'
 				success: (s) ->
 					$.extend sn, s
@@ -22,14 +22,14 @@ $ ->
 			sn = $(this).data 'sn'
 			$.ajax
 				url: 'conf/themes.json'
-				async: false
+				async: off
 				dataType: 'json'
 				success: (s) ->
 					if s[sn.theme.name]
 						$.extend sn.theme, s[sn.theme.name]
-						sn.theme.enable = true
+						sn.theme.enable = on
 					else
-						sn.theme.enable = false
+						sn.theme.enable = off
 					
 					$(this).data 'sn', sn
 

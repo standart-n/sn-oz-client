@@ -7,56 +7,56 @@ $ ->
 
 			_this = this
 			def =
-				'text':''
+				text: ''
 			$.extend true, def, options
 			
 			text = def.text
-			text = $(_this).snWiki('tags', 'text':text)
-			text = $(_this).snWiki('formating', 'text':text)
-			text = $(_this).snWiki('headings', 'text':text)
-			text = $(_this).snWiki('externalLinks', 'text':text)
-			text = $(_this).snWiki('fileLinks', 'text':text)
-			text = $(_this).snWiki('internalLinks', 'text':text)
-			text = $(_this).snWiki('mailTo', 'text':text)
-			text = $(_this).snWiki('photo', 'text':text)
-			text = $(_this).snWiki('image', 'text':text)
-			text = $(_this).snWiki('fonts', 'text':text)
-			text = $(_this).snWiki('anchor', 'text':text)
-			text = $(_this).snWiki('indPrimary', 'text':text)
-			text = $(_this).snWiki('spoiler', 'text':text)
-			text = $(_this).snWiki('spaces', 'text':text)
+			text = $(_this).snWiki('tags', text: text)
+			text = $(_this).snWiki('formating', text: text)
+			text = $(_this).snWiki('headings', text: text)
+			text = $(_this).snWiki('externalLinks', text: text)
+			text = $(_this).snWiki('fileLinks', text: text)
+			text = $(_this).snWiki('internalLinks', text: text)
+			text = $(_this).snWiki('mailTo', text: text)
+			text = $(_this).snWiki('photo', text: text)
+			text = $(_this).snWiki('image', text: text)
+			text = $(_this).snWiki('fonts', text: text)
+			text = $(_this).snWiki('anchor', text: text)
+			text = $(_this).snWiki('indPrimary', text: text)
+			text = $(_this).snWiki('spoiler', text: text)
+			text = $(_this).snWiki('spaces', text: text)
 			text
 
 		side: (options = {}) ->
 
 			_this = this
 			def =
-				'text':''
+				text: ''
 			$.extend true, def, options
 			
 			text = def.text
-			text = $(_this).snWiki('tags', 'text':text)
-			text = $(_this).snWiki('formating', 'text':text)
-			text = $(_this).snWiki('headings', 'text':text)
-			text = $(_this).snWiki('externalLinks', 'text':text)
-			text = $(_this).snWiki('fileLinks', 'text':text)
-			text = $(_this).snWiki('internalLinks', 'text':text)
-			text = $(_this).snWiki('mailTo', 'text':text)
-			text = $(_this).snWiki('photo', 'text':text)
-			text = $(_this).snWiki('image', 'text':text)
-			text = $(_this).snWiki('fonts', 'text':text)
-			text = $(_this).snWiki('anchor', 'text':text)
-			text = $(_this).snWiki('gismeteo', 'text':text)
-			text = $(_this).snWiki('indSide', 'text':text)
-			text = $(_this).snWiki('sideMenu', 'text':text)
-			text = $(_this).snWiki('spaces', 'text':text)
+			text = $(_this).snWiki('tags', text: text)
+			text = $(_this).snWiki('formating', text: text)
+			text = $(_this).snWiki('headings', text: text)
+			text = $(_this).snWiki('externalLinks', text: text)
+			text = $(_this).snWiki('fileLinks', text: text)
+			text = $(_this).snWiki('internalLinks', text: text)
+			text = $(_this).snWiki('mailTo', text: text)
+			text = $(_this).snWiki('photo', text: text)
+			text = $(_this).snWiki('image', text: text)
+			text = $(_this).snWiki('fonts', text: text)
+			text = $(_this).snWiki('anchor', text: text)
+			text = $(_this).snWiki('gismeteo', text: text)
+			text = $(_this).snWiki('indSide', text: text)
+			text = $(_this).snWiki('sideMenu', text: text)
+			text = $(_this).snWiki('spaces', text: text)
 			text
 
 
 		formating: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -68,7 +68,7 @@ $ ->
 		headings: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -86,7 +86,7 @@ $ ->
 		externalLinks: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -98,7 +98,7 @@ $ ->
 
 			sn = $(this).data 'sn'
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -109,7 +109,7 @@ $ ->
 		mailTo: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -121,7 +121,7 @@ $ ->
 
 			sn = $(this).data 'sn'
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -131,7 +131,7 @@ $ ->
 
 			sn = $(this).data 'sn'
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -144,7 +144,7 @@ $ ->
 
 			sn = $(this).data 'sn'
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -156,7 +156,7 @@ $ ->
 		internalLinks: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -167,7 +167,7 @@ $ ->
 		indPrimary: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -180,7 +180,7 @@ $ ->
 		indSide: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -193,7 +193,7 @@ $ ->
 		tags: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -214,7 +214,7 @@ $ ->
 		anchor: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -225,7 +225,7 @@ $ ->
 		sideMenu: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -234,7 +234,7 @@ $ ->
 		gismeteo: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			sn = $(this).data 'sn'
@@ -244,7 +244,7 @@ $ ->
 		spoiler: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text
@@ -261,7 +261,7 @@ $ ->
 		spaces: (options = {}) ->
 
 			def =
-				'text':''
+				text: ''
 
 			$.extend def, options
 			text = def.text

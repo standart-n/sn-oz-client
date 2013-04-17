@@ -3,24 +3,12 @@ $ ->
 	methods = 
 		init: (options = {}) ->
 			sn = $(this).data 'sn'
-			$(this).snLayout('load', ('div':'main', 'file':'main.html'))
-			$(this).snLayout('load', ('div':'header', 'file':'header.html'))
-			$(this).snLayout('load', ('div':'content', 'file':'content.html'))
-			$('.bar-caption').html sn.region.caption
+			main = new EJS(url: 'layout/' + sn.region.name + '/main.html', ext: '.html').render
+					header:		new EJS(url: 'layout/' + sn.region.name + '/header.html', ext: '.html').render
+						caption: sn.region.caption
+					content:	new EJS(url: 'layout/' + sn.region.name + '/content.html', ext: '.html').render()
+			$('#main').html main
 
-		load: (options = {}) ->
-			sn = $(this).data 'sn'
-			def =
-				'div':'main'
-				'file':'main.html'
-
-			$.extend def, options
-			$.ajax
-				url: 'layout/' + sn.region.name + '/' + def.file
-				async: false
-				dataType: 'html'
-				success: (s) ->
-					$('#'+def.div).html s
 
 	$.fn.snLayout = (sn = {}) ->
 		if methods[sn]

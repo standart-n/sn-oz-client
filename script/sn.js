@@ -36,10 +36,10 @@ $(function() {
         options = {};
       }
       def = {
-        'levels': {},
-        'users': {},
-        'content': {},
-        'result': {}
+        levels: {},
+        users: {},
+        content: {},
+        result: {}
       };
       $.extend(true, def, options);
       $(this).data('sn', def);
@@ -77,27 +77,27 @@ $(function() {
         options = {};
       }
       def = {
-        'href': 'none'
+        href: 'none'
       };
       $.extend(true, def, options);
       sn = $(this).data('sn');
       sn.href = def.href + '/:';
       sn.levels = {
-        'one': sn.href.replace(/(.*)#(.*?)\/(.*)/, '$2'),
-        'two': sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/, '$3'),
-        'three': sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/, '$4'),
-        'anchor': sn.href.replace(/(.*)\:(.*?)\/(.*)/, '$2')
+        one: sn.href.replace(/(.*)#(.*?)\/(.*)/, '$2'),
+        two: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/, '$3'),
+        three: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/, '$4'),
+        anchor: sn.href.replace(/(.*)\:(.*?)\/(.*)/, '$2')
       };
       switch (sn.levels.one) {
         case 'autoload':
           $(this).snModels('primary', {
-            'file': 'main.html'
+            file: 'main.html'
           });
           $(this).snModels('side', {
-            'file': 'main.html'
+            file: 'main.html'
           });
           $(this).snTriggers('switchSide', {
-            'link': 'main'
+            link: 'main'
           });
           $(this).snTriggers('linksBar');
           $(this).snTriggers('linksSide');
@@ -112,10 +112,10 @@ $(function() {
           }, 0);
           if (sn.levels.one !== sn.part) {
             $(this).snTriggers('switchBar', {
-              'link': sn.levels.one
+              link: sn.levels.one
             });
             $(this).snModels('side', {
-              'file': sn.levels.one + '.html'
+              file: sn.levels.one + '.html'
             });
             $(this).snTriggers('linksSide');
             $(this).snTriggers('switcherSide');
@@ -123,17 +123,17 @@ $(function() {
           }
           if (sn.levels.two === 'text') {
             $(this).snTriggers('switchSide', {
-              'link': sn.levels.three
+              link: sn.levels.three
             });
             $(this).snModels('primary', {
-              'file': sn.levels.three + '.html'
+              file: sn.levels.three + '.html'
             });
           } else {
             $(this).snTriggers('switchSide', {
-              'link': sn.levels.two
+              link: sn.levels.two
             });
             $(this).snModels('primary', {
-              'file': sn.levels.two + '.html'
+              file: sn.levels.two + '.html'
             });
           }
       }
@@ -201,7 +201,7 @@ $(function() {
       _this = this;
       return $('.side-box a').on('click', function() {
         return $(_this).snEvents({
-          'href': $(this).attr('href')
+          href: $(this).attr('href')
         });
       });
     },
@@ -211,7 +211,7 @@ $(function() {
       _this = this;
       return $('.primary-box a').on('click', function() {
         return $(_this).snEvents({
-          'href': $(this).attr('href')
+          href: $(this).attr('href')
         });
       });
     },
@@ -221,7 +221,7 @@ $(function() {
       _this = this;
       return $('a').on('click', function() {
         return $(_this).snEvents({
-          'href': $(this).attr('href')
+          href: $(this).attr('href')
         });
       });
     },
@@ -232,7 +232,7 @@ $(function() {
         options = {};
       }
       def = {
-        'link': 'main'
+        link: 'main'
       };
       $.extend(def, options);
       $('.bar-button').removeClass('bar-button-active').removeClass('bar-button-hover').addClass('bar-button-normal');
@@ -245,7 +245,7 @@ $(function() {
         options = {};
       }
       def = {
-        'link': 'above'
+        link: 'above'
       };
       $.extend(def, options);
       $('.side-box-link').removeClass('side-box-link-active').removeClass('side-box-link-hover').addClass('side-box-link-normal');
@@ -405,46 +405,28 @@ $(function() {
 
   methods = {
     init: function(options) {
-      var sn;
+      var main, sn;
 
       if (options == null) {
         options = {};
       }
       sn = $(this).data('sn');
-      $(this).snLayout('load', {
-        'div': 'main',
-        'file': 'main.html'
+      main = new EJS({
+        url: 'layout/' + sn.region.name + '/main.html',
+        ext: '.html'
+      }).render({
+        header: new EJS({
+          url: 'layout/' + sn.region.name + '/header.html',
+          ext: '.html'
+        }).render({
+          caption: sn.region.caption
+        }),
+        content: new EJS({
+          url: 'layout/' + sn.region.name + '/content.html',
+          ext: '.html'
+        }).render()
       });
-      $(this).snLayout('load', {
-        'div': 'header',
-        'file': 'header.html'
-      });
-      $(this).snLayout('load', {
-        'div': 'content',
-        'file': 'content.html'
-      });
-      return $('.bar-caption').html(sn.region.caption);
-    },
-    load: function(options) {
-      var def, sn;
-
-      if (options == null) {
-        options = {};
-      }
-      sn = $(this).data('sn');
-      def = {
-        'div': 'main',
-        'file': 'main.html'
-      };
-      $.extend(def, options);
-      return $.ajax({
-        url: 'layout/' + sn.region.name + '/' + def.file,
-        async: false,
-        dataType: 'html',
-        success: function(s) {
-          return $('#' + def.div).html(s);
-        }
-      });
+      return $('#main').html(main);
     }
   };
   return $.fn.snLayout = function(sn) {
@@ -481,14 +463,14 @@ $(function() {
       _this = this;
       sn = $(this).data('sn');
       def = {
-        'elem': '#primary-content',
-        'type': 'primary',
-        'file': 'main.html'
+        elem: '#primary-content',
+        type: 'primary',
+        file: 'main.html'
       };
       $.extend(def, options);
-      return $(this).snModels('load', def, function(text) {
+      return $(this).snModels('load', def, function(s) {
         $(def.elem).html($(_this).snWiki('primary', {
-          'text': text
+          text: s
         }));
         return $(_this).snTriggers('spoiler');
       });
@@ -502,14 +484,14 @@ $(function() {
       _this = this;
       sn = $(this).data('sn');
       def = {
-        'elem': '#side-content',
-        'type': 'side',
-        'file': 'news.html'
+        elem: '#side-content',
+        type: 'side',
+        file: 'news.html'
       };
       $.extend(def, options);
-      return $(this).snModels('load', def, function(text) {
+      return $(this).snModels('load', def, function(s) {
         return $(def.elem).html($(_this).snWiki('side', {
-          'text': text
+          text: s
         }));
       });
     },
@@ -521,9 +503,9 @@ $(function() {
       }
       sn = $(this).data('sn');
       def = {
-        'url': '',
-        'type': 'view',
-        'file': 'news.html'
+        url: '',
+        type: 'view',
+        file: 'news.html'
       };
       $.extend(def, options);
       switch (def.type) {
@@ -582,51 +564,51 @@ $(function() {
       }
       _this = this;
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(true, def, options);
       text = def.text;
       text = $(_this).snWiki('tags', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('formating', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('headings', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('externalLinks', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('fileLinks', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('internalLinks', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('mailTo', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('photo', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('image', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('fonts', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('anchor', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('indPrimary', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('spoiler', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('spaces', {
-        'text': text
+        text: text
       });
       return text;
     },
@@ -638,54 +620,54 @@ $(function() {
       }
       _this = this;
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(true, def, options);
       text = def.text;
       text = $(_this).snWiki('tags', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('formating', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('headings', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('externalLinks', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('fileLinks', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('internalLinks', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('mailTo', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('photo', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('image', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('fonts', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('anchor', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('gismeteo', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('indSide', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('sideMenu', {
-        'text': text
+        text: text
       });
       text = $(_this).snWiki('spaces', {
-        'text': text
+        text: text
       });
       return text;
     },
@@ -696,7 +678,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -709,7 +691,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -731,7 +713,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -745,7 +727,7 @@ $(function() {
       }
       sn = $(this).data('sn');
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -758,7 +740,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -772,7 +754,7 @@ $(function() {
       }
       sn = $(this).data('sn');
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -786,7 +768,7 @@ $(function() {
       }
       sn = $(this).data('sn');
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -800,7 +782,7 @@ $(function() {
       }
       sn = $(this).data('sn');
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -813,7 +795,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -826,7 +808,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -839,7 +821,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -852,7 +834,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -865,7 +847,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -878,7 +860,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -891,7 +873,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       sn = $(this).data('sn');
@@ -905,7 +887,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -918,7 +900,7 @@ $(function() {
         options = {};
       }
       def = {
-        'text': ''
+        text: ''
       };
       $.extend(def, options);
       text = def.text;
@@ -946,24 +928,36 @@ $(function() {
 
   methods = {
     init: function(options) {
+      var _this;
+
       if (options == null) {
         options = {};
       }
+      _this = this;
       return $(this).on('click', function() {
-        var def, sn, view;
+        var def, signin, sn;
 
-        sn = $(this).data('sn');
+        sn = $(_this).data('sn');
         if (sn.levels.two === 'signin') {
           def = {
-            'elem': '#primary-content'
+            elem: '#primary-content'
           };
           $.extend(true, def, options);
-          view = new EJS({
+          signin = new EJS({
             url: 'view/signin.html',
             ext: '.html'
+          }).render({
+            signinFormEnter: new EJS({
+              url: 'view/signinFormEnter.html',
+              ext: '.html'
+            }).render(),
+            signinFormReg: new EJS({
+              url: 'view/signinFormReg.html',
+              ext: '.html'
+            }).render()
           });
-          $(def.elem).html($(this).snWiki('primary', {
-            'text': view.text
+          $(def.elem).html($(_this).snWiki('primary', {
+            'text': signin
           }));
           return $(this).snSignin('triggers', def);
         }
@@ -1012,9 +1006,9 @@ $(function() {
 
         __this = this;
         check = $(_this).snSignin('checkField', {
-          'type': $(this).data('check-type'),
-          'value': $(this).val(),
-          'caption': $(this).data('def-value')
+          type: $(this).data('check-type'),
+          value: $(this).val(),
+          caption: $(this).data('def-value')
         });
         return $('.signin-form-check').each(function() {
           if ($(this).data('check-type') === $(__this).data('check-type')) {
@@ -1041,12 +1035,12 @@ $(function() {
         options = {};
       }
       def = {
-        'type': 'post',
-        'value': '',
-        'caption': '',
-        'error': true,
-        'start': 'В поле',
-        'exp': ''
+        type: 'post',
+        value: '',
+        caption: '',
+        error: true,
+        start: 'В поле',
+        exp: ''
       };
       $.extend(true, def, options);
       value = def.value.toString();
@@ -1207,7 +1201,7 @@ $(function() {
         options = {};
       }
       def = {
-        'error': false
+        error: false
       };
       _this = this;
       $.extend(true, def, options);
@@ -1218,9 +1212,9 @@ $(function() {
 
         __this = this;
         check = $(_this).snSignin('checkField', {
-          'type': $(this).data('check-type'),
-          'value': $(this).val(),
-          'caption': $(this).data('def-value')
+          type: $(this).data('check-type'),
+          value: $(this).val(),
+          caption: $(this).data('def-value')
         });
         if (check.error !== void 0) {
           if (check.error) {
@@ -1273,7 +1267,7 @@ $(function() {
         options = {};
       }
       def = {
-        'error': false
+        error: false
       };
       $.extend(true, def, options);
       if (def.error) {
@@ -1291,16 +1285,16 @@ $(function() {
         options = {};
       }
       def = {
-        'debug': false,
-        'type': 'jsonp',
-        'firstname': $('#signin-input-firstname').val(),
-        'lastname': $('#signin-input-lastname').val(),
-        'patronymic': $('#signin-input-patronymic').val(),
-        'email': $('#signin-input-email').val(),
-        'phone': $('#signin-input-phone').val(),
-        'company': $('#signin-input-company').val(),
-        'post': $('#signin-input-post').val(),
-        'error': false
+        debug: false,
+        type: 'jsonp',
+        firstname: $('#signin-input-firstname').val(),
+        lastname: $('#signin-input-lastname').val(),
+        patronymic: $('#signin-input-patronymic').val(),
+        email: $('#signin-input-email').val(),
+        phone: $('#signin-input-phone').val(),
+        company: $('#signin-input-company').val(),
+        post: $('#signin-input-post').val(),
+        error: false
       };
       _this = this;
       $.extend(true, def, options);
@@ -1310,7 +1304,7 @@ $(function() {
       sn = $(this).data('sn');
       return $.ajax({
         url: 'http://oz.st-n.ru/server-dev/?callback=?',
-        async: true,
+        async: false,
         type: 'POST',
         data: {
           action: 'registration',

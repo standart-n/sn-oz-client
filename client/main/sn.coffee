@@ -5,10 +5,10 @@ $ ->
 		init: (options = {}) ->
 
 			def =
-				'levels':{}
-				'users':{}
-				'content':{}
-				'result':{}
+				levels:{}
+				users:{}
+				content:{}
+				result:{}
 
 			$.extend true, def, options
 
