@@ -12,10 +12,14 @@ $ ->
 
 			$.extend true, def, options
 
+			console.log 'start...'
 			$(this).data 'sn', def
+			console.log 'configuration...'
 			$(this).snConf()
+			console.log 'layout...'
 			$(this).snLayout()
-			$(this).snEvents('href':'#autoload')			
+			console.log 'autoload...'
+			$(this).snEvents href: '#autoload'
 
 
 	$.fn.sn = (sn = {}) ->

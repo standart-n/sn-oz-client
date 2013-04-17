@@ -22,12 +22,12 @@ $ ->
 				type: 'primary'
 			$.extend def, options
 			
-			if def.file
+			if def.file?
 				$(this).snModels 'load', def, (s) ->
 					$(def.elem).html $(_this).snWiki('primary', text: s)
 					$(_this).snTriggers 'spoiler'
 			else
-				if def.text
+				if def.text?
 					$(def.elem).html $(_this).snWiki('primary', text: def.text)
 					$(_this).snTriggers 'spoiler'
 
@@ -41,12 +41,12 @@ $ ->
 				type: 'side'
 			$.extend def, options
 			
-			if def.file
+			if def.file?
 				$(this).snModels 'load', def, (s) ->
 					$(def.elem).html $(_this).snWiki('side', text: s)
 			else
-				if def.text				
-					$(def.elem).html $(_this).snWiki('side', text: text)
+				if def.text?
+					$(def.elem).html $(_this).snWiki('side', text: def.text)
 
 		load: (options = {},callback) ->
 			sn = $(this).data 'sn'
@@ -70,7 +70,8 @@ $ ->
 				cache: off
 				dataType: 'html'
 				success: (text) ->
-					callback(text) if callback
+					if text?
+						callback(text) if callback
 
 
 

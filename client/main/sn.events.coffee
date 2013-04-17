@@ -10,6 +10,7 @@ $ ->
 			
 			sn = $(this).data 'sn'
 			sn.href = def.href + '/:'
+			console.info 'url: ' + sn.href
 			sn.levels =
 				one: sn.href.replace /(.*)#(.*?)\/(.*)/, '$2'
 				two: sn.href.replace /(.*)#(.*?)\/(.*?)\/(.*)/, '$3'
@@ -30,19 +31,20 @@ $ ->
 
 				else
 					$('html,body').animate scrollTop:0, 0
-					if sn.levels.one isnt sn.part
-						$(this).snTriggers('switchBar', link: sn.levels.one)
-						$(this).snModels('side', file: sn.levels.one + '.html')
-						$(this).snTriggers('linksSide')
-						$(this).snTriggers('switcherSide')
-						sn.part = sn.levels.one
 
 					if sn.levels.two is 'text'
-						$(this).snTriggers('switchSide', link: sn.levels.three)
-						$(this).snModels('primary', file: sn.levels.three + '.html')
-					else
-						$(this).snTriggers('switchSide', link: sn.levels.two)
-						$(this).snModels('primary', file: sn.levels.two+'.html')
+						if sn.levels.one isnt sn.part
+							$(this).snTriggers('switchBar', link: sn.levels.one)
+							$(this).snModels('side', file: sn.levels.one + '.html')
+							$(this).snTriggers('linksSide')
+							$(this).snTriggers('switcherSide')
+							sn.part = sn.levels.one
+
+							$(this).snTriggers('switchSide', link: sn.levels.three)
+							$(this).snModels('primary', file: sn.levels.three + '.html')
+							
+							# $(this).snTriggers('switchSide', link: sn.levels.two)
+							# $(this).snModels('primary', file: sn.levels.two+'.html')
 
 			$(this).data 'sn', sn
 			$(this).snEvents 'anchor'

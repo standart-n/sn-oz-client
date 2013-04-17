@@ -2,8 +2,9 @@ $ ->
 
 	methods =
 		init: (options = {}) ->
+			_this = this
 			$(this).on 'click',() ->
-				sn = $(this).data 'sn'
+				sn = $(_this).data 'sn'
 				if sn.levels.two is 'horoscope'
 					alert 'horoscope'
 
@@ -33,5 +34,5 @@ $ ->
 			else 
 				$.error 'Метод ' + sn + ' не существует'
 
-	$('#sn').snHoroscope()
+	# $('#sn').snHoroscope()
 

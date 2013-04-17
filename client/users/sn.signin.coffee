@@ -2,22 +2,27 @@ $ ->
 
 	methods =
 		init: (options = {}) ->
-			_this = this
-			$(this).on 'click', () ->
-				sn = $(_this).data 'sn'
-				if sn.levels.two is 'signin'
-					def =
-						view: 
-							signin: new EJS(url: 'view/signin.html', ext: '.html').render
-									signinFormEnter:	new EJS(url: 'view/signinFormEnter.html', ext: '.html').render()
-									signinFormReg:		new EJS(url: 'view/signinFormReg.html', ext: '.html').render()
-						
-					$.extend true, def, options
+			sn = $(this).data 'sn'
+			def =
+				view: 
+					signin: new EJS(url: 'view/signin.html', ext: '.html').render
+							signinFormEnter:	new EJS(url: 'view/signinFormEnter.html', ext: '.html').render()
+							signinFormReg:		new EJS(url: 'view/signinFormReg.html', ext: '.html').render()
+							signinBlockHelp:	new EJS(url: 'view/signinBlockHelp.html', ext: '.html').render()
 
-					$(_this).snModels 'primary', text: def.view.signin
-					$(_this).snSignin 'triggers', def
+					signinSide: new EJS(url: 'view/signinSide.html', ext: '.html').render()
+				
+			$.extend true, def, options
 
-		triggers: (def = {}) ->
+			$(this).snModels 'primary', text: def.view.signin
+			$(this).snModels 'side', text: def.view.signinSide
+			$(this).snTriggers 'switchSide', link: sn.levels.two
+			$(this).snSignin 'triggers', def
+
+		help: () ->
+			$('#signin-block-help').show()
+
+		triggers: (options = {}) ->
 			_this = this
 			$('.signin-input').on 'focus', () ->
 				if $(this).val() is $(this).data('def-value') or $(this).val() is ''
@@ -58,7 +63,7 @@ $ ->
 
 				$('.signin-form-check').each () ->
 					if $(this).data('check-type') is $(__this).data('check-type')
-						if check.error isnt undefined
+						if check.error?
 							if $(this).hasClass 'signin-form-check-clear'
 								$(this).removeClass 'signin-form-check-clear'
 
@@ -80,5 +85,4 @@ $ ->
 			else 
 				$.error 'Метод ' + sn + ' не существует'
 
-	$('#sn').snSignin()
 

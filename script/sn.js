@@ -7,6 +7,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      return conlole.log('design');
     }
   };
   return $.fn.snDesign = function(sn) {
@@ -42,11 +43,15 @@ $(function() {
         result: {}
       };
       $.extend(true, def, options);
+      console.log('start...');
       $(this).data('sn', def);
+      console.log('configuration...');
       $(this).snConf();
+      console.log('layout...');
       $(this).snLayout();
+      console.log('autoload...');
       return $(this).snEvents({
-        'href': '#autoload'
+        href: '#autoload'
       });
     }
   };
@@ -82,6 +87,7 @@ $(function() {
       $.extend(true, def, options);
       sn = $(this).data('sn');
       sn.href = def.href + '/:';
+      console.info('url: ' + sn.href);
       sn.levels = {
         one: sn.href.replace(/(.*)#(.*?)\/(.*)/, '$2'),
         two: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/, '$3'),
@@ -110,31 +116,24 @@ $(function() {
           $('html,body').animate({
             scrollTop: 0
           }, 0);
-          if (sn.levels.one !== sn.part) {
-            $(this).snTriggers('switchBar', {
-              link: sn.levels.one
-            });
-            $(this).snModels('side', {
-              file: sn.levels.one + '.html'
-            });
-            $(this).snTriggers('linksSide');
-            $(this).snTriggers('switcherSide');
-            sn.part = sn.levels.one;
-          }
           if (sn.levels.two === 'text') {
-            $(this).snTriggers('switchSide', {
-              link: sn.levels.three
-            });
-            $(this).snModels('primary', {
-              file: sn.levels.three + '.html'
-            });
-          } else {
-            $(this).snTriggers('switchSide', {
-              link: sn.levels.two
-            });
-            $(this).snModels('primary', {
-              file: sn.levels.two + '.html'
-            });
+            if (sn.levels.one !== sn.part) {
+              $(this).snTriggers('switchBar', {
+                link: sn.levels.one
+              });
+              $(this).snModels('side', {
+                file: sn.levels.one + '.html'
+              });
+              $(this).snTriggers('linksSide');
+              $(this).snTriggers('switcherSide');
+              sn.part = sn.levels.one;
+              $(this).snTriggers('switchSide', {
+                link: sn.levels.three
+              });
+              $(this).snModels('primary', {
+                file: sn.levels.three + '.html'
+              });
+            }
           }
       }
       $(this).data('sn', sn);
@@ -485,7 +484,7 @@ $(function() {
         type: 'primary'
       };
       $.extend(def, options);
-      if (def.file) {
+      if (def.file != null) {
         return $(this).snModels('load', def, function(s) {
           $(def.elem).html($(_this).snWiki('primary', {
             text: s
@@ -493,7 +492,7 @@ $(function() {
           return $(_this).snTriggers('spoiler');
         });
       } else {
-        if (def.text) {
+        if (def.text != null) {
           $(def.elem).html($(_this).snWiki('primary', {
             text: def.text
           }));
@@ -514,16 +513,16 @@ $(function() {
         type: 'side'
       };
       $.extend(def, options);
-      if (def.file) {
+      if (def.file != null) {
         return $(this).snModels('load', def, function(s) {
           return $(def.elem).html($(_this).snWiki('side', {
             text: s
           }));
         });
       } else {
-        if (def.text) {
+        if (def.text != null) {
           return $(def.elem).html($(_this).snWiki('side', {
-            text: text
+            text: def.text
           }));
         }
       }
@@ -557,8 +556,10 @@ $(function() {
         cache: false,
         dataType: 'html',
         success: function(text) {
-          if (callback) {
-            return callback(text);
+          if (text != null) {
+            if (callback) {
+              return callback(text);
+            }
           }
         }
       });
@@ -968,40 +969,93 @@ $(function() {
       }
       _this = this;
       return $(this).on('click', function() {
-        var def, sn;
+        var sn;
 
         sn = $(_this).data('sn');
-        if (sn.levels.two === 'signin') {
-          def = {
-            view: {
-              signin: new EJS({
-                url: 'view/signin.html',
-                ext: '.html'
-              }).render({
-                signinFormEnter: new EJS({
-                  url: 'view/signinFormEnter.html',
-                  ext: '.html'
-                }).render(),
-                signinFormReg: new EJS({
-                  url: 'view/signinFormReg.html',
-                  ext: '.html'
-                }).render()
-              })
-            }
-          };
-          $.extend(true, def, options);
-          $(_this).snModels('primary', {
-            text: def.view.signin
-          });
-          return $(_this).snSignin('triggers', def);
+        if (sn.levels.one === 'users') {
+          switch (sn.levels.two) {
+            case 'signin':
+              return $(_this).snSignin();
+            case 'help':
+              return $(_this).snSignin('help');
+          }
         }
       });
+    }
+  };
+  $.fn.snUsers = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      if (typeof sn === 'object' || !sn) {
+        return methods.init.apply(this, arguments);
+      } else {
+        return $.error('Метод ' + sn + ' не существует');
+      }
+    }
+  };
+  return $('#sn').snUsers();
+});
+
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
+      var def, sn;
+
+      if (options == null) {
+        options = {};
+      }
+      sn = $(this).data('sn');
+      def = {
+        view: {
+          signin: new EJS({
+            url: 'view/signin.html',
+            ext: '.html'
+          }).render({
+            signinFormEnter: new EJS({
+              url: 'view/signinFormEnter.html',
+              ext: '.html'
+            }).render(),
+            signinFormReg: new EJS({
+              url: 'view/signinFormReg.html',
+              ext: '.html'
+            }).render(),
+            signinBlockHelp: new EJS({
+              url: 'view/signinBlockHelp.html',
+              ext: '.html'
+            }).render()
+          }),
+          signinSide: new EJS({
+            url: 'view/signinSide.html',
+            ext: '.html'
+          }).render()
+        }
+      };
+      $.extend(true, def, options);
+      $(this).snModels('primary', {
+        text: def.view.signin
+      });
+      $(this).snModels('side', {
+        text: def.view.signinSide
+      });
+      $(this).snTriggers('switchSide', {
+        link: sn.levels.two
+      });
+      return $(this).snSignin('triggers', def);
     },
-    triggers: function(def) {
+    help: function() {
+      return $('#signin-block-help').show();
+    },
+    triggers: function(options) {
       var _this;
 
-      if (def == null) {
-        def = {};
+      if (options == null) {
+        options = {};
       }
       _this = this;
       $('.signin-input').on('focus', function() {
@@ -1021,19 +1075,19 @@ $(function() {
       });
       $('#signin-form-enter').on('submit', function(e) {
         e.preventDefault();
-        return $(_this).snSignin('checkEnterForm');
+        return $(_this).snEnter('checkEnterForm');
       });
       $('#signin-button-enter').on('click', function(e) {
         e.preventDefault();
-        return $(_this).snSignin('checkEnterForm');
+        return $(_this).snEnter('checkEnterForm');
       });
       $('#signin-form-reg').on('submit', function(e) {
         e.preventDefault();
-        return $(_this).snSignin('checkRegForm');
+        return $(_this).snRegistration('checkRegForm');
       });
       $('#signin-button-reg').on('click', function(e) {
         e.preventDefault();
-        return $(_this).snSignin('checkRegForm');
+        return $(_this).snRegistration('checkRegForm');
       });
       return $('.signin-type-reg').on('keyup', function() {
         var check, __this;
@@ -1046,7 +1100,7 @@ $(function() {
         });
         return $('.signin-form-check').each(function() {
           if ($(this).data('check-type') === $(__this).data('check-type')) {
-            if (check.error !== void 0) {
+            if (check.error != null) {
               if ($(this).hasClass('signin-form-check-clear')) {
                 $(this).removeClass('signin-form-check-clear');
               }
@@ -1061,17 +1115,32 @@ $(function() {
           }
         });
       });
-    },
-    checkEnterForm: function(options) {
-      var sn;
+    }
+  };
+  return $.fn.snSignin = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      if (typeof sn === 'object' || !sn) {
+        return methods.init.apply(this, arguments);
+      } else {
+        return $.error('Метод ' + sn + ' не существует');
+      }
+    }
+  };
+});
 
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
       if (options == null) {
         options = {};
       }
-      sn = $(this).data(sn);
-      alert('enter');
-      console.info('sn', sn);
-      return false;
     },
     checkRegForm: function(options) {
       var def, _this;
@@ -1136,7 +1205,7 @@ $(function() {
         });
       });
       console.info('afterCheckRegForm', def);
-      $(this).snSignin('afterCheckRegForm', def);
+      $(this).snRegistration('afterCheckRegForm', def);
       return false;
     },
     afterCheckRegForm: function(options) {
@@ -1154,7 +1223,7 @@ $(function() {
       } else {
         alert('bez oshibok');
         console.info('regOnServer');
-        return $(this).snSignin('regOnServer');
+        return $(this).snRegistration('regOnServer');
       }
     },
     regOnServer: function(options) {
@@ -1208,14 +1277,8 @@ $(function() {
           if (sn.result.alert) {
             alert(sn.result.alert);
           }
-          if (!s.reg) {
-            if (s.valid) {
-              console.log('afterCheckRegFormOnServer', s);
-              return $(_this).snSignin('afterCheckRegFormOnServer', s);
-            }
-          } else {
-
-          }
+          console.log('afterCheckRegFormOnServer', s);
+          return $(_this).snRegistration('afterCheckRegFormOnServer', s);
         },
         error: function(XMLHttpRequest, textStatus, error) {
           return console.error('ajax:', textStatus, error);
@@ -1234,6 +1297,9 @@ $(function() {
       };
       $.extend(true, def, options);
       sn = $(this).data('sn');
+      if (sn.result.reg) {
+        $(this).snRegistration('afterSuccessReg', def);
+      }
       if (!sn.result.reg) {
         def.error = true;
         if (sn.result.valid) {
@@ -1275,7 +1341,7 @@ $(function() {
       }
     }
   };
-  $.fn.snSignin = function(sn) {
+  return $.fn.snRegistration = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -1289,7 +1355,43 @@ $(function() {
       }
     }
   };
-  return $('#sn').snSignin();
+});
+
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
+      if (options == null) {
+        options = {};
+      }
+    },
+    checkEnterForm: function(options) {
+      var sn;
+
+      if (options == null) {
+        options = {};
+      }
+      sn = $(this).data(sn);
+      alert('enter');
+      console.info('sn', sn);
+      return false;
+    }
+  };
+  return $.fn.snEnter = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      if (typeof sn === 'object' || !sn) {
+        return methods.init.apply(this, arguments);
+      } else {
+        return $.error('Метод ' + sn + ' не существует');
+      }
+    }
+  };
 });
 
 $(function() {
@@ -1458,7 +1560,7 @@ $(function() {
       return def;
     }
   };
-  $.fn.snValidation = function(sn) {
+  return $.fn.snValidation = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -1472,7 +1574,6 @@ $(function() {
       }
     }
   };
-  return $('#sn').snSignin();
 });
 
 $(function() {
@@ -1480,13 +1581,16 @@ $(function() {
 
   methods = {
     init: function(options) {
+      var _this;
+
       if (options == null) {
         options = {};
       }
+      _this = this;
       return $(this).on('click', function() {
         var sn;
 
-        sn = $(this).data('sn');
+        sn = $(_this).data('sn');
         if (sn.levels.two === 'horoscope') {
           return alert('horoscope');
         }
@@ -1515,7 +1619,7 @@ $(function() {
       });
     }
   };
-  $.fn.snHoroscope = function(sn) {
+  return $.fn.snHoroscope = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -1529,5 +1633,4 @@ $(function() {
       }
     }
   };
-  return $('#sn').snHoroscope();
 });

@@ -3,6 +3,7 @@ $ ->
 	methods =
 		init: (options = {}) ->
 			# nothing
+			conlole.log 'design'
 
 
 	$.fn.snDesign = (sn = {}) ->
