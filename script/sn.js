@@ -791,16 +791,11 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      text = text.replace(/======(.*?)======\n/mg, "<h6>$1</h6>");
-      text = text.replace(/=====(.*?)=====\n/mg, "<h5>$1</h5>");
-      text = text.replace(/====(.*?)====\n/mg, "<h4>$1</h4>");
-      text = text.replace(/===(.*?)===\n/mg, "<h3>$1</h3>");
-      text = text.replace(/==(.*?)==\n/mg, "<h2>$1</h2>");
-      text = text.replace(/======(.*?)======/mg, "<h6>$1</h6>");
-      text = text.replace(/=====(.*?)=====/mg, "<h5>$1</h5>");
-      text = text.replace(/====(.*?)====/mg, "<h4>$1</h4>");
-      text = text.replace(/===(.*?)===/mg, "<h3>$1</h3>");
-      return text = text.replace(/==(.*?)==/mg, "<h2>$1</h2>");
+      text = text.replace(/======(.*?)======\n?/mg, "<h6>$1</h6>");
+      text = text.replace(/=====(.*?)=====\n?/mg, "<h5>$1</h5>");
+      text = text.replace(/====(.*?)====\n?/mg, "<h4>$1</h4>");
+      text = text.replace(/===(.*?)===\n?/mg, "<h3>$1</h3>");
+      return text = text.replace(/==(.*?)==\n?/mg, "<h2>$1</h2>");
     },
     externalLinks: function(options) {
       var def, text;
@@ -882,7 +877,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[\[color:([a-zA-Z0-9\-\.\/\?%\#_]+)\](.*?)\]/mg, '<font style="color:$1">$2</font>').replace(/\[\[color:red\](.*?)\]/mg, '<font style="color:#ff0000">$1</font>').replace(/\[\[color:silver\](.*?)\]/mg, '<font style="color:#666">$1</font>');
+      return text.replace(/\[\[color:\#([a-zA-Z0-9\-\.\/\?%\#_]+)\](.*?)\]/mg, '<font style="color:#$1">$2</font>').replace(/\[\[color:([a-zA-Z0-9\-\.\/\?%\#_]+)\](.*?)\]/mg, '<span class="$1">$2</span>');
     },
     internalLinks: function(options) {
       var def, text;
@@ -908,7 +903,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<<\n/g, '<div class="primary-box-outer"><div class="primary-box wiki-text">').replace(/>>>\n/g, '</div></div>').replace(/<<</g, '<div class="primary-box-outer"><div class="primary-box wiki-text">').replace(/>>>/g, '</div></div>');
+      return text.replace(/<<<\n?/g, '<div class="primary-box-outer"><div class="primary-box wiki-text">').replace(/>>>\n?/g, '</div></div>');
     },
     indSide: function(options) {
       var def, text;
@@ -921,7 +916,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<<\n/g, '<div class="side-box-outer"><div class="side-box wiki-text">').replace(/>>>\n/g, '</div></div>').replace(/<<</g, '<div class="side-box-outer"><div class="side-box wiki-text">').replace(/>>>/g, '</div></div>');
+      return text.replace(/<<<\n?/g, '<div class="side-box-outer"><div class="side-box wiki-text">').replace(/>>>\n?/g, '</div></div>');
     },
     tags: function(options) {
       var def, text;
@@ -934,7 +929,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<(.*?)>\n/g, '<$1>').replace(/<(.*?)>\r/g, '<$1>').replace(/<(.*?)>\r\n/g, '<$1>').replace(/<\/(.*?)>\n/g, '</$1>').replace(/<\/(.*?)>\r/g, '</$1>').replace(/<\/(.*?)>\r\n/g, '</$1>').replace(/<(.*?)>\n/g, '<$1>').replace(/<(.*?)>\r/g, '<$1>').replace(/<(.*?)>\r\n/g, '<$1>').replace(/<\/(.*?)>\n/g, '</$1>').replace(/<\/(.*?)>\r/g, '</$1>').replace(/<\/(.*?)>\r\n/g, '</$1>');
+      return text.replace(/<(.*?)>\n?/g, '<$1>').replace(/<\/(.*?)>\n?/g, '</$1>');
     },
     anchor: function(options) {
       var def, text;
@@ -947,7 +942,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]\n/g, '<a id="anchor-$1"></a>').replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a id="anchor-$1"></a>');
+      return text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]\n?/g, '<a id="anchor-$1"></a>');
     },
     sideMenu: function(options) {
       var def, text;
@@ -960,7 +955,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_\:]+) ([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/mg, '<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
+      return text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_\:]+) ([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]\n?/mg, '<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
     },
     gismeteo: function(options) {
       var def, sn, text;
@@ -974,7 +969,7 @@ $(function() {
       $.extend(def, options);
       sn = $(this).data('sn');
       text = def.text;
-      return text.replace(/\[gismeteo\]/mg, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="98%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>');
+      return text.replace(/\[gismeteo\]\n?/mg, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="98%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>');
     },
     spoiler: function(options) {
       var def, text;
@@ -987,7 +982,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<\[(.+)\]\n/g, '<div class="primary-box-spoiler">' + '<a href="#spoiler" class="wiki-link primary-box-spoiler-caption">$1</a>' + '<div class="primary-box-spoiler-body">').replace(/>>\n/g, '</div></div>').replace(/<<\[(.+)\]/g, '<div class="primary-box-spoiler">' + '<a href="#spoiler" class="wiki-link primary-box-spoiler-caption">$1</a>' + '<div class="primary-box-spoiler-body">').replace(/>>/g, '</div></div>');
+      return text.replace(/<<\[(.+)\]\n?/g, '<div class="primary-box-spoiler">' + '<a href="#spoiler" class="wiki-link primary-box-spoiler-caption">$1</a>' + '<div class="primary-box-spoiler-body">').replace(/>>\n?/g, '</div></div>');
     },
     spaces: function(options) {
       var def, text;
@@ -1000,7 +995,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/^\n/, "").replace(/\]\n/g, "]").replace(/\%\>\n/g, "%>").replace(/\n\n/g, "<br><br>").replace(/\n/g, "<br>").replace(/<br>\n<div class=\"primary-box-outer\">/g, "<div class=\"primary-box-outer\">").replace(/<br><div class=\"primary-box-outer\">/g, "<div class=\"primary-box-outer\">");
+      return text.replace(/^\n/, "").replace(/\]\n/g, "]").replace(/\%\>\n/g, "%>").replace(/\n/g, "<br>").replace(/<br>\n?(<div class=\"primary-box-outer\">)/g, "$1");
     }
   };
   return $.fn.snWiki = function(sn) {

@@ -589,6 +589,66 @@ a.side-box-link-hover {
   color: #333;
 }
 
+.wiki-text span.black {
+  color: #000;
+}
+
+.wiki-text span.grayDarker {
+  color: #222;
+}
+
+.wiki-text span.grayDark {
+  color: #333;
+}
+
+.wiki-text span.gray {
+  color: #555;
+}
+
+.wiki-text span.grayLight {
+  color: #999;
+}
+
+.wiki-text span.grayLighter {
+  color: #eee;
+}
+
+.wiki-text span.white {
+  color: #fff;
+}
+
+.wiki-text span.blue {
+  color: #049cdb;
+}
+
+.wiki-text span.blueDark {
+  color: #0064cd;
+}
+
+.wiki-text span.green {
+  color: #46a546;
+}
+
+.wiki-text span.red {
+  color: #9d261d;
+}
+
+.wiki-text span.yellow {
+  color: #ffc40d;
+}
+
+.wiki-text span.orange {
+  color: #f89406;
+}
+
+.wiki-text span.pink {
+  color: #c3325f;
+}
+
+.wiki-text span.purple {
+  color: #7a43b6;
+}
+
 .wiki-image-left {
   float: left;
   margin: 5px 10px 5px 0;
