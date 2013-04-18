@@ -8,7 +8,6 @@ $ ->
 					signin: new EJS(url: 'view/signin.html', ext: '.html').render
 							signinFormEnter:	new EJS(url: 'view/signinFormEnter.html', ext: '.html').render()
 							signinFormReg:		new EJS(url: 'view/signinFormReg.html', ext: '.html').render()
-							signinBlockHelp:	new EJS(url: 'view/signinBlockHelp.html', ext: '.html').render()
 
 					signinSide: new EJS(url: 'view/signinSide.html', ext: '.html').render()
 				
@@ -16,13 +15,30 @@ $ ->
 
 			$(this).snModels 'primary', text: def.view.signin
 			$(this).snModels 'side', text: def.view.signinSide
-			$(this).snTriggers 'switchSide', link: sn.levels.two
+			$(this).snTriggers 'switch', 'side', sn.levels.two
+			$(this).snTriggers 'switch', 'bar', sn.levels.one
+			$(this).snTriggers 'links', 'side'
+			$(this).snTriggers 'hover', 'side'
 			$(this).snSignin 'triggers', def
 
-		help: () ->
-			$('#signin-block-help').show()
+		help: (options = {}) ->
+
+			console.log 'signin: ' + 'help'
+
+			sn = $(this).data 'sn'
+			def =
+				view: 
+					signinBlockHelp: new EJS(url: 'view/signinBlockHelp.html', ext: '.html').render()
+
+			$.extend true, def, options
+			
+			$(this).snModels 'primary', text: def.view.signinBlockHelp, position: 'before'
+
 
 		triggers: (options = {}) ->
+
+			console.log 'signin: ' + 'triggers'
+
 			_this = this
 			$('.signin-input').on 'focus', () ->
 				if $(this).val() is $(this).data('def-value') or $(this).val() is ''

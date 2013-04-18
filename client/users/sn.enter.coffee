@@ -5,6 +5,9 @@ $ ->
 
 
 		checkEnterForm: (options = {}) ->
+
+			console.log 'enter: ' + 'checkEnterForm'
+
 			sn = $(this).data sn
 			alert 'enter'
 			console.info 'sn', sn

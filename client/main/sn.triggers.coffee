@@ -3,13 +3,40 @@ $ ->
 	methods =
 		init: (options = {}) ->
 
+		switch: (type = '', link = '') ->
+			switch type
+				when 'side'
+					$(this).snTriggers 'switchSide', link: link
+				when 'bar'
+					$(this).snTriggers 'switchBar', link: link
+
+		hover: (type = '') ->
+			switch type
+				when 'side'
+					$(this).snTriggers 'switcherSide'
+				when 'bar'
+					$(this).snTriggers 'switcherBar'
+
+		links: (type = '') ->
+			switch type
+				when 'side'
+					$(this).snTriggers 'linksSide'
+				when 'primary'
+					$(this).snTriggers 'linksPrimary'
+				when 'bar'
+					$(this).snTriggers 'linksBar'
+
 		linksSide: () ->
+
+			console.log 'trigger: ' + 'linksSide'
 
 			_this = this
 			$('.side-box a').on 'click', () ->
 				$(_this).snEvents href: $(this).attr('href')
 
 		linksPrimary: () ->
+
+			console.log 'trigger: ' + 'linksPrimary'
 
 			_this = this
 			$('.primary-box a').on 'click', () ->
@@ -18,10 +45,13 @@ $ ->
 		linksBar: () ->
 
 			_this = this
+			console.log 'trigger: ' + 'linksBar'
 			$('a').on 'click', () ->
 				$(_this).snEvents href: $(this).attr('href')
 
 		switchBar: (options = {}) ->
+
+			console.log 'trigger: ' + 'switchBar'
 
 			def =
 				link: 'main'
@@ -41,6 +71,8 @@ $ ->
 
 		switchSide: (options = {}) ->
 
+			console.log 'trigger: ' + 'switchSide'
+
 			def=
 				link: 'above'
 
@@ -59,6 +91,8 @@ $ ->
 
 		switcherBar: () ->
 
+			console.log 'trigger: ' + 'switcherBar'
+
 			$('.bar-button').on 'mouseover', () ->
 				if !$(this).hasClass('bar-button-active')
 					$(this)
@@ -73,6 +107,8 @@ $ ->
 
 		switcherSide: () ->
 
+			console.log 'trigger: ' + 'switcherSide'
+
 			$('.side-box-link').on 'mouseover', () ->
 				if !$(this).hasClass('side-box-link-active')
 					$(this)
@@ -86,6 +122,8 @@ $ ->
 						.addClass('side-box-link-normal')
 
 		spoiler: () ->
+
+			console.log 'trigger: ' + 'spoiler'
 
 			$('.primary-box-spoiler-caption').on 'click', () ->
 				if $(this).hasClass('primary-box-spoiler-caption-open')

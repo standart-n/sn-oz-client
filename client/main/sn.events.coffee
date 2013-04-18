@@ -19,14 +19,14 @@ $ ->
 
 			switch sn.levels.one
 				when 'autoload'
-					$(this).snModels('primary', file: 'main.html')
-					$(this).snModels('side', file: 'main.html')
-					$(this).snTriggers('switchSide', link: 'main')
-					$(this).snTriggers('linksBar')
-					$(this).snTriggers('linksSide')
-					$(this).snTriggers('linksPrimary')
-					$(this).snTriggers('switcherBar')
-					$(this).snTriggers('switcherSide')
+					$(this).snModels 'primary', file: 'main.html'
+					$(this).snModels 'side', file: 'main.html'
+					$(this).snTriggers 'switch', 'side', 'main'
+					$(this).snTriggers 'links', 'bar'
+					$(this).snTriggers 'links', 'side'
+					$(this).snTriggers 'links', 'primary'
+					$(this).snTriggers 'hover', 'bar'
+					$(this).snTriggers 'hover', 'side'
 					sn.part = 'main'
 
 				else
@@ -34,14 +34,13 @@ $ ->
 
 					if sn.levels.two is 'text'
 						if sn.levels.one isnt sn.part
-							$(this).snTriggers('switchBar', link: sn.levels.one)
-							$(this).snModels('side', file: sn.levels.one + '.html')
-							$(this).snTriggers('linksSide')
-							$(this).snTriggers('switcherSide')
+							$(this).snModels 'side', file: sn.levels.one + '.html'
+							$(this).snModels 'primary', file: sn.levels.three + '.html'
+							$(this).snTriggers 'links', 'side'
+							$(this).snTriggers 'switch', 'bar', sn.levels.one
+							$(this).snTriggers 'switch', 'side', sn.levels.three
+							$(this).snTriggers 'hover', 'side'
 							sn.part = sn.levels.one
-
-							$(this).snTriggers('switchSide', link: sn.levels.three)
-							$(this).snModels('primary', file: sn.levels.three + '.html')
 							
 							# $(this).snTriggers('switchSide', link: sn.levels.two)
 							# $(this).snModels('primary', file: sn.levels.two+'.html')

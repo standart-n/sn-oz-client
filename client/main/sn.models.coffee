@@ -4,6 +4,9 @@ $ ->
 		init: (options = {}) ->
 
 		main: (options = {}) ->
+
+			console.log 'models: ' + 'main'
+
 			_this = this
 			sn = $(this).data 'sn'
 			def =
@@ -15,6 +18,8 @@ $ ->
 
 		primary: (options = {}) ->
 
+			console.log 'models: ' + 'primary'
+
 			_this = this
 			sn = $(this).data 'sn'
 			def =
@@ -24,15 +29,18 @@ $ ->
 			
 			if def.file?
 				$(this).snModels 'load', def, (s) ->
-					$(def.elem).html $(_this).snWiki('primary', text: s)
+					def.text = s
+					$(_this).snModels 'inner', def
 					$(_this).snTriggers 'spoiler'
 			else
 				if def.text?
-					$(def.elem).html $(_this).snWiki('primary', text: def.text)
+					$(_this).snModels 'inner', def
 					$(_this).snTriggers 'spoiler'
 
 
 		side: (options = {}) ->		
+
+			console.log 'models: ' + 'side'
 
 			_this = this
 			sn = $(this).data 'sn'
@@ -43,12 +51,36 @@ $ ->
 			
 			if def.file?
 				$(this).snModels 'load', def, (s) ->
-					$(def.elem).html $(_this).snWiki('side', text: s)
+					def.text = s
+					$(_this).snModels 'inner', def
 			else
 				if def.text?
-					$(def.elem).html $(_this).snWiki('side', text: def.text)
+					$(_this).snModels 'inner', def
+
+		inner: (options = {}) ->
+
+			sn = $(this).data 'sn'
+			def =
+				elem: 		'#side-content'
+				type: 		'side'
+				text: 		''
+				position: 	'place'
+			$.extend def, options
+
+			console.log 'innerText: ' + def.type + ' ' + def.position
+
+			switch def.position
+				when 'place'
+					$(def.elem).html $(this).snWiki(def.type, text: def.text)
+				when 'after'
+					$(def.elem).html $(def.elem).html() + $(this).snWiki(def.type, text: def.text)
+				when 'before'
+					$(def.elem).html $(this).snWiki(def.type, text: def.text) + $(def.elem).html()
+
 
 		load: (options = {},callback) ->
+
+
 			sn = $(this).data 'sn'
 			def =
 				url: ''
@@ -64,6 +96,10 @@ $ ->
 				when 'side'
 					def.url = 'content/' + sn.region.name + '/side_' + def.file
 
+			console.log 'type: ' + def.type
+			console.log 'file: ' + def.file
+			console.log 'url: ' + def.url
+
 			$.ajax
 				url: def.url
 				async: off
@@ -71,6 +107,7 @@ $ ->
 				dataType: 'html'
 				success: (text) ->
 					if text?
+						console.log 'success'
 						callback(text) if callback
 
 

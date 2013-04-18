@@ -102,14 +102,12 @@ $(function() {
           $(this).snModels('side', {
             file: 'main.html'
           });
-          $(this).snTriggers('switchSide', {
-            link: 'main'
-          });
-          $(this).snTriggers('linksBar');
-          $(this).snTriggers('linksSide');
-          $(this).snTriggers('linksPrimary');
-          $(this).snTriggers('switcherBar');
-          $(this).snTriggers('switcherSide');
+          $(this).snTriggers('switch', 'side', 'main');
+          $(this).snTriggers('links', 'bar');
+          $(this).snTriggers('links', 'side');
+          $(this).snTriggers('links', 'primary');
+          $(this).snTriggers('hover', 'bar');
+          $(this).snTriggers('hover', 'side');
           sn.part = 'main';
           break;
         default:
@@ -118,21 +116,17 @@ $(function() {
           }, 0);
           if (sn.levels.two === 'text') {
             if (sn.levels.one !== sn.part) {
-              $(this).snTriggers('switchBar', {
-                link: sn.levels.one
-              });
               $(this).snModels('side', {
                 file: sn.levels.one + '.html'
-              });
-              $(this).snTriggers('linksSide');
-              $(this).snTriggers('switcherSide');
-              sn.part = sn.levels.one;
-              $(this).snTriggers('switchSide', {
-                link: sn.levels.three
               });
               $(this).snModels('primary', {
                 file: sn.levels.three + '.html'
               });
+              $(this).snTriggers('links', 'side');
+              $(this).snTriggers('switch', 'bar', sn.levels.one);
+              $(this).snTriggers('switch', 'side', sn.levels.three);
+              $(this).snTriggers('hover', 'side');
+              sn.part = sn.levels.one;
             }
           }
       }
@@ -194,9 +188,52 @@ $(function() {
         options = {};
       }
     },
+    "switch": function(type, link) {
+      if (type == null) {
+        type = '';
+      }
+      if (link == null) {
+        link = '';
+      }
+      switch (type) {
+        case 'side':
+          return $(this).snTriggers('switchSide', {
+            link: link
+          });
+        case 'bar':
+          return $(this).snTriggers('switchBar', {
+            link: link
+          });
+      }
+    },
+    hover: function(type) {
+      if (type == null) {
+        type = '';
+      }
+      switch (type) {
+        case 'side':
+          return $(this).snTriggers('switcherSide');
+        case 'bar':
+          return $(this).snTriggers('switcherBar');
+      }
+    },
+    links: function(type) {
+      if (type == null) {
+        type = '';
+      }
+      switch (type) {
+        case 'side':
+          return $(this).snTriggers('linksSide');
+        case 'primary':
+          return $(this).snTriggers('linksPrimary');
+        case 'bar':
+          return $(this).snTriggers('linksBar');
+      }
+    },
     linksSide: function() {
       var _this;
 
+      console.log('trigger: ' + 'linksSide');
       _this = this;
       return $('.side-box a').on('click', function() {
         return $(_this).snEvents({
@@ -207,6 +244,7 @@ $(function() {
     linksPrimary: function() {
       var _this;
 
+      console.log('trigger: ' + 'linksPrimary');
       _this = this;
       return $('.primary-box a').on('click', function() {
         return $(_this).snEvents({
@@ -218,6 +256,7 @@ $(function() {
       var _this;
 
       _this = this;
+      console.log('trigger: ' + 'linksBar');
       return $('a').on('click', function() {
         return $(_this).snEvents({
           href: $(this).attr('href')
@@ -230,6 +269,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('trigger: ' + 'switchBar');
       def = {
         link: 'main'
       };
@@ -243,6 +283,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('trigger: ' + 'switchSide');
       def = {
         link: 'above'
       };
@@ -251,6 +292,7 @@ $(function() {
       return $('#side-' + def.link).removeClass('side-box-link-normal').removeClass('side-box-link-hover').addClass('side-box-link-active').blur();
     },
     switcherBar: function() {
+      console.log('trigger: ' + 'switcherBar');
       $('.bar-button').on('mouseover', function() {
         if (!$(this).hasClass('bar-button-active')) {
           return $(this).removeClass('bar-button-normal').addClass('bar-button-hover');
@@ -263,6 +305,7 @@ $(function() {
       });
     },
     switcherSide: function() {
+      console.log('trigger: ' + 'switcherSide');
       $('.side-box-link').on('mouseover', function() {
         if (!$(this).hasClass('side-box-link-active')) {
           return $(this).removeClass('side-box-link-normal').addClass('side-box-link-hover');
@@ -275,6 +318,7 @@ $(function() {
       });
     },
     spoiler: function() {
+      console.log('trigger: ' + 'spoiler');
       return $('.primary-box-spoiler-caption').on('click', function() {
         if ($(this).hasClass('primary-box-spoiler-caption-open')) {
           $(this).removeClass('primary-box-spoiler-caption-open').addClass('primary-box-spoiler-caption-close');
@@ -324,6 +368,7 @@ $(function() {
     main: function() {
       var sn;
 
+      console.log('conf: ' + 'main.json');
       sn = $(this).data('sn');
       return $.ajax({
         url: 'conf/main.json',
@@ -338,6 +383,7 @@ $(function() {
     theme: function() {
       var sn;
 
+      console.log('conf: ' + 'themes.json');
       sn = $(this).data('sn');
       return $.ajax({
         url: 'conf/themes.json',
@@ -357,6 +403,7 @@ $(function() {
     css: function() {
       var sn;
 
+      console.log('conf: ' + 'css');
       sn = $(this).data('sn');
       if (sn.theme.css) {
         return $.each(sn.theme.css, function(i) {
@@ -374,6 +421,7 @@ $(function() {
     js: function() {
       var sn;
 
+      console.log('conf: ' + 'js');
       sn = $(this).data('sn');
       if (sn.theme.js) {
         return $.each(sn.theme.js, function(i) {
@@ -461,6 +509,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('models: ' + 'main');
       _this = this;
       sn = $(this).data('sn');
       def = {
@@ -477,6 +526,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('models: ' + 'primary');
       _this = this;
       sn = $(this).data('sn');
       def = {
@@ -486,16 +536,13 @@ $(function() {
       $.extend(def, options);
       if (def.file != null) {
         return $(this).snModels('load', def, function(s) {
-          $(def.elem).html($(_this).snWiki('primary', {
-            text: s
-          }));
+          def.text = s;
+          $(_this).snModels('inner', def);
           return $(_this).snTriggers('spoiler');
         });
       } else {
         if (def.text != null) {
-          $(def.elem).html($(_this).snWiki('primary', {
-            text: def.text
-          }));
+          $(_this).snModels('inner', def);
           return $(_this).snTriggers('spoiler');
         }
       }
@@ -506,6 +553,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('models: ' + 'side');
       _this = this;
       sn = $(this).data('sn');
       def = {
@@ -515,16 +563,43 @@ $(function() {
       $.extend(def, options);
       if (def.file != null) {
         return $(this).snModels('load', def, function(s) {
-          return $(def.elem).html($(_this).snWiki('side', {
-            text: s
-          }));
+          def.text = s;
+          return $(_this).snModels('inner', def);
         });
       } else {
         if (def.text != null) {
-          return $(def.elem).html($(_this).snWiki('side', {
+          return $(_this).snModels('inner', def);
+        }
+      }
+    },
+    inner: function(options) {
+      var def, sn;
+
+      if (options == null) {
+        options = {};
+      }
+      sn = $(this).data('sn');
+      def = {
+        elem: '#side-content',
+        type: 'side',
+        text: '',
+        position: 'place'
+      };
+      $.extend(def, options);
+      console.log('innerText: ' + def.type + ' ' + def.position);
+      switch (def.position) {
+        case 'place':
+          return $(def.elem).html($(this).snWiki(def.type, {
             text: def.text
           }));
-        }
+        case 'after':
+          return $(def.elem).html($(def.elem).html() + $(this).snWiki(def.type, {
+            text: def.text
+          }));
+        case 'before':
+          return $(def.elem).html($(this).snWiki(def.type, {
+            text: def.text
+          }) + $(def.elem).html());
       }
     },
     load: function(options, callback) {
@@ -550,6 +625,9 @@ $(function() {
         case 'side':
           def.url = 'content/' + sn.region.name + '/side_' + def.file;
       }
+      console.log('type: ' + def.type);
+      console.log('file: ' + def.file);
+      console.log('url: ' + def.url);
       return $.ajax({
         url: def.url,
         async: false,
@@ -557,6 +635,7 @@ $(function() {
         dataType: 'html',
         success: function(text) {
           if (text != null) {
+            console.log('success');
             if (callback) {
               return callback(text);
             }
@@ -596,6 +675,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('wiki: ' + 'primary');
       _this = this;
       def = {
         text: ''
@@ -652,6 +732,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('wiki: ' + 'side');
       _this = this;
       def = {
         text: ''
@@ -938,7 +1019,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\]\n/g, "]").replace(/\n\n/g, "<br><br>").replace(/\n/g, "<br>").replace(/<br>\n<div class=\"primary-box-outer\">/g, "<div class=\"primary-box-outer\">").replace(/<br><div class=\"primary-box-outer\">/g, "<div class=\"primary-box-outer\">");
+      return text.replace(/^\n/, "").replace(/\]\n/g, "]").replace(/\%\>\n/g, "%>").replace(/\n\n/g, "<br><br>").replace(/\n/g, "<br>").replace(/<br>\n<div class=\"primary-box-outer\">/g, "<div class=\"primary-box-outer\">").replace(/<br><div class=\"primary-box-outer\">/g, "<div class=\"primary-box-outer\">");
     }
   };
   return $.fn.snWiki = function(sn) {
@@ -1024,10 +1105,6 @@ $(function() {
             signinFormReg: new EJS({
               url: 'view/signinFormReg.html',
               ext: '.html'
-            }).render(),
-            signinBlockHelp: new EJS({
-              url: 'view/signinBlockHelp.html',
-              ext: '.html'
             }).render()
           }),
           signinSide: new EJS({
@@ -1043,13 +1120,33 @@ $(function() {
       $(this).snModels('side', {
         text: def.view.signinSide
       });
-      $(this).snTriggers('switchSide', {
-        link: sn.levels.two
-      });
+      $(this).snTriggers('switch', 'side', sn.levels.two);
+      $(this).snTriggers('switch', 'bar', sn.levels.one);
+      $(this).snTriggers('links', 'side');
+      $(this).snTriggers('hover', 'side');
       return $(this).snSignin('triggers', def);
     },
-    help: function() {
-      return $('#signin-block-help').show();
+    help: function(options) {
+      var def, sn;
+
+      if (options == null) {
+        options = {};
+      }
+      console.log('signin: ' + 'help');
+      sn = $(this).data('sn');
+      def = {
+        view: {
+          signinBlockHelp: new EJS({
+            url: 'view/signinBlockHelp.html',
+            ext: '.html'
+          }).render()
+        }
+      };
+      $.extend(true, def, options);
+      return $(this).snModels('primary', {
+        text: def.view.signinBlockHelp,
+        position: 'before'
+      });
     },
     triggers: function(options) {
       var _this;
@@ -1057,6 +1154,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('signin: ' + 'triggers');
       _this = this;
       $('.signin-input').on('focus', function() {
         if ($(this).val() === $(this).data('def-value') || $(this).val() === '') {
@@ -1148,6 +1246,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('registration: ' + 'checkRegForm');
       def = {
         error: false
       };
@@ -1214,6 +1313,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('registration: ' + 'afterCheckRegForm');
       def = {
         error: false
       };
@@ -1232,6 +1332,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('registration: ' + 'regOnServer');
       def = {
         debug: false,
         type: 'jsonp',
@@ -1285,12 +1386,20 @@ $(function() {
         }
       });
     },
+    afterSuccessReg: function(options) {
+      if (options == null) {
+        options = {};
+      }
+      console.log('registration: ' + 'afterSuccessReg');
+      return alert('afterSuccessReg');
+    },
     afterCheckRegFormOnServer: function(options) {
       var def, sn;
 
       if (options == null) {
         options = {};
       }
+      console.log('registration: ' + 'afterCheckRegFormOnServer');
       def = {
         'error': false,
         'start': 'В поле'
@@ -1372,6 +1481,7 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      console.log('enter: ' + 'checkEnterForm');
       sn = $(this).data(sn);
       alert('enter');
       console.info('sn', sn);
@@ -1420,6 +1530,7 @@ $(function() {
       };
       $.extend(true, def, options);
       value = def.value.toString();
+      console.log('validation: ' + def.type + ' - ' + value);
       switch (def.type) {
         case 'firstname':
           if (value === '' || value === def.caption) {
@@ -1555,7 +1666,7 @@ $(function() {
           }
       }
       if (!def.error) {
-        console.warn('validatation', def.type, def.exp);
+        console.warn(def.exp);
       }
       return def;
     }

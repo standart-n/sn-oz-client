@@ -5,6 +5,8 @@ $ ->
 
 		primary: (options = {}) ->
 
+			console.log 'wiki: ' + 'primary'
+
 			_this = this
 			def =
 				text: ''
@@ -28,6 +30,8 @@ $ ->
 			text
 
 		side: (options = {}) ->
+
+			console.log 'wiki: ' + 'side'
 
 			_this = this
 			def =
@@ -266,7 +270,9 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
+				.replace(/^\n/, "")
 				.replace(/\]\n/g, "]")
+				.replace(/\%\>\n/g, "%>")
 				.replace(/\n\n/g, "<br><br>")
 				.replace(/\n/g, "<br>")
 				.replace(/<br>\n<div class=\"primary-box-outer\">/g, "<div class=\"primary-box-outer\">")

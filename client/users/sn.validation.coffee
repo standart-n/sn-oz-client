@@ -17,6 +17,8 @@ $ ->
 			$.extend true, def, options
 			value = def.value.toString()
 
+			console.log 'validation: ' + def.type + ' - ' + value
+
 			switch def.type
 				when 'firstname'
 					if value is '' or value is def.caption 
@@ -123,7 +125,7 @@ $ ->
 								else
 									def.error = false
 			if !def.error
-				console.warn 'validatation', def.type, def.exp
+				console.warn def.exp
 			def
 
 

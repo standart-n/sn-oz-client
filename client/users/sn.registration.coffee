@@ -5,6 +5,8 @@ $ ->
 
 		checkRegForm: (options = {}) ->
 
+			console.log 'registration: ' + 'checkRegForm'
+
 			def =
 				error: false
 			_this = this
@@ -54,6 +56,8 @@ $ ->
 
 		afterCheckRegForm: (options = {}) ->
 
+			console.log 'registration: ' + 'afterCheckRegForm'
+
 			def =
 				error: false
 			$.extend true, def, options
@@ -66,6 +70,8 @@ $ ->
 				$(this).snRegistration 'regOnServer'
 
 		regOnServer: (options = {}) ->
+
+			console.log 'registration: ' + 'regOnServer'
 
 			def =
 				debug:				off
@@ -113,8 +119,18 @@ $ ->
 
 				error: (XMLHttpRequest,textStatus,error) ->
 					console.error 'ajax:', textStatus, error
+
+		afterSuccessReg: (options = {}) ->
+
+			console.log 'registration: ' + 'afterSuccessReg'
+
+			alert 'afterSuccessReg'
+
 			
 		afterCheckRegFormOnServer: (options = {}) ->
+
+			console.log 'registration: ' + 'afterCheckRegFormOnServer'
+
 			def =
 				'error': false
 				'start': 'В поле'

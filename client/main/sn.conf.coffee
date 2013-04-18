@@ -9,6 +9,9 @@ $ ->
 			$(this).snConf 'settings'
 
 		main: ->
+
+			console.log 'conf: ' + 'main.json'
+
 			sn = $(this).data 'sn'
 			$.ajax
 				url: 'conf/main.json'
@@ -19,6 +22,9 @@ $ ->
 					$(this).data 'sn', sn
 
 		theme: ->
+
+			console.log 'conf: ' + 'themes.json'
+
 			sn = $(this).data 'sn'
 			$.ajax
 				url: 'conf/themes.json'
@@ -34,6 +40,9 @@ $ ->
 					$(this).data 'sn', sn
 
 		css: ->
+
+			console.log 'conf: ' + 'css'
+
 			sn = $(this).data 'sn'
 			if sn.theme.css
 				$.each sn.theme.css, (i) ->
@@ -45,6 +54,9 @@ $ ->
 					head.appendChild link
 
 		js: ->
+
+			console.log 'conf: ' + 'js'
+
 			sn = $(this).data 'sn'
 			if sn.theme.js
 				$.each sn.theme.js, (i) ->
