@@ -6,7 +6,10 @@ $ ->
 			def =
 				href:'none'
 
-			$.extend true, def, options
+			if typeof sn isnt 'object'
+				def.href = options
+			else				
+				$.extend true, def, options
 			
 			sn = $(this).data 'sn'
 			sn.href = def.href + '/:'
@@ -75,7 +78,5 @@ $ ->
 		if methods[sn]
 			methods[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			if typeof sn == 'object' || !sn
-				methods.init.apply @, arguments
-			else 
-				$.error 'Метод ' + sn + ' не существует'
+			methods.init.apply @, arguments
+			

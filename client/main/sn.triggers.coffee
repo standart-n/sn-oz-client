@@ -32,7 +32,7 @@ $ ->
 
 			_this = this
 			$('.side-box a').on 'click', () ->
-				$(_this).snEvents href: $(this).attr('href')
+				$(_this).snEvents $(this).attr('href')
 
 		linksPrimary: () ->
 
@@ -40,14 +40,14 @@ $ ->
 
 			_this = this
 			$('.primary-box a').on 'click', () ->
-				$(_this).snEvents href: $(this).attr('href')
+				$(_this).snEvents $(this).attr('href')
 
 		linksBar: () ->
 
 			_this = this
 			console.log 'trigger: ' + 'linksBar'
 			$('a').on 'click', () ->
-				$(_this).snEvents href: $(this).attr('href')
+				$(_this).snEvents $(this).attr('href')
 
 		switchBar: (options = {}) ->
 
@@ -155,8 +155,5 @@ $ ->
 		if methods[sn]
 			methods[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			if typeof sn == 'object' || !sn
-				methods.init.apply @, arguments
-			else 
-				$.error 'Метод ' + sn + ' не существует'
+			methods.init.apply @, arguments
 

@@ -17,11 +17,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -50,9 +46,7 @@ $(function() {
       console.log('layout...');
       $(this).snLayout();
       console.log('autoload...');
-      return $(this).snEvents({
-        href: '#autoload'
-      });
+      return $(this).snEvents('#autoload');
     }
   };
   return $.fn.sn = function(sn) {
@@ -62,11 +56,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -84,7 +74,11 @@ $(function() {
       def = {
         href: 'none'
       };
-      $.extend(true, def, options);
+      if (typeof sn !== 'object') {
+        def.href = options;
+      } else {
+        $.extend(true, def, options);
+      }
       sn = $(this).data('sn');
       sn.href = def.href + '/:';
       sn.levels = {
@@ -182,11 +176,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -248,9 +238,7 @@ $(function() {
       console.log('trigger: ' + 'linksSide');
       _this = this;
       return $('.side-box a').on('click', function() {
-        return $(_this).snEvents({
-          href: $(this).attr('href')
-        });
+        return $(_this).snEvents($(this).attr('href'));
       });
     },
     linksPrimary: function() {
@@ -259,9 +247,7 @@ $(function() {
       console.log('trigger: ' + 'linksPrimary');
       _this = this;
       return $('.primary-box a').on('click', function() {
-        return $(_this).snEvents({
-          href: $(this).attr('href')
-        });
+        return $(_this).snEvents($(this).attr('href'));
       });
     },
     linksBar: function() {
@@ -270,9 +256,7 @@ $(function() {
       _this = this;
       console.log('trigger: ' + 'linksBar');
       return $('a').on('click', function() {
-        return $(_this).snEvents({
-          href: $(this).attr('href')
-        });
+        return $(_this).snEvents($(this).attr('href'));
       });
     },
     switchBar: function(options) {
@@ -355,11 +339,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -451,11 +431,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -498,11 +474,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -664,11 +636,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -1042,11 +1010,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -1084,11 +1048,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
   return $('#sn').snUsers();
@@ -1240,11 +1200,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -1475,11 +1431,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -1513,11 +1465,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -1696,11 +1644,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
@@ -1755,11 +1699,7 @@ $(function() {
     if (methods[sn]) {
       return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
     } else {
-      if (typeof sn === 'object' || !sn) {
-        return methods.init.apply(this, arguments);
-      } else {
-        return $.error('Метод ' + sn + ' не существует');
-      }
+      return methods.init.apply(this, arguments);
     }
   };
 });
