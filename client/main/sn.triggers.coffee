@@ -125,7 +125,10 @@ $ ->
 
 			console.log 'trigger: ' + 'spoiler'
 
-			$('.primary-box-spoiler-caption').on 'click', () ->
+			$('.primary-box-spoiler-caption').on 'click', (e) ->
+
+				e.preventDefault()
+
 				if $(this).hasClass('primary-box-spoiler-caption-open')
 					$(this)
 						.removeClass('primary-box-spoiler-caption-open')

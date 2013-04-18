@@ -87,52 +87,64 @@ $(function() {
       $.extend(true, def, options);
       sn = $(this).data('sn');
       sn.href = def.href + '/:';
-      console.info('url: ' + sn.href);
       sn.levels = {
         one: sn.href.replace(/(.*)#(.*?)\/(.*)/, '$2'),
         two: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/, '$3'),
         three: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/, '$4'),
         anchor: sn.href.replace(/(.*)\:(.*?)\/(.*)/, '$2')
       };
-      switch (sn.levels.one) {
-        case 'autoload':
-          $(this).snModels('primary', {
-            file: 'main.html'
-          });
-          $(this).snModels('side', {
-            file: 'main.html'
-          });
-          $(this).snTriggers('switch', 'side', 'main');
-          $(this).snTriggers('links', 'bar');
-          $(this).snTriggers('links', 'side');
-          $(this).snTriggers('links', 'primary');
-          $(this).snTriggers('hover', 'bar');
-          $(this).snTriggers('hover', 'side');
-          sn.part = 'main';
-          break;
-        default:
-          $('html,body').animate({
-            scrollTop: 0
-          }, 0);
-          if (sn.levels.two === 'text') {
-            if (sn.levels.one !== sn.part) {
-              $(this).snModels('side', {
-                file: sn.levels.one + '.html'
-              });
-              $(this).snModels('primary', {
-                file: sn.levels.three + '.html'
-              });
-              $(this).snTriggers('links', 'side');
-              $(this).snTriggers('switch', 'bar', sn.levels.one);
-              $(this).snTriggers('switch', 'side', sn.levels.three);
-              $(this).snTriggers('hover', 'side');
-              sn.part = sn.levels.one;
+      console.info('url: ' + sn.href);
+      console.info('levels: ', sn.levels);
+      if ((sn.levels.one != null) && sn.levels.one !== 'spoiler') {
+        switch (sn.levels.one) {
+          case 'autoload':
+            $(this).snModels('primary', {
+              file: 'main.html'
+            });
+            $(this).snModels('side', {
+              file: 'main.html'
+            });
+            $(this).snTriggers('switch', 'side', 'main');
+            $(this).snTriggers('links', 'bar');
+            $(this).snTriggers('links', 'side');
+            $(this).snTriggers('links', 'primary');
+            $(this).snTriggers('hover', 'bar');
+            $(this).snTriggers('hover', 'side');
+            sn.part = 'main';
+            break;
+          default:
+            if ((sn.levels.two != null) && (sn.levels.three != null)) {
+              $('html,body').animate({
+                scrollTop: 0
+              }, 0);
+              if (sn.levels.two === 'text') {
+                if (sn.levels.one !== sn.part) {
+                  $(this).snModels('side', {
+                    file: sn.levels.one + '.html'
+                  });
+                  $(this).snModels('primary', {
+                    file: sn.levels.three + '.html'
+                  });
+                  $(this).snTriggers('links', 'side');
+                  $(this).snTriggers('links', 'primary');
+                  $(this).snTriggers('switch', 'bar', sn.levels.one);
+                  $(this).snTriggers('switch', 'side', sn.levels.three);
+                  $(this).snTriggers('hover', 'side');
+                  sn.part = sn.levels.one;
+                } else {
+                  $(this).snModels('primary', {
+                    file: sn.levels.three + '.html'
+                  });
+                  $(this).snTriggers('links', 'primary');
+                  $(this).snTriggers('switch', 'side', sn.levels.three);
+                }
+              }
             }
-          }
+        }
+        $(this).data('sn', sn);
+        $(this).snEvents('anchor');
+        return $(this).click();
       }
-      $(this).data('sn', sn);
-      $(this).snEvents('anchor');
-      return $(this).click();
     },
     anchor: function(options) {
       var e, height, sn;
@@ -319,7 +331,8 @@ $(function() {
     },
     spoiler: function() {
       console.log('trigger: ' + 'spoiler');
-      return $('.primary-box-spoiler-caption').on('click', function() {
+      return $('.primary-box-spoiler-caption').on('click', function(e) {
+        e.preventDefault();
         if ($(this).hasClass('primary-box-spoiler-caption-open')) {
           $(this).removeClass('primary-box-spoiler-caption-open').addClass('primary-box-spoiler-caption-close');
         } else {
@@ -1098,14 +1111,16 @@ $(function() {
             url: 'view/signin.html',
             ext: '.html'
           }).render({
-            signinFormEnter: new EJS({
-              url: 'view/signinFormEnter.html',
-              ext: '.html'
-            }).render(),
-            signinFormReg: new EJS({
-              url: 'view/signinFormReg.html',
-              ext: '.html'
-            }).render()
+            view: {
+              signinFormEnter: new EJS({
+                url: 'view/signinFormEnter.html',
+                ext: '.html'
+              }).render(),
+              signinFormReg: new EJS({
+                url: 'view/signinFormReg.html',
+                ext: '.html'
+              }).render()
+            }
           }),
           signinSide: new EJS({
             url: 'view/signinSide.html',
@@ -1114,6 +1129,8 @@ $(function() {
         }
       };
       $.extend(true, def, options);
+      console.log('signin: ' + 'init');
+      console.log('render: ', def);
       $(this).snModels('primary', {
         text: def.view.signin
       });
@@ -1143,10 +1160,11 @@ $(function() {
         }
       };
       $.extend(true, def, options);
-      return $(this).snModels('primary', {
+      $(this).snModels('primary', {
         text: def.view.signinBlockHelp,
         position: 'before'
       });
+      return $(this).snSignin('triggers');
     },
     triggers: function(options) {
       var _this;

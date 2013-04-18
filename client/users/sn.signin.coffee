@@ -6,12 +6,16 @@ $ ->
 			def =
 				view: 
 					signin: new EJS(url: 'view/signin.html', ext: '.html').render
+						view:
 							signinFormEnter:	new EJS(url: 'view/signinFormEnter.html', ext: '.html').render()
 							signinFormReg:		new EJS(url: 'view/signinFormReg.html', ext: '.html').render()
 
 					signinSide: new EJS(url: 'view/signinSide.html', ext: '.html').render()
 				
 			$.extend true, def, options
+
+			console.log 'signin: ' + 'init'
+			console.log 'render: ', def
 
 			$(this).snModels 'primary', text: def.view.signin
 			$(this).snModels 'side', text: def.view.signinSide
@@ -33,6 +37,7 @@ $ ->
 			$.extend true, def, options
 			
 			$(this).snModels 'primary', text: def.view.signinBlockHelp, position: 'before'
+			$(this).snSignin 'triggers'
 
 
 		triggers: (options = {}) ->
