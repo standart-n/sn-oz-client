@@ -49,12 +49,12 @@ $ ->
 									$(this).snTriggers 'switch', 'bar', sn.levels.one
 									$(this).snTriggers 'switch', 'side', sn.levels.three
 									$(this).snTriggers 'hover', 'side'
-									sn.part = sn.levels.one
 								else
 									$(this).snModels 'primary', file: sn.levels.three + '.html'
 									$(this).snTriggers 'links', 'primary'
 									$(this).snTriggers 'switch', 'side', sn.levels.three
 
+				sn.part = sn.levels.one
 				$(this).data 'sn', sn
 				$(this).snEvents 'anchor'
 				$(this).click()
