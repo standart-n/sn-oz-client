@@ -1,4 +1,3 @@
-TPL=smarty
 DATE=$(shell date +%I:%M%p)
 CHECK=\033[32m✔\033[39m
 HR=\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#
@@ -15,6 +14,7 @@ all: client finish
 client: client-js css templates
 
 templates:
+	@jade --pretty ./jade/index.jade -O ./
 	@jade --pretty ./jade/view/* -O ./view/
 	@jade --pretty ./jade/layout/izhevsk/* -O ./layout/izhevsk
 	@jade --pretty ./jade/layout/kirov/* -O ./layout/kirov

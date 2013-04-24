@@ -3,22 +3,15 @@ $ ->
 	methods =
 		init: (options = {}) ->
 			sn = $(this).data 'sn'
-			def =
-				view: 
-					signin: new EJS(url: 'view/signin.html', ext: '.html').render
-						view:
-							signinFormEnter:	new EJS(url: 'view/signinFormEnter.html', ext: '.html').render()
-							signinFormReg:		new EJS(url: 'view/signinFormReg.html', ext: '.html').render()
-
-					signinSide: new EJS(url: 'view/signinSide.html', ext: '.html').render()
+			def = {}
 				
 			$.extend true, def, options
 
 			console.log 'signin: ' + 'init'
 			console.log 'render: ', def
 
-			$(this).snModels 'primary', text: def.view.signin
-			$(this).snModels 'side', text: def.view.signinSide
+			$(this).snModels 'primary', view: 'signin.html'
+			$(this).snModels 'side', view: 'signinSide.html'
 			$(this).snTriggers 'switch', 'side', sn.levels.two
 			$(this).snTriggers 'switch', 'bar', sn.levels.one
 			$(this).snTriggers 'links', 'side'
@@ -30,13 +23,11 @@ $ ->
 			console.log 'signin: ' + 'help'
 
 			sn = $(this).data 'sn'
-			def =
-				view: 
-					signinBlockHelp: new EJS(url: 'view/signinBlockHelp.html', ext: '.html').render()
+			def = {}
 
 			$.extend true, def, options
 			
-			$(this).snModels 'primary', text: def.view.signinBlockHelp, position: 'before'
+			$(this).snModels 'primary', view: 'signinBlockHelp.html', position: 'before'
 			$(this).snSignin 'triggers'
 
 

@@ -233,6 +233,7 @@ $ ->
 			text = def.text
 			text
 				.replace(/^\n/, "")
+				.replace(/\n\n/g, "<br><br>")
 				.replace(/>\n?/g, '>')
 				.replace(/\]\n/g, "]")
 				.replace(/\n/g, "<br>")

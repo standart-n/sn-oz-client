@@ -248,7 +248,7 @@ textarea {
   width: 100%;
   height: 54px;
   min-width: 100%;
-  background-image: url('../../img/silver/silver-bar-bg.png');
+  background-image: url('../../img/silver/theme/silver-bar-bg.png');
   background-position: 0 0;
   background-repeat: repeat-x;
 }
@@ -260,7 +260,7 @@ textarea {
   height: 54px;
   min-width: 40px;
   text-decoration: none;
-  background-image: url('../../img/silver/silver-bar-logo.png');
+  background-image: url('../../img/silver/theme/silver-bar-logo.png');
   background-position: 0 0;
   background-repeat: no-repeat;
   border: none;
@@ -296,21 +296,21 @@ textarea {
 
 #bar .bar-button-normal {
   color: #010101;
-  background-image: url('../../img/silver/silver-bar-button-normal.png');
+  background-image: url('../../img/silver/theme/silver-bar-button-normal.png');
   background-position: 0 0;
   background-repeat: no-repeat;
 }
 
 #bar .bar-button-active {
   color: #424242;
-  background-image: url('../../img/silver/silver-bar-button-active.png');
+  background-image: url('../../img/silver/theme/silver-bar-button-active.png');
   background-position: 0 0;
   background-repeat: no-repeat;
 }
 
 #bar .bar-button-hover {
   color: #fcfcfc;
-  background-image: url('../../img/silver/silver-bar-button-hover.png');
+  background-image: url('../../img/silver/theme/silver-bar-button-hover.png');
   background-position: 0 0;
   background-repeat: no-repeat;
 }
@@ -474,7 +474,7 @@ a.side-box-link {
 a.side-box-link-active {
   font-weight: bold;
   color: #333;
-  background-image: url('../../img/silver/silver-side-link-arrow.png');
+  background-image: url('../../img/silver/theme/silver-side-link-arrow.png');
   background-position: right center;
   background-repeat: no-repeat;
 }
@@ -482,7 +482,7 @@ a.side-box-link-active {
 a.side-box-link-normal {
   font-weight: normal;
   color: #036;
-  background-image: url('../../img/silver/silver-side-link-arrow-10pr.png');
+  background-image: url('../../img/silver/theme/silver-side-link-arrow-10pr.png');
   background-position: right center;
   background-repeat: no-repeat;
 }
@@ -490,7 +490,7 @@ a.side-box-link-normal {
 a.side-box-link-hover {
   font-weight: normal;
   color: #555;
-  background-image: url('../../img/silver/silver-side-link-arrow-70pr.png');
+  background-image: url('../../img/silver/theme/silver-side-link-arrow-70pr.png');
   background-position: right center;
   background-repeat: no-repeat;
 }
@@ -515,19 +515,19 @@ a.side-box-link-hover {
   margin: 0 0 5px 0;
   clear: both;
   line-height: 22px;
-  background-image: url('../../img/silver/silver-spoiler-down.png');
+  background-image: url('../../img/silver/theme/silver-spoiler-down.png');
   background-position: 0 0;
   background-repeat: no-repeat;
 }
 
 .primary-box-spoiler-caption-open {
-  background-image: url('../../img/silver/silver-spoiler-up.png');
+  background-image: url('../../img/silver/theme/silver-spoiler-up.png');
   background-position: 0 0;
   background-repeat: no-repeat;
 }
 
 .primary-box-spoiler-caption-close {
-  background-image: url('../../img/silver/silver-spoiler-down.png');
+  background-image: url('../../img/silver/theme/silver-spoiler-down.png');
   background-position: 0 0;
   background-repeat: no-repeat;
 }
@@ -664,63 +664,6 @@ float:right;
 margin:5px 10px 5px 0;
 }*/
 
-.hscope-icons {
-  display: block;
-  float: left;
-  width: 67px;
-  height: 65px;
-  background-image: url(../../img/horoscope/hscope-icons.png);
-  background-repeat: no-repeat;
-}
-
-#hscope-icon-vodoley {
-  background-position: 0 0;
-}
-
-#hscope-icon-oven {
-  background-position: -67px 0;
-}
-
-#hscope-icon-rak {
-  background-position: -133px 0;
-}
-
-#hscope-icon-kozerog {
-  background-position: -199px 0;
-}
-
-#hscope-icon-bliznecu {
-  background-position: 0 -65px;
-}
-
-#hscope-icon-lev {
-  background-position: -67px -65px;
-}
-
-#hscope-icon-vesu {
-  background-position: -133px -65px;
-}
-
-#hscope-icon-rubu {
-  background-position: -199px -65px;
-}
-
-#hscope-icon-strelec {
-  background-position: 0 -130px;
-}
-
-#hscope-icon-rak {
-  background-position: -67px -130px;
-}
-
-#hscope-icon-telec {
-  background-position: -133px -130px;
-}
-
-#hscope-icon-deva {
-  background-position: -199px -130px;
-}
-
 .signin-header {
   display: block;
   float: left;
@@ -830,7 +773,7 @@ a#signin-button-reg {
   height: 16px;
   margin: 12px 0 0 4px;
   background-color: none;
-  background-image: url('../../img/users/signin/check.png');
+  background-image: url('../../img/silver/users/signin/check.png');
   background-repeat: no-repeat;
 }
 
@@ -874,7 +817,7 @@ a#signin-button-reg {
   height: 16px;
   margin: 2px 4px 0 0;
   background-color: none;
-  background-image: url('../../img/users/signin/check.png');
+  background-image: url('../../img/silver/users/signin/check.png');
   background-repeat: no-repeat;
 }
 

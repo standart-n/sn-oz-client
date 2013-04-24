@@ -2,9 +2,236 @@
 <div id="signin">
   <table align="center" valign="top" cellpadding="1" cellspacing="1" border="0">
     <tr valign="top">
-      <td><%= view.signinFormEnter %></td>
+      <td>
+        <form id="signin-form-enter" action="index.html" onSubmit="return false;" method="GET">
+          <table align="center" valign="top" cellpadding="1" cellspacing="1" border="0">
+            <tr valign="top">
+              <td>
+                <div class="signin-header">У вас уже есть логин и пароль?</div>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-caption">Авторизация</div>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-hint">Введите логин и пароль</div>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-login" value="Логин" data-def-value="Логин" type="text" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-enter"/>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-preview" value="Пароль" data-def-value="Пароль" data-def-type="password" type="password" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-enter"/>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><a id="signin-button-enter" href="#users/signin/enter" class="signin-button">Войти</a></td>
+            </tr>
+          </table>
+          <div class="hidden">
+            <input type="submit"/>
+          </div>
+        </form>
+      </td>
       <td width="10px"></td>
-      <td><%= view.signinFormReg %></td>
+      <td>
+        <form id="signin-form-reg" action="index.html" onSubmit="return false;" method="GET">
+          <table align="center" valign="top" cellpadding="1" cellspacing="1" border="0">
+            <tr valign="top">
+              <td>
+                <div class="signin-header">Или вы еще не зарегистрировались?</div>
+              </td>
+              <td width="20px"></td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-caption">Регистрация</div>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-hint">Персональные данные</div>
+              </td>
+              <td></td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-lastname" value="Фамилия" data-def-value="Фамилия" data-check-type="lastname" type="text" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-reg"/>
+                </div>
+              </td>
+              <td>
+                <div data-check-type="lastname" class="signin-form-check signin-form-check-clear"></div>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-firstname" value="Имя" data-def-value="Имя" data-check-type="firstname" type="text" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-reg"/>
+                </div>
+              </td>
+              <td>
+                <div data-check-type="firstname" class="signin-form-check signin-form-check-clear"></div>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-patronymic" value="Отчество" data-def-value="Отчество" data-check-type="patronymic" type="text" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-reg"/>
+                </div>
+              </td>
+              <td>
+                <div data-check-type="patronymic" class="signin-form-check signin-form-check-clear"></div>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-hint">Контактные данные</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-email" value="E-mail адрес" data-def-value="E-mail адрес" data-check-type="email" type="text" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-reg"/>
+                </div>
+              </td>
+              <td>
+                <div data-check-type="email" class="signin-form-check signin-form-check-clear"></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-phone" value="Контактный телефон" data-def-value="Контактный телефон" data-check-type="phone" type="text" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-reg"/>
+                </div>
+              </td>
+              <td>
+                <div data-check-type="phone" class="signin-form-check signin-form-check-clear"></div>
+              </td>
+            </tr>
+            <tr valign="top">
+              <td>
+                <div class="signin-hint">Ваша организация</div>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-company" value="Организация" data-def-value="Организация" data-check-type="company" type="text" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-reg"/>
+                </div>
+              </td>
+              <td>
+                <div data-check-type="company" class="signin-form-check signin-form-check-clear"></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="signin-input-outer">
+                  <input id="signin-input-post" value="Должность" data-def-value="Должность" data-check-type="post" type="text" size="30" maxlength="30" class="signin-input signin-input-blur signin-type-reg"/>
+                </div>
+              </td>
+              <td>
+                <div data-check-type="post" class="signin-form-check signin-form-check-clear"></div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <div class="signin-warning-outer">
+                  <table align="center" valign="top" cellpadding="0" cellspacing="0" border="0">
+                    <tr valign="top">
+                      <td width="20px">
+                        <div data-check-type="firstname" class="signin-form-warning signin-form-warning-error"></div>
+                      </td>
+                      <td>
+                        <div data-check-type="firstname" class="signin-warning signin-warning-firstname">
+                           
+                          В поле "Фамилия" ничего не записано
+                        </div>
+                      </td>
+                      <td width="21px"></td>
+                    </tr>
+                    <tr valign="top">
+                      <td>
+                        <div data-check-type="lastname" class="signin-form-warning signin-form-warning-error"></div>
+                      </td>
+                      <td>
+                        <div data-check-type="lastname" class="signin-warning signin-warning-lastname">
+                           
+                          В поле "Имя" ничего не записано
+                        </div>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr valign="top">
+                      <td>
+                        <div data-check-type="patronymic" class="signin-form-warning signin-form-warning-error"></div>
+                      </td>
+                      <td>
+                        <div data-check-type="patronymic" class="signin-warning signin-warning-patronymic"></div>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr valign="top">
+                      <td>
+                        <div data-check-type="email" class="signin-form-warning signin-form-warning-error"></div>
+                      </td>
+                      <td>
+                        <div data-check-type="email" class="signin-warning signin-warning-email"></div>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr valign="top">
+                      <td>
+                        <div data-check-type="phone" class="signin-form-warning signin-form-warning-error"></div>
+                      </td>
+                      <td>
+                        <div data-check-type="phone" class="signin-warning signin-warning-phone"></div>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr valign="top">
+                      <td>
+                        <div data-check-type="company" class="signin-form-warning signin-form-warning-error"></div>
+                      </td>
+                      <td>
+                        <div data-check-type="company" class="signin-warning signin-warning-company"></div>
+                      </td>
+                      <td></td>
+                    </tr>
+                    <tr valign="top">
+                      <td>
+                        <div data-check-type="post" class="signin-form-warning signin-form-warning-error"></div>
+                      </td>
+                      <td>
+                        <div data-check-type="post" class="signin-warning signin-warning-post"></div>
+                      </td>
+                      <td></td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><a id="signin-button-reg" href="#users/signin/registration" class="signin-button">Готово</a></td>
+              <td></td>
+            </tr>
+          </table>
+          <div class="hide">
+            <input type="submit"/>
+          </div>
+        </form>
+      </td>
     </tr>
   </table>
 </div>>>>

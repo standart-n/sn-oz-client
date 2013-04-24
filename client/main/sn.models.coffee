@@ -7,55 +7,66 @@ $ ->
 
 			console.log 'models: ' + 'main'
 
-			_this = this
-			sn = $(this).data 'sn'
 			def =
-				elem: '#main'
-				type: 'main'
-				text: ''
+				elem:		'#main'
+				type:		'main'
+				wiki:		off
 			$.extend def, options
-			$(def.elem).html def.text
+
+			$(this).snModels 'append', def
 
 		primary: (options = {}) ->
 
 			console.log 'models: ' + 'primary'
 
-			_this = this
-			sn = $(this).data 'sn'
 			def =
-				elem: '#primary-content'
-				type: 'primary'
+				elem:		'#primary-content'
+				type:		'primary'
+				wiki:		on
 			$.extend def, options
 			
-			if def.file?
-				$(this).snModels 'load', def, (s) ->
-					def.text = s
-					$(_this).snModels 'inner', def
-					$(_this).snTriggers 'spoiler'
-			else
-				if def.text?
-					$(_this).snModels 'inner', def
-					$(_this).snTriggers 'spoiler'
+			$(this).snModels 'append', def
+
 
 
 		side: (options = {}) ->		
 
 			console.log 'models: ' + 'side'
 
-			_this = this
-			sn = $(this).data 'sn'
 			def =
-				elem: '#side-content'
-				type: 'side'
+				elem:		'#side-content'
+				type:		'side'
+				wiki:		on
 			$.extend def, options
 			
+			$(this).snModels 'append', def
+
+
+		append: (def = {}) ->
+
+			_this = this
+			sn = $(this).data 'sn'
+
 			if def.file?
 				$(this).snModels 'load', def, (s) ->
 					def.text = s
 					$(_this).snModels 'inner', def
+					$(_this).snTriggers 'spoiler' if def.type is 'primary'
 			else
 				if def.text?
 					$(_this).snModels 'inner', def
+					$(_this).snTriggers 'spoiler' if def.type is 'primary'
+				else
+					if def.view?
+						def.text = new EJS(url: 'view/' + def.view, ext: '.html').render(sn)
+						$(_this).snModels 'inner', def
+						$(_this).snTriggers 'spoiler' if def.type is 'primary'
+					else
+						if def.layout?
+							def.text = new EJS(url: 'layout/' + sn.region.name + '/' + def.layout , ext: '.html').render(sn)
+							$(_this).snModels 'inner', def
+							$(_this).snTriggers 'spoiler' if def.type is 'primary'
+
 
 		inner: (options = {}) ->
 
@@ -64,18 +75,21 @@ $ ->
 				elem: 		'#side-content'
 				type: 		'side'
 				text: 		''
+				wiki:		on
 				position: 	'place'
 			$.extend def, options
 
 			console.log 'innerText: ' + def.type + ' ' + def.position
-
+			
+			def.text = $(this).snWiki(def.type, text: def.text) if def.wiki is on
+	
 			switch def.position
 				when 'place'
-					$(def.elem).html $(this).snWiki(def.type, text: def.text)
+					$(def.elem).html def.text
 				when 'after'
-					$(def.elem).html $(def.elem).html() + $(this).snWiki(def.type, text: def.text)
+					$(def.elem).html $(def.elem).html() + def.text
 				when 'before'
-					$(def.elem).html $(this).snWiki(def.type, text: def.text) + $(def.elem).html()
+					$(def.elem).html def.text + $(def.elem).html()
 
 
 		load: (options = {},callback) ->
@@ -91,6 +105,8 @@ $ ->
 			switch def.type
 				when 'view'
 					def.url = 'view/' + def.file
+				when 'layout'
+					def.url = 'layout/' + sn.region.name + '/' + def.file
 				when 'primary'
 					def.url = 'content/' + sn.region.name + '/' + def.file
 				when 'side'

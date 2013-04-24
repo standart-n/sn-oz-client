@@ -441,29 +441,14 @@ $(function() {
 
   methods = {
     init: function(options) {
-      var main, sn;
+      var sn;
 
       if (options == null) {
         options = {};
       }
       sn = $(this).data('sn');
-      main = new EJS({
-        url: 'layout/' + sn.region.name + '/main.html',
-        ext: '.html'
-      }).render({
-        header: new EJS({
-          url: 'layout/' + sn.region.name + '/header.html',
-          ext: '.html'
-        }).render({
-          caption: sn.region.caption
-        }),
-        content: new EJS({
-          url: 'layout/' + sn.region.name + '/content.html',
-          ext: '.html'
-        }).render()
-      });
       return $(this).snModels('main', {
-        text: main
+        layout: 'main.html'
       });
     }
   };
@@ -489,71 +474,94 @@ $(function() {
       }
     },
     main: function(options) {
-      var def, sn, _this;
+      var def;
 
       if (options == null) {
         options = {};
       }
       console.log('models: ' + 'main');
-      _this = this;
-      sn = $(this).data('sn');
       def = {
         elem: '#main',
         type: 'main',
-        text: ''
+        wiki: false
       };
       $.extend(def, options);
-      return $(def.elem).html(def.text);
+      return $(this).snModels('append', def);
     },
     primary: function(options) {
-      var def, sn, _this;
+      var def;
 
       if (options == null) {
         options = {};
       }
       console.log('models: ' + 'primary');
-      _this = this;
-      sn = $(this).data('sn');
       def = {
         elem: '#primary-content',
-        type: 'primary'
+        type: 'primary',
+        wiki: true
       };
       $.extend(def, options);
-      if (def.file != null) {
-        return $(this).snModels('load', def, function(s) {
-          def.text = s;
-          $(_this).snModels('inner', def);
-          return $(_this).snTriggers('spoiler');
-        });
-      } else {
-        if (def.text != null) {
-          $(_this).snModels('inner', def);
-          return $(_this).snTriggers('spoiler');
-        }
-      }
+      return $(this).snModels('append', def);
     },
     side: function(options) {
-      var def, sn, _this;
+      var def;
 
       if (options == null) {
         options = {};
       }
       console.log('models: ' + 'side');
-      _this = this;
-      sn = $(this).data('sn');
       def = {
         elem: '#side-content',
-        type: 'side'
+        type: 'side',
+        wiki: true
       };
       $.extend(def, options);
+      return $(this).snModels('append', def);
+    },
+    append: function(def) {
+      var sn, _this;
+
+      if (def == null) {
+        def = {};
+      }
+      _this = this;
+      sn = $(this).data('sn');
       if (def.file != null) {
         return $(this).snModels('load', def, function(s) {
           def.text = s;
-          return $(_this).snModels('inner', def);
+          $(_this).snModels('inner', def);
+          if (def.type === 'primary') {
+            return $(_this).snTriggers('spoiler');
+          }
         });
       } else {
         if (def.text != null) {
-          return $(_this).snModels('inner', def);
+          $(_this).snModels('inner', def);
+          if (def.type === 'primary') {
+            return $(_this).snTriggers('spoiler');
+          }
+        } else {
+          if (def.view != null) {
+            def.text = new EJS({
+              url: 'view/' + def.view,
+              ext: '.html'
+            }).render(sn);
+            $(_this).snModels('inner', def);
+            if (def.type === 'primary') {
+              return $(_this).snTriggers('spoiler');
+            }
+          } else {
+            if (def.layout != null) {
+              def.text = new EJS({
+                url: 'layout/' + sn.region.name + '/' + def.layout,
+                ext: '.html'
+              }).render(sn);
+              $(_this).snModels('inner', def);
+              if (def.type === 'primary') {
+                return $(_this).snTriggers('spoiler');
+              }
+            }
+          }
         }
       }
     },
@@ -568,23 +576,23 @@ $(function() {
         elem: '#side-content',
         type: 'side',
         text: '',
+        wiki: true,
         position: 'place'
       };
       $.extend(def, options);
       console.log('innerText: ' + def.type + ' ' + def.position);
+      if (def.wiki === true) {
+        def.text = $(this).snWiki(def.type, {
+          text: def.text
+        });
+      }
       switch (def.position) {
         case 'place':
-          return $(def.elem).html($(this).snWiki(def.type, {
-            text: def.text
-          }));
+          return $(def.elem).html(def.text);
         case 'after':
-          return $(def.elem).html($(def.elem).html() + $(this).snWiki(def.type, {
-            text: def.text
-          }));
+          return $(def.elem).html($(def.elem).html() + def.text);
         case 'before':
-          return $(def.elem).html($(this).snWiki(def.type, {
-            text: def.text
-          }) + $(def.elem).html());
+          return $(def.elem).html(def.text + $(def.elem).html());
       }
     },
     load: function(options, callback) {
@@ -603,6 +611,9 @@ $(function() {
       switch (def.type) {
         case 'view':
           def.url = 'view/' + def.file;
+          break;
+        case 'layout':
+          def.url = 'layout/' + sn.region.name + '/' + def.file;
           break;
         case 'primary':
           def.url = 'content/' + sn.region.name + '/' + def.file;
@@ -663,9 +674,6 @@ $(function() {
       };
       $.extend(true, def, options);
       text = def.text;
-      text = $(_this).snWiki('tags', {
-        text: text
-      });
       text = $(_this).snWiki('formating', {
         text: text
       });
@@ -720,9 +728,6 @@ $(function() {
       };
       $.extend(true, def, options);
       text = def.text;
-      text = $(_this).snWiki('tags', {
-        text: text
-      });
       text = $(_this).snWiki('formating', {
         text: text
       });
@@ -778,7 +783,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/'''''(.*?)'''''/mg, "<i><b>$1</b></i>").replace(/'''(.*?)'''/mg, "<b>$1</b>").replace(/''(.*?)''/mg, "<i>$1</i>");
+      return text.replace(/'''''(.*?)'''''/g, "<i><b>$1</b></i>").replace(/'''(.*?)'''/g, "<b>$1</b>").replace(/''(.*?)''/g, "<i>$1</i>");
     },
     headings: function(options) {
       var def, text;
@@ -791,11 +796,11 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      text = text.replace(/======(.*?)======\n?/mg, "<h6>$1</h6>");
-      text = text.replace(/=====(.*?)=====\n?/mg, "<h5>$1</h5>");
-      text = text.replace(/====(.*?)====\n?/mg, "<h4>$1</h4>");
-      text = text.replace(/===(.*?)===\n?/mg, "<h3>$1</h3>");
-      return text = text.replace(/==(.*?)==\n?/mg, "<h2>$1</h2>");
+      text = text.replace(/======(.*?)======\n?/g, "<h6>$1</h6>");
+      text = text.replace(/=====(.*?)=====\n?/g, "<h5>$1</h5>");
+      text = text.replace(/====(.*?)====\n?/g, "<h4>$1</h4>");
+      text = text.replace(/===(.*?)===\n?/g, "<h3>$1</h3>");
+      return text = text.replace(/==(.*?)==\n?/g, "<h2>$1</h2>");
     },
     externalLinks: function(options) {
       var def, text;
@@ -808,7 +813,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/mg, '<a class="wiki-link" href="$1" target="_blank">$2</a>').replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg, '<a class="wiki-link" href="$1" target="_blank">$1</a>');
+      return text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="$1" target="_blank">$2</a>').replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="$1" target="_blank">$1</a>');
     },
     fileLinks: function(options) {
       var def, sn, text;
@@ -822,7 +827,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/mg, '<a class="wiki-link" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$2</a>').replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg, '<a class="wiki-link" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$1</a>');
+      return text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$2</a>').replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$1</a>');
     },
     mailTo: function(options) {
       var def, text;
@@ -835,7 +840,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+) (.*?)\]/mg, '<a class="wiki-link" href="mailto:$1">$2</a>').replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/mg, '<a class="wiki-link" href="mailto:$1">$1</a>');
+      return text.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="mailto:$1">$2</a>').replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="mailto:$1">$1</a>');
     },
     photo: function(options) {
       var def, sn, text;
@@ -849,7 +854,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg, '<img align="center" width="100%" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
+      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" width="100%" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
     },
     image: function(options) {
       var def, sn, text;
@@ -863,7 +868,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) left\]/mg, '<img align="center" class="wiki-image-left" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">').replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) right\]/mg, '<img align="center" class="wiki-image-right" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">').replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/mg, '<img align="center" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
+      return text.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) left\]/g, '<img align="center" class="wiki-image-left" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">').replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) right\]/g, '<img align="center" class="wiki-image-right" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">').replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
     },
     fonts: function(options) {
       var def, sn, text;
@@ -877,7 +882,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[\[color:\#([a-zA-Z0-9\-\.\/\?%\#_]+)\](.*?)\]/mg, '<font style="color:#$1">$2</font>').replace(/\[\[color:([a-zA-Z0-9\-\.\/\?%\#_]+)\](.*?)\]/mg, '<span class="$1">$2</span>');
+      return text.replace(/\[\[color:\#([a-zA-Z0-9\-\.\/\?%\#_]+)\](.*?)\]/g, '<font style="color:#$1">$2</font>').replace(/\[\[color:([a-zA-Z0-9\-\.\/\?%\#_]+)\](.*?)\]/g, '<span class="$1">$2</span>');
     },
     internalLinks: function(options) {
       var def, text;
@@ -890,7 +895,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.*?)\]/mg, '<a class="wiki-link" href="#$1">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/mg, '<a class="wiki-link" href="#$1">$1</a>');
+      return text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.*?)\]/g, '<a class="wiki-link" href="#$1">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a class="wiki-link" href="#$1">$1</a>');
     },
     indPrimary: function(options) {
       var def, text;
@@ -918,19 +923,6 @@ $(function() {
       text = def.text;
       return text.replace(/<<<\n?/g, '<div class="side-box-outer"><div class="side-box wiki-text">').replace(/>>>\n?/g, '</div></div>');
     },
-    tags: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/<(.*?)>\n?/g, '<$1>').replace(/<\/(.*?)>\n?/g, '</$1>');
-    },
     anchor: function(options) {
       var def, text;
 
@@ -955,7 +947,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_\:]+) ([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]\n?/mg, '<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
+      return text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_\:]+) ([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]\n?/g, '<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
     },
     gismeteo: function(options) {
       var def, sn, text;
@@ -969,7 +961,7 @@ $(function() {
       $.extend(def, options);
       sn = $(this).data('sn');
       text = def.text;
-      return text.replace(/\[gismeteo\]\n?/mg, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="98%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>');
+      return text.replace(/\[gismeteo\]\n?/g, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="98%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>');
     },
     spoiler: function(options) {
       var def, text;
@@ -995,7 +987,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/^\n/, "").replace(/\]\n/g, "]").replace(/\%\>\n/g, "%>").replace(/\n/g, "<br>").replace(/<br>\n?(<div class=\"primary-box-outer\">)/g, "$1");
+      return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/\]\n/g, "]").replace(/\n/g, "<br>").replace(/<br>\n?(<div class=\"primary-box-outer\">)/g, "$1");
     }
   };
   return $.fn.snWiki = function(sn) {
@@ -1060,37 +1052,15 @@ $(function() {
         options = {};
       }
       sn = $(this).data('sn');
-      def = {
-        view: {
-          signin: new EJS({
-            url: 'view/signin.html',
-            ext: '.html'
-          }).render({
-            view: {
-              signinFormEnter: new EJS({
-                url: 'view/signinFormEnter.html',
-                ext: '.html'
-              }).render(),
-              signinFormReg: new EJS({
-                url: 'view/signinFormReg.html',
-                ext: '.html'
-              }).render()
-            }
-          }),
-          signinSide: new EJS({
-            url: 'view/signinSide.html',
-            ext: '.html'
-          }).render()
-        }
-      };
+      def = {};
       $.extend(true, def, options);
       console.log('signin: ' + 'init');
       console.log('render: ', def);
       $(this).snModels('primary', {
-        text: def.view.signin
+        view: 'signin.html'
       });
       $(this).snModels('side', {
-        text: def.view.signinSide
+        view: 'signinSide.html'
       });
       $(this).snTriggers('switch', 'side', sn.levels.two);
       $(this).snTriggers('switch', 'bar', sn.levels.one);
@@ -1106,17 +1076,10 @@ $(function() {
       }
       console.log('signin: ' + 'help');
       sn = $(this).data('sn');
-      def = {
-        view: {
-          signinBlockHelp: new EJS({
-            url: 'view/signinBlockHelp.html',
-            ext: '.html'
-          }).render()
-        }
-      };
+      def = {};
       $.extend(true, def, options);
       $(this).snModels('primary', {
-        text: def.view.signinBlockHelp,
+        view: 'signinBlockHelp.html',
         position: 'before'
       });
       return $(this).snSignin('triggers');

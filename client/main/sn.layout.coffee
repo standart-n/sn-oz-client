@@ -3,11 +3,7 @@ $ ->
 	methods = 
 		init: (options = {}) ->
 			sn = $(this).data 'sn'
-			main = new EJS(url: 'layout/' + sn.region.name + '/main.html', ext: '.html').render
-				header:		new EJS(url: 'layout/' + sn.region.name + '/header.html', ext: '.html').render
-					caption: sn.region.caption
-				content:	new EJS(url: 'layout/' + sn.region.name + '/content.html', ext: '.html').render()
-			$(this).snModels 'main', text: main
+			$(this).snModels 'main', layout: 'main.html'
 
 
 	$.fn.snLayout = (sn = {}) ->
