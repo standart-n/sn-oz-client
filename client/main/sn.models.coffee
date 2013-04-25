@@ -2,11 +2,6 @@ $ ->
 
 	methods =
 		init: (options = {}) ->
-
-		main: (options = {}) ->
-
-			console.log 'models: ' + 'main' if console?
-
 			def =
 				elem:		'#main'
 				type:		'main'

@@ -2,7 +2,8 @@ $ ->
 
 	methods = 
 		init: (options = {}) ->
-			$(this).snModels 'main', layout: 'main.html'
+			$(this).snModels elem: '#bar', layout: 'bar.html'
+			$(this).snModels elem: '#main', layout: 'main.html'
 
 
 	$.fn.snLayout = (sn = {}) ->

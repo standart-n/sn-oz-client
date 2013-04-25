@@ -31,7 +31,7 @@ $ ->
 			console.log 'trigger: ' + 'linksSide' if console?
 
 			_this = this
-			$('.side-box a').on 'click', () ->
+			$('#side a').on 'click', () ->
 				$(_this).snEvents $(this).attr('href')
 
 		linksPrimary: () ->
@@ -39,7 +39,7 @@ $ ->
 			console.log 'trigger: ' + 'linksPrimary' if console?
 
 			_this = this
-			$('.primary-box a').on 'click', () ->
+			$('#primary a').on 'click', () ->
 				$(_this).snEvents $(this).attr('href')
 
 		linksBar: () ->

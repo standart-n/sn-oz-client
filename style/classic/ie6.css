@@ -42,6 +42,10 @@ body {
   margin-left: -20px;
 }
 
+.bar {
+  top: "expression(eval(document.documentElement.scrollTop) + 100)";
+}
+
 .span1,
 .span2,
 .span3,
@@ -442,7 +446,9 @@ ul.thumbnails {
 
 ul.thumbnails li {
   float: left;
-  margin: 0 0 18px 0;
+  padding: none;
+  margin: 0 10px 18px 0;
+  border: none;
 }
 
 /* Tooltips */
@@ -511,10 +517,8 @@ ul.thumbnails li {
   cursor: pointer;
 }
 
-.well {
-  height: auto;
-}
+/* HR */
 
-.well img {
-  float: left;
+hr {
+  width: 98%;
 }

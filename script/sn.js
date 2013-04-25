@@ -253,7 +253,7 @@ $(function() {
         console.log('trigger: ' + 'linksSide');
       }
       _this = this;
-      return $('.side-box a').on('click', function() {
+      return $('#side a').on('click', function() {
         return $(_this).snEvents($(this).attr('href'));
       });
     },
@@ -264,7 +264,7 @@ $(function() {
         console.log('trigger: ' + 'linksPrimary');
       }
       _this = this;
-      return $('.primary-box a').on('click', function() {
+      return $('#primary a').on('click', function() {
         return $(_this).snEvents($(this).attr('href'));
       });
     },
@@ -482,7 +482,12 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      return $(this).snModels('main', {
+      $(this).snModels({
+        elem: '#bar',
+        layout: 'bar.html'
+      });
+      return $(this).snModels({
+        elem: '#main',
         layout: 'main.html'
       });
     }
@@ -504,18 +509,10 @@ $(function() {
 
   methods = {
     init: function(options) {
-      if (options == null) {
-        options = {};
-      }
-    },
-    main: function(options) {
       var def;
 
       if (options == null) {
         options = {};
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('models: ' + 'main');
       }
       def = {
         elem: '#main',
@@ -911,7 +908,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" width="90%" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
+      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" style="width:96%;margin:auto;" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
     },
     image: function(options) {
       var def, sn, text;
@@ -964,7 +961,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<<\n?/g, '<div class="well well-small">').replace(/>>>\n?/g, '</div>');
+      return text.replace(/<<<\n?/g, '<div class="well">').replace(/>>>\n?/g, '</div>');
     },
     anchor: function(options) {
       var def, text;
@@ -1004,7 +1001,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[gismeteo\]\n?/g, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="98%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>');
+      return text.replace(/\[gismeteo\]\n?/g, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="96%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>');
     },
     spoiler: function(options) {
       var def, text;

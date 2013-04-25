@@ -8,7 +8,7 @@
 
 table {
   max-width: 100%;
-  background-color: @tableBackground;
+  // background-color: @tableBackground;
   border-collapse: collapse;
   border-spacing: 0;
 }
@@ -19,6 +19,8 @@ table {
 .table {
   width: 100%;
   margin-bottom: @baseLineHeight;
+  background-color: @wellBackground;
+
   // Cells
   th,
   td {
@@ -51,7 +53,7 @@ table {
 
   // Nesting
   .table {
-    background-color: @bodyBackground;
+    //background-color: @wellBackground;
   }
 }
 
