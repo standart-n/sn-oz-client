@@ -10,9 +10,9 @@ $ ->
 
 		main: ->
 
-			console.log 'conf: ' + 'main.json'
-
 			sn = $(this).data 'sn'
+			console.log 'conf: ' + 'main.json' if console?
+
 			$.ajax
 				url: 'conf/main.json'
 				async: off
@@ -23,9 +23,9 @@ $ ->
 
 		theme: ->
 
-			console.log 'conf: ' + 'themes.json'
-
 			sn = $(this).data 'sn'
+			console.log 'conf: ' + 'themes.json' if console?
+
 			$.ajax
 				url: 'conf/themes.json'
 				async: off
@@ -41,9 +41,9 @@ $ ->
 
 		css: ->
 
-			console.log 'conf: ' + 'css'
-
 			sn = $(this).data 'sn'
+			console.log 'conf: ' + 'css' if console?
+
 			if sn.theme.css
 				$.each sn.theme.css, (i) ->
 					head = document.getElementsByTagName('head')[0]
@@ -55,9 +55,9 @@ $ ->
 
 		js: ->
 
-			console.log 'conf: ' + 'js'
-
 			sn = $(this).data 'sn'
+			console.log 'conf: ' + 'js' if console?
+
 			if sn.theme.js
 				$.each sn.theme.js, (i) ->
 					$.getScript @

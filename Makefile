@@ -27,6 +27,9 @@ client-js:
 css:
 	@recess --compile ./less/silver/index.less > ./style/silver/theme.css
 
+	@recess --compile ./less/classic/index.less > ./style/classic/theme.css
+	@recess --compile ./less/classic/ie6.less > ./style/classic/ie6.css
+
 	
 finish:
 	@echo "\nSuccessfully built at ${DATE}."

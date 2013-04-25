@@ -5,7 +5,7 @@ $ ->
 
 		primary: (options = {}) ->
 
-			console.log 'wiki: ' + 'primary'
+			console.log 'wiki: ' + 'primary' if console?
 
 			_this = this
 			def =
@@ -23,14 +23,14 @@ $ ->
 			text = $(_this).snWiki('image', text: text)
 			text = $(_this).snWiki('fonts', text: text)
 			text = $(_this).snWiki('anchor', text: text)
-			text = $(_this).snWiki('indPrimary', text: text)
+			text = $(_this).snWiki('ind', text: text)
 			text = $(_this).snWiki('spoiler', text: text)
 			text = $(_this).snWiki('spaces', text: text)
 			text
 
 		side: (options = {}) ->
 
-			console.log 'wiki: ' + 'side'
+			console.log 'wiki: ' + 'side' if console?
 
 			_this = this
 			def =
@@ -49,7 +49,7 @@ $ ->
 			text = $(_this).snWiki('fonts', text: text)
 			text = $(_this).snWiki('anchor', text: text)
 			text = $(_this).snWiki('gismeteo', text: text)
-			text = $(_this).snWiki('indSide', text: text)
+			text = $(_this).snWiki('ind', text: text)
 			text = $(_this).snWiki('sideMenu', text: text)
 			text = $(_this).snWiki('spaces', text: text)
 			text
@@ -88,8 +88,8 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="$1" target="_blank">$2</a>')
-				.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="$1" target="_blank">$1</a>')
+				.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a href="$1" target="_blank">$2</a>')
+				.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="$1" target="_blank">$1</a>')
 
 		fileLinks: (options = {}) ->
 
@@ -100,8 +100,8 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$2</a>')
-				.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$1</a>')
+				.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$2</a>')
+				.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$1</a>')
 
 		mailTo: (options = {}) ->
 
@@ -111,8 +111,8 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="mailto:$1">$2</a>')
-				.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="mailto:$1">$1</a>')
+				.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+) (.*?)\]/g, '<a href="mailto:$1">$2</a>')
+				.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a href="mailto:$1">$1</a>')
 
 		photo: (options = {}) ->
 
@@ -122,7 +122,7 @@ $ ->
 
 			$.extend def, options
 			text = def.text
-			text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" width="100%" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
+			text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" width="90%" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
 
 		image: (options = {}) ->
 
@@ -133,13 +133,12 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) left\]/g,'<img align="center" class="wiki-image-left" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
-				.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) right\]/g,'<img align="center" class="wiki-image-right" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
-				.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g,'<img align="center" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
+				.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) left\]/g,'<img class="pull-left" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
+				.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) right\]/g,'<img class="pull-right" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
+				.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g,'<img src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
 
 		fonts: (options = {}) ->
 
-			sn = $(this).data 'sn'
 			def =
 				text: ''
 
@@ -157,21 +156,10 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.*?)\]/g, '<a class="wiki-link" href="#$1">$2</a>')
-				.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a class="wiki-link" href="#$1">$1</a>')
+				.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.*?)\]/g, '<a href="#$1">$2</a>')
+				.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>')
 
-		indPrimary: (options = {}) ->
-
-			def =
-				text: ''
-
-			$.extend def, options
-			text = def.text
-			text
-				.replace(/<<<\n?/g, '<div class="primary-box-outer"><div class="primary-box wiki-text">')
-				.replace(/>>>\n?/g, '</div></div>')
-
-		indSide: (options = {}) ->
+		ind: (options = {}) ->
 
 			def =
 				text: ''
@@ -179,8 +167,9 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/<<<\n?/g, '<div class="side-box-outer"><div class="side-box wiki-text">')
-				.replace(/>>>\n?/g, '</div></div>')
+				.replace(/<<<\n?/g, '<div class="well well-small">')
+				.replace(/>>>\n?/g, '</div>')
+
 
 		anchor: (options = {}) ->
 
@@ -203,11 +192,11 @@ $ ->
 
 		gismeteo: (options = {}) ->
 
+			sn = $(this).data 'sn'
 			def =
 				text: ''
 
 			$.extend def, options
-			sn = $(this).data 'sn'
 			text = def.text
 			text.replace(/\[gismeteo\]\n?/g, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="98%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>')
 
@@ -219,9 +208,9 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/<<\[(.+)\]\n?/g,'<div class="primary-box-spoiler">'+
-											'<a href="#spoiler" class="wiki-link primary-box-spoiler-caption">$1</a>'+
-											'<div class="primary-box-spoiler-body">')
+				.replace(/<<\[(.+)\]\n?/g,'<div class="spoiler">'+
+											'<a href="#spoiler" class="wiki-link spoiler-caption">$1</a>'+
+											'<div class="spoiler-body">')
 				.replace(/>>\n?/g,'</div></div>')
 
 		spaces: (options = {}) ->

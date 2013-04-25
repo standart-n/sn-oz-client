@@ -1,4 +1,15 @@
 {
+	"classic":
+	{
+		"css":
+		[
+			"style/classic/theme.css",
+			"style/classic/ie6.css"
+		],
+		"js":
+		[
+		]
+	},
 	"silver":
 	{
 		"css":

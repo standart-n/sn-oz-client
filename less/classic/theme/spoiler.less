@@ -1,0 +1,48 @@
+
+.spoiler {
+	display:block;
+	float:left;
+	width:96%;
+	height:auto;
+	padding:0 0 5px 0;
+	margin:5px 0 0 2%;
+}
+
+* html .spoiler {
+	margin:5px 0 0 1%;
+}
+
+.spoiler-caption {
+	display:block;
+	float:left;
+	line-height:22px;
+	padding:0 0 0 28px;
+	margin:0 0 5px 0;
+	clear:both;
+	.image('@{img}/silver-spoiler-down.png');
+}
+
+.spoiler-caption-open {
+	.image('@{img}/silver-spoiler-up.png');
+}
+
+.spoiler-caption-close {
+	.image('@{img}/silver-spoiler-down.png');
+}
+
+.spoiler-body {
+	display:none;
+	float:left;
+	clear:both;
+	padding:5px 0 10px 4%;
+	width:96%;
+	background:#f7f7f7;
+	border-top:#aaa dashed 1px;
+	border-bottom:#aaa dashed 1px;
+}
+
+* html .spoiler-body {
+	padding:5px 0 10px 2%;
+}
+
+

@@ -4,22 +4,23 @@ $ ->
 	methods =
 		init: (options = {}) ->
 
-			def =
+			sn =
 				levels:{}
 				users:{}
 				content:{}
 				result:{}
+				console: off
 
-			$.extend true, def, options
+			$.extend true, sn, options
 
-			console.log 'start...'
-			$(this).data 'sn', def
-			console.log 'configuration...'
+			$(this).data 'sn', sn
+			console.log 'configuration...' if console?
 			$(this).snConf()
-			console.log 'layout...'
+			console.log 'layout...' if console?
 			$(this).snLayout()
-			console.log 'autoload...'
+			console.log 'autoload...' if console?
 			$(this).snEvents '#autoload'
+
 
 
 	$.fn.sn = (sn = {}) ->

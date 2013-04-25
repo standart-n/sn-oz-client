@@ -5,11 +5,11 @@ $ ->
 
 		checkRegForm: (options = {}) ->
 
-			console.log 'registration: ' + 'checkRegForm'
+			_this = this
+			console.log 'registration: ' + 'checkRegForm' if console?
 
 			def =
 				error: false
-			_this = this
 			$.extend true, def, options
 
 			$('.signin-warning').hide()
@@ -56,7 +56,7 @@ $ ->
 
 		afterCheckRegForm: (options = {}) ->
 
-			console.log 'registration: ' + 'afterCheckRegForm'
+			console.log 'registration: ' + 'afterCheckRegForm' if console?
 
 			def =
 				error: false
@@ -71,7 +71,7 @@ $ ->
 
 		regOnServer: (options = {}) ->
 
-			console.log 'registration: ' + 'regOnServer'
+			console.log 'registration: ' + 'regOnServer' if console?
 
 			def =
 				debug:				off
@@ -114,22 +114,23 @@ $ ->
 					alert s if def.debug
 					$(_this).data 'sn', sn
 					alert sn.result.alert if sn.result.alert
-					console.log 'afterCheckRegFormOnServer', s
+					console.log 'afterCheckRegFormOnServer', s if console?
 					$(_this).snRegistration 'afterCheckRegFormOnServer', s
 
 				error: (XMLHttpRequest,textStatus,error) ->
-					console.error 'ajax:', textStatus, error
+					console.error 'ajax:', textStatus, error if console?
 
 		afterSuccessReg: (options = {}) ->
 
-			console.log 'registration: ' + 'afterSuccessReg'
+			sn = $(this).data 'sn'
+			console.log 'registration: ' + 'afterSuccessReg' if console?
 
 			alert 'afterSuccessReg'
 
 			
 		afterCheckRegFormOnServer: (options = {}) ->
 
-			console.log 'registration: ' + 'afterCheckRegFormOnServer'
+			console.log 'registration: ' + 'afterCheckRegFormOnServer' if console?
 
 			def =
 				'error': false

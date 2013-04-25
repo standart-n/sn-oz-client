@@ -2,13 +2,13 @@ $ ->
 
 	methods =
 		init: (options = {}) ->
+
 			sn = $(this).data 'sn'
-			def = {}
-				
+			def = {}		
 			$.extend true, def, options
 
-			console.log 'signin: ' + 'init'
-			console.log 'render: ', def
+			console.log 'signin: ' + 'init' if console?
+			console.log 'render: ', def if console?
 
 			$(this).snModels 'primary', view: 'signin.html'
 			$(this).snModels 'side', view: 'signinSide.html'
@@ -20,11 +20,9 @@ $ ->
 
 		help: (options = {}) ->
 
-			console.log 'signin: ' + 'help'
+			console.log 'signin: ' + 'help' if console?
 
-			sn = $(this).data 'sn'
 			def = {}
-
 			$.extend true, def, options
 			
 			$(this).snModels 'primary', view: 'signinBlockHelp.html', position: 'before'
@@ -33,9 +31,9 @@ $ ->
 
 		triggers: (options = {}) ->
 
-			console.log 'signin: ' + 'triggers'
-
 			_this = this
+			console.log 'signin: ' + 'triggers' if console?
+
 			$('.signin-input').on 'focus', () ->
 				if $(this).val() is $(this).data('def-value') or $(this).val() is ''
 					$(this).removeClass('signin-input-blur')

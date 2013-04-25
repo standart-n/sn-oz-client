@@ -19,8 +19,8 @@ $ ->
 				three: sn.href.replace /(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/, '$4'
 				anchor: sn.href.replace /(.*)\:(.*?)\/(.*)/, '$2'
 
-			console.info 'url: ' + sn.href
-			console.info 'levels: ', sn.levels
+			console.info 'url: ' + sn.href if console?
+			console.info 'levels: ', sn.levels if console?
 
 			if sn.levels.one? and sn.levels.one isnt 'spoiler'
 				switch sn.levels.one
@@ -70,7 +70,7 @@ $ ->
 								$(this).snTriggers 'switchSide', 'link':sn.levels.anchor
 							$('html,body').animate  scrollTop:height, 'slow'
 				catch e
-					console.error 'anchor', e
+					console.error 'anchor', e if console?
 
 
 

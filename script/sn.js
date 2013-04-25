@@ -7,7 +7,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      return conlole.log('design');
+      if (typeof console !== "undefined" && console !== null) {
+        return conlole.log('design');
+      }
     }
   };
   return $.fn.snDesign = function(sn) {
@@ -27,25 +29,31 @@ $(function() {
 
   methods = {
     init: function(options) {
-      var def;
+      var sn;
 
       if (options == null) {
         options = {};
       }
-      def = {
+      sn = {
         levels: {},
         users: {},
         content: {},
-        result: {}
+        result: {},
+        console: false
       };
-      $.extend(true, def, options);
-      console.log('start...');
-      $(this).data('sn', def);
-      console.log('configuration...');
+      $.extend(true, sn, options);
+      $(this).data('sn', sn);
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('configuration...');
+      }
       $(this).snConf();
-      console.log('layout...');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('layout...');
+      }
       $(this).snLayout();
-      console.log('autoload...');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('autoload...');
+      }
       return $(this).snEvents('#autoload');
     }
   };
@@ -87,8 +95,12 @@ $(function() {
         three: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/, '$4'),
         anchor: sn.href.replace(/(.*)\:(.*?)\/(.*)/, '$2')
       };
-      console.info('url: ' + sn.href);
-      console.info('levels: ', sn.levels);
+      if (typeof console !== "undefined" && console !== null) {
+        console.info('url: ' + sn.href);
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.info('levels: ', sn.levels);
+      }
       if ((sn.levels.one != null) && sn.levels.one !== 'spoiler') {
         switch (sn.levels.one) {
           case 'autoload':
@@ -164,7 +176,9 @@ $(function() {
           }
         } catch (_error) {
           e = _error;
-          return console.error('anchor', e);
+          if (typeof console !== "undefined" && console !== null) {
+            return console.error('anchor', e);
+          }
         }
       }
     }
@@ -235,7 +249,9 @@ $(function() {
     linksSide: function() {
       var _this;
 
-      console.log('trigger: ' + 'linksSide');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('trigger: ' + 'linksSide');
+      }
       _this = this;
       return $('.side-box a').on('click', function() {
         return $(_this).snEvents($(this).attr('href'));
@@ -244,7 +260,9 @@ $(function() {
     linksPrimary: function() {
       var _this;
 
-      console.log('trigger: ' + 'linksPrimary');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('trigger: ' + 'linksPrimary');
+      }
       _this = this;
       return $('.primary-box a').on('click', function() {
         return $(_this).snEvents($(this).attr('href'));
@@ -254,7 +272,9 @@ $(function() {
       var _this;
 
       _this = this;
-      console.log('trigger: ' + 'linksBar');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('trigger: ' + 'linksBar');
+      }
       return $('a').on('click', function() {
         return $(_this).snEvents($(this).attr('href'));
       });
@@ -265,7 +285,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('trigger: ' + 'switchBar');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('trigger: ' + 'switchBar');
+      }
       def = {
         link: 'main'
       };
@@ -279,7 +301,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('trigger: ' + 'switchSide');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('trigger: ' + 'switchSide');
+      }
       def = {
         link: 'above'
       };
@@ -288,7 +312,9 @@ $(function() {
       return $('#side-' + def.link).removeClass('side-box-link-normal').removeClass('side-box-link-hover').addClass('side-box-link-active').blur();
     },
     switcherBar: function() {
-      console.log('trigger: ' + 'switcherBar');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('trigger: ' + 'switcherBar');
+      }
       $('.bar-button').on('mouseover', function() {
         if (!$(this).hasClass('bar-button-active')) {
           return $(this).removeClass('bar-button-normal').addClass('bar-button-hover');
@@ -301,7 +327,9 @@ $(function() {
       });
     },
     switcherSide: function() {
-      console.log('trigger: ' + 'switcherSide');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('trigger: ' + 'switcherSide');
+      }
       $('.side-box-link').on('mouseover', function() {
         if (!$(this).hasClass('side-box-link-active')) {
           return $(this).removeClass('side-box-link-normal').addClass('side-box-link-hover');
@@ -314,15 +342,17 @@ $(function() {
       });
     },
     spoiler: function() {
-      console.log('trigger: ' + 'spoiler');
-      return $('.primary-box-spoiler-caption').on('click', function(e) {
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('trigger: ' + 'spoiler');
+      }
+      return $('.spoiler-caption').on('click', function(e) {
         e.preventDefault();
-        if ($(this).hasClass('primary-box-spoiler-caption-open')) {
-          $(this).removeClass('primary-box-spoiler-caption-open').addClass('primary-box-spoiler-caption-close');
+        if ($(this).hasClass('spoiler-caption-open')) {
+          $(this).removeClass('spoiler-caption-open').addClass('spoiler-caption-close');
         } else {
-          $(this).removeClass('primary-box-spoiler-caption-close').addClass('primary-box-spoiler-caption-open');
+          $(this).removeClass('spoiler-caption-close').addClass('spoiler-caption-open');
         }
-        return $(this).parent('.primary-box-spoiler').children('.primary-box-spoiler-body').each(function() {
+        return $(this).parent('.spoiler').children('.spoiler-body').each(function() {
           if ($(this).hasClass('spoiler-status-open')) {
             return $(this).removeClass('spoiler-status-open').addClass('spoiler-status-close').hide();
           } else {
@@ -361,8 +391,10 @@ $(function() {
     main: function() {
       var sn;
 
-      console.log('conf: ' + 'main.json');
       sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'main.json');
+      }
       return $.ajax({
         url: 'conf/main.json',
         async: false,
@@ -376,8 +408,10 @@ $(function() {
     theme: function() {
       var sn;
 
-      console.log('conf: ' + 'themes.json');
       sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'themes.json');
+      }
       return $.ajax({
         url: 'conf/themes.json',
         async: false,
@@ -396,8 +430,10 @@ $(function() {
     css: function() {
       var sn;
 
-      console.log('conf: ' + 'css');
       sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'css');
+      }
       if (sn.theme.css) {
         return $.each(sn.theme.css, function(i) {
           var head, link;
@@ -414,8 +450,10 @@ $(function() {
     js: function() {
       var sn;
 
-      console.log('conf: ' + 'js');
       sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'js');
+      }
       if (sn.theme.js) {
         return $.each(sn.theme.js, function(i) {
           return $.getScript(this);
@@ -441,12 +479,9 @@ $(function() {
 
   methods = {
     init: function(options) {
-      var sn;
-
       if (options == null) {
         options = {};
       }
-      sn = $(this).data('sn');
       return $(this).snModels('main', {
         layout: 'main.html'
       });
@@ -479,7 +514,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('models: ' + 'main');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('models: ' + 'main');
+      }
       def = {
         elem: '#main',
         type: 'main',
@@ -494,9 +531,11 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('models: ' + 'primary');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('models: ' + 'primary');
+      }
       def = {
-        elem: '#primary-content',
+        elem: '#primary',
         type: 'primary',
         wiki: true
       };
@@ -509,9 +548,11 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('models: ' + 'side');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('models: ' + 'side');
+      }
       def = {
-        elem: '#side-content',
+        elem: '#side',
         type: 'side',
         wiki: true
       };
@@ -566,12 +607,11 @@ $(function() {
       }
     },
     inner: function(options) {
-      var def, sn;
+      var def;
 
       if (options == null) {
         options = {};
       }
-      sn = $(this).data('sn');
       def = {
         elem: '#side-content',
         type: 'side',
@@ -580,7 +620,9 @@ $(function() {
         position: 'place'
       };
       $.extend(def, options);
-      console.log('innerText: ' + def.type + ' ' + def.position);
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('innerText: ' + def.type + ' ' + def.position);
+      }
       if (def.wiki === true) {
         def.text = $(this).snWiki(def.type, {
           text: def.text
@@ -588,12 +630,15 @@ $(function() {
       }
       switch (def.position) {
         case 'place':
-          return $(def.elem).html(def.text);
+          $(def.elem).html(def.text);
+          break;
         case 'after':
-          return $(def.elem).html($(def.elem).html() + def.text);
+          $(def.elem).html($(def.elem).html() + def.text);
+          break;
         case 'before':
-          return $(def.elem).html(def.text + $(def.elem).html());
+          $(def.elem).html(def.text + $(def.elem).html());
       }
+      return $(this).ie6();
     },
     load: function(options, callback) {
       var def, sn;
@@ -621,9 +666,15 @@ $(function() {
         case 'side':
           def.url = 'content/' + sn.region.name + '/side_' + def.file;
       }
-      console.log('type: ' + def.type);
-      console.log('file: ' + def.file);
-      console.log('url: ' + def.url);
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('type: ' + def.type);
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('file: ' + def.file);
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('url: ' + def.url);
+      }
       return $.ajax({
         url: def.url,
         async: false,
@@ -631,7 +682,9 @@ $(function() {
         dataType: 'html',
         success: function(text) {
           if (text != null) {
-            console.log('success');
+            if (typeof console !== "undefined" && console !== null) {
+              console.log('success');
+            }
             if (callback) {
               return callback(text);
             }
@@ -667,7 +720,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('wiki: ' + 'primary');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('wiki: ' + 'primary');
+      }
       _this = this;
       def = {
         text: ''
@@ -704,7 +759,7 @@ $(function() {
       text = $(_this).snWiki('anchor', {
         text: text
       });
-      text = $(_this).snWiki('indPrimary', {
+      text = $(_this).snWiki('ind', {
         text: text
       });
       text = $(_this).snWiki('spoiler', {
@@ -721,7 +776,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('wiki: ' + 'side');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('wiki: ' + 'side');
+      }
       _this = this;
       def = {
         text: ''
@@ -761,7 +818,7 @@ $(function() {
       text = $(_this).snWiki('gismeteo', {
         text: text
       });
-      text = $(_this).snWiki('indSide', {
+      text = $(_this).snWiki('ind', {
         text: text
       });
       text = $(_this).snWiki('sideMenu', {
@@ -813,7 +870,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="$1" target="_blank">$2</a>').replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="$1" target="_blank">$1</a>');
+      return text.replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a href="$1" target="_blank">$2</a>').replace(/\[(https?:\/\/[a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="$1" target="_blank">$1</a>');
     },
     fileLinks: function(options) {
       var def, sn, text;
@@ -827,7 +884,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$2</a>').replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$1</a>');
+      return text.replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$2</a>').replace(/\[file:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$1</a>');
     },
     mailTo: function(options) {
       var def, text;
@@ -840,7 +897,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+) (.*?)\]/g, '<a class="wiki-link" href="mailto:$1">$2</a>').replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a class="wiki-link" href="mailto:$1">$1</a>');
+      return text.replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+) (.*?)\]/g, '<a href="mailto:$1">$2</a>').replace(/\[email:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a href="mailto:$1">$1</a>');
     },
     photo: function(options) {
       var def, sn, text;
@@ -854,7 +911,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" width="100%" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
+      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" width="90%" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
     },
     image: function(options) {
       var def, sn, text;
@@ -868,15 +925,14 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) left\]/g, '<img align="center" class="wiki-image-left" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">').replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) right\]/g, '<img align="center" class="wiki-image-right" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">').replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
+      return text.replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) left\]/g, '<img class="pull-left" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">').replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+) right\]/g, '<img class="pull-right" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">').replace(/\[image:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
     },
     fonts: function(options) {
-      var def, sn, text;
+      var def, text;
 
       if (options == null) {
         options = {};
       }
-      sn = $(this).data('sn');
       def = {
         text: ''
       };
@@ -895,9 +951,9 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.*?)\]/g, '<a class="wiki-link" href="#$1">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a class="wiki-link" href="#$1">$1</a>');
+      return text.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+) (.*?)\]/g, '<a href="#$1">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>');
     },
-    indPrimary: function(options) {
+    ind: function(options) {
       var def, text;
 
       if (options == null) {
@@ -908,20 +964,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<<\n?/g, '<div class="primary-box-outer"><div class="primary-box wiki-text">').replace(/>>>\n?/g, '</div></div>');
-    },
-    indSide: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/<<<\n?/g, '<div class="side-box-outer"><div class="side-box wiki-text">').replace(/>>>\n?/g, '</div></div>');
+      return text.replace(/<<<\n?/g, '<div class="well well-small">').replace(/>>>\n?/g, '</div>');
     },
     anchor: function(options) {
       var def, text;
@@ -955,11 +998,11 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      sn = $(this).data('sn');
       def = {
         text: ''
       };
       $.extend(def, options);
-      sn = $(this).data('sn');
       text = def.text;
       return text.replace(/\[gismeteo\]\n?/g, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="98%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>');
     },
@@ -974,7 +1017,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<\[(.+)\]\n?/g, '<div class="primary-box-spoiler">' + '<a href="#spoiler" class="wiki-link primary-box-spoiler-caption">$1</a>' + '<div class="primary-box-spoiler-body">').replace(/>>\n?/g, '</div></div>');
+      return text.replace(/<<\[(.+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="wiki-link spoiler-caption">$1</a>' + '<div class="spoiler-body">').replace(/>>\n?/g, '</div></div>');
     },
     spaces: function(options) {
       var def, text;
@@ -1054,8 +1097,12 @@ $(function() {
       sn = $(this).data('sn');
       def = {};
       $.extend(true, def, options);
-      console.log('signin: ' + 'init');
-      console.log('render: ', def);
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('signin: ' + 'init');
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('render: ', def);
+      }
       $(this).snModels('primary', {
         view: 'signin.html'
       });
@@ -1069,13 +1116,14 @@ $(function() {
       return $(this).snSignin('triggers', def);
     },
     help: function(options) {
-      var def, sn;
+      var def;
 
       if (options == null) {
         options = {};
       }
-      console.log('signin: ' + 'help');
-      sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('signin: ' + 'help');
+      }
       def = {};
       $.extend(true, def, options);
       $(this).snModels('primary', {
@@ -1090,8 +1138,10 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('signin: ' + 'triggers');
       _this = this;
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('signin: ' + 'triggers');
+      }
       $('.signin-input').on('focus', function() {
         if ($(this).val() === $(this).data('def-value') || $(this).val() === '') {
           $(this).removeClass('signin-input-blur');
@@ -1178,11 +1228,13 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('registration: ' + 'checkRegForm');
+      _this = this;
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('registration: ' + 'checkRegForm');
+      }
       def = {
         error: false
       };
-      _this = this;
       $.extend(true, def, options);
       $('.signin-warning').hide();
       $('.signin-form-warning').hide();
@@ -1245,7 +1297,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('registration: ' + 'afterCheckRegForm');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('registration: ' + 'afterCheckRegForm');
+      }
       def = {
         error: false
       };
@@ -1264,7 +1318,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('registration: ' + 'regOnServer');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('registration: ' + 'regOnServer');
+      }
       def = {
         debug: false,
         type: 'jsonp',
@@ -1310,19 +1366,28 @@ $(function() {
           if (sn.result.alert) {
             alert(sn.result.alert);
           }
-          console.log('afterCheckRegFormOnServer', s);
+          if (typeof console !== "undefined" && console !== null) {
+            console.log('afterCheckRegFormOnServer', s);
+          }
           return $(_this).snRegistration('afterCheckRegFormOnServer', s);
         },
         error: function(XMLHttpRequest, textStatus, error) {
-          return console.error('ajax:', textStatus, error);
+          if (typeof console !== "undefined" && console !== null) {
+            return console.error('ajax:', textStatus, error);
+          }
         }
       });
     },
     afterSuccessReg: function(options) {
+      var sn;
+
       if (options == null) {
         options = {};
       }
-      console.log('registration: ' + 'afterSuccessReg');
+      sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('registration: ' + 'afterSuccessReg');
+      }
       return alert('afterSuccessReg');
     },
     afterCheckRegFormOnServer: function(options) {
@@ -1331,7 +1396,9 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('registration: ' + 'afterCheckRegFormOnServer');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('registration: ' + 'afterCheckRegFormOnServer');
+      }
       def = {
         'error': false,
         'start': 'В поле'
@@ -1409,8 +1476,10 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      console.log('enter: ' + 'checkEnterForm');
-      sn = $(this).data(sn);
+      sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('enter: ' + 'checkEnterForm');
+      }
       alert('enter');
       console.info('sn', sn);
       return false;
@@ -1454,7 +1523,9 @@ $(function() {
       };
       $.extend(true, def, options);
       value = def.value.toString();
-      console.log('validation: ' + def.type + ' - ' + value);
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('validation: ' + def.type + ' - ' + value);
+      }
       switch (def.type) {
         case 'firstname':
           if (value === '' || value === def.caption) {
@@ -1590,7 +1661,9 @@ $(function() {
           }
       }
       if (!def.error) {
-        console.warn(def.exp);
+        if (typeof console !== "undefined" && console !== null) {
+          console.warn(def.exp);
+        }
       }
       return def;
     }
@@ -1611,46 +1684,19 @@ $(function() {
   var methods;
 
   methods = {
-    init: function(options) {
-      var _this;
-
-      if (options == null) {
-        options = {};
+    init: function() {
+      if ($.browser.msie && parseInt($.browser.version, 10) === 6) {
+        $(".row div[class^=\"span\"]:last-child").addClass("last-child");
+        $("[class*=\"span\"]").addClass("margin-left-20");
+        $('[class*="span"][class*="offset"]').removeClass('margin-left-20');
+        $(":button[class=\"btn\"], :reset[class=\"btn\"], :submit[class=\"btn\"], input[type=\"button\"]").addClass("button-reset");
+        $(":checkbox").addClass("input-checkbox");
+        $("[class^=\"icon-\"], [class*=\" icon-\"]").addClass("icon-sprite");
+        return $(".pagination li:first-child a").addClass("pagination-first-child");
       }
-      _this = this;
-      return $(this).on('click', function() {
-        var sn;
-
-        sn = $(_this).data('sn');
-        if (sn.levels.two === 'horoscope') {
-          return alert('horoscope');
-        }
-      });
-    },
-    load: function() {
-      var def, sn;
-
-      def = {
-        'el': '#primary-content'
-      };
-      $.extend(true, def, options);
-      sn = $(this).data('sn');
-      return $.ajax({
-        url: 'http://oz.st-n.ru/horoscope/?callback=?',
-        dataType: 'jsonp',
-        success: function(s) {
-          if (s.hscope) {
-            return $.each(s.hscope, function(key, value) {
-              if (value.description) {
-                return $('#hscope-description-' + key).html(value.description);
-              }
-            });
-          }
-        }
-      });
     }
   };
-  return $.fn.snHoroscope = function(sn) {
+  return $.fn.ie6 = function(sn) {
     if (sn == null) {
       sn = {};
     }

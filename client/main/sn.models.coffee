@@ -5,7 +5,7 @@ $ ->
 
 		main: (options = {}) ->
 
-			console.log 'models: ' + 'main'
+			console.log 'models: ' + 'main' if console?
 
 			def =
 				elem:		'#main'
@@ -17,10 +17,10 @@ $ ->
 
 		primary: (options = {}) ->
 
-			console.log 'models: ' + 'primary'
+			console.log 'models: ' + 'primary' if console?
 
 			def =
-				elem:		'#primary-content'
+				elem:		'#primary'
 				type:		'primary'
 				wiki:		on
 			$.extend def, options
@@ -31,10 +31,10 @@ $ ->
 
 		side: (options = {}) ->		
 
-			console.log 'models: ' + 'side'
+			console.log 'models: ' + 'side' if console?
 
 			def =
-				elem:		'#side-content'
+				elem:		'#side'
 				type:		'side'
 				wiki:		on
 			$.extend def, options
@@ -70,7 +70,6 @@ $ ->
 
 		inner: (options = {}) ->
 
-			sn = $(this).data 'sn'
 			def =
 				elem: 		'#side-content'
 				type: 		'side'
@@ -79,7 +78,7 @@ $ ->
 				position: 	'place'
 			$.extend def, options
 
-			console.log 'innerText: ' + def.type + ' ' + def.position
+			console.log 'innerText: ' + def.type + ' ' + def.position if console?
 			
 			def.text = $(this).snWiki(def.type, text: def.text) if def.wiki is on
 	
@@ -90,6 +89,9 @@ $ ->
 					$(def.elem).html $(def.elem).html() + def.text
 				when 'before'
 					$(def.elem).html def.text + $(def.elem).html()
+
+			$(this).ie6()
+
 
 
 		load: (options = {},callback) ->
@@ -112,9 +114,9 @@ $ ->
 				when 'side'
 					def.url = 'content/' + sn.region.name + '/side_' + def.file
 
-			console.log 'type: ' + def.type
-			console.log 'file: ' + def.file
-			console.log 'url: ' + def.url
+			console.log 'type: ' + def.type if console?
+			console.log 'file: ' + def.file if console?
+			console.log 'url: ' + def.url if console?
 
 			$.ajax
 				url: def.url
@@ -123,7 +125,7 @@ $ ->
 				dataType: 'html'
 				success: (text) ->
 					if text?
-						console.log 'success'
+						console.log 'success' if console?
 						callback(text) if callback
 
 

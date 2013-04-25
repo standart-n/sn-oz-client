@@ -2,7 +2,6 @@ $ ->
 
 	methods = 
 		init: (options = {}) ->
-			sn = $(this).data 'sn'
 			$(this).snModels 'main', layout: 'main.html'
 
 

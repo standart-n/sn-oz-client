@@ -3,7 +3,7 @@ $ ->
 	methods =
 		init: (options = {}) ->
 			# nothing
-			conlole.log 'design'
+			conlole.log 'design' if console?
 
 
 	$.fn.snDesign = (sn = {}) ->

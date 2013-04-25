@@ -17,7 +17,7 @@ $ ->
 			$.extend true, def, options
 			value = def.value.toString()
 
-			console.log 'validation: ' + def.type + ' - ' + value
+			console.log 'validation: ' + def.type + ' - ' + value if console?
 
 			switch def.type
 				when 'firstname'
@@ -125,7 +125,7 @@ $ ->
 								else
 									def.error = false
 			if !def.error
-				console.warn def.exp
+				console.warn def.exp if console?
 			def
 
 

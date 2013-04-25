@@ -28,7 +28,7 @@ $ ->
 
 		linksSide: () ->
 
-			console.log 'trigger: ' + 'linksSide'
+			console.log 'trigger: ' + 'linksSide' if console?
 
 			_this = this
 			$('.side-box a').on 'click', () ->
@@ -36,7 +36,7 @@ $ ->
 
 		linksPrimary: () ->
 
-			console.log 'trigger: ' + 'linksPrimary'
+			console.log 'trigger: ' + 'linksPrimary' if console?
 
 			_this = this
 			$('.primary-box a').on 'click', () ->
@@ -45,13 +45,13 @@ $ ->
 		linksBar: () ->
 
 			_this = this
-			console.log 'trigger: ' + 'linksBar'
+			console.log 'trigger: ' + 'linksBar' if console?
 			$('a').on 'click', () ->
 				$(_this).snEvents $(this).attr('href')
 
 		switchBar: (options = {}) ->
 
-			console.log 'trigger: ' + 'switchBar'
+			console.log 'trigger: ' + 'switchBar' if console?
 
 			def =
 				link: 'main'
@@ -71,7 +71,7 @@ $ ->
 
 		switchSide: (options = {}) ->
 
-			console.log 'trigger: ' + 'switchSide'
+			console.log 'trigger: ' + 'switchSide' if console?
 
 			def=
 				link: 'above'
@@ -91,7 +91,7 @@ $ ->
 
 		switcherBar: () ->
 
-			console.log 'trigger: ' + 'switcherBar'
+			console.log 'trigger: ' + 'switcherBar' if console?
 
 			$('.bar-button').on 'mouseover', () ->
 				if !$(this).hasClass('bar-button-active')
@@ -107,7 +107,7 @@ $ ->
 
 		switcherSide: () ->
 
-			console.log 'trigger: ' + 'switcherSide'
+			console.log 'trigger: ' + 'switcherSide' if console?
 
 			$('.side-box-link').on 'mouseover', () ->
 				if !$(this).hasClass('side-box-link-active')
@@ -123,22 +123,22 @@ $ ->
 
 		spoiler: () ->
 
-			console.log 'trigger: ' + 'spoiler'
+			console.log 'trigger: ' + 'spoiler' if console?
 
-			$('.primary-box-spoiler-caption').on 'click', (e) ->
+			$('.spoiler-caption').on 'click', (e) ->
 
 				e.preventDefault()
 
-				if $(this).hasClass('primary-box-spoiler-caption-open')
+				if $(this).hasClass('spoiler-caption-open')
 					$(this)
-						.removeClass('primary-box-spoiler-caption-open')
-						.addClass('primary-box-spoiler-caption-close')
+						.removeClass('spoiler-caption-open')
+						.addClass('spoiler-caption-close')
 				else
 					$(this)
-						.removeClass('primary-box-spoiler-caption-close')
-						.addClass('primary-box-spoiler-caption-open')
+						.removeClass('spoiler-caption-close')
+						.addClass('spoiler-caption-open')
 
-				$(this).parent('.primary-box-spoiler').children('.primary-box-spoiler-body').each () ->
+				$(this).parent('.spoiler').children('.spoiler-body').each () ->
 					if $(this).hasClass('spoiler-status-open')
 						$(this)
 							.removeClass('spoiler-status-open')
