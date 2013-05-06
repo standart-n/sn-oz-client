@@ -4,31 +4,6 @@ $(function() {
 
   methods = {
     init: function(options) {
-      if (options == null) {
-        options = {};
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        return conlole.log('design');
-      }
-    }
-  };
-  return $.fn.snDesign = function(sn) {
-    if (sn == null) {
-      sn = {};
-    }
-    if (methods[sn]) {
-      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else {
-      return methods.init.apply(this, arguments);
-    }
-  };
-});
-
-$(function() {
-  var methods;
-
-  methods = {
-    init: function(options) {
       var sn;
 
       if (options == null) {
@@ -58,6 +33,131 @@ $(function() {
     }
   };
   return $.fn.sn = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      return methods.init.apply(this, arguments);
+    }
+  };
+});
+
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
+      if (options == null) {
+        options = {};
+      }
+      $(this).snConf('main');
+      $(this).snConf('theme');
+      $(this).snConf('css');
+      $(this).snConf('js');
+      return $(this).snConf('settings');
+    },
+    main: function() {
+      var sn;
+
+      sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'main.json');
+      }
+      return $.ajax({
+        url: 'conf/main.json',
+        async: false,
+        dataType: 'json',
+        success: function(s) {
+          $.extend(sn, s);
+          return $(this).data('sn', sn);
+        }
+      });
+    },
+    theme: function() {
+      var sn;
+
+      sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'themes.json');
+      }
+      return $.ajax({
+        url: 'conf/themes.json',
+        async: false,
+        dataType: 'json',
+        success: function(s) {
+          if (s[sn.theme.name]) {
+            $.extend(sn.theme, s[sn.theme.name]);
+            sn.theme.enable = true;
+          } else {
+            sn.theme.enable = false;
+          }
+          return $(this).data('sn', sn);
+        }
+      });
+    },
+    css: function() {
+      var sn;
+
+      sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'css');
+      }
+      if (sn.theme.css) {
+        return $.each(sn.theme.css, function(i) {
+          var head, link;
+
+          head = document.getElementsByTagName('head')[0];
+          link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.type = 'text/css';
+          link.href = this;
+          return head.appendChild(link);
+        });
+      }
+    },
+    js: function() {
+      var sn;
+
+      sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'js');
+      }
+      if (sn.theme.js) {
+        return $.each(sn.theme.js, function(i) {
+          return $.getScript(this);
+        });
+      }
+    },
+    settings: function() {}
+  };
+  return $.fn.snConf = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      return methods.init.apply(this, arguments);
+    }
+  };
+});
+
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
+      if (options == null) {
+        options = {};
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        return conlole.log('design');
+      }
+    }
+  };
+  return $.fn.snDesign = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -184,6 +284,236 @@ $(function() {
     }
   };
   return $.fn.snEvents = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      return methods.init.apply(this, arguments);
+    }
+  };
+});
+
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
+      if (options == null) {
+        options = {};
+      }
+      $(this).snModels({
+        elem: '#bar',
+        layout: 'bar.html'
+      });
+      return $(this).snModels({
+        elem: '#main',
+        layout: 'main.html'
+      });
+    }
+  };
+  return $.fn.snLayout = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      return methods.init.apply(this, arguments);
+    }
+  };
+});
+
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
+      var def;
+
+      if (options == null) {
+        options = {};
+      }
+      def = {
+        elem: '#main',
+        type: 'main',
+        wiki: false
+      };
+      $.extend(def, options);
+      return $(this).snModels('append', def);
+    },
+    primary: function(options) {
+      var def;
+
+      if (options == null) {
+        options = {};
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('models: ' + 'primary');
+      }
+      def = {
+        elem: '#primary',
+        type: 'primary',
+        wiki: true
+      };
+      $.extend(def, options);
+      return $(this).snModels('append', def);
+    },
+    side: function(options) {
+      var def;
+
+      if (options == null) {
+        options = {};
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('models: ' + 'side');
+      }
+      def = {
+        elem: '#side',
+        type: 'side',
+        wiki: true
+      };
+      $.extend(def, options);
+      return $(this).snModels('append', def);
+    },
+    append: function(def) {
+      var sn, _this;
+
+      if (def == null) {
+        def = {};
+      }
+      _this = this;
+      sn = $(this).data('sn');
+      if (def.file != null) {
+        return $(this).snModels('load', def, function(s) {
+          def.text = s;
+          $(_this).snModels('inner', def);
+          if (def.type === 'primary') {
+            return $(_this).snTriggers('spoiler');
+          }
+        });
+      } else {
+        if (def.text != null) {
+          $(_this).snModels('inner', def);
+          if (def.type === 'primary') {
+            return $(_this).snTriggers('spoiler');
+          }
+        } else {
+          if (def.view != null) {
+            def.text = new EJS({
+              url: 'view/' + def.view,
+              ext: '.html'
+            }).render(sn);
+            $(_this).snModels('inner', def);
+            if (def.type === 'primary') {
+              return $(_this).snTriggers('spoiler');
+            }
+          } else {
+            if (def.layout != null) {
+              def.text = new EJS({
+                url: 'layout/' + sn.region.name + '/' + def.layout,
+                ext: '.html'
+              }).render(sn);
+              $(_this).snModels('inner', def);
+              if (def.type === 'primary') {
+                return $(_this).snTriggers('spoiler');
+              }
+            }
+          }
+        }
+      }
+    },
+    inner: function(options) {
+      var def;
+
+      if (options == null) {
+        options = {};
+      }
+      def = {
+        elem: '#side-content',
+        type: 'side',
+        text: '',
+        wiki: true,
+        position: 'place'
+      };
+      $.extend(def, options);
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('innerText: ' + def.type + ' ' + def.position);
+      }
+      if (def.wiki === true) {
+        def.text = $(this).snWiki(def.type, {
+          text: def.text
+        });
+      }
+      switch (def.position) {
+        case 'place':
+          $(def.elem).html(def.text);
+          break;
+        case 'after':
+          $(def.elem).html($(def.elem).html() + def.text);
+          break;
+        case 'before':
+          $(def.elem).html(def.text + $(def.elem).html());
+      }
+      if ($.isFunction($.bootstrapIE6)) {
+        return $.bootstrapIE6(def.elem);
+      }
+    },
+    load: function(options, callback) {
+      var def, sn;
+
+      if (options == null) {
+        options = {};
+      }
+      sn = $(this).data('sn');
+      def = {
+        url: '',
+        type: 'view',
+        file: 'news.html'
+      };
+      $.extend(def, options);
+      switch (def.type) {
+        case 'view':
+          def.url = 'view/' + def.file;
+          break;
+        case 'layout':
+          def.url = 'layout/' + sn.region.name + '/' + def.file;
+          break;
+        case 'primary':
+          def.url = 'content/' + sn.region.name + '/' + def.file;
+          break;
+        case 'side':
+          def.url = 'content/' + sn.region.name + '/side_' + def.file;
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('type: ' + def.type);
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('file: ' + def.file);
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('url: ' + def.url);
+      }
+      return $.ajax({
+        url: def.url,
+        async: false,
+        cache: false,
+        dataType: 'html',
+        success: function(text) {
+          if (text != null) {
+            if (typeof console !== "undefined" && console !== null) {
+              console.log('success');
+            }
+            if (callback) {
+              return callback(text);
+            }
+          }
+        }
+      });
+    }
+  };
+  return $.fn.snModels = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -363,334 +693,6 @@ $(function() {
     }
   };
   return $.fn.snTriggers = function(sn) {
-    if (sn == null) {
-      sn = {};
-    }
-    if (methods[sn]) {
-      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else {
-      return methods.init.apply(this, arguments);
-    }
-  };
-});
-
-$(function() {
-  var methods;
-
-  methods = {
-    init: function(options) {
-      if (options == null) {
-        options = {};
-      }
-      $(this).snConf('main');
-      $(this).snConf('theme');
-      $(this).snConf('css');
-      $(this).snConf('js');
-      return $(this).snConf('settings');
-    },
-    main: function() {
-      var sn;
-
-      sn = $(this).data('sn');
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('conf: ' + 'main.json');
-      }
-      return $.ajax({
-        url: 'conf/main.json',
-        async: false,
-        dataType: 'json',
-        success: function(s) {
-          $.extend(sn, s);
-          return $(this).data('sn', sn);
-        }
-      });
-    },
-    theme: function() {
-      var sn;
-
-      sn = $(this).data('sn');
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('conf: ' + 'themes.json');
-      }
-      return $.ajax({
-        url: 'conf/themes.json',
-        async: false,
-        dataType: 'json',
-        success: function(s) {
-          if (s[sn.theme.name]) {
-            $.extend(sn.theme, s[sn.theme.name]);
-            sn.theme.enable = true;
-          } else {
-            sn.theme.enable = false;
-          }
-          return $(this).data('sn', sn);
-        }
-      });
-    },
-    css: function() {
-      var sn;
-
-      sn = $(this).data('sn');
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('conf: ' + 'css');
-      }
-      if (sn.theme.css) {
-        return $.each(sn.theme.css, function(i) {
-          var head, link;
-
-          head = document.getElementsByTagName('head')[0];
-          link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.type = 'text/css';
-          link.href = this;
-          return head.appendChild(link);
-        });
-      }
-    },
-    js: function() {
-      var sn;
-
-      sn = $(this).data('sn');
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('conf: ' + 'js');
-      }
-      if (sn.theme.js) {
-        return $.each(sn.theme.js, function(i) {
-          return $.getScript(this);
-        });
-      }
-    },
-    settings: function() {}
-  };
-  return $.fn.snConf = function(sn) {
-    if (sn == null) {
-      sn = {};
-    }
-    if (methods[sn]) {
-      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else {
-      return methods.init.apply(this, arguments);
-    }
-  };
-});
-
-$(function() {
-  var methods;
-
-  methods = {
-    init: function(options) {
-      if (options == null) {
-        options = {};
-      }
-      $(this).snModels({
-        elem: '#bar',
-        layout: 'bar.html'
-      });
-      return $(this).snModels({
-        elem: '#main',
-        layout: 'main.html'
-      });
-    }
-  };
-  return $.fn.snLayout = function(sn) {
-    if (sn == null) {
-      sn = {};
-    }
-    if (methods[sn]) {
-      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else {
-      return methods.init.apply(this, arguments);
-    }
-  };
-});
-
-$(function() {
-  var methods;
-
-  methods = {
-    init: function(options) {
-      var def;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        elem: '#main',
-        type: 'main',
-        wiki: false
-      };
-      $.extend(def, options);
-      return $(this).snModels('append', def);
-    },
-    primary: function(options) {
-      var def;
-
-      if (options == null) {
-        options = {};
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('models: ' + 'primary');
-      }
-      def = {
-        elem: '#primary',
-        type: 'primary',
-        wiki: true
-      };
-      $.extend(def, options);
-      return $(this).snModels('append', def);
-    },
-    side: function(options) {
-      var def;
-
-      if (options == null) {
-        options = {};
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('models: ' + 'side');
-      }
-      def = {
-        elem: '#side',
-        type: 'side',
-        wiki: true
-      };
-      $.extend(def, options);
-      return $(this).snModels('append', def);
-    },
-    append: function(def) {
-      var sn, _this;
-
-      if (def == null) {
-        def = {};
-      }
-      _this = this;
-      sn = $(this).data('sn');
-      if (def.file != null) {
-        return $(this).snModels('load', def, function(s) {
-          def.text = s;
-          $(_this).snModels('inner', def);
-          if (def.type === 'primary') {
-            return $(_this).snTriggers('spoiler');
-          }
-        });
-      } else {
-        if (def.text != null) {
-          $(_this).snModels('inner', def);
-          if (def.type === 'primary') {
-            return $(_this).snTriggers('spoiler');
-          }
-        } else {
-          if (def.view != null) {
-            def.text = new EJS({
-              url: 'view/' + def.view,
-              ext: '.html'
-            }).render(sn);
-            $(_this).snModels('inner', def);
-            if (def.type === 'primary') {
-              return $(_this).snTriggers('spoiler');
-            }
-          } else {
-            if (def.layout != null) {
-              def.text = new EJS({
-                url: 'layout/' + sn.region.name + '/' + def.layout,
-                ext: '.html'
-              }).render(sn);
-              $(_this).snModels('inner', def);
-              if (def.type === 'primary') {
-                return $(_this).snTriggers('spoiler');
-              }
-            }
-          }
-        }
-      }
-    },
-    inner: function(options) {
-      var def;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        elem: '#side-content',
-        type: 'side',
-        text: '',
-        wiki: true,
-        position: 'place'
-      };
-      $.extend(def, options);
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('innerText: ' + def.type + ' ' + def.position);
-      }
-      if (def.wiki === true) {
-        def.text = $(this).snWiki(def.type, {
-          text: def.text
-        });
-      }
-      switch (def.position) {
-        case 'place':
-          $(def.elem).html(def.text);
-          break;
-        case 'after':
-          $(def.elem).html($(def.elem).html() + def.text);
-          break;
-        case 'before':
-          $(def.elem).html(def.text + $(def.elem).html());
-      }
-      return $(this).ie6();
-    },
-    load: function(options, callback) {
-      var def, sn;
-
-      if (options == null) {
-        options = {};
-      }
-      sn = $(this).data('sn');
-      def = {
-        url: '',
-        type: 'view',
-        file: 'news.html'
-      };
-      $.extend(def, options);
-      switch (def.type) {
-        case 'view':
-          def.url = 'view/' + def.file;
-          break;
-        case 'layout':
-          def.url = 'layout/' + sn.region.name + '/' + def.file;
-          break;
-        case 'primary':
-          def.url = 'content/' + sn.region.name + '/' + def.file;
-          break;
-        case 'side':
-          def.url = 'content/' + sn.region.name + '/side_' + def.file;
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('type: ' + def.type);
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('file: ' + def.file);
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('url: ' + def.url);
-      }
-      return $.ajax({
-        url: def.url,
-        async: false,
-        cache: false,
-        dataType: 'html',
-        success: function(text) {
-          if (text != null) {
-            if (typeof console !== "undefined" && console !== null) {
-              console.log('success');
-            }
-            if (callback) {
-              return callback(text);
-            }
-          }
-        }
-      });
-    }
-  };
-  return $.fn.snModels = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -908,7 +910,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" style="width:96%;margin:auto;" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
+      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" style="width:99%;margin:auto;" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
     },
     image: function(options) {
       var def, sn, text;
@@ -961,7 +963,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<<\n?/g, '<div class="well">').replace(/>>>\n?/g, '</div>');
+      return text.replace(/<<<\n?/g, '<div class="well well-small">').replace(/>>>\n?/g, '</div>');
     },
     anchor: function(options) {
       var def, text;
@@ -1047,158 +1049,26 @@ $(function() {
 
   methods = {
     init: function(options) {
-      var _this;
-
       if (options == null) {
         options = {};
       }
-      _this = this;
-      return $(this).on('click', function() {
-        var sn;
-
-        sn = $(_this).data('sn');
-        if (sn.levels.one === 'users') {
-          switch (sn.levels.two) {
-            case 'signin':
-              return $(_this).snSignin();
-            case 'help':
-              return $(_this).snSignin('help');
-          }
-        }
-      });
-    }
-  };
-  $.fn.snUsers = function(sn) {
-    if (sn == null) {
-      sn = {};
-    }
-    if (methods[sn]) {
-      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else {
-      return methods.init.apply(this, arguments);
-    }
-  };
-  return $('#sn').snUsers();
-});
-
-$(function() {
-  var methods;
-
-  methods = {
-    init: function(options) {
-      var def, sn;
+    },
+    checkEnterForm: function(options) {
+      var sn;
 
       if (options == null) {
         options = {};
       }
       sn = $(this).data('sn');
-      def = {};
-      $.extend(true, def, options);
       if (typeof console !== "undefined" && console !== null) {
-        console.log('signin: ' + 'init');
+        console.log('enter: ' + 'checkEnterForm');
       }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('render: ', def);
-      }
-      $(this).snModels('primary', {
-        view: 'signin.html'
-      });
-      $(this).snModels('side', {
-        view: 'signinSide.html'
-      });
-      $(this).snTriggers('switch', 'side', sn.levels.two);
-      $(this).snTriggers('switch', 'bar', sn.levels.one);
-      $(this).snTriggers('links', 'side');
-      $(this).snTriggers('hover', 'side');
-      return $(this).snSignin('triggers', def);
-    },
-    help: function(options) {
-      var def;
-
-      if (options == null) {
-        options = {};
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('signin: ' + 'help');
-      }
-      def = {};
-      $.extend(true, def, options);
-      $(this).snModels('primary', {
-        view: 'signinBlockHelp.html',
-        position: 'before'
-      });
-      return $(this).snSignin('triggers');
-    },
-    triggers: function(options) {
-      var _this;
-
-      if (options == null) {
-        options = {};
-      }
-      _this = this;
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('signin: ' + 'triggers');
-      }
-      $('.signin-input').on('focus', function() {
-        if ($(this).val() === $(this).data('def-value') || $(this).val() === '') {
-          $(this).removeClass('signin-input-blur');
-          $(this).addClass('signin-input-focus');
-          $(this).val('');
-          return $(this).select();
-        }
-      });
-      $('.signin-input').on('blur', function() {
-        if ($(this).val() === $(this).data('def-value') || $(this).val() === '') {
-          $(this).removeClass('signin-input-focus');
-          $(this).addClass('signin-input-blur');
-          return $(this).val($(this).data('def-value'));
-        }
-      });
-      $('#signin-form-enter').on('submit', function(e) {
-        e.preventDefault();
-        return $(_this).snEnter('checkEnterForm');
-      });
-      $('#signin-button-enter').on('click', function(e) {
-        e.preventDefault();
-        return $(_this).snEnter('checkEnterForm');
-      });
-      $('#signin-form-reg').on('submit', function(e) {
-        e.preventDefault();
-        return $(_this).snRegistration('checkRegForm');
-      });
-      $('#signin-button-reg').on('click', function(e) {
-        e.preventDefault();
-        return $(_this).snRegistration('checkRegForm');
-      });
-      return $('.signin-type-reg').on('keyup', function() {
-        var check, __this;
-
-        __this = this;
-        check = $(_this).snValidation('checkField', {
-          type: $(this).data('check-type'),
-          value: $(this).val(),
-          caption: $(this).data('def-value')
-        });
-        return $('.signin-form-check').each(function() {
-          if ($(this).data('check-type') === $(__this).data('check-type')) {
-            if (check.error != null) {
-              if ($(this).hasClass('signin-form-check-clear')) {
-                $(this).removeClass('signin-form-check-clear');
-              }
-              if (check.error) {
-                $(this).removeClass('signin-form-check-true');
-                return $(this).addClass('signin-form-check-false');
-              } else {
-                $(this).removeClass('signin-form-check-false');
-                return $(this).addClass('signin-form-check-true');
-              }
-            }
-          }
-        });
-      });
+      alert('enter');
+      console.info('sn', sn);
+      return false;
     }
   };
-  return $.fn.snSignin = function(sn) {
+  return $.fn.snEnter = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -1463,26 +1333,119 @@ $(function() {
 
   methods = {
     init: function(options) {
-      if (options == null) {
-        options = {};
-      }
-    },
-    checkEnterForm: function(options) {
-      var sn;
+      var def, sn;
 
       if (options == null) {
         options = {};
       }
       sn = $(this).data('sn');
+      def = {};
+      $.extend(true, def, options);
       if (typeof console !== "undefined" && console !== null) {
-        console.log('enter: ' + 'checkEnterForm');
+        console.log('signin: ' + 'init');
       }
-      alert('enter');
-      console.info('sn', sn);
-      return false;
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('render: ', def);
+      }
+      $(this).snModels('primary', {
+        view: 'signin.html'
+      });
+      $(this).snModels('side', {
+        view: 'signinSide.html'
+      });
+      $(this).snTriggers('switch', 'side', sn.levels.two);
+      $(this).snTriggers('switch', 'bar', sn.levels.one);
+      $(this).snTriggers('links', 'side');
+      $(this).snTriggers('hover', 'side');
+      return $(this).snSignin('triggers', def);
+    },
+    help: function(options) {
+      var def;
+
+      if (options == null) {
+        options = {};
+      }
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('signin: ' + 'help');
+      }
+      def = {};
+      $.extend(true, def, options);
+      $(this).snModels('primary', {
+        view: 'signinBlockHelp.html',
+        position: 'before'
+      });
+      return $(this).snSignin('triggers');
+    },
+    triggers: function(options) {
+      var _this;
+
+      if (options == null) {
+        options = {};
+      }
+      _this = this;
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('signin: ' + 'triggers');
+      }
+      $('.signin-input').on('focus', function() {
+        if ($(this).val() === $(this).data('def-value') || $(this).val() === '') {
+          $(this).removeClass('signin-input-blur');
+          $(this).addClass('signin-input-focus');
+          $(this).val('');
+          return $(this).select();
+        }
+      });
+      $('.signin-input').on('blur', function() {
+        if ($(this).val() === $(this).data('def-value') || $(this).val() === '') {
+          $(this).removeClass('signin-input-focus');
+          $(this).addClass('signin-input-blur');
+          return $(this).val($(this).data('def-value'));
+        }
+      });
+      $('#signin-form-enter').on('submit', function(e) {
+        e.preventDefault();
+        return $(_this).snEnter('checkEnterForm');
+      });
+      $('#signin-button-enter').on('click', function(e) {
+        e.preventDefault();
+        return $(_this).snEnter('checkEnterForm');
+      });
+      $('#signin-form-reg').on('submit', function(e) {
+        e.preventDefault();
+        return $(_this).snRegistration('checkRegForm');
+      });
+      $('#signin-button-reg').on('click', function(e) {
+        e.preventDefault();
+        return $(_this).snRegistration('checkRegForm');
+      });
+      return $('.signin-type-reg').on('keyup', function() {
+        var check, __this;
+
+        __this = this;
+        check = $(_this).snValidation('checkField', {
+          type: $(this).data('check-type'),
+          value: $(this).val(),
+          caption: $(this).data('def-value')
+        });
+        return $('.signin-form-check').each(function() {
+          if ($(this).data('check-type') === $(__this).data('check-type')) {
+            if (check.error != null) {
+              if ($(this).hasClass('signin-form-check-clear')) {
+                $(this).removeClass('signin-form-check-clear');
+              }
+              if (check.error) {
+                $(this).removeClass('signin-form-check-true');
+                return $(this).addClass('signin-form-check-false');
+              } else {
+                $(this).removeClass('signin-form-check-false');
+                return $(this).addClass('signin-form-check-true');
+              }
+            }
+          }
+        });
+      });
     }
   };
-  return $.fn.snEnter = function(sn) {
+  return $.fn.snSignin = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -1492,6 +1455,45 @@ $(function() {
       return methods.init.apply(this, arguments);
     }
   };
+});
+
+$(function() {
+  var methods;
+
+  methods = {
+    init: function(options) {
+      var _this;
+
+      if (options == null) {
+        options = {};
+      }
+      _this = this;
+      return $(this).on('click', function() {
+        var sn;
+
+        sn = $(_this).data('sn');
+        if (sn.levels.one === 'users') {
+          switch (sn.levels.two) {
+            case 'signin':
+              return $(_this).snSignin();
+            case 'help':
+              return $(_this).snSignin('help');
+          }
+        }
+      });
+    }
+  };
+  $.fn.snUsers = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      return methods.init.apply(this, arguments);
+    }
+  };
+  return $('#sn').snUsers();
 });
 
 $(function() {

@@ -23,15 +23,17 @@ client-js:
 
 css:
 
-	@recess --compile ./less/classic/index.less > ./style/classic/theme.css
-	@recess --compile ./less/classic/ie6.less > ./style/classic/ie6.css
+	@recess --compile ./less/reload/bootstrap/bootstrap.less > ./style/reload/bootstrap.css
+	@recess --compile ./less/reload/bootstrap-ie6/bootstrap-ie6.less > ./style/reload/bootstrap-ie6.css
 
 	
 finish:
 	@echo "\nSuccessfully built at ${DATE}."
 
 
-
+bs-js:
+	@cat ./js/bootstrap/bootstrap-*.js  > ./script/bootstrap.js
+	@uglifyjs ./script/bootstrap.js -nc > ./script/bootstrap.min.js
 
 
 #

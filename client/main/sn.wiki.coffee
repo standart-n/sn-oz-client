@@ -122,7 +122,7 @@ $ ->
 
 			$.extend def, options
 			text = def.text
-			text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" style="width:96%;margin:auto;" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
+			text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" style="width:99%;margin:auto;" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">')
 
 		image: (options = {}) ->
 
@@ -167,7 +167,7 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/<<<\n?/g, '<div class="well">')
+				.replace(/<<<\n?/g, '<div class="well well-small">')
 				.replace(/>>>\n?/g, '</div>')
 
 

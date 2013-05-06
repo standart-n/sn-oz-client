@@ -85,7 +85,9 @@ $ ->
 				when 'before'
 					$(def.elem).html def.text + $(def.elem).html()
 
-			$(this).ie6()
+			# $(this).ie6()
+			if $.isFunction $.bootstrapIE6
+				$.bootstrapIE6 def.elem
 
 
 
