@@ -457,8 +457,10 @@ $(function() {
           $(def.elem).html(def.text + $(def.elem).html());
       }
       if ($.isFunction($.bootstrapIE6)) {
-        return $.bootstrapIE6(def.elem);
+        $.bootstrapIE6(def.elem);
       }
+      $(def.elem + ' .dropdown').dropdown();
+      return $(def.elem + ' .tooltip-link').tooltip();
     },
     load: function(options, callback) {
       var def, sn;

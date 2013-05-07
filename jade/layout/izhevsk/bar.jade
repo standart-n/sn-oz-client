@@ -1,19 +1,46 @@
-table(align="center", cellpadding="0", cellspacing="0", border="0")
-	tr(valign="top")
-		td(width="10px")
-		td(width="40px")
-			a.bar-logo(href="#main/text/main")
-		td(width="100px")
-			.bar-caption
-				<%= region.caption %>
-		td(width="20px")
-		td(width="117px")
-			a#bar-main.bar-button.bar-button-active(href="#main/text/main")
-				Главная
-		td(width="10px")
-		td(width="117px")
-			a#bar-news.bar-button.bar-button-normal(href="#news/text/news")
-				Новости
-		td(width="20px")
-		td(width="50px")
-			a.bar-link(href="#users/signin") Войти
+//
+	table(align="center", cellpadding="0", cellspacing="0", border="0")
+		tr(valign="top")
+			td(width="10px")
+			td(width="40px")
+				a.bar-logo(href="#main/text/main")
+			td(width="100px")
+				.bar-caption
+					<%= region.caption %>
+			td(width="20px")
+			td(width="117px")
+				a#bar-main.bar-button.bar-button-active(href="#main/text/main")
+					Главная
+			td(width="10px")
+			td(width="117px")
+				a#bar-news.bar-button.bar-button-normal(href="#news/text/news")
+					Новости
+			td(width="20px")
+			td(width="50px")
+				a.bar-link(href="#users/signin") Войти
+
+.navbar.navbar-fixed-top
+	.navbar-inner
+		.container
+			a.brand(href="#") <%= region.caption %>
+			ul.nav
+				li.active
+					a(href="#") На главную
+				li
+					a(href="#") Ссылка 1
+				li
+					a(href="#") Ссылка 2
+
+				li.dropdown
+					a.dropdown-toggle(href="#", data-toggle = "dropdown") Ссылка
+						b.caret
+					ul.dropdown-menu
+						li
+							a(href="#") action
+						li
+							a(href="#") action
+						li.divider
+						li.nav-header nav header
+
+
+

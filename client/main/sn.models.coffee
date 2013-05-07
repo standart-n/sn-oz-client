@@ -88,6 +88,8 @@ $ ->
 			# $(this).ie6()
 			if $.isFunction $.bootstrapIE6
 				$.bootstrapIE6 def.elem
+			$(def.elem+' .dropdown').dropdown()
+			$(def.elem+' .tooltip-link').tooltip()
 
 
 
