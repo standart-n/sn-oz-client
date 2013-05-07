@@ -247,7 +247,7 @@
 			//-------------
 			// table
 			//-------------
-
+			alert('table');
 			// fix table-hover effect
 			$('table.table-hover', el).on('mouseenter', 'tr', function () {
 				$(this).addClass('tr-hover');

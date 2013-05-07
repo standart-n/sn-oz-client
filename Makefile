@@ -23,7 +23,7 @@ client-js:
 
 css:
 
-	@recess --compile ./less/reload/bootstrap.less > ./style/reload/bootstrap.css
+	@recess --compile ./less/bootstrap/bootstrap.less > ./style/bootstrap/bootstrap.css
 
 	
 finish:

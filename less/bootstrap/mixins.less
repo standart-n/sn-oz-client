@@ -2,6 +2,18 @@
 // Mixins
 // --------------------------------------------------
 
+.border-block {
+  border-top:#ddd solid 1px;
+  border-left:#ccc solid 1px;
+  border-right:#ccc solid 1px;
+  border-bottom:#bbb solid 1px;
+}
+
+.image(@src: image, @repeat: no-repeat, @position: 0 0) {
+  background-image: url(@src);
+  background-repeat: @repeat;
+  background-position: @position;
+}
 
 // UTILITY MIXINS
 // --------------------------------------------------
