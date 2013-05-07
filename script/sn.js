@@ -1029,7 +1029,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/\]\n/g, "]").replace(/\n/g, "<br>").replace(/<br>\n?(<div class=\"primary-box-outer\">)/g, "$1");
+      return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/\]\n/g, "]").replace(/\n/g, "<br>");
     }
   };
   return $.fn.snWiki = function(sn) {

@@ -226,7 +226,6 @@ $ ->
 				.replace(/>\n?/g, '>')
 				.replace(/\]\n/g, "]")
 				.replace(/\n/g, "<br>")
-				.replace(/<br>\n?(<div class=\"primary-box-outer\">)/g, "$1")
 
 
 	$.fn.snWiki = (sn = {}) ->

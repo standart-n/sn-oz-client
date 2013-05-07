@@ -274,7 +274,8 @@
 // -------------------------
 @gridColumns:             12;
 @gridColumnWidth:         60px;
-@gridGutterWidth:         20px;
+// @gridGutterWidth:         20px; - bkp
+@gridGutterWidth:         2px;
 @gridRowWidth:            (@gridColumns * @gridColumnWidth) + (@gridGutterWidth * (@gridColumns - 1));
 
 // 1200px min
@@ -290,7 +291,7 @@
 
 // Fluid grid
 // -------------------------
-@fluidGridColumnWidth:    percentage(@gridColumnWidth/@gridRowWidth);
+@fluidGridColumnWidth:    percentage(@gridColumnWidth/(@gridRowWidth*1.008));
 @fluidGridGutterWidth:    percentage(@gridGutterWidth/@gridRowWidth);
 
 // 1200px min
