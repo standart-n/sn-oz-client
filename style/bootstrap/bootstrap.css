@@ -2390,6 +2390,8 @@ table th[class*="span"],
   background-color: #c4e3f3;
 }
 
+[class^="icon-"],
+[class*=" icon-"],
 .icon-xxx {
   display: inline-block;
   _display: inline;
@@ -5627,7 +5629,6 @@ input[type="submit"].btn.btn-mini {
   text-decoration: none;
   background-color: #ffffff;
   border: 1px solid #dddddd;
-  border-left-width: 0;
 }
 
 .pagination ul li a:hover,
