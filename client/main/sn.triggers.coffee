@@ -32,6 +32,8 @@ $ ->
 
 			_this = this
 			$('#side a').on 'click', () ->
+				$('#side li').removeClass('active')
+				$(this).parent('li').addClass('active')
 				$(_this).snEvents $(this).attr('href')
 
 		linksPrimary: () ->
@@ -46,11 +48,14 @@ $ ->
 
 			_this = this
 			console.log 'trigger: ' + 'linksBar' if console?
-			$('a').on 'click', () ->
+			$('#bar a').on 'click', () ->
+				$('#bar li').removeClass('active')
+				$(this).parent('li').addClass('active')
 				$(_this).snEvents $(this).attr('href')
 
 		switchBar: (options = {}) ->
 
+			###
 			console.log 'trigger: ' + 'switchBar' if console?
 
 			def =
@@ -68,9 +73,11 @@ $ ->
 				.removeClass('bar-button-hover')
 				.addClass('bar-button-active')
 				.blur()
+			###
 
 		switchSide: (options = {}) ->
 
+			###
 			console.log 'trigger: ' + 'switchSide' if console?
 
 			def=
@@ -88,38 +95,39 @@ $ ->
 				.removeClass('side-box-link-hover')
 				.addClass('side-box-link-active')
 				.blur()
+			###
 
 		switcherBar: () ->
 
 			console.log 'trigger: ' + 'switcherBar' if console?
 
-			$('.bar-button').on 'mouseover', () ->
-				if !$(this).hasClass('bar-button-active')
-					$(this)
-						.removeClass('bar-button-normal')
-						.addClass('bar-button-hover')
+			$('.bar-link').on 'mouseover', () ->
+				if !$(this).parent('li').hasClass('active')
+					$(this).parent('li')
+						.removeClass('normal')
+						.addClass('hover')
 
-			$('.bar-button').on 'mouseleave', () ->
-				if !$(this).hasClass('bar-button-active')
-					$(this)
-						.removeClass('bar-button-hover')
-						.addClass('bar-button-normal')
+			$('.bar-link').on 'mouseleave', () ->
+				if !$(this).parent('li').hasClass('active')
+					$(this).parent('li')
+						.removeClass('hover')
+						.addClass('normal')
 
 		switcherSide: () ->
 
 			console.log 'trigger: ' + 'switcherSide' if console?
 
-			$('.side-box-link').on 'mouseover', () ->
-				if !$(this).hasClass('side-box-link-active')
-					$(this)
-						.removeClass('side-box-link-normal')
-						.addClass('side-box-link-hover')
+			$('.side-link').on 'mouseover', () ->
+				if !$(this).parent('li').hasClass('active')
+					$(this).parent('li')
+						.removeClass('normal')
+						.addClass('hover')
 
-			$('.side-box-link').on 'mouseleave', () ->
-				if !$(this).hasClass('side-box-link-active')
-					$(this)
-						.removeClass('side-box-link-hover')
-						.addClass('side-box-link-normal')
+			$('.side-link').on 'mouseleave', () ->
+				if !$(this).parent('li').hasClass('active')
+					$(this).parent('li')
+						.removeClass('hover')
+						.addClass('normal')
 
 		spoiler: () ->
 

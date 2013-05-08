@@ -32,7 +32,7 @@ $ ->
 						$(this).snTriggers 'links', 'side'
 						$(this).snTriggers 'links', 'primary'
 						$(this).snTriggers 'hover', 'bar'
-						$(this).snTriggers 'hover', 'side'
+						(this).snTriggers 'hover', 'side'
 						sn.part = 'main'
 
 					else

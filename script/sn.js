@@ -215,7 +215,7 @@ $(function() {
             $(this).snTriggers('links', 'side');
             $(this).snTriggers('links', 'primary');
             $(this).snTriggers('hover', 'bar');
-            $(this).snTriggers('hover', 'side');
+            this.snTriggers('hover', 'side');
             sn.part = 'main';
             break;
           default:
@@ -586,6 +586,8 @@ $(function() {
       }
       _this = this;
       return $('#side a').on('click', function() {
+        $('#side li').removeClass('active');
+        $(this).parent('li').addClass('active');
         return $(_this).snEvents($(this).attr('href'));
       });
     },
@@ -607,54 +609,74 @@ $(function() {
       if (typeof console !== "undefined" && console !== null) {
         console.log('trigger: ' + 'linksBar');
       }
-      return $('a').on('click', function() {
+      return $('#bar a').on('click', function() {
+        $('#bar li').removeClass('active');
+        $(this).parent('li').addClass('active');
         return $(_this).snEvents($(this).attr('href'));
       });
     },
     switchBar: function(options) {
-      var def;
-
       if (options == null) {
-        options = {};
+        return options = {};
       }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('trigger: ' + 'switchBar');
-      }
-      def = {
-        link: 'main'
-      };
-      $.extend(def, options);
-      $('.bar-button').removeClass('bar-button-active').removeClass('bar-button-hover').addClass('bar-button-normal');
-      return $('#bar-' + def.link).removeClass('bar-button-normal').removeClass('bar-button-hover').addClass('bar-button-active').blur();
+      /*
+      			console.log 'trigger: ' + 'switchBar' if console?
+      
+      			def =
+      				link: 'main'
+      
+      			$.extend def, options
+      
+      			$('.bar-button')
+      				.removeClass('bar-button-active')
+      				.removeClass('bar-button-hover')
+      				.addClass('bar-button-normal')
+      
+      			$('#bar-'+def.link)
+      				.removeClass('bar-button-normal')
+      				.removeClass('bar-button-hover')
+      				.addClass('bar-button-active')
+      				.blur()
+      */
+
     },
     switchSide: function(options) {
-      var def;
-
       if (options == null) {
-        options = {};
+        return options = {};
       }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('trigger: ' + 'switchSide');
-      }
-      def = {
-        link: 'above'
-      };
-      $.extend(def, options);
-      $('.side-box-link').removeClass('side-box-link-active').removeClass('side-box-link-hover').addClass('side-box-link-normal');
-      return $('#side-' + def.link).removeClass('side-box-link-normal').removeClass('side-box-link-hover').addClass('side-box-link-active').blur();
+      /*
+      			console.log 'trigger: ' + 'switchSide' if console?
+      
+      			def=
+      				link: 'above'
+      
+      			$.extend(def,options)
+      
+      			$('.side-box-link')
+      				.removeClass('side-box-link-active')
+      				.removeClass('side-box-link-hover')
+      				.addClass('side-box-link-normal')
+      
+      			$('#side-'+def.link)
+      				.removeClass('side-box-link-normal')
+      				.removeClass('side-box-link-hover')
+      				.addClass('side-box-link-active')
+      				.blur()
+      */
+
     },
     switcherBar: function() {
       if (typeof console !== "undefined" && console !== null) {
         console.log('trigger: ' + 'switcherBar');
       }
-      $('.bar-button').on('mouseover', function() {
-        if (!$(this).hasClass('bar-button-active')) {
-          return $(this).removeClass('bar-button-normal').addClass('bar-button-hover');
+      $('.bar-link').on('mouseover', function() {
+        if (!$(this).parent('li').hasClass('active')) {
+          return $(this).parent('li').removeClass('normal').addClass('hover');
         }
       });
-      return $('.bar-button').on('mouseleave', function() {
-        if (!$(this).hasClass('bar-button-active')) {
-          return $(this).removeClass('bar-button-hover').addClass('bar-button-normal');
+      return $('.bar-link').on('mouseleave', function() {
+        if (!$(this).parent('li').hasClass('active')) {
+          return $(this).parent('li').removeClass('hover').addClass('normal');
         }
       });
     },
@@ -662,14 +684,14 @@ $(function() {
       if (typeof console !== "undefined" && console !== null) {
         console.log('trigger: ' + 'switcherSide');
       }
-      $('.side-box-link').on('mouseover', function() {
-        if (!$(this).hasClass('side-box-link-active')) {
-          return $(this).removeClass('side-box-link-normal').addClass('side-box-link-hover');
+      $('.side-link').on('mouseover', function() {
+        if (!$(this).parent('li').hasClass('active')) {
+          return $(this).parent('li').removeClass('normal').addClass('hover');
         }
       });
-      return $('.side-box-link').on('mouseleave', function() {
-        if (!$(this).hasClass('side-box-link-active')) {
-          return $(this).removeClass('side-box-link-hover').addClass('side-box-link-normal');
+      return $('.side-link').on('mouseleave', function() {
+        if (!$(this).parent('li').hasClass('active')) {
+          return $(this).parent('li').removeClass('hover').addClass('normal');
         }
       });
     },

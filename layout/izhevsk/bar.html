@@ -1,34 +1,13 @@
-<!--
-<table align="center" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top">
-    <td width="10px"></td>
-    <td width="40px"><a href="#main/text/main" class="bar-logo"></a></td>
-    <td width="100px">
-      <div class="bar-caption"><%= region.caption %></div>
-    </td>
-    <td width="20px"></td>
-    <td width="117px"><a id="bar-main" href="#main/text/main" class="bar-button bar-button-active">Главная</a></td>
-    <td width="10px"></td>
-    <td width="117px"><a id="bar-news" href="#news/text/news" class="bar-button bar-button-normal">Новости</a></td>
-    <td width="20px"></td>
-    <td width="50px"><a href="#users/signin" class="bar-link">Войти</a></td>
-  </tr>
-</table>-->
-<div class="navbar navbar-fixed-top">
+
+<div id="bar" class="navbar navbar-fixed-top">
   <div class="navbar-inner">
-    <div class="container"><a href="#" class="brand"><%= region.caption %></a>
+    <div class="container"><a href="#main/text/main" class="brand"><%= region.caption %></a>
       <ul class="nav">
-        <li class="active"><a href="#">На главную</a></li>
-        <li><a href="#">Ссылка 1</a></li>
-        <li><a href="#">Ссылка 2</a></li>
-        <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Ссылка<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">action</a></li>
-            <li><a href="#">action</a></li>
-            <li class="divider"></li>
-            <li class="nav-header">nav header</li>
-          </ul>
-        </li>
+        <li class="active"><a href="#main/text/main">Главная</a></li>
+        <li><a href="#news/text/news">Новости</a></li>
+      </ul>
+      <ul class="nav pull-right">
+        <li><a href="#users/signin">Войти</a></li>
       </ul>
     </div>
   </div>
