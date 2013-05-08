@@ -748,6 +748,66 @@ a:hover {
   clear: both;
 }
 
+span.black {
+  color: #000;
+}
+
+span.grayDarker {
+  color: #222;
+}
+
+span.grayDark {
+  color: #333;
+}
+
+span.gray {
+  color: #555;
+}
+
+span.grayLight {
+  color: #999;
+}
+
+span.grayLighter {
+  color: #eee;
+}
+
+span.white {
+  color: #fff;
+}
+
+span.blue {
+  color: #049cdb;
+}
+
+span.blueDark {
+  color: #0064cd;
+}
+
+span.green {
+  color: #46a546;
+}
+
+span.red {
+  color: #9d261d;
+}
+
+span.yellow {
+  color: #ffc40d;
+}
+
+span.orange {
+  color: #f89406;
+}
+
+span.pink {
+  color: #c3325f;
+}
+
+span.purple {
+  color: #7a43b6;
+}
+
 p {
   margin: 0 0 10px;
 }
@@ -884,7 +944,7 @@ h4 small {
 
 .page-header {
   padding-bottom: 9px;
-  margin: 10px 0 0;
+  margin: 20px 0 30px;
   border-bottom: 1px solid #eeeeee;
 }
 
@@ -2390,8 +2450,6 @@ table th[class*="span"],
   background-color: #c4e3f3;
 }
 
-[class^="icon-"],
-[class*=" icon-"],
 .icon-xxx {
   display: inline-block;
   _display: inline;
@@ -4454,7 +4512,7 @@ input[type="submit"].btn.btn-mini {
 .nav-tabs .active a:hover {
   color: #555555;
   cursor: default;
-  background-color: #e0e5ed;
+  background-color: #fcfcfc;
   border: 1px solid #ddd;
   *border: 1px solid #999;
   border-bottom-color: transparent;
@@ -4463,7 +4521,7 @@ input[type="submit"].btn.btn-mini {
 .nav-tabs * .active a,
 .nav-tabs * .active a:hover {
   color: inherit;
-  background-color: inherit;
+  background-color: #fcfcfc;
   border: none;
 }
 
@@ -4774,7 +4832,7 @@ input[type="submit"].btn.btn-mini {
 .tab-content .tab-pane,
 .pill-content .pill-pane {
   display: none;
-  *background-color: #ffffff;
+  *background-color: #fcfcfc;
   *zoom: 1;
 }
 

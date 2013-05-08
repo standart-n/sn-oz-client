@@ -13,6 +13,7 @@ $ ->
 			$.extend true, def, options
 			
 			text = def.text
+			text = $(_this).snWiki('before', text: text)
 			text = $(_this).snWiki('formating', text: text)
 			text = $(_this).snWiki('headings', text: text)
 			text = $(_this).snWiki('externalLinks', text: text)
@@ -38,6 +39,7 @@ $ ->
 			$.extend true, def, options
 			
 			text = def.text
+			text = $(_this).snWiki('before', text: text)
 			text = $(_this).snWiki('formating', text: text)
 			text = $(_this).snWiki('headings', text: text)
 			text = $(_this).snWiki('externalLinks', text: text)
@@ -54,6 +56,16 @@ $ ->
 			text = $(_this).snWiki('spaces', text: text)
 			text
 
+
+		before: (options = {}) ->
+
+			def =
+				text: ''
+
+			$.extend def, options
+			text = def.text
+			text
+				.replace(/>\n\n/g, '>\n')
 
 		formating: (options = {}) ->
 
@@ -224,7 +236,6 @@ $ ->
 				.replace(/^\n/, "")
 				.replace(/\n\n/g, "<br><br>")
 				.replace(/>\n?/g, '>')
-				.replace(/\]\n/g, "]")
 				.replace(/\n/g, "<br>")
 
 

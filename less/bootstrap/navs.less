@@ -170,6 +170,8 @@
 // .nav-tabs > li {
 .nav-tabs li {
   margin-bottom: -1px;
+  //position: relatative;
+  //top: 2px;
 
   *zoom:1;
   *background-color: @white;
@@ -213,16 +215,20 @@
 .nav-tabs .active a,
 .nav-tabs .active a:hover {
   color: @gray;
-  background-color: @bodyBackground;
+  //background-color: @bodyBackground;
+  background-color: #fcfcfc;
   border: 1px solid #ddd;
   *border: 1px solid #999;
   border-bottom-color: transparent;
+  //border-bottom-color: #fcfcfc;
   cursor: default;
 }
 .nav-tabs * .active a,
 .nav-tabs * .active a:hover {
   color:inherit;
-  background-color:inherit;
+  //background-color:inherit;
+  background-color:#fcfcfc;
+  //border-bottom-color: #fcfcfc;
   border:none;
 }
 
@@ -510,7 +516,8 @@
   display: none;
 
   *zoom:1;
-  *background-color: @white;
+  //*background-color: @white;
+  *background-color: #fcfcfc;
   // *background-color: @transparentIE6;
   // *filter:chroma(color=@transparentIE6);
 

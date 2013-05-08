@@ -10,6 +10,16 @@ $ ->
 				when 'bar'
 					$(this).snTriggers 'switchBar', link: link
 
+		plugins: (def = {}) ->
+
+			if $.isFunction $.bootstrapIE6
+				$.bootstrapIE6 def.elem
+			$(def.elem+' .dropdown').dropdown()
+			$(def.elem+' .nav-tabs a').on 'click', () ->
+				$(this).tab('show')
+			$(def.elem+' .tooltip-link').tooltip()
+
+
 		hover: (type = '') ->
 			switch type
 				when 'side'

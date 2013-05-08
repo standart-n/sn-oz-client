@@ -456,11 +456,7 @@ $(function() {
         case 'before':
           $(def.elem).html(def.text + $(def.elem).html());
       }
-      if ($.isFunction($.bootstrapIE6)) {
-        $.bootstrapIE6(def.elem);
-      }
-      $(def.elem + ' .dropdown').dropdown();
-      return $(def.elem + ' .tooltip-link').tooltip();
+      return $(this).snTriggers('plugins', def);
     },
     load: function(options, callback) {
       var def, sn;
@@ -553,6 +549,19 @@ $(function() {
             link: link
           });
       }
+    },
+    plugins: function(def) {
+      if (def == null) {
+        def = {};
+      }
+      if ($.isFunction($.bootstrapIE6)) {
+        $.bootstrapIE6(def.elem);
+      }
+      $(def.elem + ' .dropdown').dropdown();
+      $(def.elem + ' .nav-tabs a').on('click', function() {
+        return $(this).tab('show');
+      });
+      return $(def.elem + ' .tooltip-link').tooltip();
     },
     hover: function(type) {
       if (type == null) {
@@ -752,6 +761,9 @@ $(function() {
       };
       $.extend(true, def, options);
       text = def.text;
+      text = $(_this).snWiki('before', {
+        text: text
+      });
       text = $(_this).snWiki('formating', {
         text: text
       });
@@ -808,6 +820,9 @@ $(function() {
       };
       $.extend(true, def, options);
       text = def.text;
+      text = $(_this).snWiki('before', {
+        text: text
+      });
       text = $(_this).snWiki('formating', {
         text: text
       });
@@ -851,6 +866,19 @@ $(function() {
         text: text
       });
       return text;
+    },
+    before: function(options) {
+      var def, text;
+
+      if (options == null) {
+        options = {};
+      }
+      def = {
+        text: ''
+      };
+      $.extend(def, options);
+      text = def.text;
+      return text.replace(/>\n\n/g, '>\n');
     },
     formating: function(options) {
       var def, text;
@@ -1053,7 +1081,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/\]\n/g, "]").replace(/\n/g, "<br>");
+      return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/\n/g, "<br>");
     }
   };
   return $.fn.snWiki = function(sn) {
