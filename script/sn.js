@@ -557,11 +557,7 @@ $(function() {
       if ($.isFunction($.bootstrapIE6)) {
         $.bootstrapIE6(def.elem);
       }
-      $(def.elem + ' .dropdown').dropdown();
-      $(def.elem + ' .nav-tabs a').on('click', function() {
-        return $(this).tab('show');
-      });
-      return $(def.elem + ' .tooltip-link').tooltip();
+      return $(def.elem + ' .tooltip-toggle').tooltip();
     },
     hover: function(type) {
       if (type == null) {
@@ -595,9 +591,11 @@ $(function() {
       }
       _this = this;
       return $('#side a').on('click', function() {
-        $('#side li').removeClass('active');
-        $(this).parent('li').addClass('active');
-        return $(_this).snEvents($(this).attr('href'));
+        if ($(this).attr('href') !== '#') {
+          $('#side li').removeClass('active');
+          $(this).parent('li').addClass('active');
+          return $(_this).snEvents($(this).attr('href'));
+        }
       });
     },
     linksPrimary: function() {
@@ -608,7 +606,9 @@ $(function() {
       }
       _this = this;
       return $('#primary a').on('click', function() {
-        return $(_this).snEvents($(this).attr('href'));
+        if ($(this).attr('href') !== '#') {
+          return $(_this).snEvents($(this).attr('href'));
+        }
       });
     },
     linksBar: function() {
@@ -619,9 +619,11 @@ $(function() {
         console.log('trigger: ' + 'linksBar');
       }
       return $('#bar a').on('click', function() {
-        $('#bar li').removeClass('active');
-        $(this).parent('li').addClass('active');
-        return $(_this).snEvents($(this).attr('href'));
+        if ($(this).attr('href') !== '#' && $(this).data('toggle') !== 'dropdown') {
+          $('#bar li').removeClass('active');
+          $(this).parent('li').addClass('active');
+          return $(_this).snEvents($(this).attr('href'));
+        }
       });
     },
     switchBar: function(options) {

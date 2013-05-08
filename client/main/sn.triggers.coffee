@@ -12,12 +12,8 @@ $ ->
 
 		plugins: (def = {}) ->
 
-			if $.isFunction $.bootstrapIE6
-				$.bootstrapIE6 def.elem
-			$(def.elem+' .dropdown').dropdown()
-			$(def.elem+' .nav-tabs a').on 'click', () ->
-				$(this).tab('show')
-			$(def.elem+' .tooltip-link').tooltip()
+			if $.isFunction $.bootstrapIE6 then $.bootstrapIE6 def.elem
+			$(def.elem+' .tooltip-toggle').tooltip()
 
 
 		hover: (type = '') ->
@@ -42,9 +38,10 @@ $ ->
 
 			_this = this
 			$('#side a').on 'click', () ->
-				$('#side li').removeClass('active')
-				$(this).parent('li').addClass('active')
-				$(_this).snEvents $(this).attr('href')
+				if $(this).attr('href') isnt '#'
+					$('#side li').removeClass('active')
+					$(this).parent('li').addClass('active')
+					$(_this).snEvents $(this).attr('href')
 
 		linksPrimary: () ->
 
@@ -52,16 +49,18 @@ $ ->
 
 			_this = this
 			$('#primary a').on 'click', () ->
-				$(_this).snEvents $(this).attr('href')
+				if $(this).attr('href') isnt '#'
+					$(_this).snEvents $(this).attr('href')
 
 		linksBar: () ->
 
 			_this = this
 			console.log 'trigger: ' + 'linksBar' if console?
 			$('#bar a').on 'click', () ->
-				$('#bar li').removeClass('active')
-				$(this).parent('li').addClass('active')
-				$(_this).snEvents $(this).attr('href')
+				if $(this).attr('href') isnt '#' and $(this).data('toggle') isnt 'dropdown'
+					$('#bar li').removeClass('active')
+					$(this).parent('li').addClass('active')
+					$(_this).snEvents $(this).attr('href')
 
 		switchBar: (options = {}) ->
 

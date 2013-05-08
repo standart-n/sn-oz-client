@@ -46,7 +46,7 @@
   _position:absolute;
   _top:0;
   _margin-top:0;
-  _top:expression(eval(document.documentElement.scrollTop));
+  _top:expression(eval(document.documentElement.scrollTop+50));
 }
 .modal.fade.in {
   _filter:alpha(opacity=100);
