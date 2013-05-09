@@ -37,7 +37,8 @@ $ ->
 			console.log 'trigger: ' + 'linksSide' if console?
 
 			_this = this
-			$('#side a').on 'click', () ->
+			$('#side a').on 'click', (e) ->
+				e.preventDefault()
 				if $(this).attr('href') isnt '#'
 					$('#side li').removeClass('active')
 					$(this).parent('li').addClass('active')
@@ -48,7 +49,8 @@ $ ->
 			console.log 'trigger: ' + 'linksPrimary' if console?
 
 			_this = this
-			$('#primary a').on 'click', () ->
+			$('#primary a').on 'click', (e) ->
+				e.preventDefault()
 				if $(this).attr('href') isnt '#'
 					$(_this).snEvents $(this).attr('href')
 
@@ -56,7 +58,8 @@ $ ->
 
 			_this = this
 			console.log 'trigger: ' + 'linksBar' if console?
-			$('#bar a').on 'click', () ->
+			$('#bar a').on 'click', (e) ->
+				e.preventDefault()
 				if $(this).attr('href') isnt '#' and $(this).data('toggle') isnt 'dropdown'
 					$('#bar li').removeClass('active')
 					$(this).parent('li').addClass('active')
