@@ -151,30 +151,30 @@ $ ->
 
 			console.log 'trigger: ' + 'spoiler' if console?
 
-			$('.spoiler-caption').on 'click', (e) ->
+			$('.spoiler').on 'click', (e) ->
 
 				e.preventDefault()
 
-				if $(this).hasClass('spoiler-caption-open')
+				if not $(this).hasClass('spoiler-open')
 					$(this)
-						.removeClass('spoiler-caption-open')
-						.addClass('spoiler-caption-close')
+						.removeClass('spoiler-close')
+						.addClass('spoiler-open')
 				else
 					$(this)
-						.removeClass('spoiler-caption-close')
-						.addClass('spoiler-caption-open')
+						.removeClass('spoiler-open')
+						.addClass('spoiler-close')
 
 				$(this).parent('.spoiler').children('.spoiler-body').each () ->
-					if $(this).hasClass('spoiler-status-open')
+					if not $(this).hasClass('spoiler-open')
 						$(this)
-							.removeClass('spoiler-status-open')
-							.addClass('spoiler-status-close')
-							.hide()
+							.removeClass('spoiler-close')
+							.addClass('spoiler-open')
+							.show()
 					else
 						$(this)
-							.removeClass('spoiler-status-close')
-							.addClass('spoiler-status-open')
-							.show()
+							.removeClass('spoiler-open')
+							.addClass('spoiler-close')
+							.hide()
 
 
 	$.fn.snTriggers = (sn = {}) ->

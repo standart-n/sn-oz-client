@@ -311,9 +311,9 @@ $ ->
 			text = def.text
 			text
 				.replace(/<<\[(.+)\]\n?/g,'<div class="spoiler">'+
-											'<a href="#spoiler" class="wiki-link spoiler-caption">$1</a>'+
-											'<div class="spoiler-body">')
-				.replace(/>>\n?/g,'</div></div>')
+											'<a href="#spoiler" class="wiki-link">$1</a>'+
+											'<div class="spoiler-body"><pre>')
+				.replace(/>>\n?/g,'</pre></div></div>')
 
 		header: (options = {}) ->
 
