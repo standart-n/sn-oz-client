@@ -136,6 +136,7 @@ $ ->
 				.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="#$1" class="tooltip-toggle" rel="tooltip" title="$2">$1</a>')
 				.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="#$1">$2</a>')
 				.replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>')
+				.replace(/([\s+])#([a-zA-Z0-9\-\.\/\?%\#_\:]+)([\s]+)/g, '$1<a href="#$2">$2</a>$3')
 
 		externalLinks: (options = {}) ->
 
@@ -165,6 +166,7 @@ $ ->
 				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>')
 				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$1" target="_blank">$2</a>')
 				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="$1" target="_blank">$1</a>')
+				.replace(/([\s]+)https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<a href="$2" target="_blank">$2</a>$3')
 
 		fileLinks: (options = {}) ->
 
@@ -195,6 +197,7 @@ $ ->
 				.replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>')
 				.replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$2</a>')
 				.replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$1</a>')
+				.replace(/([\s]+)files?:([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$2" target="_blank">$2</a>$3')
 
 		mailTo: (options = {}) ->
 
