@@ -720,16 +720,16 @@ $(function() {
       }
       return $('.spoiler-caption').on('click', function(e) {
         e.preventDefault();
-        if ($(this).hasClass('spoiler-caption-open')) {
-          $(this).removeClass('spoiler-caption-open').addClass('spoiler-caption-close');
+        if ($(this).hasClass('spoiler-open')) {
+          $(this).removeClass('spoiler-open').addClass('spoiler-close');
         } else {
-          $(this).removeClass('spoiler-caption-close').addClass('spoiler-caption-open');
+          $(this).removeClass('spoiler-close').addClass('spoiler-open');
         }
         return $(this).parent('.spoiler').children('.spoiler-body').each(function() {
-          if ($(this).hasClass('spoiler-status-open')) {
-            return $(this).removeClass('spoiler-status-open').addClass('spoiler-status-close').hide();
+          if ($(this).hasClass('spoiler-open')) {
+            return $(this).removeClass('spoiler-open').addClass('spoiler-close').hide();
           } else {
-            return $(this).removeClass('spoiler-status-close').addClass('spoiler-status-open').show();
+            return $(this).removeClass('spoiler-close').addClass('spoiler-open').show();
           }
         });
       });
@@ -1099,7 +1099,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<\[(.+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="wiki-link spoiler-caption">$1</a>' + '<div class="spoiler-body">').replace(/>>\n?/g, '</div></div>');
+      return text.replace(/<<\[(.+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn spoiler-caption spoiler-close"><span class="caret"></span>&nbsp;$1</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/>>\n?/g, '</pre></div></p></div>');
     },
     header: function(options) {
       var def, text;
@@ -1138,7 +1138,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/\n/g, "<br>");
+      return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/<pre><br>/g, '<pre>').replace(/\n/g, "<br>");
     }
   };
   return $.fn.snWiki = function(sn) {
