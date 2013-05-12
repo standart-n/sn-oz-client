@@ -28,6 +28,7 @@ $ ->
 			text = $(_this).snWiki('spoiler', text: text)
 			text = $(_this).snWiki('header', text: text)
 			text = $(_this).snWiki('spaces', text: text)
+			text = $(_this).snWiki('noevent', text: text)
 			text
 
 		side: (options = {}) ->
@@ -55,6 +56,7 @@ $ ->
 			text = $(_this).snWiki('ind', text: text)
 			text = $(_this).snWiki('sideMenu', text: text)
 			text = $(_this).snWiki('spaces', text: text)
+			text = $(_this).snWiki('noevent', text: text)
 			text
 
 
@@ -108,6 +110,11 @@ $ ->
 			.replace(/\[(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)\]/g, '<i class="icon-$2"></i>')
 			.replace(/\[(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)\]/g, '<i class="icon-$2"></i>')
 
+			.replace(/([\s]+)(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)([\s]+)/g, '$1<i class="icon-$3 icon-white"></i>$4')
+			.replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)([\s]+)/g, '$1<i class="icon-$3 icon-white"></i>$4')
+			.replace(/([\s]+)(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4')
+			.replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4')
+
 		internalLinks: (options = {}) ->
 
 			def =
@@ -146,27 +153,27 @@ $ ->
 			$.extend def, options
 			text = def.text
 			text
-				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+) (left|top|right|bottom)\]/g, '<a href="$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5" target="_blank">$4</a>')
-				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>')
-				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+(left|top|right|bottom)\]/g, '<a href="$3" class="btn btn-$2 tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>')
-				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>')
-				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$3" class="btn btn-$2" target="_blank">$4</a>')
-				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn btn-$2" href="$2" target="_blank">$2</a>')
+				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+) (left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5" target="_blank">$4</a>')
+				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>')
+				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>')
+				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>')
+				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://$3" class="btn btn-$2" target="_blank">$4</a>')
+				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn btn-$2" href="http://$2" target="_blank">$2</a>')
 
-				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+) (left|top|right|bottom)\]/g, '<a href="$2" class="btn tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>')
-				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>')
-				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+(left|top|right|bottom)\]/g, '<a href="$2" class="btn tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>')
-				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$2" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>')
-				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a class="btn" href="$2" target="_blank">$3</a>')
-				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn" href="$2" target="_blank">$2</a>')
+				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+) (left|top|right|bottom)\]/g, '<a href="http://$2" class="btn tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>')
+				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>')
+				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$2" class="btn tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>')
+				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://$2" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>')
+				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a class="btn" href="http://$2" target="_blank">$3</a>')
+				.replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn" href="http://$2" target="_blank">$2</a>')
 
-				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+(left|top|right|bottom)\]/g, '<a href="$1" class="tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>')
-				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>')
-				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+(left|top|right|bottom)\]/g, '<a href="$1" class="tooltip-toggle" data-placement="$3" rel="tooltip" title="$2" target="_blank">$1</a>')
-				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>')
-				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="$1" target="_blank">$2</a>')
-				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="$1" target="_blank">$1</a>')
-				.replace(/([\s]+)https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<a href="$2" target="_blank">$2</a>$3')
+				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$1" class="tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>')
+				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>')
+				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$1" class="tooltip-toggle" data-placement="$3" rel="tooltip" title="$2" target="_blank">$1</a>')
+				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>')
+				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)]+)\]/g, '<a href="http://$1" target="_blank">$2</a>')
+				.replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="http://$1" target="_blank">$1</a>')
+				.replace(/([\s]+)https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<a href="http://$2" target="_blank">$2</a>$3')
 
 		fileLinks: (options = {}) ->
 
@@ -231,6 +238,9 @@ $ ->
 			text
 				.replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+(right|left)\]/g,'<img class="pull-$3" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$2">')
 				.replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g,'<img src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$2">')
+				
+				.replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+(right|left)([\s]+)/g,'$1<img class="pull-$4" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$3">$5')
+				.replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g,'$1<img src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$3">$4')
 
 		fonts: (options = {}) ->
 
@@ -316,6 +326,15 @@ $ ->
 				.replace(/<\[\n?/g,'<div class="page-header">')
 				.replace(/\]>\n?/g,'</div>')
 
+		noevent: (options = {}) ->
+
+			def =
+				text: ''
+
+			$.extend def, options
+			text = def.text
+			text
+				.replace(/(href="#")/g,'$1 data-noevent="true"')
 
 		spaces: (options = {}) ->
 

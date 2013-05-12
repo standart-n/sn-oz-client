@@ -11,7 +11,7 @@ $ ->
 			else				
 				$.extend true, def, options
 			
-			if def.href isnt '#'
+			if def.href isnt '#' and def.href.match(/#(.*)/)
 				
 				sn = $(this).data 'sn'	
 				sn.href = def.href + '/:'

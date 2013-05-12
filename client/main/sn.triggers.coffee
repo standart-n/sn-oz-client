@@ -38,11 +38,13 @@ $ ->
 
 			_this = this
 			$('#side a').on 'click', (e) ->
-				e.preventDefault()
-				if $(this).attr('href') isnt '#'
+				#e.preventDefault()
+				if $(this).attr('href') isnt '#' and not $(this).data('noevent')
 					$('#side li').removeClass('active')
 					$(this).parent('li').addClass('active')
 					$(_this).snEvents $(this).attr('href')
+				else
+					e.preventDefault()
 
 		linksPrimary: () ->
 
@@ -50,20 +52,24 @@ $ ->
 
 			_this = this
 			$('#primary a').on 'click', (e) ->
-				e.preventDefault()
-				if $(this).attr('href') isnt '#'
+				#e.preventDefault()
+				if $(this).attr('href') isnt '#' and not $(this).data('noevent')
 					$(_this).snEvents $(this).attr('href')
+				else
+					e.preventDefault()
 
 		linksBar: () ->
 
 			_this = this
 			console.log 'trigger: ' + 'linksBar' if console?
 			$('#bar a').on 'click', (e) ->
-				e.preventDefault()
-				if $(this).attr('href') isnt '#' and $(this).data('toggle') isnt 'dropdown'
+				#e.preventDefault()
+				if $(this).attr('href') isnt '#' and $(this).data('toggle') isnt 'dropdown' and not $(this).data('noevent')
 					$('#bar li').removeClass('active')
 					$(this).parent('li').addClass('active')
 					$(_this).snEvents $(this).attr('href')
+				else
+					e.preventDefault()
 
 		switchBar: (options = {}) ->
 
