@@ -17,6 +17,9 @@ templates:
 	@jade --pretty ./jade/index.jade -O ./
 	@jade --pretty ./jade/view/* -O ./view/
 	@jade --pretty ./jade/layout/izhevsk/* -O ./layout/izhevsk
+	@jade --pretty ./jade/layout/kirov/* -O ./layout/kirov
+	@jade --pretty ./jade/layout/stavropol/* -O ./layout/stavropol
+	@jade --pretty ./jade/layout/volgograd/* -O ./layout/volgograd
 
 client-js:
 	@coffee -cbjvp ./client/* > ./script/sn.js
