@@ -12,7 +12,7 @@ $ ->
 
 		plugins: (def = {}) ->
 
-			if $.isFunction $.bootstrapIE6 then $.bootstrapIE6 def.elem
+			if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(def.elem)
 			$(def.elem+' .tooltip-toggle').tooltip()
 
 

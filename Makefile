@@ -31,8 +31,7 @@ finish:
 
 
 bs-js:
-	@cat ./js/bootstrap/bootstrap-*.js  > ./script/bootstrap.js
-	@uglifyjs ./script/bootstrap.js -nc > ./script/bootstrap.min.js
+	@cat ./js/bootstrap-js/bootstrap-*.js  > ./script/bootstrap.js
 
 
 #

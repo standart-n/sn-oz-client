@@ -1099,7 +1099,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/<<\[(.+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn spoiler-caption spoiler-close"><span class="caret"></span>&nbsp;$1</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/>>\n?/g, '</pre></div></p></div>');
+      return text.replace(/<<\[(.+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn spoiler-caption spoiler-close">' + '<span class="caret"></span>&nbsp;$1</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/>>\n?/g, '</pre></div></p></div>');
     },
     header: function(options) {
       var def, text;
@@ -1777,34 +1777,6 @@ $(function() {
     }
   };
   return $.fn.snValidation = function(sn) {
-    if (sn == null) {
-      sn = {};
-    }
-    if (methods[sn]) {
-      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
-    } else {
-      return methods.init.apply(this, arguments);
-    }
-  };
-});
-
-$(function() {
-  var methods;
-
-  methods = {
-    init: function() {
-      if ($.browser.msie && parseInt($.browser.version, 10) === 6) {
-        $(".row div[class^=\"span\"]:last-child").addClass("last-child");
-        $("[class*=\"span\"]").addClass("margin-left-20");
-        $('[class*="span"][class*="offset"]').removeClass('margin-left-20');
-        $(":button[class=\"btn\"], :reset[class=\"btn\"], :submit[class=\"btn\"], input[type=\"button\"]").addClass("button-reset");
-        $(":checkbox").addClass("input-checkbox");
-        $("[class^=\"icon-\"], [class*=\" icon-\"]").addClass("icon-sprite");
-        return $(".pagination li:first-child a").addClass("pagination-first-child");
-      }
-    }
-  };
-  return $.fn.ie6 = function(sn) {
     if (sn == null) {
       sn = {};
     }

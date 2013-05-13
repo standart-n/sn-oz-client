@@ -311,7 +311,8 @@ $ ->
 			text = def.text
 			text
 				.replace(/<<\[(.+)\]\n?/g,'<div class="spoiler">'+
-											'<a href="#spoiler" class="btn spoiler-caption spoiler-close"><span class="caret"></span>&nbsp;$1</a><p>'+
+											'<a href="#spoiler" class="btn spoiler-caption spoiler-close">'+
+											'<span class="caret"></span>&nbsp;$1</a><p>'+
 											'<div class="hide spoiler-body spoiler-close"><pre>')
 				.replace(/>>\n?/g,'</pre></div></p></div>')
 
