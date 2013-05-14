@@ -1,4 +1,13 @@
 {
+	"bootstrap":
+	{
+		"css":
+		[
+		],
+		"js":
+		[
+		]
+	},
 	"classic":
 	{
 		"css":
