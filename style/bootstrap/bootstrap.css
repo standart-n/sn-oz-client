@@ -172,6 +172,10 @@ body {
   font-size: 14px;
   line-height: 20px;
   color: #333333;
+}
+
+body,
+html {
   background-color: #e0e5ed;
 }
 
@@ -4467,12 +4471,13 @@ input[type="submit"].btn.btn-mini {
 }
 
 .nav-tabs {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #999;
 }
 
 .nav-tabs li {
   margin-bottom: -1px;
-  *background-color: #ffffff;
+  *background-color: #fffffe;
+  *filter: chroma(color=#fffffe);
   *zoom: 1;
 }
 
@@ -4512,7 +4517,7 @@ input[type="submit"].btn.btn-mini {
 .nav-tabs .active a:hover {
   color: #555555;
   cursor: default;
-  background-color: #fcfcfc;
+  background-color: #ddd;
   border: 1px solid #ddd;
   *border: 1px solid #999;
   border-bottom-color: transparent;
@@ -4521,7 +4526,7 @@ input[type="submit"].btn.btn-mini {
 .nav-tabs * .active a,
 .nav-tabs * .active a:hover {
   color: inherit;
-  background-color: #fcfcfc;
+  background-color: inherit;
   border: none;
 }
 

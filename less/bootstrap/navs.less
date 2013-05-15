@@ -164,19 +164,19 @@
 
 // Give the tabs something to sit on
 .nav-tabs {
-  border-bottom: 1px solid #ddd;
+  //border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #999;
 }
 // Make the list-items overlay the bottom border
 // .nav-tabs > li {
 .nav-tabs li {
   margin-bottom: -1px;
-  //position: relatative;
-  //top: 2px;
+  //margin-bottom: 0;
 
   *zoom:1;
-  *background-color: @white;
-  // *background-color: @transparentIE6;
-  // *filter:chroma(color=@transparentIE6);
+  //*background-color: @white;
+  *background-color: @transparentIE6;
+  *filter:chroma(color=@transparentIE6);
 }
 .nav-tabs * li {
   zoom:normal;
@@ -215,20 +215,18 @@
 .nav-tabs .active a,
 .nav-tabs .active a:hover {
   color: @gray;
-  //background-color: @bodyBackground;
-  background-color: #fcfcfc;
+  //background-color: @wellBackground;
+  background-color: #ddd;
   border: 1px solid #ddd;
   *border: 1px solid #999;
   border-bottom-color: transparent;
-  //border-bottom-color: #fcfcfc;
+  //border-bottom-color: #ff0000;
   cursor: default;
 }
 .nav-tabs * .active a,
 .nav-tabs * .active a:hover {
   color:inherit;
-  //background-color:inherit;
-  background-color:#fcfcfc;
-  //border-bottom-color: #fcfcfc;
+  background-color:inherit;
   border:none;
 }
 
