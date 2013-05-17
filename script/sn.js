@@ -188,6 +188,9 @@ $(function() {
         $.extend(true, def, options);
       }
       if (def.href !== '#' && def.href.match(/#(.*)/)) {
+        $.cookie('last_href', def.href, {
+          expires: 7
+        });
         sn = $(this).data('sn');
         sn.href = def.href + '/:';
         sn.levels = {

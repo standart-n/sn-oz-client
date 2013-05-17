@@ -100,7 +100,8 @@
 .nav-list .active a:hover /* fix for IE6 */ {
   color: @white;
   text-shadow: 0 -1px 0 rgba(0,0,0,.2);
-  background-color: @linkColor;
+  //background-color: @linkColor;
+  background-color: @VKblueDarker;
 }
 .nav-list * .active a,
 .nav-list * .active a:hover /* fix for IE6 */ {
@@ -165,7 +166,7 @@
 // Give the tabs something to sit on
 .nav-tabs {
   //border-bottom: 1px solid #ddd;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid @VKblueDarker;
 }
 // Make the list-items overlay the bottom border
 // .nav-tabs > li {
@@ -214,13 +215,14 @@
 // .nav-tabs > .active > a:hover {
 .nav-tabs .active a,
 .nav-tabs .active a:hover {
-  color: @gray;
+  //color: @gray;
+  color: @white;
   //background-color: @wellBackground;
-  background-color: #ddd;
+  background-color: @VKblueDarker;
   border: 1px solid #ddd;
-  *border: 1px solid #999;
-  border-bottom-color: transparent;
-  //border-bottom-color: #ff0000;
+  *border: 1px solid @VKblueDarker;
+  //border-bottom-color: transparent;
+  border-bottom-color: @VKblueDarker;
   cursor: default;
 }
 .nav-tabs * .active a,

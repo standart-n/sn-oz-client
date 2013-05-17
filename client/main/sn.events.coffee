@@ -12,6 +12,9 @@ $ ->
 				$.extend true, def, options
 			
 			if def.href isnt '#' and def.href.match(/#(.*)/)
+
+				$.cookie 'last_href', def.href, expires: 7
+
 				
 				sn = $(this).data 'sn'	
 				sn.href = def.href + '/:'

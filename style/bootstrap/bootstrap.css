@@ -4394,7 +4394,7 @@ input[type="submit"].btn.btn-mini {
 .nav-list .active a:hover {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-  background-color: #0088cc;
+  background-color: #375e92;
 }
 
 .nav-list * .active a,
@@ -4471,7 +4471,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .nav-tabs {
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #375e92;
 }
 
 .nav-tabs li {
@@ -4515,12 +4515,12 @@ input[type="submit"].btn.btn-mini {
 
 .nav-tabs .active a,
 .nav-tabs .active a:hover {
-  color: #555555;
+  color: #ffffff;
   cursor: default;
-  background-color: #ddd;
+  background-color: #375e92;
   border: 1px solid #ddd;
-  *border: 1px solid #999;
-  border-bottom-color: transparent;
+  *border: 1px solid #375e92;
+  border-bottom-color: #375e92;
 }
 
 .nav-tabs * .active a,

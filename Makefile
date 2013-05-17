@@ -24,8 +24,11 @@ templates:
 client-js:
 	@coffee -cbjvp ./client/* > ./script/sn.js
 
-css:
+test:
+	@jade --pretty ./jade/test.jade -O ./
+	@coffee -cbjvp ./test-js/* > ./script/test.js
 
+css:
 	@recess --compile ./less/bootstrap/bootstrap.less > ./style/bootstrap/bootstrap.css
 
 	
@@ -34,7 +37,7 @@ finish:
 
 
 bs-js:
-	@cat ./js/bootstrap-js/bootstrap-*.js  > ./script/bootstrap.js
+	@cat ./bootstrap-js/bootstrap-*.js  > ./script/bootstrap.js
 
 
 #
