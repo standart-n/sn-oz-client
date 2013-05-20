@@ -14,7 +14,8 @@ $(function() {
         users: {},
         content: {},
         result: {},
-        console: false
+        theme: {},
+        settings: {}
       };
       $.extend(true, sn, options);
       $(this).data('sn', sn);
@@ -130,7 +131,26 @@ $(function() {
         });
       }
     },
-    settings: function() {}
+    settings: function() {
+      var sn;
+
+      sn = $(this).data('sn');
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('conf: ' + 'settings.json');
+      }
+      return $.ajax({
+        url: 'conf/settings.json',
+        async: false,
+        dataType: 'json',
+        success: function(s) {
+          if (s != null) {
+            $.extend(sn.settings, s);
+            sn.settings.enable = true;
+          }
+          return $(this).data('sn', sn);
+        }
+      });
+    }
   };
   return $.fn.snConf = function(sn) {
     if (sn == null) {
@@ -157,7 +177,7 @@ $(function() {
       }
     }
   };
-  $.fn.snDesign = function(sn) {
+  return $.fn.snDesign = function(sn) {
     if (sn == null) {
       sn = {};
     }
@@ -167,136 +187,139 @@ $(function() {
       return methods.init.apply(this, arguments);
     }
   };
-  return $(function() {
-    methods = {
-      init: function(options) {
-        var def, sn;
+});
 
-        if (options == null) {
-          options = {};
-        }
-        def = {
-          href: 'none'
-        };
-        if (typeof sn !== 'object') {
-          def.href = options;
-        } else {
-          $.extend(true, def, options);
-        }
-        if (def.href !== '#' && def.href.match(/#(.*)/)) {
-          if (def.href === '#main/text/contacts') {
-            $.cookie('contacts', def.href, {
-              expires: 7
-            });
-          }
-          sn = $(this).data('sn');
-          sn.href = def.href + '/:';
-          sn.levels = {
-            one: sn.href.replace(/(.*)#(.*?)\/(.*)/, '$2'),
-            two: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/, '$3'),
-            three: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/, '$4'),
-            anchor: sn.href.replace(/(.*)\:(.*?)\/(.*)/, '$2')
-          };
-          if (typeof console !== "undefined" && console !== null) {
-            console.info('url: ' + sn.href);
-          }
-          if (typeof console !== "undefined" && console !== null) {
-            console.info('levels: ', sn.levels);
-          }
-          if ((sn.levels.one != null) && sn.levels.one !== 'spoiler') {
-            switch (sn.levels.one) {
-              case 'autoload':
-                $(this).snModels('primary', {
-                  file: 'main.html'
-                });
-                $(this).snModels('side', {
-                  file: 'main.html'
-                });
-                $(this).snTriggers('switch', 'side', 'main');
-                $(this).snTriggers('links', 'bar');
-                $(this).snTriggers('links', 'side');
-                $(this).snTriggers('links', 'primary');
-                $(this).snTriggers('hover', 'bar');
-                this.snTriggers('hover', 'side');
-                sn.part = 'main';
-                break;
-              default:
-                if ((sn.levels.two != null) && (sn.levels.three != null)) {
-                  $('html,body').animate({
-                    scrollTop: 0
-                  }, 0);
-                  if (sn.levels.two === 'text') {
-                    if (sn.levels.one !== sn.part) {
-                      $(this).snModels('side', {
-                        file: sn.levels.one + '.html'
-                      });
-                      $(this).snModels('primary', {
-                        file: sn.levels.three + '.html'
-                      });
-                      $(this).snTriggers('links', 'side');
-                      $(this).snTriggers('links', 'primary');
-                      $(this).snTriggers('switch', 'bar', sn.levels.one);
-                      $(this).snTriggers('switch', 'side', sn.levels.three);
-                      $(this).snTriggers('hover', 'side');
-                    } else {
-                      $(this).snModels('primary', {
-                        file: sn.levels.three + '.html'
-                      });
-                      $(this).snTriggers('links', 'primary');
-                      $(this).snTriggers('switch', 'side', sn.levels.three);
-                    }
-                  }
-                  sn.part = sn.levels.one;
-                }
-            }
-            $(this).data('sn', sn);
-            $(this).snEvents('anchor');
-            return $(this).click();
-          }
-        }
-      },
-      anchor: function(options) {
-        var e, height, sn;
+$(function() {
+  var methods;
 
-        if (options == null) {
-          options = {};
+  methods = {
+    init: function(options) {
+      var def, sn;
+
+      if (options == null) {
+        options = {};
+      }
+      def = {
+        href: 'none'
+      };
+      if (typeof sn !== 'object') {
+        def.href = options;
+      } else {
+        $.extend(true, def, options);
+      }
+      if (def.href !== '#' && def.href.match(/#(.*)/)) {
+        if (def.href === '#main/text/contacts') {
+          $.cookie('contacts', def.href, {
+            expires: 7
+          });
         }
         sn = $(this).data('sn');
-        if (sn.levels.anchor !== '') {
-          try {
-            if ($('#anchor-' + sn.levels.anchor).length) {
-              height = $('#anchor-' + sn.levels.anchor).offset().top - 87;
-              if (height) {
-                if ($('#side-' + sn.levels.anchor).length) {
-                  $(this).snTriggers('switchSide', {
-                    'link': sn.levels.anchor
-                  });
+        sn.href = def.href + '/:';
+        sn.levels = {
+          one: sn.href.replace(/(.*)#(.*?)\/(.*)/, '$2'),
+          two: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/, '$3'),
+          three: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/, '$4'),
+          anchor: sn.href.replace(/(.*)\:(.*?)\/(.*)/, '$2')
+        };
+        if (typeof console !== "undefined" && console !== null) {
+          console.info('url: ' + sn.href);
+        }
+        if (typeof console !== "undefined" && console !== null) {
+          console.info('levels: ', sn.levels);
+        }
+        if ((sn.levels.one != null) && sn.levels.one !== 'spoiler') {
+          switch (sn.levels.one) {
+            case 'autoload':
+              $(this).snModels('primary', {
+                file: 'main.html'
+              });
+              $(this).snModels('side', {
+                file: 'main.html'
+              });
+              $(this).snTriggers('switch', 'side', 'main');
+              $(this).snTriggers('links', 'bar');
+              $(this).snTriggers('links', 'side');
+              $(this).snTriggers('links', 'primary');
+              $(this).snTriggers('hover', 'bar');
+              this.snTriggers('hover', 'side');
+              sn.part = 'main';
+              break;
+            default:
+              if ((sn.levels.two != null) && (sn.levels.three != null)) {
+                $('html,body').animate({
+                  scrollTop: 0
+                }, 0);
+                if (sn.levels.two === 'text') {
+                  if (sn.levels.one !== sn.part) {
+                    $(this).snModels('side', {
+                      file: sn.levels.one + '.html'
+                    });
+                    $(this).snModels('primary', {
+                      file: sn.levels.three + '.html'
+                    });
+                    $(this).snTriggers('links', 'side');
+                    $(this).snTriggers('links', 'primary');
+                    $(this).snTriggers('switch', 'bar', sn.levels.one);
+                    $(this).snTriggers('switch', 'side', sn.levels.three);
+                    $(this).snTriggers('hover', 'side');
+                  } else {
+                    $(this).snModels('primary', {
+                      file: sn.levels.three + '.html'
+                    });
+                    $(this).snTriggers('links', 'primary');
+                    $(this).snTriggers('switch', 'side', sn.levels.three);
+                  }
                 }
-                return $('html,body').animate({
-                  scrollTop: height
-                }, 'slow');
+                sn.part = sn.levels.one;
               }
+          }
+          $(this).data('sn', sn);
+          $(this).snEvents('anchor');
+          return $(this).click();
+        }
+      }
+    },
+    anchor: function(options) {
+      var e, height, sn;
+
+      if (options == null) {
+        options = {};
+      }
+      sn = $(this).data('sn');
+      if (sn.levels.anchor !== '') {
+        try {
+          if ($('#anchor-' + sn.levels.anchor).length) {
+            height = $('#anchor-' + sn.levels.anchor).offset().top - 87;
+            if (height) {
+              if ($('#side-' + sn.levels.anchor).length) {
+                $(this).snTriggers('switchSide', {
+                  'link': sn.levels.anchor
+                });
+              }
+              return $('html,body').animate({
+                scrollTop: height
+              }, 'slow');
             }
-          } catch (_error) {
-            e = _error;
-            if (typeof console !== "undefined" && console !== null) {
-              return console.error('anchor', e);
-            }
+          }
+        } catch (_error) {
+          e = _error;
+          if (typeof console !== "undefined" && console !== null) {
+            return console.error('anchor', e);
           }
         }
       }
-    };
-    return $.fn.snEvents = function(sn) {
-      if (sn == null) {
-        sn = {};
-      }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
-      } else {
-        return methods.init.apply(this, arguments);
-      }
-    };
-  });
+    }
+  };
+  return $.fn.snEvents = function(sn) {
+    if (sn == null) {
+      sn = {};
+    }
+    if (methods[sn]) {
+      return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+    } else {
+      return methods.init.apply(this, arguments);
+    }
+  };
 });
 
 $(function() {
@@ -641,23 +664,23 @@ $(function() {
         return options = {};
       }
       /*
-      			console.log 'trigger: ' + 'switchBar' if console?
+      				console.log 'trigger: ' + 'switchBar' if console?
       
-      			def =
-      				link: 'main'
+      				def =
+      					link: 'main'
       
-      			$.extend def, options
+      				$.extend def, options
       
-      			$('.bar-button')
-      				.removeClass('bar-button-active')
-      				.removeClass('bar-button-hover')
-      				.addClass('bar-button-normal')
+      				$('.bar-button')
+      					.removeClass('bar-button-active')
+      					.removeClass('bar-button-hover')
+      					.addClass('bar-button-normal')
       
-      			$('#bar-'+def.link)
-      				.removeClass('bar-button-normal')
-      				.removeClass('bar-button-hover')
-      				.addClass('bar-button-active')
-      				.blur()
+      				$('#bar-'+def.link)
+      					.removeClass('bar-button-normal')
+      					.removeClass('bar-button-hover')
+      					.addClass('bar-button-active')
+      					.blur()
       */
 
     },
@@ -666,23 +689,23 @@ $(function() {
         return options = {};
       }
       /*
-      			console.log 'trigger: ' + 'switchSide' if console?
+      				console.log 'trigger: ' + 'switchSide' if console?
       
-      			def=
-      				link: 'above'
+      				def=
+      					link: 'above'
       
-      			$.extend(def,options)
+      				$.extend(def,options)
       
-      			$('.side-box-link')
-      				.removeClass('side-box-link-active')
-      				.removeClass('side-box-link-hover')
-      				.addClass('side-box-link-normal')
+      				$('.side-box-link')
+      					.removeClass('side-box-link-active')
+      					.removeClass('side-box-link-hover')
+      					.addClass('side-box-link-normal')
       
-      			$('#side-'+def.link)
-      				.removeClass('side-box-link-normal')
-      				.removeClass('side-box-link-hover')
-      				.addClass('side-box-link-active')
-      				.blur()
+      				$('#side-'+def.link)
+      					.removeClass('side-box-link-normal')
+      					.removeClass('side-box-link-hover')
+      					.addClass('side-box-link-active')
+      					.blur()
       */
 
     },
@@ -981,7 +1004,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$6" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn btn-$2" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$3" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn btn-$2" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$3" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$2" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn" href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$2" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" data-placement="$3" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$1" target="_blank">$1</a>').replace(/([\s]+)files?:([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<a href="http://oz.st-n.ru/publish/files/' + sn.region.name + '/$2" target="_blank">$2</a>$3');
+      return text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$6" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn btn-$2" href="' + sn.settings.paths.files.url + sn.region.name + '/$3" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn btn-$2" href="' + sn.settings.paths.files.url + sn.region.name + '/$3" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="' + sn.settings.paths.files.url + sn.region.name + '/$2" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn" href="' + sn.settings.paths.files.url + sn.region.name + '/$2" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" data-placement="$3" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" target="_blank">$1</a>').replace(/([\s]+)files?:([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" target="_blank">$2</a>$3');
     },
     mailTo: function(options) {
       var def, text;
@@ -1008,7 +1031,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" style="width:99%;margin:auto;" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$1">');
+      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" style="width:99%;margin:auto;" src="' + sn.settings.paths.images.url + sn.region.name + '/$1">');
     },
     image: function(options) {
       var def, sn, text;
@@ -1022,7 +1045,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+(right|left)\]/g, '<img class="pull-$3" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$2">').replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$2">').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+(right|left)([\s]+)/g, '$1<img class="pull-$4" src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$3">$5').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<img src="http://oz.st-n.ru/publish/photo/' + sn.region.name + '/$3">$4');
+      return text.replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+(right|left)\]/g, '<img class="pull-$3" src="' + sn.settings.paths.images.url + sn.region.name + '/$2">').replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img src="' + sn.settings.paths.images.url + sn.region.name + '/$2">').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+(right|left)([\s]+)/g, '$1<img class="pull-$4" src="' + sn.settings.paths.images.url + sn.region.name + '/$3">$5').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<img src="' + sn.settings.paths.images.url + sn.region.name + '/$3">$4');
     },
     fonts: function(options) {
       var def, text;
@@ -1088,7 +1111,7 @@ $(function() {
       };
       $.extend(def, options);
       text = def.text;
-      return text.replace(/\[gismeteo\]\n?/g, '<iframe src="http://oz.st-n.ru/gismeteo/' + sn.region.name + '/" width="96%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>&nbsp;');
+      return text.replace(/\[gismeteo\]\n?/g, '<iframe src="' + sn.settings.paths.widgets.gismeteo.url + sn.region.name + '/" width="96%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>&nbsp;');
     },
     spoiler: function(options) {
       var def, text;

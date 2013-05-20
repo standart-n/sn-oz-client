@@ -1,6 +1,7 @@
 
-
 Старт приложения
+----------------
+
 ```coffeescript
 
 	$ ->
@@ -13,10 +14,13 @@
 ```coffeescript
 
 				sn =
-					levels:{} # адрес, по которому был сделан последний переход
-					users:{}
+					levels:{} # состояние последнего перехода
+					users:{} # состояние пользователя
 					content:{}
-					result:{}
+					result:{} # результат последнего ajax запроса
+					theme:{} # тема оформления
+					settings:{} # доп. настройки
+
 
 				$.extend true, sn, options
 				$(this).data 'sn', sn

@@ -1,0 +1,22 @@
+{
+	"paths":
+	{
+		"files":
+		{
+			"url": "http://oz.st-n.ru/publish/files/"
+		},
+		"images":
+		{
+			"url": "http://oz.st-n.ru/publish/photo/"
+		},
+		"widgets":
+		{
+			"gismeteo":
+			{
+				"url": "http://oz.st-n.ru/gismeteo/"
+			}
+		}
+
+	}
+
+}
