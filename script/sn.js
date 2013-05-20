@@ -208,6 +208,9 @@ $(function() {
         $.extend(true, def, options);
       }
       if (def.href !== '#' && def.href.match(/#(.*)/)) {
+        $.cookie('last_href', def.href, {
+          expires: 7
+        });
         if (def.href === '#main/text/contacts') {
           $.cookie('contacts', def.href, {
             expires: 7
