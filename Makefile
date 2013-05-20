@@ -11,7 +11,7 @@ def: all
 
 all: client finish
 
-client: client-js css templates
+client: cacke css templates
 
 templates:
 	@jade --pretty ./jade/index.jade -O ./
@@ -21,8 +21,8 @@ templates:
 	@jade --pretty ./jade/layout/stavropol/* -O ./layout/stavropol
 	@jade --pretty ./jade/layout/volgograd/* -O ./layout/volgograd
 
-client-js:
-	@coffee -cbjvp ./client/* > ./script/sn.js
+cacke:
+	@coffee -cbjvp ./client-js/* > ./script/sn.js
 
 test:
 	@jade --pretty ./jade/test.jade -O ./
