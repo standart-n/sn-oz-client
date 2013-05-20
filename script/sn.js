@@ -264,12 +264,10 @@ $(function() {
         $.extend(true, def, options);
       }
       if (def.href !== '#' && def.href.match(/#(.*)/)) {
-        $.cookie('last_href', def.href, {
-          expires: 7
-        });
         if (def.href === '#main/text/contacts') {
           $.cookie('contacts', def.href, {
-            expires: 7
+            expires: 7,
+            path: '/'
           });
         }
         sn = $(this).data('sn');
@@ -302,9 +300,14 @@ $(function() {
               $(this).snTriggers('hover', 'bar');
               this.snTriggers('hover', 'side');
               sn.part = 'main';
+              $.removeCookie('last_href');
               break;
             default:
               if ((sn.levels.two != null) && (sn.levels.three != null)) {
+                $.cookie('last_href', def.href, {
+                  expires: 7,
+                  path: '/'
+                });
                 $('html,body').animate({
                   scrollTop: 0
                 }, 0);

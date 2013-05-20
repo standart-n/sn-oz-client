@@ -19,17 +19,12 @@ $ ->
 			
 			if def.href isnt '#' and def.href.match(/#(.*)/)
 
-				# сохраняем в cookies последнюю ссылку, по которой был сделан переход, чтобы
-				# проверить работают ли cookie при переходах между страницами
-
-				$.cookie 'last_href', def.href, expires: 7
-
 
 				# сохраняем cookies, когда человек переходит в раздел "контакты", 
 				# чтобы в тестах проверить, сохраняются ли они при закрытии программы
 
 				if def.href is '#main/text/contacts'
-					$.cookie 'contacts', def.href, expires: 7
+					$.cookie 'contacts', def.href, expires: 7, path: '/'
 
 				# парсинг адресной строки
 				
@@ -63,12 +58,20 @@ $ ->
 							$(this).snTriggers 'hover', 'bar'
 							(this).snTriggers 'hover', 'side'
 							sn.part = 'main'
+
+							$.removeCookie 'last_href'
 						
 						else
 							
 							# в других случаях
 
 							if sn.levels.two? and sn.levels.three?
+
+								# сохраняем в cookies последнюю ссылку, по которой был сделан переход, чтобы
+								# проверить работают ли cookie при переходах между страницами
+
+								$.cookie 'last_href', def.href, expires: 7, path: '/'
+
 
 								# поднимаем экран в самый вверх
 
