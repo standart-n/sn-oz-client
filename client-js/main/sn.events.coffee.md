@@ -36,6 +36,7 @@
 						anchor: sn.href.replace /(.*)\:(.*?)\/(.*)/, '$2'
 
 выводим в логи
+
 					console.info 'url: ' + sn.href if console?
 					console.info 'levels: ', sn.levels if console?
 
