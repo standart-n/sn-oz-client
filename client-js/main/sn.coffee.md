@@ -1,3 +1,5 @@
+```coffeescript
+
 
 Старт приложения
 
@@ -8,7 +10,7 @@
 начальное состояние объекта sn
 
 				sn =
-					levels:{} // адрес, по которому был сделан последний переход
+					levels:{} # адрес, по которому был сделан последний переход
 					users:{}
 					content:{}
 					result:{}
@@ -32,11 +34,12 @@
 				$(this).snEvents '#autoload'
 
 инициализация
-```coffeescript
 
 		$.fn.sn = (sn = {}) ->
 			if methods[sn]
 				methods[sn].apply @, Array.prototype.slice.call arguments, 1
 			else 
 				methods.init.apply @, arguments
+
+
 ```
