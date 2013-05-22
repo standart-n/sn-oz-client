@@ -13,7 +13,6 @@ $ ->
 		init: (options = {}) ->
 			def =
 				elem:		'#main'
-				type:		'main'
 				wiki:		off
 			$.extend def, options
 
@@ -27,7 +26,6 @@ $ ->
 
 			def =
 				elem:		'#primary'
-				type:		'primary'
 				wiki:		on
 			$.extend def, options
 			
@@ -41,7 +39,6 @@ $ ->
 
 			def =
 				elem:		'#side'
-				type:		'side'
 				wiki:		on
 			$.extend def, options
 			
@@ -59,17 +56,15 @@ $ ->
 		# если нужно зарузить файл
 
 			if def.file?
-				$(this).snModels 'load', def, (s) ->
+				$(this).snModels 'load', def.file, (s) ->
 					def.text = s
 					$(_this).snModels 'inner', def
-					$(_this).snTriggers 'spoiler' if def.type is 'primary'
 
 			# если в параметре передается текст
 
 			else
 				if def.text?
 					$(_this).snModels 'inner', def
-					$(_this).snTriggers 'spoiler' if def.type is 'primary'
 
 
 				# если в параметре передается путь к представлению
@@ -77,18 +72,18 @@ $ ->
 
 				else
 					if def.view?
-						def.text = new EJS(url: 'view/' + def.view, ext: '.html').render(sn)
-						$(_this).snModels 'inner', def
-						$(_this).snTriggers 'spoiler' if def.type is 'primary'
+						if window.EJS?
+							def.text = new EJS(url: 'view/' + def.view, ext: '.html').render(sn)
+							$(_this).snModels 'inner', def
 
 					# если в параметре передается путь к шаблону
 					# загружаем спомощью EJS
 
 					else
 						if def.layout?
-							def.text = new EJS(url: 'layout/' + sn.region.name + '/' + def.layout , ext: '.html').render(sn)
-							$(_this).snModels 'inner', def
-							$(_this).snTriggers 'spoiler' if def.type is 'primary'
+							if window.EJS?
+								def.text = new EJS(url: 'layout/' + window.sn.region.name + '/' + def.layout , ext: '.html').render(sn)
+								$(_this).snModels 'inner', def
 
 		# вставка текста
 
@@ -97,79 +92,62 @@ $ ->
 			# параметры по умолчанию
 
 			def =
-				elem: 		'#side-content'
-				type: 		'side'
-				text: 		''
+				elem:		'#main'
 				wiki:		on
 				position: 	'place'
 			$.extend def, options
 
-			# вывод в логи
+			if def.text?
 
-			console.log 'innerText: ' + def.type + ' ' + def.position if console?
-			
-			# обрабатываем вики-разметку
+				# вывод в логи
 
-			def.text = $(this).snWiki(def.type, text: def.text) if def.wiki is on
-	
-			# вставляем текст в нужный блок
+				console.log 'innerText' if console?
+				
+				# обрабатываем вики-разметку
 
-			switch def.position
-				when 'place'
-					$(def.elem).html def.text
-				when 'after'
-					$(def.elem).html $(def.elem).html() + def.text
-				when 'before'
-					$(def.elem).html def.text + $(def.elem).html()
+				def.text = $(this).snWiki(def.text) if def.wiki is on
+		
+				# вставляем текст в нужный блок
 
-			# запускаем необходимые триггеры для корректного отображения контента,
-			# который мы вставили
+				switch def.position
+					when 'place'
+						$(def.elem).html def.text
+					when 'after'
+						$(def.elem).html $(def.elem).html() + def.text
+					when 'before'
+						$(def.elem).html def.text + $(def.elem).html()
 
-			$(this).snTriggers 'plugins', def
+				# запускаем необходимые триггеры для корректного отображения контента,
+				# который мы вставили
+
+				$(this).snTriggers 'plugins', def
 
 
 		# скрипт для загрузки текста из файла
 
-		load: (options = {},callback) ->
+		load: (file, callback) ->
 
 			# параметры по-умолчанию
 
-			sn = $(this).data 'sn'
-			def =
-				url: ''
-				type: 'view'
-				file: 'news.html'
-			$.extend def, options
+			if file?
 
-			# определяем нужный путь к файлу
+				url = 'content/' + window.sn.region.name + '/' + file
 
-			switch def.type
-				when 'view'
-					def.url = 'view/' + def.file
-				when 'layout'
-					def.url = 'layout/' + sn.region.name + '/' + def.file
-				when 'primary'
-					def.url = 'content/' + sn.region.name + '/' + def.file
-				when 'side'
-					def.url = 'content/' + sn.region.name + '/side_' + def.file
+				# запись в логи
+				
+				console.log 'file: ' + file if console?
 
-			# запись в логи
-			
-			console.log 'type: ' + def.type if console?
-			console.log 'file: ' + def.file if console?
-			console.log 'url: ' + def.url if console?
+				# берем текст спомощью ajax
 
-			# берем текст спомощью ajax
-
-			$.ajax
-				url: def.url
-				async: off
-				cache: off
-				dataType: 'html'
-				success: (text) ->
-					if text?
-						console.log 'success' if console?
-						callback(text) if callback
+				$.ajax
+					url: url
+					async: off
+					cache: off
+					dataType: 'html'
+					success: (text) ->
+						if text?
+							console.log 'success' if console?
+							callback(text) if callback
 
 	# инициализация
 

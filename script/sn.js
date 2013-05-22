@@ -20,6 +20,16 @@ $(function() {
       if (options == null) {
         options = {};
       }
+      window.sn = {
+        region: {
+          caption: 'unknow',
+          name: 'unknow'
+        },
+        theme: {
+          caption: 'unknow',
+          name: 'unknow'
+        }
+      };
       sn = {
         levels: {},
         users: {},
@@ -27,42 +37,28 @@ $(function() {
         conf: {},
         result: {},
         theme: {},
-        settings: {},
-        execute: {
-          conf: true,
-          layout: true,
-          events: true
-        }
+        settings: {}
       };
       $.extend(true, sn, options);
       $(this).data('sn', sn);
       return sn;
     },
     start: function(options) {
-      var sn;
-
       if (options == null) {
         options = {};
       }
-      sn = $(this).data('sn');
-      if (sn.execute.conf) {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('configuration...');
-        }
-        $(this).snConf();
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('configuration...');
       }
-      if (sn.execute.layout) {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('layout...');
-        }
-        $(this).snLayout();
+      $(this).snConf();
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('layout...');
       }
-      if (sn.execute.events) {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('autoload...');
-        }
-        return $(this).snEvents('#autoload');
+      $(this).snLayout();
+      if (typeof console !== "undefined" && console !== null) {
+        console.log('autoload...');
       }
+      return $(this).snEvents('#autoload');
     }
   };
   return $.fn.sn = function(sn) {
@@ -95,7 +91,8 @@ $(function() {
       $(this).snConf('theme');
       $(this).snConf('css');
       $(this).snConf('js');
-      return $(this).snConf('settings');
+      $(this).snConf('settings');
+      return $(this).snConf('wiki');
     },
     main: function() {
       var sn;
@@ -112,6 +109,12 @@ $(function() {
           if (s != null) {
             $.extend(sn, s);
             sn.conf.main = true;
+          }
+          if (sn.region != null) {
+            window.sn.region = sn.region;
+          }
+          if (sn.theme != null) {
+            window.sn.theme = sn.theme;
           }
           return $(this).data('sn', sn);
         }
@@ -131,26 +134,23 @@ $(function() {
         success: function(s) {
           if (s != null) {
             sn.conf.theme = true;
-            if (s[sn.theme.name]) {
+            if (s[sn.theme.name] != null) {
               $.extend(sn.theme, s[sn.theme.name]);
               sn.theme.enable = true;
             } else {
               sn.theme.enable = false;
             }
+            return $(this).data('sn', sn);
           }
-          return $(this).data('sn', sn);
         }
       });
     },
     css: function() {
-      var sn;
-
-      sn = $(this).data('sn');
       if (typeof console !== "undefined" && console !== null) {
         console.log('conf: ' + 'css');
       }
-      if (sn.theme.css) {
-        return $.each(sn.theme.css, function(i) {
+      if (window.sn.theme.css != null) {
+        return $.each(window.sn.theme.css, function(i) {
           var head, link;
 
           head = document.getElementsByTagName('head')[0];
@@ -163,14 +163,11 @@ $(function() {
       }
     },
     js: function() {
-      var sn;
-
-      sn = $(this).data('sn');
       if (typeof console !== "undefined" && console !== null) {
         console.log('conf: ' + 'js');
       }
-      if (sn.theme.js) {
-        return $.each(sn.theme.js, function(i) {
+      if (window.sn.theme.js != null) {
+        return $.each(window.sn.theme.js, function(i) {
           return $.getScript(this);
         });
       }
@@ -188,13 +185,29 @@ $(function() {
         dataType: 'json',
         success: function(s) {
           if (s != null) {
-            sn.conf.settings = true;
             $.extend(sn.settings, s);
             sn.settings.enable = true;
+            sn.conf.settings = true;
           }
           return $(this).data('sn', sn);
         }
       });
+    },
+    wiki: function() {
+      var sn;
+
+      sn = $(this).data('sn');
+      return window.sn.wiki = {
+        images: {
+          url: sn.settings.paths.images.url + sn.region.name + '/'
+        },
+        files: {
+          url: sn.settings.paths.files.url + sn.region.name + '/'
+        },
+        gismeteo: {
+          url: sn.settings.paths.widgets.gismeteo.url + sn.region.name + '/'
+        }
+      };
     }
   };
   return $.fn.snConf = function(sn) {
@@ -250,47 +263,41 @@ $(function() {
 
   methods = {
     init: function(options) {
-      var def, sn;
+      var def, href, levels;
 
       if (options == null) {
         options = {};
       }
       def = {
-        href: 'none'
+        href: '#autoload'
       };
-      if (typeof sn !== 'object') {
-        def.href = options;
+      if (typeof options !== 'object') {
+        href = options;
       } else {
         $.extend(true, def, options);
+        href = def.href;
       }
-      if (def.href !== '#' && def.href.match(/#(.*)/)) {
-        if (def.href === '#main/text/contacts') {
-          $.cookie('contacts', def.href, {
-            expires: 7
-          });
-        }
-        sn = $(this).data('sn');
-        sn.href = def.href + '/:';
-        sn.levels = {
-          one: sn.href.replace(/(.*)#(.*?)\/(.*)/, '$2'),
-          two: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*)/, '$3'),
-          three: sn.href.replace(/(.*)#(.*?)\/(.*?)\/(.*?)\/(.*)/, '$4'),
-          anchor: sn.href.replace(/(.*)\:(.*?)\/(.*)/, '$2')
+      if (href !== '#' && href.match(/#([a-zA-Z0-9\_\-]+)/)) {
+        levels = {
+          one: href.match(/#([a-zA-Z0-9\_\-]+)/, '$2'),
+          two: href.match(/#[a-zA-Z0-9\_\-]+\/([a-zA-Z0-9\_\-]+)/, '$3'),
+          three: href.match(/#[a-zA-Z0-9\_\-]+\/[a-zA-Z0-9\_\-]+\/([a-zA-Z0-9\_\-]+)/, '$4'),
+          anchor: href.match(/\:([a-zA-Z0-9\_\-]+)/)
         };
         if (typeof console !== "undefined" && console !== null) {
-          console.info('url: ' + sn.href);
+          console.info('url: ' + href);
         }
         if (typeof console !== "undefined" && console !== null) {
-          console.info('levels: ', sn.levels);
+          console.info('levels: ', levels);
         }
-        if ((sn.levels.one != null) && sn.levels.one !== 'spoiler') {
-          switch (sn.levels.one) {
+        if ((levels.one != null) && levels.one[1] !== 'spoiler') {
+          switch (levels.one[1]) {
             case 'autoload':
               $(this).snModels('primary', {
                 file: 'main.html'
               });
               $(this).snModels('side', {
-                file: 'main.html'
+                file: 'side_main.html'
               });
               $(this).snTriggers('switch', 'side', 'main');
               $(this).snTriggers('links', 'bar');
@@ -298,61 +305,54 @@ $(function() {
               $(this).snTriggers('links', 'primary');
               $(this).snTriggers('hover', 'bar');
               this.snTriggers('hover', 'side');
-              sn.part = 'main';
+              window.sn.part = 'main';
               break;
             default:
-              if ((sn.levels.two != null) && (sn.levels.three != null)) {
-                $.cookie('last_href', def.href, {
+              if ((levels.two != null) && (levels.three != null)) {
+                $.cookie('last_href', href, {
                   expires: 7
                 });
                 $('html,body').animate({
                   scrollTop: 0
                 }, 0);
-                if (sn.levels.two === 'text') {
-                  if (sn.levels.one !== sn.part) {
-                    $(this).snModels('side', {
-                      file: sn.levels.one + '.html'
-                    });
-                    $(this).snModels('primary', {
-                      file: sn.levels.three + '.html'
-                    });
-                    $(this).snTriggers('links', 'side');
-                    $(this).snTriggers('links', 'primary');
-                    $(this).snTriggers('switch', 'bar', sn.levels.one);
-                    $(this).snTriggers('switch', 'side', sn.levels.three);
-                    $(this).snTriggers('hover', 'side');
-                  } else {
-                    $(this).snModels('primary', {
-                      file: sn.levels.three + '.html'
-                    });
-                    $(this).snTriggers('links', 'primary');
-                    $(this).snTriggers('switch', 'side', sn.levels.three);
-                  }
+                if (levels.two[1] === 'text' && levels.one[1] !== window.sn.part) {
+                  $(this).snModels('side', {
+                    file: 'side_' + levels.one[1] + '.html'
+                  });
+                  $(this).snModels('primary', {
+                    file: levels.three[1] + '.html'
+                  });
+                  $(this).snTriggers('links', 'side');
+                  $(this).snTriggers('links', 'primary');
+                  $(this).snTriggers('switch', 'bar', levels.one[1]);
+                  $(this).snTriggers('switch', 'side', levels.three[1]);
+                  $(this).snTriggers('hover', 'side');
+                } else {
+                  $(this).snModels('primary', {
+                    file: levels.three[1] + '.html'
+                  });
+                  $(this).snTriggers('links', 'primary');
+                  $(this).snTriggers('switch', 'side', levels.three[1]);
                 }
-                sn.part = sn.levels.one;
+                window.sn.part = levels.one[1];
               }
           }
-          $(this).data('sn', sn);
-          $(this).snEvents('anchor');
-          return $(this).click();
+          $(this).snEvents('anchor', levels);
+          return $(this).click(levels);
         }
       }
     },
-    anchor: function(options) {
-      var e, height, sn;
+    anchor: function(levels) {
+      var e, height;
 
-      if (options == null) {
-        options = {};
-      }
-      sn = $(this).data('sn');
-      if (sn.levels.anchor !== '') {
+      if (levels.anchor != null) {
         try {
-          if ($('#anchor-' + sn.levels.anchor).length) {
-            height = $('#anchor-' + sn.levels.anchor).offset().top - 87;
+          if ($('#anchor-' + levels.anchor[1]).length) {
+            height = $('#anchor-' + levels.anchor[1]).offset().top - 50;
             if (height) {
-              if ($('#side-' + sn.levels.anchor).length) {
+              if ($('#side-' + levels.anchor[1]).length) {
                 $(this).snTriggers('switchSide', {
-                  'link': sn.levels.anchor
+                  'link': levels.anchor[1]
                 });
               }
               return $('html,body').animate({
@@ -435,7 +435,6 @@ $(function() {
       }
       def = {
         elem: '#main',
-        type: 'main',
         wiki: false
       };
       $.extend(def, options);
@@ -452,7 +451,6 @@ $(function() {
       }
       def = {
         elem: '#primary',
-        type: 'primary',
         wiki: true
       };
       $.extend(def, options);
@@ -469,7 +467,6 @@ $(function() {
       }
       def = {
         elem: '#side',
-        type: 'side',
         wiki: true
       };
       $.extend(def, options);
@@ -484,38 +481,30 @@ $(function() {
       _this = this;
       sn = $(this).data('sn');
       if (def.file != null) {
-        return $(this).snModels('load', def, function(s) {
+        return $(this).snModels('load', def.file, function(s) {
           def.text = s;
-          $(_this).snModels('inner', def);
-          if (def.type === 'primary') {
-            return $(_this).snTriggers('spoiler');
-          }
+          return $(_this).snModels('inner', def);
         });
       } else {
         if (def.text != null) {
-          $(_this).snModels('inner', def);
-          if (def.type === 'primary') {
-            return $(_this).snTriggers('spoiler');
-          }
+          return $(_this).snModels('inner', def);
         } else {
           if (def.view != null) {
-            def.text = new EJS({
-              url: 'view/' + def.view,
-              ext: '.html'
-            }).render(sn);
-            $(_this).snModels('inner', def);
-            if (def.type === 'primary') {
-              return $(_this).snTriggers('spoiler');
+            if (window.EJS != null) {
+              def.text = new EJS({
+                url: 'view/' + def.view,
+                ext: '.html'
+              }).render(sn);
+              return $(_this).snModels('inner', def);
             }
           } else {
             if (def.layout != null) {
-              def.text = new EJS({
-                url: 'layout/' + sn.region.name + '/' + def.layout,
-                ext: '.html'
-              }).render(sn);
-              $(_this).snModels('inner', def);
-              if (def.type === 'primary') {
-                return $(_this).snTriggers('spoiler');
+              if (window.EJS != null) {
+                def.text = new EJS({
+                  url: 'layout/' + window.sn.region.name + '/' + def.layout,
+                  ext: '.html'
+                }).render(sn);
+                return $(_this).snModels('inner', def);
               }
             }
           }
@@ -529,84 +518,56 @@ $(function() {
         options = {};
       }
       def = {
-        elem: '#side-content',
-        type: 'side',
-        text: '',
+        elem: '#main',
         wiki: true,
         position: 'place'
       };
       $.extend(def, options);
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('innerText: ' + def.type + ' ' + def.position);
+      if (def.text != null) {
+        if (typeof console !== "undefined" && console !== null) {
+          console.log('innerText');
+        }
+        if (def.wiki === true) {
+          def.text = $(this).snWiki(def.text);
+        }
+        switch (def.position) {
+          case 'place':
+            $(def.elem).html(def.text);
+            break;
+          case 'after':
+            $(def.elem).html($(def.elem).html() + def.text);
+            break;
+          case 'before':
+            $(def.elem).html(def.text + $(def.elem).html());
+        }
+        return $(this).snTriggers('plugins', def);
       }
-      if (def.wiki === true) {
-        def.text = $(this).snWiki(def.type, {
-          text: def.text
-        });
-      }
-      switch (def.position) {
-        case 'place':
-          $(def.elem).html(def.text);
-          break;
-        case 'after':
-          $(def.elem).html($(def.elem).html() + def.text);
-          break;
-        case 'before':
-          $(def.elem).html(def.text + $(def.elem).html());
-      }
-      return $(this).snTriggers('plugins', def);
     },
-    load: function(options, callback) {
-      var def, sn;
+    load: function(file, callback) {
+      var url;
 
-      if (options == null) {
-        options = {};
-      }
-      sn = $(this).data('sn');
-      def = {
-        url: '',
-        type: 'view',
-        file: 'news.html'
-      };
-      $.extend(def, options);
-      switch (def.type) {
-        case 'view':
-          def.url = 'view/' + def.file;
-          break;
-        case 'layout':
-          def.url = 'layout/' + sn.region.name + '/' + def.file;
-          break;
-        case 'primary':
-          def.url = 'content/' + sn.region.name + '/' + def.file;
-          break;
-        case 'side':
-          def.url = 'content/' + sn.region.name + '/side_' + def.file;
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('type: ' + def.type);
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('file: ' + def.file);
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('url: ' + def.url);
-      }
-      return $.ajax({
-        url: def.url,
-        async: false,
-        cache: false,
-        dataType: 'html',
-        success: function(text) {
-          if (text != null) {
-            if (typeof console !== "undefined" && console !== null) {
-              console.log('success');
-            }
-            if (callback) {
-              return callback(text);
+      if (file != null) {
+        url = 'content/' + window.sn.region.name + '/' + file;
+        if (typeof console !== "undefined" && console !== null) {
+          console.log('file: ' + file);
+        }
+        return $.ajax({
+          url: url,
+          async: false,
+          cache: false,
+          dataType: 'html',
+          success: function(text) {
+            if (text != null) {
+              if (typeof console !== "undefined" && console !== null) {
+                console.log('success');
+              }
+              if (callback) {
+                return callback(text);
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
   };
   return $.fn.snModels = function(sn) {
@@ -652,6 +613,7 @@ $(function() {
       if (def == null) {
         def = {};
       }
+      $(def.elem).snTriggers('spoiler');
       if ($.isFunction($.bootstrapIE6)) {
         $.bootstrapIE6(def.elem);
       }
@@ -814,7 +776,7 @@ $(function() {
       if (typeof console !== "undefined" && console !== null) {
         console.log('trigger: ' + 'spoiler');
       }
-      return $('.spoiler-caption').on('click', function(e) {
+      return $('.spoiler-caption', this).on('click', function(e) {
         e.preventDefault();
         if ($(this).hasClass('spoiler-open')) {
           $(this).removeClass('spoiler-open').addClass('spoiler-close');
@@ -847,394 +809,75 @@ $(function() {
   var methods;
 
   methods = {
-    init: function(options) {
-      if (options == null) {
-        options = {};
-      }
-    },
-    primary: function(options) {
-      var def, text, _this;
+    init: function(text, def) {
+      var _base, _ref, _ref1;
 
-      if (options == null) {
-        options = {};
+      if (def == null) {
+        def = {};
+      }
+      if ((_ref = window.sn) == null) {
+        window.sn = {};
+      }
+      if ((_ref1 = (_base = window.sn).wiki) == null) {
+        _base.wiki = {
+          images: {
+            url: ''
+          },
+          files: {
+            url: ''
+          },
+          gismeteo: {
+            url: ''
+          }
+        };
       }
       if (typeof console !== "undefined" && console !== null) {
-        console.log('wiki: ' + 'primary');
+        console.log('wiki');
       }
-      _this = this;
-      def = {
-        text: ''
-      };
-      $.extend(true, def, options);
-      text = def.text;
-      text = $(_this).snWiki('before', {
-        text: text
-      });
-      text = $(_this).snWiki('formating', {
-        text: text
-      });
-      text = $(_this).snWiki('headings', {
-        text: text
-      });
-      text = $(_this).snWiki('icons', {
-        text: text
-      });
-      text = $(_this).snWiki('externalLinks', {
-        text: text
-      });
-      text = $(_this).snWiki('fileLinks', {
-        text: text
-      });
-      text = $(_this).snWiki('internalLinks', {
-        text: text
-      });
-      text = $(_this).snWiki('mailTo', {
-        text: text
-      });
-      text = $(_this).snWiki('image', {
-        text: text
-      });
-      text = $(_this).snWiki('fonts', {
-        text: text
-      });
-      text = $(_this).snWiki('anchor', {
-        text: text
-      });
-      text = $(_this).snWiki('ind', {
-        text: text
-      });
-      text = $(_this).snWiki('spoiler', {
-        text: text
-      });
-      text = $(_this).snWiki('header', {
-        text: text
-      });
-      text = $(_this).snWiki('spaces', {
-        text: text
-      });
-      text = $(_this).snWiki('noevent', {
-        text: text
-      });
-      return text;
-    },
-    side: function(options) {
-      var def, text, _this;
+      /*
+      			text = text.toString()
+      			text = $(this).snWiki('before', text)					# предобработка
+      			text = $(this).snWiki('formating', text)				# жирный и курсив
+      			text = $(this).snWiki('headings', text)					# заголовки
+      			text = $(this).snWiki('icons', text)					# иконки
+      			text = $(this).snWiki('externalLinks', text)			# внешние ссылки
+      			text = $(this).snWiki('fileLinks', text)				# ссылки на файлы
+      			text = $(this).snWiki('internalLinks', text)			# внутренние ссылки
+      			text = $(this).snWiki('mailTo', text)					# ссылки на email-адреса
+      			text = $(this).snWiki('image', text)					# изображения
+      			text = $(this).snWiki('fonts', text)					# шрифты
+      			text = $(this).snWiki('anchor', text)					# якоря
+      			text = $(this).snWiki('ind', text)						# абзацы
+      			text = $(this).snWiki('gismeteo', text)					# погода
+      			text = $(this).snWiki('spoiler', text)					# спойлеры
+      			text = $(this).snWiki('header', text)					# заголовки с подчеркиванием
+      			text = $(this).snWiki('spaces', text)					# переносы строк
+      			text = $(this).snWiki('noevent', text)					# пустые ссылки ( href="#" )
+      			text
+      */
 
-      if (options == null) {
-        options = {};
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('wiki: ' + 'side');
-      }
-      _this = this;
-      def = {
-        text: ''
-      };
-      $.extend(true, def, options);
-      text = def.text;
-      text = $(_this).snWiki('before', {
-        text: text
-      });
-      text = $(_this).snWiki('formating', {
-        text: text
-      });
-      text = $(_this).snWiki('headings', {
-        text: text
-      });
-      text = $(_this).snWiki('icons', {
-        text: text
-      });
-      text = $(_this).snWiki('externalLinks', {
-        text: text
-      });
-      text = $(_this).snWiki('fileLinks', {
-        text: text
-      });
-      text = $(_this).snWiki('internalLinks', {
-        text: text
-      });
-      text = $(_this).snWiki('mailTo', {
-        text: text
-      });
-      text = $(_this).snWiki('image', {
-        text: text
-      });
-      text = $(_this).snWiki('fonts', {
-        text: text
-      });
-      text = $(_this).snWiki('anchor', {
-        text: text
-      });
-      text = $(_this).snWiki('gismeteo', {
-        text: text
-      });
-      text = $(_this).snWiki('ind', {
-        text: text
-      });
-      text = $(_this).snWiki('sideMenu', {
-        text: text
-      });
-      text = $(_this).snWiki('spaces', {
-        text: text
-      });
-      text = $(_this).snWiki('noevent', {
-        text: text
-      });
-      return text;
-    },
-    before: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\|\n/g, '').replace(/\]\n\n/g, ']<br><br>').replace(/\]\n/g, ']<br>').replace(/>\n\n/g, '>\n');
-    },
-    formating: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/'''''(.*?)'''''/g, "<i><b>$1</b></i>").replace(/'''(.*?)'''/g, "<b>$1</b>").replace(/''(.*?)''/g, "<i>$1</i>");
-    },
-    headings: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
+      text = text.replace(/\|\n/g, '').replace(/\]\n\n/g, ']<br><br>').replace(/\]\n/g, ']<br>').replace(/>\n\n/g, '>\n');
+      text = text.replace(/'''''(.*?)'''''/g, "<i><b>$1</b></i>").replace(/'''(.*?)'''/g, "<b>$1</b>").replace(/''(.*?)''/g, "<i>$1</i>");
       text = text.replace(/======(.*?)======\n?/g, "<h6>$1</h6>");
       text = text.replace(/=====(.*?)=====\n?/g, "<h5>$1</h5>");
       text = text.replace(/====(.*?)====\n?/g, "<h4>$1</h4>");
       text = text.replace(/===(.*?)===\n?/g, "<h3>$1</h3>");
-      return text = text.replace(/==(.*?)==\n?/g, "<h2>$1</h2>");
-    },
-    icons: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      return text = def.text.replace(/\[(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)\]/g, '<i class="icon-$2 icon-white"></i> ').replace(/\[(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)\]/g, '<i class="icon-$2 icon-white"></i> ').replace(/\[(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)\]/g, '<i class="icon-$2"></i> ').replace(/\[(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)\]/g, '<i class="icon-$2"></i> ').replace(/([\s]+)(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)([\s]+)/g, '$1<i class="icon-$3 icon-white"></i>$4').replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)([\s]+)/g, '$1<i class="icon-$3 icon-white"></i>$4').replace(/([\s]+)(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4').replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4');
-    },
-    internalLinks: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" data-placement="$5" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn btn-$2" href="#$3">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a class="btn btn-$2" href="#$1">$1</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$2" class="btn tooltip-toggle" data-placement="$5" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$2" class="btn tooltip-toggle" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$2" class="btn tooltip-toggle" data-placement="$4" rel="tooltip" title="$3">$2</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$2" class="btn tooltip-toggle" rel="tooltip" title="$3">$2</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="#$2">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$1" class="tooltip-toggle" data-placement="$4" rel="tooltip" title="$3">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1" class="tooltip-toggle" rel="tooltip" title="$3">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$1" class="tooltip-toggle" data-placement="$3" rel="tooltip" title="$2">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1" class="tooltip-toggle" rel="tooltip" title="$2">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>').replace(/([\s+])#([a-zA-Z0-9\-\.\/\?%\#_\:]+)([\s]+)/g, '$1<a href="#$2">$2</a>$3');
-    },
-    externalLinks: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+) (left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn btn-$2" href="http://$2" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+) (left|top|right|bottom)\]/g, '<a href="http://$2" class="btn tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$2" class="btn tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$2" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="http://$2" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn" href="http://$2" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$1" class="tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$1" class="tooltip-toggle" data-placement="$3" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="http://$1" target="_blank">$1</a>').replace(/([\s]+)https?:\/\/([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<a href="http://$2" target="_blank">$2</a>$3');
-    },
-    fileLinks: function(options) {
-      var def, sn, text;
-
-      if (options == null) {
-        options = {};
-      }
-      sn = $(this).data('sn');
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$6" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn btn-$2" href="' + sn.settings.paths.files.url + sn.region.name + '/$3" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn btn-$2" href="' + sn.settings.paths.files.url + sn.region.name + '/$3" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" class="btn tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="' + sn.settings.paths.files.url + sn.region.name + '/$2" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a class="btn" href="' + sn.settings.paths.files.url + sn.region.name + '/$2" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" data-placement="$3" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<a href="' + sn.settings.paths.files.url + sn.region.name + '/$1" target="_blank">$1</a>').replace(/([\s]+)files?:([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<a href="' + sn.settings.paths.files.url + sn.region.name + '/$2" target="_blank">$2</a>$3');
-    },
-    mailTo: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[e\-?mail:([a-zA-Z0-9@\-\.\/\?%\#_]+)[\s]+(.*?)\]/g, '<a href="mailto:$1">$2</a>').replace(/\[e\-?mail:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a href="mailto:$1">$1</a>');
-    },
-    photo: function(options) {
-      var def, sn, text;
-
-      if (options == null) {
-        options = {};
-      }
-      sn = $(this).data('sn');
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[photo:([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img align="center" style="width:99%;margin:auto;" src="' + sn.settings.paths.images.url + sn.region.name + '/$1">');
-    },
-    image: function(options) {
-      var def, sn, text;
-
-      if (options == null) {
-        options = {};
-      }
-      sn = $(this).data('sn');
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+(right|left)\]/g, '<img class="pull-$3" src="' + sn.settings.paths.images.url + sn.region.name + '/$2">').replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)\]/g, '<img src="' + sn.settings.paths.images.url + sn.region.name + '/$2">').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)[\s]+(right|left)([\s]+)/g, '$1<img class="pull-$4" src="' + sn.settings.paths.images.url + sn.region.name + '/$3">$5').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?%\#_]+)([\s]+)/g, '$1<img src="' + sn.settings.paths.images.url + sn.region.name + '/$3">$4');
-    },
-    fonts: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[badge[\s]+(success|warning|important|info|inverse)\][\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)/g, '<span class="badge badge-$1">$2</span>').replace(/\[badge[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(success|warning|important|info|inverse)\]/g, '<span class="badge badge-$2">$1</span>').replace(/\[badge[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="badge">$1</span>').replace(/\[label[\s]+(success|warning|important|info|inverse)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="label label-$1">$2</span>').replace(/\[label[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(success|warning|important|info|inverse)\]/g, '<span class="label label-$2">$1</span>').replace(/\[label[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="label">$1</span>').replace(/\[color:\#([a-zA-Z0-9]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<font style="color:#$1">$2</font>').replace(/\[color:([a-zA-Z0-9]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="$1">$2</span>').replace(/\[\[color:\#([a-zA-Z0-9]+)\](.*?)\]/g, '<font style="color:#$1">$2</font>').replace(/\[\[color:([a-zA-Z0-9]+)\](.*?)\]/g, '<span class="$1">$2</span>');
-    },
-    ind: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/<<<\n?/g, '<div class="well well-small">').replace(/>>>\n?/g, '</div>');
-    },
-    anchor: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?%\#_]+)\]\n?/g, '<a id="anchor-$1"></a>');
-    },
-    sideMenu: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[menu:#([a-zA-Z0-9\-\.\/\?%\#_\:]+) ([a-zA-Z0-9\-\.\/\?%\#_]+) (.*?)\]\n?/g, '<a class="side-box-link side-box-link-normal" href="#$1" id="side-$2">$3</a>');
-    },
-    gismeteo: function(options) {
-      var def, sn, text;
-
-      if (options == null) {
-        options = {};
-      }
-      sn = $(this).data('sn');
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/\[gismeteo\]\n?/g, '<iframe src="' + sn.settings.paths.widgets.gismeteo.url + sn.region.name + '/" width="96%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>&nbsp;');
-    },
-    spoiler: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/<<\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn btn-$2 spoiler-caption spoiler-close">' + '<span class="caret"></span>&nbsp;$3</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/<<\[b(tn|utton)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn spoiler-caption spoiler-close">' + '<span class="caret"></span>&nbsp;$2</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/<<\[([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="spoiler-caption spoiler-close">' + '$1</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/>>\n?/g, '</pre></div></p></div>');
-    },
-    header: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/<\[\n?/g, '<div class="page-header">').replace(/\]>\n?/g, '</div>');
-    },
-    noevent: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/(href="#")/g, '$1 data-noevent="true"');
-    },
-    spaces: function(options) {
-      var def, text;
-
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        text: ''
-      };
-      $.extend(def, options);
-      text = def.text;
-      return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/<pre><br>/g, '<pre>').replace(/\n/g, "<br>");
+      text = text.replace(/==(.*?)==\n?/g, "<h2>$1</h2>");
+      text = text.replace(/\[(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)\]/g, '<i class="icon-$2 icon-white"></i> ').replace(/\[(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)\]/g, '<i class="icon-$2 icon-white"></i> ').replace(/\[(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)\]/g, '<i class="icon-$2"></i> ').replace(/\[(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)\]/g, '<i class="icon-$2"></i> ').replace(/([\s]+)(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)([\s]+)/g, '$1<i class="icon-$3 icon-white"></i>$4').replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)([\s]+)/g, '$1<i class="icon-$3 icon-white"></i>$4').replace(/([\s]+)(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4').replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4');
+      text = text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" data-placement="$5" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn btn-$2" href="#$3">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a class="btn btn-$2" href="#$1">$1</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$2" class="btn tooltip-toggle" data-placement="$5" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$2" class="btn tooltip-toggle" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$2" class="btn tooltip-toggle" data-placement="$4" rel="tooltip" title="$3">$2</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$2" class="btn tooltip-toggle" rel="tooltip" title="$3">$2</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="#$2">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$1" class="tooltip-toggle" data-placement="$4" rel="tooltip" title="$3">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1" class="tooltip-toggle" rel="tooltip" title="$3">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$1" class="tooltip-toggle" data-placement="$3" rel="tooltip" title="$2">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1" class="tooltip-toggle" rel="tooltip" title="$2">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>').replace(/([\s+])#([a-zA-Z0-9\-\.\/\?%\#_\:]+)([\s]+)/g, '$1<a href="#$2">$2</a>$3');
+      text = text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+) (left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a class="btn btn-$2" href="http://$2" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+) (left|top|right|bottom)\]/g, '<a href="http://$2" class="btn tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$2" class="btn tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$2" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="http://$2" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a class="btn" href="http://$2" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$1" class="tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$1" class="tooltip-toggle" data-placement="$3" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a href="http://$1" target="_blank">$1</a>').replace(/([\s]+)https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g, '$1<a href="http://$2" target="_blank">$2</a>$3');
+      text = text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + window.sn.wiki.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$6" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + window.sn.wiki.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + window.sn.wiki.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + window.sn.wiki.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn btn-$2" href="' + window.sn.wiki.files.url + '$3" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a class="btn btn-$2" href="' + window.sn.wiki.files.url + '$3" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + window.sn.wiki.files.url + '$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + window.sn.wiki.files.url + '$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + window.sn.wiki.files.url + '$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + window.sn.wiki.files.url + '$2" class="btn tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="' + window.sn.wiki.files.url + '$2" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a class="btn" href="' + window.sn.wiki.files.url + '$2" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + window.sn.wiki.files.url + '$1" class="tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + window.sn.wiki.files.url + '$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + window.sn.wiki.files.url + '$1" class="tooltip-toggle" rel="tooltip" data-placement="$3" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + window.sn.wiki.files.url + '$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + window.sn.wiki.files.url + '$1" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a href="' + window.sn.wiki.files.url + '$1" target="_blank">$1</a>').replace(/([\s]+)files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g, '$1<a href="' + window.sn.wiki.files.url + '$2" target="_blank">$2</a>$3');
+      text = text.replace(/\[e\-?mail:([a-zA-Z0-9@\-\.\/\?%\#_]+)[\s]+(.*?)\]/g, '<a href="mailto:$1">$2</a>').replace(/\[e\-?mail:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a href="mailto:$1">$1</a>');
+      text = text.replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+(right|left)\]/g, '<img class="pull-$3" src="' + window.sn.wiki.images.url + '$2">').replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<img src="' + window.sn.wiki.images.url + '$2">').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+(right|left)([\s]+)/g, '$1<img class="pull-$4" src="' + window.sn.wiki.images.url + '$3">$5').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g, '$1<img src="' + window.sn.wiki.images.url + '$3">$4');
+      text = text.replace(/\[badge[\s]+(success|warning|important|info|inverse)\][\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)/g, '<span class="badge badge-$1">$2</span>').replace(/\[badge[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(success|warning|important|info|inverse)\]/g, '<span class="badge badge-$2">$1</span>').replace(/\[badge[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="badge">$1</span>').replace(/\[label[\s]+(success|warning|important|info|inverse)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="label label-$1">$2</span>').replace(/\[label[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(success|warning|important|info|inverse)\]/g, '<span class="label label-$2">$1</span>').replace(/\[label[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="label">$1</span>').replace(/\[color:\#([a-zA-Z0-9]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<font style="color:#$1">$2</font>').replace(/\[color:([a-zA-Z0-9]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="$1">$2</span>').replace(/\[\[color:\#([a-zA-Z0-9]+)\](.*?)\]/g, '<font style="color:#$1">$2</font>').replace(/\[\[color:([a-zA-Z0-9]+)\](.*?)\]/g, '<span class="$1">$2</span>');
+      text = text.replace(/<<<\#?\:?([a-zA-Z0-9\-\.\/\?\_]+)\n?/g, '<div class="well well-small"><a id="anchor-$1"></a>').replace(/<<<\n?/g, '<div class="well well-small">').replace(/>>>\n?/g, '</div>');
+      text = text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]\n?/g, '<a id="anchor-$1"></a>');
+      text.replace(/\[gismeteo\]\n?/g, '<iframe src="' + window.sn.wiki.gismeteo.url + '" width="96%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>&nbsp;');
+      text = text.replace(/<<\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn btn-$2 spoiler-caption spoiler-close">' + '<span class="caret"></span>&nbsp;$3</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/<<\[b(tn|utton)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn spoiler-caption spoiler-close">' + '<span class="caret"></span>&nbsp;$2</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/<<\[([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="spoiler-caption spoiler-close">' + '$1</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/>>\n?/g, '</pre></div></p></div>');
+      text = text.replace(/<\[\n?/g, '<div class="page-header">').replace(/\]>\n?/g, '</div>');
+      text = text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/<pre><br>/g, '<pre>').replace(/\n/g, "<br>");
+      text = text.replace(/(href="#")/g, '$1 data-noevent="true"');
+      return text;
     }
   };
   return $.fn.snWiki = function(sn) {

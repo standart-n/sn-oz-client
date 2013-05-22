@@ -17,6 +17,14 @@ $ ->
 
 		setup: (options = {}) ->
 
+			window.sn = 
+				region:
+					caption: 'unknow'
+					name: 'unknow'
+				theme:
+					caption: 'unknow'
+					name: 'unknow'
+
 			sn =
 				levels:{} # состояние последнего перехода
 				users:{} # состояние пользователя
@@ -25,11 +33,6 @@ $ ->
 				result:{} # результат последнего ajax запроса
 				theme:{} # тема оформления
 				settings:{} # доп. настройки
-				execute:
-					conf: true
-					layout: true
-					events: true
-
 
 			$.extend true, sn, options
 			$(this).data 'sn', sn
@@ -41,27 +44,22 @@ $ ->
 
 		start: (options = {}) ->
 
-			sn = $(this).data 'sn'
-
 			# загрузка конфигов
 
-			if sn.execute.conf
-				console.log 'configuration...' if console?
-				$(this).snConf()
+			console.log 'configuration...' if console?
+			$(this).snConf()
 
 
 			# загрузка оболочки и дизайна
 
-			if sn.execute.layout
-				console.log 'layout...' if console?
-				$(this).snLayout()
+			console.log 'layout...' if console?
+			$(this).snLayout()
 
 
 			# отображение начальной страницы по событию #autoload
 
-			if sn.execute.events
-				console.log 'autoload...' if console?
-				$(this).snEvents '#autoload'
+			console.log 'autoload...' if console?
+			$(this).snEvents '#autoload'
 
 
 

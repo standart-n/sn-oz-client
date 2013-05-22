@@ -12,9 +12,10 @@ $ ->
 
 		plugins: (def = {}) ->
 
+			$(def.elem).snTriggers 'spoiler'
 			if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(def.elem)
-			$(def.elem+' .tooltip-toggle').tooltip()
-
+			$(def.elem + ' .tooltip-toggle').tooltip()
+	
 
 		hover: (type = '') ->
 			switch type
@@ -151,7 +152,7 @@ $ ->
 
 			console.log 'trigger: ' + 'spoiler' if console?
 
-			$('.spoiler-caption').on 'click', (e) ->
+			$('.spoiler-caption', this).on 'click', (e) ->
 
 				e.preventDefault()
 
