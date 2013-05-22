@@ -13,8 +13,10 @@ $ ->
 		plugins: (def = {}) ->
 
 			$(def.elem).snTriggers 'spoiler'
-			if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(def.elem)
 			$(def.elem + ' .tooltip-toggle').tooltip()
+			setTimeout () ->
+				 if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(def.elem)
+			, 1
 	
 
 		hover: (type = '') ->

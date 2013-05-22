@@ -614,10 +614,12 @@ $(function() {
         def = {};
       }
       $(def.elem).snTriggers('spoiler');
-      if ($.isFunction($.bootstrapIE6)) {
-        $.bootstrapIE6(def.elem);
-      }
-      return $(def.elem + ' .tooltip-toggle').tooltip();
+      $(def.elem + ' .tooltip-toggle').tooltip();
+      return setTimeout(function() {
+        if ($.isFunction($.bootstrapIE6)) {
+          return $.bootstrapIE6(def.elem);
+        }
+      }, 1);
     },
     hover: function(type) {
       if (type == null) {
