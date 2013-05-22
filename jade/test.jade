@@ -19,6 +19,8 @@ html
 
 		h3
 			a(href  =  "index.html") Вернуться назад
+			&nbsp;|&nbsp;
+			a.removeCookies(href  =  "#") Очистить cookies
 
 		#qunit
 		#qunit-fixture
@@ -65,7 +67,6 @@ html
 						setStr = unescape(cookie);
 					}
 				}
-				alert(document.cookie);
 				return(setStr);
 			}
 

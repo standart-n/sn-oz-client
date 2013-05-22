@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="lib/qunit/qunit.css">
   </head>
   <body>
-    <h3><a href="index.html">Вернуться назад</a></h3>
+    <h3><a href="index.html">Вернуться назад</a>&nbsp;|&nbsp;<a href="#" class="removeCookies">Очистить cookies</a></h3>
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
     <div id="wrap" class="hide">
@@ -56,7 +56,6 @@
          setStr = unescape(cookie);
         }
        }
-       alert(document.cookie);
        return(setStr);
       }
       

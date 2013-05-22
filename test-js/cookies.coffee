@@ -1,6 +1,8 @@
 
 module 'Чтение и запись cookies'
 
+$('.removeCookies').on 'click', (e) ->
+	$.each($.cookie(), $.removeCookie)
 
 test 'autoload', () ->
 	alert(document.cookie)
@@ -20,3 +22,9 @@ test 'simple value', () ->
 test 'Проверка работы cookies в приложении', () ->	
 	ok $.cookie('last_href'), 'Сохранение cookies при переходах по страницам'
 	ok $.cookie('contacts'), 'Сохранение cookies после закрытия программы'
+
+
+# test 'Проверка кастомными функциями', () ->
+# 	ok getCookie('custom'), 'custom 1'
+# 	set_cookie('custom','forward','7')
+# 	ok getCookie('custom'), 'custom 2'

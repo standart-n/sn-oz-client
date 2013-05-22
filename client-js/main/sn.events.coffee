@@ -60,7 +60,7 @@ $ ->
 							(this).snTriggers 'hover', 'side'
 							sn.part = 'main'
 
-							$.each $.cookie(), $.removeCookie
+							#$.each $.cookie(), $.removeCookie
 
 						
 						else

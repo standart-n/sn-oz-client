@@ -299,7 +299,6 @@ $(function() {
               $(this).snTriggers('hover', 'bar');
               this.snTriggers('hover', 'side');
               sn.part = 'main';
-              $.each($.cookie(), $.removeCookie);
               break;
             default:
               if ((sn.levels.two != null) && (sn.levels.three != null)) {
