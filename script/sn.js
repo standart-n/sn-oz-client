@@ -266,9 +266,7 @@ $(function() {
       if (def.href !== '#' && def.href.match(/#(.*)/)) {
         if (def.href === '#main/text/contacts') {
           $.cookie('contacts', def.href, {
-            expires: 7,
-            path: '/',
-            domain: 'http://localhost'
+            expires: 7
           });
         }
         sn = $(this).data('sn');
@@ -306,9 +304,7 @@ $(function() {
             default:
               if ((sn.levels.two != null) && (sn.levels.three != null)) {
                 $.cookie('last_href', def.href, {
-                  expires: 7,
-                  path: '/',
-                  domain: 'http://localhost'
+                  expires: 7
                 });
                 $('html,body').animate({
                   scrollTop: 0

@@ -24,7 +24,7 @@ $ ->
 				# чтобы в тестах проверить, сохраняются ли они при закрытии программы
 
 				if def.href is '#main/text/contacts'
-					$.cookie 'contacts', def.href, expires: 7, path: '/', domain: 'http://localhost'
+					$.cookie 'contacts', def.href, expires: 7
 
 
 				# парсинг адресной строки
@@ -72,7 +72,7 @@ $ ->
 								# сохраняем в cookies последнюю ссылку, по которой был сделан переход, чтобы
 								# проверить работают ли cookie при переходах между страницами
 
-								$.cookie 'last_href', def.href, expires: 7, path: '/', domain: 'http://localhost'
+								$.cookie 'last_href', def.href, expires: 7
 
 
 								# поднимаем экран в самый вверх

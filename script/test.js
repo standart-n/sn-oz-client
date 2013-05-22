@@ -2,12 +2,21 @@
 module('Чтение и запись cookies');
 
 test('autoload', function() {
-  return ok(getCookie('test'), 'test');
+  alert(document.cookie);
+  return ok($.cookie('test'), 'test 1');
 });
 
 test('simple value', function() {
-  set_cookie('test', 'asfa', 7);
-  return ok(getCookie('test'), 'test 2');
+  $.cookie('test', 'go', {
+    expires: 7
+  });
+  alert(document.cookie);
+  return ok($.cookie('test'), 'test 2');
+});
+
+test('Проверка работы cookies в приложении', function() {
+  ok($.cookie('last_href'), 'Сохранение cookies при переходах по страницам');
+  return ok($.cookie('contacts'), 'Сохранение cookies после закрытия программы');
 });
 
 module('Проверка целостности пакета');
