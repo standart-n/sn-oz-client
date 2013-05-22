@@ -1,7 +1,7 @@
 $ ->
 
 	methods =
-		init: (text, def = {}) ->
+		init: (text = '', def = {}) ->
 
 			window.sn ?= {}
 			window.sn.wiki ?= 
@@ -14,8 +14,7 @@ $ ->
 
 			console.log 'wiki' if console?
 
-			###
-			text = text.toString()
+			#text = text.toString()
 			text = $(this).snWiki('before', text)					# предобработка
 			text = $(this).snWiki('formating', text)				# жирный и курсив
 			text = $(this).snWiki('headings', text)					# заголовки
@@ -35,20 +34,18 @@ $ ->
 			text = $(this).snWiki('noevent', text)					# пустые ссылки ( href="#" )
 			text
 
-			###
 
+		before: (text) ->
 
-		# before: (text) ->
-
-			text = text
+			text
 				.replace(/\|\n/g, '')
 				.replace(/\]\n\n/g, ']<br><br>')
 				.replace(/\]\n/g, ']<br>')
 				.replace(/>\n\n/g, '>\n')
 
-		# formating: (text) ->
+		formating: (text) ->
 
-			text = text
+			text
 				# ''''' bold and italic '''''
 				.replace(/'''''(.*?)'''''/g, "<i><b>$1</b></i>")
 				# ''' bold '''
@@ -56,7 +53,7 @@ $ ->
 				# '' italic ''
 				.replace(/''(.*?)''/g, "<i>$1</i>")
 
-		# headings: (text) ->
+		headings: (text) ->
 
 			# ======h6======
 			text = `text.replace(/======(.*?)======\n?/g, "<h6>$1</h6>")`
@@ -69,9 +66,9 @@ $ ->
 			# ==h2==
 			text = `text.replace(/==(.*?)==\n?/g, "<h2>$1</h2>")`
 
-		# icons: (text) ->
+		icons: (text) ->
 
-			text = text
+			text
 				# [i:icon-refresh white]
 				.replace(/\[(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)\]/g, '<i class="icon-$2 icon-white"></i> ')
 				# [i:refresh white]
@@ -90,9 +87,9 @@ $ ->
 				# i:refresh
 				.replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4')
 
-		# internalLinks: (text) ->
+		internalLinks: (text) ->
 
-			text = text
+			text
 				# [buttom primary #main/text/main На главную | Подсказка bottom]
 				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5">$4</a>')
 				# [buttom primary #main/text/main На главную | Подсказка]
@@ -134,9 +131,9 @@ $ ->
 				# #main/text/main
 				.replace(/([\s+])#([a-zA-Z0-9\-\.\/\?%\#_\:]+)([\s]+)/g, '$1<a href="#$2">$2</a>$3')
 
-		# externalLinks: (text) ->
+		externalLinks: (text) ->
 
-			text = text
+			text
 				# [buttom primary http://yandex.ru Яндекс | Подсказка bottom]
 				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+) (left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5" target="_blank">$4</a>')				
 				# [buttom primary http://yandex.ru Яндекс | Подсказка]
@@ -178,9 +175,9 @@ $ ->
 				# http://yandex.ru
 				.replace(/([\s]+)https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g, '$1<a href="http://$2" target="_blank">$2</a>$3')
 
-		# fileLinks: (text) ->
+		fileLinks: (text) ->
 
-			text = text
+			text
 				# [buttom primary file:20120322/download.zip Скачать | Подсказка bottom]
 				.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + window.sn.wiki.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$6" title="$5" target="_blank">$4</a>')
 				# [buttom primary file:20120322/download.zip Скачать | Подсказка]
@@ -222,17 +219,17 @@ $ ->
 				# file:20120322/download.zip
 				.replace(/([\s]+)files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g, '$1<a href="' + window.sn.wiki.files.url + '$2" target="_blank">$2</a>$3')
 
-		# mailTo: (text) ->
+		mailTo: (text) ->
 
-			text = text
+			text
 				# [email:aleksnick@list.ru Отправить письмо]
 				.replace(/\[e\-?mail:([a-zA-Z0-9@\-\.\/\?%\#_]+)[\s]+(.*?)\]/g, '<a href="mailto:$1">$2</a>')
 				# [email:aleksnick@list.ru]
 				.replace(/\[e\-?mail:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a href="mailto:$1">$1</a>')
 
-		# image: (text, options) ->
+		image: (text, options) ->
 
-			text = text
+			text
 				# [image:20130523/image.png left]
 				.replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+(right|left)\]/g,'<img class="pull-$3" src="' + window.sn.wiki.images.url + '$2">')
 				# [image:20130523/image.png]
@@ -243,9 +240,9 @@ $ ->
 				# image:20130523/image.png
 				.replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g,'$1<img src="' + window.sn.wiki.images.url + '$3">$4')
 
-		# fonts: (text) ->
+		fonts: (text) ->
 
-			text = text
+			text
 				# [badge success Бэйдж]
 				.replace(/\[badge[\s]+(success|warning|important|info|inverse)\][\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)/g, '<span class="badge badge-$1">$2</span>')
 				# [badge Бэйдж success]
@@ -270,9 +267,9 @@ $ ->
 				.replace(/\[\[color:([a-zA-Z0-9]+)\](.*?)\]/g, '<span class="$1">$2</span>')
 
 
-		# ind: (text) ->
+		ind: (text) ->
 
-			text = text
+			text
 				# <<<reestr
 				.replace(/<<<\#?\:?([a-zA-Z0-9\-\.\/\?\_]+)\n?/g, '<div class="well well-small"><a id="anchor-$1"></a>')
 				# <<<
@@ -280,20 +277,20 @@ $ ->
 				# >>>
 				.replace(/>>>\n?/g, '</div>')
 
-		# anchor: (text) ->
+		anchor: (text) ->
 
-			text = text
+			text
 				# [anchor:reestr] -> <a id="anchor-reestr"></a> Якорь
 				.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]\n?/g, '<a id="anchor-$1"></a>')
 
-		# gismeteo: (text) ->
+		gismeteo: (text) ->
 
 			# [gismeteo]
 			text.replace(/\[gismeteo\]\n?/g, '<iframe src="' + window.sn.wiki.gismeteo.url + '" width="96%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>&nbsp;')
 
-		# spoiler: (text) ->
+		spoiler: (text) ->
 
-			text = text
+			text
 				# <<[button primary Заголовок спойлера]
 				# текст спойлера
 				# >>
@@ -317,32 +314,30 @@ $ ->
 											'<div class="hide spoiler-body spoiler-close"><pre>')
 				.replace(/>>\n?/g,'</pre></div></p></div>')
 
-		# header: (text) ->
+		header: (text) ->
 
-			text = text
+			text
 				# <[
 				# Заголовок с нижним подчеркиванием
 				# ]>
 				.replace(/<\[\n?/g,'<div class="page-header">')
 				.replace(/\]>\n?/g,'</div>')
 
-		# spaces: (text) ->
+		spaces: (text) ->
 
-			text = text
+			text
 				.replace(/^\n/, "")
 				.replace(/\n\n/g, "<br><br>")
 				.replace(/>\n?/g, '>')
 				.replace(/<pre><br>/g, '<pre>')
 				.replace(/\n/g, "<br>")
 
-		# noevent: (text) ->
+		noevent: (text) ->
 
-			text = text
+			text
 				# <a href="#">Ссылка</a> -> <a href="#" data-noevent="true">Ссылка</a>
 				.replace(/(href="#")/g,'$1 data-noevent="true"')
 
-			
-			text
 
 
 	$.fn.snWiki = (sn = {}) ->

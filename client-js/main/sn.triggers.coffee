@@ -12,10 +12,10 @@ $ ->
 
 		plugins: (def = {}) ->
 
-			$(def.elem).snTriggers 'spoiler'
-			$(def.elem + ' .tooltip-toggle').tooltip()
 			setTimeout () ->
-				 if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(def.elem)
+				# if $(def.elem + ' .spoiler').length then $(def.elem).snTriggers 'spoiler'
+				if $(def.elem + ' .tooltip-toggle').length then $(def.elem + ' .tooltip-toggle').tooltip()
+				if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(def.elem)
 			, 1
 	
 
@@ -40,39 +40,42 @@ $ ->
 			console.log 'trigger: ' + 'linksSide' if console?
 
 			_this = this
-			$('#side a').on 'click', (e) ->
-				#e.preventDefault()
-				if $(this).attr('href') isnt '#' and not $(this).data('noevent')
-					$('#side li').removeClass('active')
-					$(this).parent('li').addClass('active')
-					$(_this).snEvents $(this).attr('href')
-				else
-					e.preventDefault()
+			if $('#primary a').length
+				$('#side a').on 'click', (e) ->
+					#e.preventDefault()
+					if $(this).attr('href') isnt '#' and not $(this).data('noevent')
+						$('#side li').removeClass('active')
+						$(this).parent('li').addClass('active')
+						$(_this).snEvents $(this).attr('href')
+					else
+						e.preventDefault()
 
 		linksPrimary: () ->
 
 			console.log 'trigger: ' + 'linksPrimary' if console?
 
 			_this = this
-			$('#primary a').on 'click', (e) ->
-				#e.preventDefault()
-				if $(this).attr('href') isnt '#' and not $(this).data('noevent')
-					$(_this).snEvents $(this).attr('href')
-				else
-					e.preventDefault()
+			if $('#primary a').length
+				$('#primary a').on 'click', (e) ->
+					#e.preventDefault()
+					if $(this).attr('href') isnt '#' and not $(this).data('noevent')
+						$(_this).snEvents $(this).attr('href')
+					else
+						e.preventDefault()
 
 		linksBar: () ->
 
 			_this = this
 			console.log 'trigger: ' + 'linksBar' if console?
-			$('#bar a').on 'click', (e) ->
-				#e.preventDefault()
-				if $(this).attr('href') isnt '#' and $(this).data('toggle') isnt 'dropdown' and not $(this).data('noevent')
-					$('#bar li').removeClass('active')
-					$(this).parent('li').addClass('active')
-					$(_this).snEvents $(this).attr('href')
-				else
-					e.preventDefault()
+			if $('#bar a').length
+				$('#bar a').on 'click', (e) ->
+					#e.preventDefault()
+					if $(this).attr('href') isnt '#' and $(this).data('toggle') isnt 'dropdown' and not $(this).data('noevent')
+						$('#bar li').removeClass('active')
+						$(this).parent('li').addClass('active')
+						$(_this).snEvents $(this).attr('href')
+					else
+						e.preventDefault()
 
 		switchBar: (options = {}) ->
 
@@ -154,7 +157,8 @@ $ ->
 
 			console.log 'trigger: ' + 'spoiler' if console?
 
-			$('.spoiler-caption', this).on 'click', (e) ->
+
+			$(this).find('.spoiler-caption').on 'click', (e) ->
 
 				e.preventDefault()
 
