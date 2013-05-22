@@ -267,7 +267,8 @@ $(function() {
         if (def.href === '#main/text/contacts') {
           $.cookie('contacts', def.href, {
             expires: 7,
-            path: '/'
+            path: '/',
+            domain: 'http://localhost'
           });
         }
         sn = $(this).data('sn');
@@ -300,13 +301,14 @@ $(function() {
               $(this).snTriggers('hover', 'bar');
               this.snTriggers('hover', 'side');
               sn.part = 'main';
-              $.removeCookie('last_href');
+              $.each($.cookie(), $.removeCookie);
               break;
             default:
               if ((sn.levels.two != null) && (sn.levels.three != null)) {
                 $.cookie('last_href', def.href, {
                   expires: 7,
-                  path: '/'
+                  path: '/',
+                  domain: 'http://localhost'
                 });
                 $('html,body').animate({
                   scrollTop: 0
