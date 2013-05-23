@@ -1,30 +1,23 @@
 
 module 'Чтение и запись cookies'
 
+# возможность очистить cookies на странице с тестами
 $('.removeCookies').on 'click', (e) ->
 	$.each($.cookie(), $.removeCookie)
 
-test 'autoload', () ->
-	alert(document.cookie)
 
-	ok $.cookie('test'), 'test 1'
+test 'чтение и запись простых значений', () ->
 
-test 'simple value', () ->
-
-	#set_cookie('test','asfa')
+	$.removeCookie 'test'
 	$.cookie 'test', 'go', expires: 7
+	strictEqual $.cookie('test'), 'go', 'запись простого значения'
 
-	alert(document.cookie)
-
-	ok $.cookie('test'), 'test 2'
-
-
-test 'Проверка работы cookies в приложении', () ->	
-	ok $.cookie('last_href'), 'Сохранение cookies при переходах по страницам'
-	ok $.cookie('contacts'), 'Сохранение cookies после закрытия программы'
+	$.removeCookie 'test'
+	strictEqual $.cookie('test'), null, 'удаление простого значения'
 
 
-# test 'Проверка кастомными функциями', () ->
-# 	ok getCookie('custom'), 'custom 1'
-# 	set_cookie('custom','forward','7')
-# 	ok getCookie('custom'), 'custom 2'
+test 'запись cookies после перехода по страницам', () ->
+
+	$.removeCookie 'last_href'
+	$('#sn').snEvents '#main/text/main'
+	ok $.cookie('last_href'), 'last_href'
