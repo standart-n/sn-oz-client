@@ -401,10 +401,12 @@ $(function() {
         options = {};
       }
       $(this).snModels('#bar', {
-        layout: 'bar.html'
+        layout: 'bar.html',
+        wiki: false
       });
       return $(this).snModels('#main', {
-        layout: 'main.html'
+        layout: 'main.html',
+        wiki: false
       });
     }
   };
