@@ -293,10 +293,10 @@ $(function() {
         if ((levels.one != null) && levels.one[1] !== 'spoiler') {
           switch (levels.one[1]) {
             case 'autoload':
-              $(this).snModels('primary', {
+              $(this).snModels('#primary', {
                 file: 'main.html'
               });
-              $(this).snModels('side', {
+              $(this).snModels('#side', {
                 file: 'side_main.html'
               });
               $(this).snTriggers('switch', 'side', 'main');
@@ -304,7 +304,9 @@ $(function() {
               $(this).snTriggers('links', 'side');
               $(this).snTriggers('links', 'primary');
               $(this).snTriggers('hover', 'bar');
-              this.snTriggers('hover', 'side');
+              $(this).snTriggers('hover', 'side');
+              $(this).snTriggers('plugins', '#primary');
+              $(this).snTriggers('plugins', '#side');
               window.sn.part = 'main';
               break;
             default:
@@ -316,10 +318,10 @@ $(function() {
                   scrollTop: 0
                 }, 0);
                 if (levels.two[1] === 'text' && levels.one[1] !== window.sn.part) {
-                  $(this).snModels('side', {
+                  $(this).snModels('#side', {
                     file: 'side_' + levels.one[1] + '.html'
                   });
-                  $(this).snModels('primary', {
+                  $(this).snModels('#primary', {
                     file: levels.three[1] + '.html'
                   });
                   $(this).snTriggers('links', 'side');
@@ -327,12 +329,15 @@ $(function() {
                   $(this).snTriggers('switch', 'bar', levels.one[1]);
                   $(this).snTriggers('switch', 'side', levels.three[1]);
                   $(this).snTriggers('hover', 'side');
+                  $(this).snTriggers('plugins', '#primary');
+                  $(this).snTriggers('plugins', '#side');
                 } else {
-                  $(this).snModels('primary', {
+                  $(this).snModels('#primary', {
                     file: levels.three[1] + '.html'
                   });
                   $(this).snTriggers('links', 'primary');
                   $(this).snTriggers('switch', 'side', levels.three[1]);
+                  $(this).snTriggers('plugins', '#primary');
                 }
                 window.sn.part = levels.one[1];
               }
@@ -395,12 +400,10 @@ $(function() {
       if (options == null) {
         options = {};
       }
-      $(this).snModels({
-        elem: '#bar',
+      $(this).snModels('#bar', {
         layout: 'bar.html'
       });
-      return $(this).snModels({
-        elem: '#main',
+      return $(this).snModels('#main', {
         layout: 'main.html'
       });
     }
@@ -427,59 +430,32 @@ $(function() {
   var methods;
 
   methods = {
-    init: function(options) {
+    init: function(elem, options) {
       var def;
 
-      if (options == null) {
-        options = {};
+      if (elem == null) {
+        elem = '#main';
       }
-      def = {
-        elem: '#main',
-        wiki: false
-      };
-      $.extend(def, options);
-      return $(this).snModels('append', def);
-    },
-    primary: function(options) {
-      var def;
-
       if (options == null) {
         options = {};
       }
       if (typeof console !== "undefined" && console !== null) {
-        console.log('models: ' + 'primary');
+        console.log('models into ' + elem);
       }
       def = {
-        elem: '#primary',
         wiki: true
       };
       $.extend(def, options);
-      return $(this).snModels('append', def);
-    },
-    side: function(options) {
-      var def;
-
-      if (options == null) {
-        options = {};
-      }
-      if (typeof console !== "undefined" && console !== null) {
-        console.log('models: ' + 'side');
-      }
-      def = {
-        elem: '#side',
-        wiki: true
-      };
-      $.extend(def, options);
+      def.elem = elem;
       return $(this).snModels('append', def);
     },
     append: function(def) {
-      var sn, _this;
+      var _this;
 
       if (def == null) {
         def = {};
       }
       _this = this;
-      sn = $(this).data('sn');
       if (def.file != null) {
         return $(this).snModels('load', def.file, function(s) {
           def.text = s;
@@ -494,7 +470,7 @@ $(function() {
               def.text = new EJS({
                 url: 'view/' + def.view,
                 ext: '.html'
-              }).render(sn);
+              }).render(window.sn);
               return $(_this).snModels('inner', def);
             }
           } else {
@@ -503,7 +479,7 @@ $(function() {
                 def.text = new EJS({
                   url: 'layout/' + window.sn.region.name + '/' + def.layout,
                   ext: '.html'
-                }).render(sn);
+                }).render(window.sn);
                 return $(_this).snModels('inner', def);
               }
             }
@@ -527,20 +503,17 @@ $(function() {
         if (typeof console !== "undefined" && console !== null) {
           console.log('innerText');
         }
-        if (def.wiki === true) {
+        if (def.wiki === true && (window.sn.wiki != null)) {
           def.text = $(this).snWiki(def.text);
         }
         switch (def.position) {
           case 'place':
-            $(def.elem).html(def.text);
-            break;
+            return $(def.elem).html(def.text);
           case 'after':
-            $(def.elem).html($(def.elem).html() + def.text);
-            break;
+            return $(def.elem).html($(def.elem).html() + def.text);
           case 'before':
-            $(def.elem).html(def.text + $(def.elem).html());
+            return $(def.elem).html(def.text + $(def.elem).html());
         }
-        return $(this).snTriggers('plugins', def);
       }
     },
     load: function(file, callback) {
@@ -600,25 +573,24 @@ $(function() {
       }
       switch (type) {
         case 'side':
-          return $(this).snTriggers('switchSide', {
-            link: link
-          });
+          return $(this).snTriggers('switchSide', link);
         case 'bar':
-          return $(this).snTriggers('switchBar', {
-            link: link
-          });
+          return $(this).snTriggers('switchBar', link);
       }
     },
-    plugins: function(def) {
-      if (def == null) {
-        def = {};
+    plugins: function(elem) {
+      if (elem == null) {
+        elem = '#main';
       }
       return setTimeout(function() {
-        if ($(def.elem + ' .tooltip-toggle').length) {
-          $(def.elem + ' .tooltip-toggle').tooltip();
+        if ($(elem + ' .tooltip-toggle').length) {
+          $(elem + ' .tooltip-toggle').tooltip();
         }
         if ($.isFunction($.bootstrapIE6)) {
-          return $.bootstrapIE6(def.elem);
+          $.bootstrapIE6(elem);
+        }
+        if ($(elem + ' .spoiler').length) {
+          return $(elem).snTriggers('spoiler');
         }
       }, 1);
     },
@@ -701,24 +673,19 @@ $(function() {
         });
       }
     },
-    switchBar: function(options) {
-      if (options == null) {
-        return options = {};
+    switchBar: function(link) {
+      if (link == null) {
+        return link = 'main';
       }
       /*
       			console.log 'trigger: ' + 'switchBar' if console?
-      
-      			def =
-      				link: 'main'
-      
-      			$.extend def, options
       
       			$('.bar-button')
       				.removeClass('bar-button-active')
       				.removeClass('bar-button-hover')
       				.addClass('bar-button-normal')
       
-      			$('#bar-'+def.link)
+      			$('#bar-' + link)
       				.removeClass('bar-button-normal')
       				.removeClass('bar-button-hover')
       				.addClass('bar-button-active')
@@ -726,24 +693,19 @@ $(function() {
       */
 
     },
-    switchSide: function(options) {
-      if (options == null) {
-        return options = {};
+    switchSide: function(link) {
+      if (link == null) {
+        return link = 'above';
       }
       /*
       			console.log 'trigger: ' + 'switchSide' if console?
-      
-      			def=
-      				link: 'above'
-      
-      			$.extend(def,options)
       
       			$('.side-box-link')
       				.removeClass('side-box-link-active')
       				.removeClass('side-box-link-hover')
       				.addClass('side-box-link-normal')
       
-      			$('#side-'+def.link)
+      			$('#side-' + link)
       				.removeClass('side-box-link-normal')
       				.removeClass('side-box-link-hover')
       				.addClass('side-box-link-active')

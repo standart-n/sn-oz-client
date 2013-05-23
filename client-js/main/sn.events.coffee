@@ -43,14 +43,16 @@ $ ->
 						# при начальной загрузке приложения
 
 						when 'autoload'
-							$(this).snModels 'primary', file: 'main.html'
-							$(this).snModels 'side', file: 'side_main.html'
+							$(this).snModels '#primary', file: 'main.html'
+							$(this).snModels '#side', file: 'side_main.html'
 							$(this).snTriggers 'switch', 'side', 'main'
 							$(this).snTriggers 'links', 'bar'
 							$(this).snTriggers 'links', 'side'
 							$(this).snTriggers 'links', 'primary'
 							$(this).snTriggers 'hover', 'bar'
-							(this).snTriggers 'hover', 'side'
+							$(this).snTriggers 'hover', 'side'
+							$(this).snTriggers 'plugins', '#primary'
+							$(this).snTriggers 'plugins', '#side'
 							window.sn.part = 'main'
 
 							#$.each $.cookie(), $.removeCookie
@@ -79,8 +81,8 @@ $ ->
 
 										# загрузка html
 
-										$(this).snModels 'side', file: 'side_' + levels.one[1] + '.html'
-										$(this).snModels 'primary', file: levels.three[1] + '.html'
+										$(this).snModels '#side', file: 'side_' + levels.one[1] + '.html'
+										$(this).snModels '#primary', file: levels.three[1] + '.html'
 
 										# включение триггеров
 
@@ -89,14 +91,17 @@ $ ->
 										$(this).snTriggers 'switch', 'bar', levels.one[1]
 										$(this).snTriggers 'switch', 'side', levels.three[1]
 										$(this).snTriggers 'hover', 'side'
+										$(this).snTriggers 'plugins', '#primary'
+										$(this).snTriggers 'plugins', '#side'
 
 									# если нужно отобразить какой то модуль
 
 									else
-										$(this).snModels 'primary', file: levels.three[1] + '.html'
+										$(this).snModels '#primary', file: levels.three[1] + '.html'
 										$(this).snTriggers 'links', 'primary'
 										$(this).snTriggers 'switch', 'side', levels.three[1]
-			
+										$(this).snTriggers 'plugins', '#primary'
+
 								window.sn.part = levels.one[1]
 					
 					$(this).snEvents 'anchor', levels # проверяем вызывались ли якоря

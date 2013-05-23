@@ -10,48 +10,23 @@ $ ->
 
 		# по-умолчанию, загруказ в #main
 
-		init: (options = {}) ->
-			def =
-				elem:		'#main'
-				wiki:		off
-			$.extend def, options
+		init: (elem = '#main', options = {}) ->
 
-			$(this).snModels 'append', def
-
-		# загрузка в блок #primary
-
-		primary: (options = {}) ->
-
-			console.log 'models: ' + 'primary' if console?
+			console.log 'models into ' + elem if console?
 
 			def =
-				elem:		'#primary'
 				wiki:		on
 			$.extend def, options
-			
-			$(this).snModels 'append', def
 
-		# загрузка в #side
+			def.elem = elem
 
-		side: (options = {}) ->		
-
-			console.log 'models: ' + 'side' if console?
-
-			def =
-				elem:		'#side'
-				wiki:		on
-			$.extend def, options
-			
 			$(this).snModels 'append', def
 
 
-		# скрипт загрузки, который извлекается текст,
-		# передает его методу inner, а затем запускает необходимые триггеры
 
 		append: (def = {}) ->
 
 			_this = this
-			sn = $(this).data 'sn'
 
 		# если нужно зарузить файл
 
@@ -73,7 +48,7 @@ $ ->
 				else
 					if def.view?
 						if window.EJS?
-							def.text = new EJS(url: 'view/' + def.view, ext: '.html').render(sn)
+							def.text = new EJS(url: 'view/' + def.view, ext: '.html').render(window.sn)
 							$(_this).snModels 'inner', def
 
 					# если в параметре передается путь к шаблону
@@ -82,7 +57,7 @@ $ ->
 					else
 						if def.layout?
 							if window.EJS?
-								def.text = new EJS(url: 'layout/' + window.sn.region.name + '/' + def.layout , ext: '.html').render(sn)
+								def.text = new EJS(url: 'layout/' + window.sn.region.name + '/' + def.layout , ext: '.html').render(window.sn)
 								$(_this).snModels 'inner', def
 
 		# вставка текста
@@ -105,7 +80,8 @@ $ ->
 				
 				# обрабатываем вики-разметку
 
-				def.text = $(this).snWiki(def.text) if def.wiki is on
+				if def.wiki is on and window.sn.wiki?
+					def.text = $(this).snWiki(def.text) 
 		
 				# вставляем текст в нужный блок
 
@@ -116,12 +92,6 @@ $ ->
 						$(def.elem).html $(def.elem).html() + def.text
 					when 'before'
 						$(def.elem).html def.text + $(def.elem).html()
-
-				# запускаем необходимые триггеры для корректного отображения контента,
-				# который мы вставили
-
-				$(this).snTriggers 'plugins', def
-
 
 		# скрипт для загрузки текста из файла
 

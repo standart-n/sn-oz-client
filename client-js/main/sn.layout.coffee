@@ -12,13 +12,13 @@ $ ->
 			# загрузка верхей панели, она фиксированная, поэтому ее див должен идти
 			# непосредственно после body
 
-			$(this).snModels elem: '#bar', layout: 'bar.html'
+			$(this).snModels '#bar', layout: 'bar.html'
 
 
 			# загрузка остального шаблона, который изначально хранится в jade формате и 
 			# генерируется в html спомощью make'файла
 
-			$(this).snModels elem: '#main', layout: 'main.html'
+			$(this).snModels '#main', layout: 'main.html'
 
 
 	# инициализиация

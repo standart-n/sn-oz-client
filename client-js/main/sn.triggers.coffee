@@ -6,16 +6,16 @@ $ ->
 		switch: (type = '', link = '') ->
 			switch type
 				when 'side'
-					$(this).snTriggers 'switchSide', link: link
+					$(this).snTriggers 'switchSide', link
 				when 'bar'
-					$(this).snTriggers 'switchBar', link: link
+					$(this).snTriggers 'switchBar', link
 
-		plugins: (def = {}) ->
+		plugins: (elem = '#main') ->
 
 			setTimeout () ->
-				# if $(def.elem + ' .spoiler').length then $(def.elem).snTriggers 'spoiler'
-				if $(def.elem + ' .tooltip-toggle').length then $(def.elem + ' .tooltip-toggle').tooltip()
-				if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(def.elem)
+				if $(elem + ' .tooltip-toggle').length then $(elem + ' .tooltip-toggle').tooltip()
+				if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(elem)
+				if $(elem + ' .spoiler').length then $(elem).snTriggers 'spoiler'
 			, 1
 	
 
@@ -77,44 +77,34 @@ $ ->
 					else
 						e.preventDefault()
 
-		switchBar: (options = {}) ->
+		switchBar: (link = 'main') ->
 
 			###
 			console.log 'trigger: ' + 'switchBar' if console?
-
-			def =
-				link: 'main'
-
-			$.extend def, options
 
 			$('.bar-button')
 				.removeClass('bar-button-active')
 				.removeClass('bar-button-hover')
 				.addClass('bar-button-normal')
 
-			$('#bar-'+def.link)
+			$('#bar-' + link)
 				.removeClass('bar-button-normal')
 				.removeClass('bar-button-hover')
 				.addClass('bar-button-active')
 				.blur()
 			###
 
-		switchSide: (options = {}) ->
+		switchSide: (link = 'above') ->
 
 			###
 			console.log 'trigger: ' + 'switchSide' if console?
-
-			def=
-				link: 'above'
-
-			$.extend(def,options)
 
 			$('.side-box-link')
 				.removeClass('side-box-link-active')
 				.removeClass('side-box-link-hover')
 				.addClass('side-box-link-normal')
 
-			$('#side-'+def.link)
+			$('#side-' + link)
 				.removeClass('side-box-link-normal')
 				.removeClass('side-box-link-hover')
 				.addClass('side-box-link-active')
