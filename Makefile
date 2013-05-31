@@ -20,6 +20,7 @@ templates:
 	@jade --pretty ./jade/layout/kirov/* -O ./layout/kirov
 	@jade --pretty ./jade/layout/stavropol/* -O ./layout/stavropol
 	@jade --pretty ./jade/layout/volgograd/* -O ./layout/volgograd
+	@jade --pretty ./jade/layout/yoshkar/* -O ./layout/yoshkar
 
 cacke:
 	@coffee -cbjvp ./client-js/* > ./script/sn.js
