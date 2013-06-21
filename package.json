@@ -1,0 +1,36 @@
+{
+  "name": "sn-oz-client",
+  "version": "0.2.0",
+  "description": "web интерфейс для Общего Заказа",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt-cli": "~0.1.9",
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jade": "~0.7.0",
+    "grunt-recess": "~0.3.3"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/grunt",
+    "bootstrap": "./node_modules/.bin/grunt bootstrap",
+    "test": "./node_modules/.bin/grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:standart-n/sn-oz-client.git"
+  },
+  "keywords": [
+    "oz",
+    "zakaz"
+  ],
+  "author": "aleksnick",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "76c5c2195368083c1cbdc06a4991298e3a4be519",
+  "bugs": {
+    "url": "https://github.com/standart-n/sn-oz-client/issues"
+  }
+}
