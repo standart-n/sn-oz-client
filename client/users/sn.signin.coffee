@@ -1,14 +1,14 @@
 $ ->
 
-	methods =
+	$this =
 		init: (options = {}) ->
 
 			sn = $(this).data 'sn'
 			def = {}		
 			$.extend true, def, options
 
-			console.log 'signin: ' + 'init' if console?
-			console.log 'render: ', def if console?
+			console.log 'signin: ' + 'init'
+			console.log 'render: ', def
 
 			$(this).snModels 'primary', view: 'signin.html'
 			$(this).snModels 'side', view: 'signinSide.html'
@@ -20,7 +20,7 @@ $ ->
 
 		help: (options = {}) ->
 
-			console.log 'signin: ' + 'help' if console?
+			console.log 'signin: ' + 'help'
 
 			def = {}
 			$.extend true, def, options
@@ -32,7 +32,7 @@ $ ->
 		triggers: (options = {}) ->
 
 			_this = this
-			console.log 'signin: ' + 'triggers' if console?
+			console.log 'signin: ' + 'triggers'
 
 			$('.signin-input').on 'focus', () ->
 				if $(this).val() is $(this).data('def-value') or $(this).val() is ''
@@ -87,9 +87,9 @@ $ ->
 
 
 	$.fn.snSignin = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments
 
 

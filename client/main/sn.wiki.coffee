@@ -1,6 +1,6 @@
 $ ->
 
-	methods =
+	$this =
 		init: (text = '', def = {}) ->
 
 			window.sn ?= {}
@@ -12,26 +12,26 @@ $ ->
 				gismeteo:
 					url: ''
 
-			console.log 'wiki' if console?
+			console.log 'wiki'
 
 			#text = text.toString()
-			text = $(this).snWiki('before', text)					# предобработка
-			text = $(this).snWiki('formating', text)				# жирный и курсив
-			text = $(this).snWiki('headings', text)					# заголовки
-			text = $(this).snWiki('icons', text)					# иконки
-			text = $(this).snWiki('externalLinks', text)			# внешние ссылки
-			text = $(this).snWiki('fileLinks', text)				# ссылки на файлы
-			text = $(this).snWiki('internalLinks', text)			# внутренние ссылки
-			text = $(this).snWiki('mailTo', text)					# ссылки на email-адреса
-			text = $(this).snWiki('image', text)					# изображения
-			text = $(this).snWiki('fonts', text)					# шрифты
-			text = $(this).snWiki('anchor', text)					# якоря
-			text = $(this).snWiki('ind', text)						# абзацы
-			text = $(this).snWiki('gismeteo', text)					# погода
-			text = $(this).snWiki('spoiler', text)					# спойлеры
-			text = $(this).snWiki('header', text)					# заголовки с подчеркиванием
-			text = $(this).snWiki('spaces', text)					# переносы строк
-			text = $(this).snWiki('noevent', text)					# пустые ссылки ( href="#" )
+			text = $this.before(text)					# предобработка
+			text = $this.formating(text)				# жирный и курсив
+			text = $this.headings(text)					# заголовки
+			text = $this.icons(text)					# иконки
+			text = $this.externalLinks(text)			# внешние ссылки
+			text = $this.fileLinks(text)				# ссылки на файлы
+			text = $this.internalLinks(text)			# внутренние ссылки
+			text = $this.mailTo(text)					# ссылки на email-адреса
+			text = $this.image(text)					# изображения
+			text = $this.fonts(text)					# шрифты
+			text = $this.anchor(text)					# якоря
+			text = $this.ind(text)						# абзацы
+			text = $this.gismeteo(text)					# погода
+			text = $this.spoiler(text)					# спойлеры
+			text = $this.header(text)					# заголовки с подчеркиванием
+			text = $this.spaces(text)					# переносы строк
+			text = $this.noevent(text)					# пустые ссылки ( href="#" )
 			text
 
 
@@ -341,7 +341,7 @@ $ ->
 
 
 	$.fn.snWiki = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments

@@ -6,8 +6,16 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    if (window.console == null) {
+      window.console = {
+        info: function() {},
+        log: function() {},
+        error: function() {},
+        warn: function() {}
+      };
+    }
+    $this = {
       init: function(options) {
         if (options == null) {
           options = {};
@@ -47,17 +55,11 @@
         if (options == null) {
           options = {};
         }
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('configuration...');
-        }
+        console.log('configuration...');
         $(this).snConf();
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('layout...');
-        }
+        console.log('layout...');
         $(this).snLayout();
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('autoload...');
-        }
+        console.log('autoload...');
         return $(this).snEvents('#autoload');
       }
     };
@@ -65,10 +67,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -83,8 +85,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         if (options == null) {
           options = {};
@@ -99,9 +101,7 @@
       main: function() {
         var sn;
         sn = $(this).data('sn');
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('conf: ' + 'main.json');
-        }
+        console.log('conf: ' + 'main.json');
         return $.ajax({
           url: 'conf/main.json',
           async: false,
@@ -124,9 +124,7 @@
       theme: function() {
         var sn;
         sn = $(this).data('sn');
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('conf: ' + 'themes.json');
-        }
+        console.log('conf: ' + 'themes.json');
         return $.ajax({
           url: 'conf/themes.json',
           async: false,
@@ -146,9 +144,7 @@
         });
       },
       css: function() {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('conf: ' + 'css');
-        }
+        console.log('conf: ' + 'css');
         if (window.sn.theme.css != null) {
           return $.each(window.sn.theme.css, function(i) {
             var head, link;
@@ -162,9 +158,7 @@
         }
       },
       js: function() {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('conf: ' + 'js');
-        }
+        console.log('conf: ' + 'js');
         if (window.sn.theme.js != null) {
           return $.each(window.sn.theme.js, function(i) {
             return $.getScript(this);
@@ -174,9 +168,7 @@
       settings: function() {
         var sn;
         sn = $(this).data('sn');
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('conf: ' + 'settings.json');
-        }
+        console.log('conf: ' + 'settings.json');
         return $.ajax({
           url: 'conf/settings.json',
           async: false,
@@ -211,10 +203,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -229,25 +221,23 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         if (options == null) {
           options = {};
         }
-        if (typeof console !== "undefined" && console !== null) {
-          return conlole.log('design');
-        }
+        return conlole.log('design');
       }
     };
     return $.fn.snDesign = function(sn) {
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -261,8 +251,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         var def, href, levels;
         if (options == null) {
@@ -284,12 +274,8 @@
             three: href.match(/#[a-zA-Z0-9\_\-]+\/[a-zA-Z0-9\_\-]+\/([a-zA-Z0-9\_\-]+)/, '$4'),
             anchor: href.match(/\:([a-zA-Z0-9\_\-]+)/)
           };
-          if (typeof console !== "undefined" && console !== null) {
-            console.info('url: ' + href);
-          }
-          if (typeof console !== "undefined" && console !== null) {
-            console.info('levels: ', levels);
-          }
+          console.info('url: ' + href);
+          console.info('levels: ', levels);
           if ((levels.one != null) && levels.one[1] !== 'spoiler') {
             switch (levels.one[1]) {
               case 'autoload':
@@ -366,9 +352,7 @@
             }
           } catch (_error) {
             e = _error;
-            if (typeof console !== "undefined" && console !== null) {
-              return console.error('anchor', e);
-            }
+            return console.error('anchor', e);
           }
         }
       }
@@ -377,10 +361,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -395,8 +379,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         if (options == null) {
           options = {};
@@ -415,10 +399,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -433,8 +417,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(elem, options) {
         var def;
         if (elem == null) {
@@ -443,9 +427,7 @@
         if (options == null) {
           options = {};
         }
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('models into ' + elem);
-        }
+        console.log('models into ' + elem);
         def = {
           wiki: true
         };
@@ -502,9 +484,7 @@
         };
         $.extend(def, options);
         if (def.text != null) {
-          if (typeof console !== "undefined" && console !== null) {
-            console.log('innerText');
-          }
+          console.log('innerText');
           if (def.wiki === true && (window.sn.wiki != null)) {
             def.text = $(this).snWiki(def.text);
           }
@@ -522,9 +502,7 @@
         var url;
         if (file != null) {
           url = 'content/' + window.sn.region.name + '/' + file;
-          if (typeof console !== "undefined" && console !== null) {
-            console.log('file: ' + file);
-          }
+          console.log('file: ' + file);
           return $.ajax({
             url: url,
             async: false,
@@ -532,9 +510,7 @@
             dataType: 'html',
             success: function(text) {
               if (text != null) {
-                if (typeof console !== "undefined" && console !== null) {
-                  console.log('success');
-                }
+                console.log('success');
                 if (callback) {
                   return callback(text);
                 }
@@ -548,10 +524,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -560,8 +536,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         if (options == null) {
           options = {};
@@ -623,9 +599,7 @@
       },
       linksSide: function() {
         var _this;
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('trigger: ' + 'linksSide');
-        }
+        console.log('trigger: ' + 'linksSide');
         _this = this;
         if ($('#primary a').length) {
           return $('#side a').on('click', function(e) {
@@ -641,9 +615,7 @@
       },
       linksPrimary: function() {
         var _this;
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('trigger: ' + 'linksPrimary');
-        }
+        console.log('trigger: ' + 'linksPrimary');
         _this = this;
         if ($('#primary a').length) {
           return $('#primary a').on('click', function(e) {
@@ -658,10 +630,8 @@
       linksBar: function() {
         var _this;
         _this = this;
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('trigger: ' + 'linksBar');
-        }
-        if ($('#bar a').length) {
+        console.log('trigger: ' + 'linksBar');
+        if ($('#bar a').length && $('#bar li').length) {
           return $('#bar a').on('click', function(e) {
             if ($(this).attr('href') !== '#' && $(this).data('toggle') !== 'dropdown' && !$(this).data('noevent')) {
               $('#bar li').removeClass('active');
@@ -678,7 +648,7 @@
           return link = 'main';
         }
         /*
-        			console.log 'trigger: ' + 'switchBar' if console?
+        			console.log 'trigger: ' + 'switchBar'
         
         			$('.bar-button')
         				.removeClass('bar-button-active')
@@ -698,7 +668,7 @@
           return link = 'above';
         }
         /*
-        			console.log 'trigger: ' + 'switchSide' if console?
+        			console.log 'trigger: ' + 'switchSide'
         
         			$('.side-box-link')
         				.removeClass('side-box-link-active')
@@ -714,9 +684,7 @@
 
       },
       switcherBar: function() {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('trigger: ' + 'switcherBar');
-        }
+        console.log('trigger: ' + 'switcherBar');
         $('.bar-link').on('mouseover', function() {
           if (!$(this).parent('li').hasClass('active')) {
             return $(this).parent('li').removeClass('normal').addClass('hover');
@@ -729,9 +697,7 @@
         });
       },
       switcherSide: function() {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('trigger: ' + 'switcherSide');
-        }
+        console.log('trigger: ' + 'switcherSide');
         $('.side-link').on('mouseover', function() {
           if (!$(this).parent('li').hasClass('active')) {
             return $(this).parent('li').removeClass('normal').addClass('hover');
@@ -744,9 +710,7 @@
         });
       },
       spoiler: function() {
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('trigger: ' + 'spoiler');
-        }
+        console.log('trigger: ' + 'spoiler');
         return $(this).find('.spoiler-caption').on('click', function(e) {
           e.preventDefault();
           if ($(this).hasClass('spoiler-open')) {
@@ -768,10 +732,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -780,8 +744,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(text, def) {
         var _base;
         if (text == null) {
@@ -806,26 +770,24 @@
             }
           };
         }
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('wiki');
-        }
-        text = $(this).snWiki('before', text);
-        text = $(this).snWiki('formating', text);
-        text = $(this).snWiki('headings', text);
-        text = $(this).snWiki('icons', text);
-        text = $(this).snWiki('externalLinks', text);
-        text = $(this).snWiki('fileLinks', text);
-        text = $(this).snWiki('internalLinks', text);
-        text = $(this).snWiki('mailTo', text);
-        text = $(this).snWiki('image', text);
-        text = $(this).snWiki('fonts', text);
-        text = $(this).snWiki('anchor', text);
-        text = $(this).snWiki('ind', text);
-        text = $(this).snWiki('gismeteo', text);
-        text = $(this).snWiki('spoiler', text);
-        text = $(this).snWiki('header', text);
-        text = $(this).snWiki('spaces', text);
-        text = $(this).snWiki('noevent', text);
+        console.log('wiki');
+        text = $this.before(text);
+        text = $this.formating(text);
+        text = $this.headings(text);
+        text = $this.icons(text);
+        text = $this.externalLinks(text);
+        text = $this.fileLinks(text);
+        text = $this.internalLinks(text);
+        text = $this.mailTo(text);
+        text = $this.image(text);
+        text = $this.fonts(text);
+        text = $this.anchor(text);
+        text = $this.ind(text);
+        text = $this.gismeteo(text);
+        text = $this.spoiler(text);
+        text = $this.header(text);
+        text = $this.spaces(text);
+        text = $this.noevent(text);
         return text;
       },
       before: function(text) {
@@ -888,10 +850,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -900,8 +862,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         if (options == null) {
           options = {};
@@ -913,9 +875,7 @@
           options = {};
         }
         sn = $(this).data('sn');
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('enter: ' + 'checkEnterForm');
-        }
+        console.log('enter: ' + 'checkEnterForm');
         alert('enter');
         console.info('sn', sn);
         return false;
@@ -925,10 +885,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -937,8 +897,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         if (options == null) {
           options = {};
@@ -950,9 +910,7 @@
           options = {};
         }
         _this = this;
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('registration: ' + 'checkRegForm');
-        }
+        console.log('registration: ' + 'checkRegForm');
         def = {
           error: false
         };
@@ -1016,9 +974,7 @@
         if (options == null) {
           options = {};
         }
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('registration: ' + 'afterCheckRegForm');
-        }
+        console.log('registration: ' + 'afterCheckRegForm');
         def = {
           error: false
         };
@@ -1036,9 +992,7 @@
         if (options == null) {
           options = {};
         }
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('registration: ' + 'regOnServer');
-        }
+        console.log('registration: ' + 'regOnServer');
         def = {
           debug: false,
           type: 'jsonp',
@@ -1084,15 +1038,11 @@
             if (sn.result.alert) {
               alert(sn.result.alert);
             }
-            if (typeof console !== "undefined" && console !== null) {
-              console.log('afterCheckRegFormOnServer', s);
-            }
+            console.log('afterCheckRegFormOnServer', s);
             return $(_this).snRegistration('afterCheckRegFormOnServer', s);
           },
           error: function(XMLHttpRequest, textStatus, error) {
-            if (typeof console !== "undefined" && console !== null) {
-              return console.error('ajax:', textStatus, error);
-            }
+            return console.error('ajax:', textStatus, error);
           }
         });
       },
@@ -1102,9 +1052,7 @@
           options = {};
         }
         sn = $(this).data('sn');
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('registration: ' + 'afterSuccessReg');
-        }
+        console.log('registration: ' + 'afterSuccessReg');
         return alert('afterSuccessReg');
       },
       afterCheckRegFormOnServer: function(options) {
@@ -1112,9 +1060,7 @@
         if (options == null) {
           options = {};
         }
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('registration: ' + 'afterCheckRegFormOnServer');
-        }
+        console.log('registration: ' + 'afterCheckRegFormOnServer');
         def = {
           'error': false,
           'start': 'В поле'
@@ -1169,10 +1115,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -1181,8 +1127,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         var def, sn;
         if (options == null) {
@@ -1191,12 +1137,8 @@
         sn = $(this).data('sn');
         def = {};
         $.extend(true, def, options);
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('signin: ' + 'init');
-        }
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('render: ', def);
-        }
+        console.log('signin: ' + 'init');
+        console.log('render: ', def);
         $(this).snModels('primary', {
           view: 'signin.html'
         });
@@ -1214,9 +1156,7 @@
         if (options == null) {
           options = {};
         }
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('signin: ' + 'help');
-        }
+        console.log('signin: ' + 'help');
         def = {};
         $.extend(true, def, options);
         $(this).snModels('primary', {
@@ -1231,9 +1171,7 @@
           options = {};
         }
         _this = this;
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('signin: ' + 'triggers');
-        }
+        console.log('signin: ' + 'triggers');
         $('.signin-input').on('focus', function() {
           if ($(this).val() === $(this).data('def-value') || $(this).val() === '') {
             $(this).removeClass('signin-input-blur');
@@ -1296,10 +1234,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });
@@ -1308,8 +1246,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         var _this;
         if (options == null) {
@@ -1334,10 +1272,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
     return $('#sn').snUsers();
@@ -1347,8 +1285,8 @@
 
 (function() {
   $(function() {
-    var methods;
-    methods = {
+    var $this;
+    $this = {
       init: function(options) {
         if (options == null) {
           options = {};
@@ -1370,9 +1308,7 @@
         };
         $.extend(true, def, options);
         value = def.value.toString();
-        if (typeof console !== "undefined" && console !== null) {
-          console.log('validation: ' + def.type + ' - ' + value);
-        }
+        console.log('validation: ' + def.type + ' - ' + value);
         switch (def.type) {
           case 'firstname':
             if (value === '' || value === def.caption) {
@@ -1508,9 +1444,7 @@
             }
         }
         if (!def.error) {
-          if (typeof console !== "undefined" && console !== null) {
-            console.warn(def.exp);
-          }
+          console.warn(def.exp);
         }
         return def;
       }
@@ -1519,10 +1453,10 @@
       if (sn == null) {
         sn = {};
       }
-      if (methods[sn]) {
-        return methods[sn].apply(this, Array.prototype.slice.call(arguments, 1));
+      if ($this[sn]) {
+        return $this[sn].apply(this, Array.prototype.slice.call(arguments, 1));
       } else {
-        return methods.init.apply(this, arguments);
+        return $this.init.apply(this, arguments);
       }
     };
   });

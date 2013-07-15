@@ -1,6 +1,6 @@
 $ ->
 
-	methods =
+	$this =
 		init: (options = {}) ->
 			$(this).snValidation 'checkField', options
 
@@ -17,7 +17,7 @@ $ ->
 			$.extend true, def, options
 			value = def.value.toString()
 
-			console.log 'validation: ' + def.type + ' - ' + value if console?
+			console.log 'validation: ' + def.type + ' - ' + value
 
 			switch def.type
 				when 'firstname'
@@ -125,14 +125,14 @@ $ ->
 								else
 									def.error = false
 			if !def.error
-				console.warn def.exp if console?
+				console.warn def.exp
 			def
 
 
 	$.fn.snValidation = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments
 
 

@@ -6,13 +6,13 @@
 
 $ ->
 
-	methods =
+	$this =
 
 		# по-умолчанию, загруказ в #main
 
 		init: (elem = '#main', options = {}) ->
 
-			console.log 'models into ' + elem if console?
+			console.log 'models into ' + elem
 
 			def =
 				wiki:		on
@@ -76,7 +76,7 @@ $ ->
 
 				# вывод в логи
 
-				console.log 'innerText' if console?
+				console.log 'innerText'
 				
 				# обрабатываем вики-разметку
 
@@ -105,7 +105,7 @@ $ ->
 
 				# запись в логи
 				
-				console.log 'file: ' + file if console?
+				console.log 'file: ' + file
 
 				# берем текст спомощью ajax
 
@@ -116,13 +116,13 @@ $ ->
 					dataType: 'html'
 					success: (text) ->
 						if text?
-							console.log 'success' if console?
+							console.log 'success'
 							callback(text) if callback
 
 	# инициализация
 
 	$.fn.snModels = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments

@@ -5,7 +5,7 @@
 ###
 
 $ ->
-	methods =
+	$this =
 
 
 		# автозагрузка
@@ -25,7 +25,7 @@ $ ->
 		main: ->
 
 			sn = $(this).data 'sn'
-			console.log 'conf: ' + 'main.json' if console?
+			console.log 'conf: ' + 'main.json'
 
 			$.ajax
 				url: 'conf/main.json'
@@ -48,7 +48,7 @@ $ ->
 		theme: ->
 
 			sn = $(this).data 'sn'
-			console.log 'conf: ' + 'themes.json' if console?
+			console.log 'conf: ' + 'themes.json'
 
 			$.ajax
 				url: 'conf/themes.json'
@@ -71,7 +71,7 @@ $ ->
 
 		css: ->
 
-			console.log 'conf: ' + 'css' if console?
+			console.log 'conf: ' + 'css'
 
 			if window.sn.theme.css?
 				$.each window.sn.theme.css, (i) ->
@@ -87,7 +87,7 @@ $ ->
 
 		js: ->
 
-			console.log 'conf: ' + 'js' if console?
+			console.log 'conf: ' + 'js'
 
 			if window.sn.theme.js?
 				$.each window.sn.theme.js, (i) ->
@@ -98,7 +98,7 @@ $ ->
 		settings: ->
 
 			sn = $(this).data 'sn'
-			console.log 'conf: ' + 'settings.json' if console?
+			console.log 'conf: ' + 'settings.json'
 
 			$.ajax
 				url: 'conf/settings.json'
@@ -127,8 +127,8 @@ $ ->
 	# инициализация
 
 	$.fn.snConf = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments
 

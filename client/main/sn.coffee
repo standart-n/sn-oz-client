@@ -4,8 +4,19 @@
 ----------------
 ###
 
+
+
 $ ->
-	methods =
+
+	if !window.console?
+		window.console =
+			info: () ->
+			log: () ->
+			error: () ->
+			warn: () ->
+
+
+	$this =
 		init: (options = {}) ->
 
 			$(this).sn 'setup', options
@@ -46,19 +57,19 @@ $ ->
 
 			# загрузка конфигов
 
-			console.log 'configuration...' if console?
+			console.log 'configuration...'
 			$(this).snConf()
 
 
 			# загрузка оболочки и дизайна
 
-			console.log 'layout...' if console?
+			console.log 'layout...'
 			$(this).snLayout()
 
 
 			# отображение начальной страницы по событию #autoload
 
-			console.log 'autoload...' if console?
+			console.log 'autoload...'
 			$(this).snEvents '#autoload'
 
 
@@ -67,8 +78,8 @@ $ ->
 	# инициализация 
 
 	$.fn.sn = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments
 

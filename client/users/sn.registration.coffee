@@ -1,12 +1,12 @@
 $ ->
 
-	methods =
+	$this =
 		init: (options = {}) ->
 
 		checkRegForm: (options = {}) ->
 
 			_this = this
-			console.log 'registration: ' + 'checkRegForm' if console?
+			console.log 'registration: ' + 'checkRegForm'
 
 			def =
 				error: false
@@ -56,7 +56,7 @@ $ ->
 
 		afterCheckRegForm: (options = {}) ->
 
-			console.log 'registration: ' + 'afterCheckRegForm' if console?
+			console.log 'registration: ' + 'afterCheckRegForm'
 
 			def =
 				error: false
@@ -71,7 +71,7 @@ $ ->
 
 		regOnServer: (options = {}) ->
 
-			console.log 'registration: ' + 'regOnServer' if console?
+			console.log 'registration: ' + 'regOnServer'
 
 			def =
 				debug:				off
@@ -114,23 +114,23 @@ $ ->
 					alert s if def.debug
 					$(_this).data 'sn', sn
 					alert sn.result.alert if sn.result.alert
-					console.log 'afterCheckRegFormOnServer', s if console?
+					console.log 'afterCheckRegFormOnServer', s
 					$(_this).snRegistration 'afterCheckRegFormOnServer', s
 
 				error: (XMLHttpRequest,textStatus,error) ->
-					console.error 'ajax:', textStatus, error if console?
+					console.error 'ajax:', textStatus, error
 
 		afterSuccessReg: (options = {}) ->
 
 			sn = $(this).data 'sn'
-			console.log 'registration: ' + 'afterSuccessReg' if console?
+			console.log 'registration: ' + 'afterSuccessReg'
 
 			alert 'afterSuccessReg'
 
 			
 		afterCheckRegFormOnServer: (options = {}) ->
 
-			console.log 'registration: ' + 'afterCheckRegFormOnServer' if console?
+			console.log 'registration: ' + 'afterCheckRegFormOnServer'
 
 			def =
 				'error': false
@@ -175,9 +175,9 @@ $ ->
 
 
 	$.fn.snRegistration = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments
 
 

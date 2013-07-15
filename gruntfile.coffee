@@ -34,23 +34,18 @@ module.exports = (grunt) ->
 					pretty: on
 				files: 
 					'./layout/izhevsk/bar.html': 					'./jade/layout/izhevsk/bar.jade'
-					'./layout/izhevsk/content.html':				'./jade/layout/izhevsk/content.jade'
 					'./layout/izhevsk/main.html': 					'./jade/layout/izhevsk/main.jade'
 
 					'./layout/kirov/bar.html': 						'./jade/layout/kirov/bar.jade'
-					'./layout/kirov/content.html':					'./jade/layout/kirov/content.jade'
 					'./layout/kirov/main.html': 					'./jade/layout/kirov/main.jade'
 
 					'./layout/stavropol/bar.html': 					'./jade/layout/stavropol/bar.jade'
-					'./layout/stavropol/content.html':				'./jade/layout/stavropol/content.jade'
 					'./layout/stavropol/main.html': 				'./jade/layout/stavropol/main.jade'
 
 					'./layout/volgograd/bar.html': 					'./jade/layout/volgograd/bar.jade'
-					'./layout/volgograd/content.html':				'./jade/layout/volgograd/content.jade'
 					'./layout/volgograd/main.html': 				'./jade/layout/volgograd/main.jade'
 
 					'./layout/yoshkar/bar.html': 					'./jade/layout/yoshkar/bar.jade'
-					'./layout/yoshkar/content.html':				'./jade/layout/yoshkar/content.jade'
 					'./layout/yoshkar/main.html': 					'./jade/layout/yoshkar/main.jade'
 
 		recess:

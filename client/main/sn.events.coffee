@@ -5,7 +5,7 @@
 
 $ ->
 
-	methods =
+	$this =
 		init: (options = {}) ->
 			def =
 				href:'#autoload'
@@ -32,8 +32,8 @@ $ ->
 
 				# выводим в логи
 
-				console.info 'url: ' + href if console?
-				console.info 'levels: ', levels if console?
+				console.info 'url: ' + href
+				console.info 'levels: ', levels
 
 				# роутинг
 
@@ -121,13 +121,13 @@ $ ->
 								$(this).snTriggers 'switchSide', 'link':levels.anchor[1]
 							$('html,body').animate  scrollTop:height, 'slow'
 				catch e
-					console.error 'anchor', e if console?
+					console.error 'anchor', e
 
 	# инициализация
 
 	$.fn.snEvents = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments
 			

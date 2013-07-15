@@ -1,6 +1,6 @@
 $ ->
 
-	methods =
+	$this =
 		init: (options = {}) ->
 
 		switch: (type = '', link = '') ->
@@ -37,7 +37,7 @@ $ ->
 
 		linksSide: () ->
 
-			console.log 'trigger: ' + 'linksSide' if console?
+			console.log 'trigger: ' + 'linksSide'
 
 			_this = this
 			if $('#primary a').length
@@ -52,7 +52,7 @@ $ ->
 
 		linksPrimary: () ->
 
-			console.log 'trigger: ' + 'linksPrimary' if console?
+			console.log 'trigger: ' + 'linksPrimary'
 
 			_this = this
 			if $('#primary a').length
@@ -66,8 +66,8 @@ $ ->
 		linksBar: () ->
 
 			_this = this
-			console.log 'trigger: ' + 'linksBar' if console?
-			if $('#bar a').length
+			console.log 'trigger: ' + 'linksBar'
+			if $('#bar a').length and $('#bar li').length
 				$('#bar a').on 'click', (e) ->
 					#e.preventDefault()
 					if $(this).attr('href') isnt '#' and $(this).data('toggle') isnt 'dropdown' and not $(this).data('noevent')
@@ -80,7 +80,7 @@ $ ->
 		switchBar: (link = 'main') ->
 
 			###
-			console.log 'trigger: ' + 'switchBar' if console?
+			console.log 'trigger: ' + 'switchBar'
 
 			$('.bar-button')
 				.removeClass('bar-button-active')
@@ -97,7 +97,7 @@ $ ->
 		switchSide: (link = 'above') ->
 
 			###
-			console.log 'trigger: ' + 'switchSide' if console?
+			console.log 'trigger: ' + 'switchSide'
 
 			$('.side-box-link')
 				.removeClass('side-box-link-active')
@@ -113,7 +113,7 @@ $ ->
 
 		switcherBar: () ->
 
-			console.log 'trigger: ' + 'switcherBar' if console?
+			console.log 'trigger: ' + 'switcherBar'
 
 			$('.bar-link').on 'mouseover', () ->
 				if !$(this).parent('li').hasClass('active')
@@ -129,7 +129,7 @@ $ ->
 
 		switcherSide: () ->
 
-			console.log 'trigger: ' + 'switcherSide' if console?
+			console.log 'trigger: ' + 'switcherSide'
 
 			$('.side-link').on 'mouseover', () ->
 				if !$(this).parent('li').hasClass('active')
@@ -145,7 +145,7 @@ $ ->
 
 		spoiler: () ->
 
-			console.log 'trigger: ' + 'spoiler' if console?
+			console.log 'trigger: ' + 'spoiler'
 
 
 			$(this).find('.spoiler-caption').on 'click', (e) ->
@@ -175,8 +175,8 @@ $ ->
 
 
 	$.fn.snTriggers = (sn = {}) ->
-		if methods[sn]
-			methods[sn].apply @, Array.prototype.slice.call arguments, 1
+		if $this[sn]
+			$this[sn].apply @, Array.prototype.slice.call arguments, 1
 		else 
-			methods.init.apply @, arguments
+			$this.init.apply @, arguments
 
