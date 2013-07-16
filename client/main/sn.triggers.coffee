@@ -1,52 +1,59 @@
+
+require('jquery')
+require('bootstrap')
+
 $ ->
 
-	$this =
-		init: (options = {}) ->
+	# $this =
+
+	class window.snTriggers
+
+		constructor: (@options = {}) ->
 
 		switch: (type = '', link = '') ->
 			switch type
 				when 'side'
-					$(this).snTriggers 'switchSide', link
+					@switchSide link
 				when 'bar'
-					$(this).snTriggers 'switchBar', link
+					@switchBar link
 
 		plugins: (elem = '#main') ->
 
+			_this = this
 			setTimeout () ->
 				if $(elem + ' .tooltip-toggle').length then $(elem + ' .tooltip-toggle').tooltip()
 				if $.isFunction($.bootstrapIE6) then $.bootstrapIE6(elem)
-				if $(elem + ' .spoiler').length then $(elem).snTriggers 'spoiler'
+				if $(elem + ' .spoiler').length then _this.spoiler(elem)
 			, 1
 	
 
 		hover: (type = '') ->
 			switch type
 				when 'side'
-					$(this).snTriggers 'switcherSide'
+					@switcherSide()
 				when 'bar'
-					$(this).snTriggers 'switcherBar'
+					@switcherBar()
 
 		links: (type = '') ->
 			switch type
 				when 'side'
-					$(this).snTriggers 'linksSide'
+					@linksSide()
 				when 'primary'
-					$(this).snTriggers 'linksPrimary'
+					@linksPrimary()
 				when 'bar'
-					$(this).snTriggers 'linksBar'
+					@linksBar()
 
 		linksSide: () ->
 
 			console.log 'trigger: ' + 'linksSide'
 
-			_this = this
 			if $('#primary a').length
 				$('#side a').on 'click', (e) ->
 					#e.preventDefault()
 					if $(this).attr('href') isnt '#' and not $(this).data('noevent')
 						$('#side li').removeClass('active')
 						$(this).parent('li').addClass('active')
-						$(_this).snEvents $(this).attr('href')
+						window.events.get $(this).attr('href')
 					else
 						e.preventDefault()
 
@@ -54,18 +61,16 @@ $ ->
 
 			console.log 'trigger: ' + 'linksPrimary'
 
-			_this = this
 			if $('#primary a').length
 				$('#primary a').on 'click', (e) ->
 					#e.preventDefault()
 					if $(this).attr('href') isnt '#' and not $(this).data('noevent')
-						$(_this).snEvents $(this).attr('href')
+						window.events.get $(this).attr('href')
 					else
 						e.preventDefault()
 
 		linksBar: () ->
 
-			_this = this
 			console.log 'trigger: ' + 'linksBar'
 			if $('#bar a').length and $('#bar li').length
 				$('#bar a').on 'click', (e) ->
@@ -73,7 +78,7 @@ $ ->
 					if $(this).attr('href') isnt '#' and $(this).data('toggle') isnt 'dropdown' and not $(this).data('noevent')
 						$('#bar li').removeClass('active')
 						$(this).parent('li').addClass('active')
-						$(_this).snEvents $(this).attr('href')
+						window.events.get $(this).attr('href')
 					else
 						e.preventDefault()
 
@@ -143,12 +148,11 @@ $ ->
 						.removeClass('hover')
 						.addClass('normal')
 
-		spoiler: () ->
+		spoiler: (elem = 'body') ->
 
 			console.log 'trigger: ' + 'spoiler'
 
-
-			$(this).find('.spoiler-caption').on 'click', (e) ->
+			$(elem).find('.spoiler-caption').on 'click', (e) ->
 
 				e.preventDefault()
 
@@ -173,10 +177,4 @@ $ ->
 							.addClass('spoiler-open')
 							.show()
 
-
-	$.fn.snTriggers = (sn = {}) ->
-		if $this[sn]
-			$this[sn].apply @, Array.prototype.slice.call arguments, 1
-		else 
-			$this.init.apply @, arguments
 

@@ -1,22 +1,23 @@
 
-###
-Загрузка настроек
------------------
-###
+# Загрузка настроек
+
+require('jquery')
+require('wiki')
 
 $ ->
-	$this =
+	
+	class window.snConf
 
 
 		# автозагрузка
 		
-		init: (options = {}) ->
-			$(this).snConf 'main'
-			$(this).snConf 'theme'
-			$(this).snConf 'css'
-			$(this).snConf 'js'
-			$(this).snConf 'settings'
-			$(this).snConf 'wiki'
+		constructor: (@options = {}) ->
+			@main()
+			@theme()
+			@css()
+			@js()
+			@settings()
+			@wiki()
 
 
 		# загрузка главного конфига, 
@@ -24,31 +25,19 @@ $ ->
 
 		main: ->
 
-			sn = $(this).data 'sn'
-			console.log 'conf: ' + 'main.json'
-
 			$.ajax
 				url: 'conf/main.json'
 				async: off
 				dataType: 'json'
 				success: (s) ->
 					if s?
-						$.extend sn, s
-						sn.conf.main = on
-
-					# заносим эти данные в глобальные переменные, т.к. очень часто используются
-					window.sn.region  = sn.region if sn.region?
-					window.sn.theme  = sn.theme if sn.theme?
-
-					$(this).data 'sn', sn
-
+						console.log 'conf: ' + 'main.json'
+						# заносим эти данные в глобальные переменные, т.к. очень часто используются
+						$.extend window.sn, s if s.region? and s.theme?
 
 		# загрузка информации о нужной теме оформления
 
 		theme: ->
-
-			sn = $(this).data 'sn'
-			console.log 'conf: ' + 'themes.json'
 
 			$.ajax
 				url: 'conf/themes.json'
@@ -56,15 +45,10 @@ $ ->
 				dataType: 'json'
 				success: (s) ->
 					if s?
-						sn.conf.theme = on
-						if s[sn.theme.name]?
-							$.extend sn.theme, s[sn.theme.name]
-							sn.theme.enable = on
-						else
-							sn.theme.enable = off
+						console.log 'conf: ' + 'themes.json'
+						if s[window.sn.theme.name]?
+							$.extend window.sn.theme, s[window.sn.theme.name]
 					
-						$(this).data 'sn', sn
-
 
 		# загрузка css файлов для данной темы оформления, если они прописаны в theme.json
 		# а не загружаются сразу в index.html
@@ -97,8 +81,6 @@ $ ->
 
 		settings: ->
 
-			sn = $(this).data 'sn'
-			console.log 'conf: ' + 'settings.json'
 
 			$.ajax
 				url: 'conf/settings.json'
@@ -106,29 +88,17 @@ $ ->
 				dataType: 'json'
 				success: (s) ->
 					if s?
-						$.extend sn.settings, s
-						sn.settings.enable = on
-						sn.conf.settings = on
+						console.log 'conf: ' + 'settings.json'
+						window.sn.settings = s
 					
-					$(this).data 'sn', sn
-
 		wiki: ->
 
-			sn = $(this).data 'sn'
-			window.sn.wiki =
+			window.wiki = new snWiki
 				images:
-					url: sn.settings.paths.images.url + sn.region.name + '/'
+					url: window.sn.settings.paths.images.url + sn.region.name + '/'
 				files:
-					url: sn.settings.paths.files.url + sn.region.name + '/'
+					url: window.sn.settings.paths.files.url + sn.region.name + '/'
 				gismeteo:
-					url: sn.settings.paths.widgets.gismeteo.url + sn.region.name + '/'
+					url: window.sn.settings.paths.widgets.gismeteo.url + sn.region.name + '/'
 
-
-	# инициализация
-
-	$.fn.snConf = (sn = {}) ->
-		if $this[sn]
-			$this[sn].apply @, Array.prototype.slice.call arguments, 1
-		else 
-			$this.init.apply @, arguments
 

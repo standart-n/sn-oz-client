@@ -1,13 +1,13 @@
 
 module 'Проверка целостности пакета'
 
-test 'наличие файлов-настроек в пакете', () ->
+# test 'наличие файлов-настроек в пакете', () ->
 
-	sn = $('#sn').data 'sn'
+# 	sn = $('#sn').data 'sn'
 
-	ok sn.conf.main?, '/conf/main.json' 
-	ok sn.conf.theme?, '/conf/themes.json' 
-	ok sn.conf.settings?, '/conf/settings.json' 
+# 	ok sn.conf.main?, '/conf/main.json' 
+# 	ok sn.conf.theme?, '/conf/themes.json' 
+# 	ok sn.conf.settings?, '/conf/settings.json' 
 
 
 test 'наличие необходимых библиотек', () ->
@@ -19,9 +19,9 @@ test 'наличие необходимых библиотек', () ->
 
 test 'наличиние необходимых шаблонов и текстов', () ->
 	
-	ok $('#bar').html() isnt '', 'layout/' + sn.region.name + '/bar.html'
-	ok $('#main').html() isnt '', 'layout/' + sn.region.name + '/main.html'
-	ok $('#primary').html() isnt '', 'content/' + sn.region.name + '/main.html'
-	ok $('#side').html() isnt '', 'content/' + sn.region.name + '/side_main.html'
+	ok $('#bar').html() isnt '', 'layout/' + window.sn.region.name + '/bar.html'
+	ok $('#main').html() isnt '', 'layout/' + window.sn.region.name + '/main.html'
+	ok $('#primary').html() isnt '', 'content/' + window.sn.region.name + '/main.html'
+	ok $('#side').html() isnt '', 'content/' + window.sn.region.name + '/side_main.html'
 
 	

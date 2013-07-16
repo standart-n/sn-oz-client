@@ -11,7 +11,8 @@
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jade": "~0.7.0",
-    "grunt-recess": "~0.3.3"
+    "grunt-recess": "~0.3.3",
+    "grunt-lmd": "~0.1.12"
   },
   "scripts": {
     "build": "./node_modules/.bin/grunt",

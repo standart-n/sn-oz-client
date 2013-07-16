@@ -62,8 +62,19 @@ module.exports = (grunt) ->
 
 		coffee:			
 			sn:
-				src: ['client/main/*', 'client/users/*', 'client/widgets/*']
-				dest: 'script/sn.js'
+				options:
+					bare: on
+				#src: ['client/main/*', 'client/users/*', 'client/widgets/*']
+				#dest: 'script/sn.js'
+				files:
+					'script/main/sn.js': 			'client/main/sn.coffee'
+					'script/main/sn.conf.js': 		'client/main/sn.conf.coffee'
+					'script/main/sn.design.js': 	'client/main/sn.design.coffee'
+					'script/main/sn.events.js': 	'client/main/sn.events.coffee'
+					'script/main/sn.layout.js': 	'client/main/sn.layout.coffee'
+					'script/main/sn.models.js': 	'client/main/sn.models.coffee'
+					'script/main/sn.triggers.js': 	'client/main/sn.triggers.coffee'
+					'script/main/sn.wiki.js': 		'client/main/sn.wiki.coffee'
 
 			test:
 				options:
@@ -94,14 +105,19 @@ module.exports = (grunt) ->
 				files: 
 					'script/bootstrap.min.js': '<%= concat.bootstrap.dest %>'
 
+		lmd:
+			build_name: 'sn'
+
+
 
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-contrib-concat'
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-jade'
 	grunt.loadNpmTasks 'grunt-recess'
+	grunt.loadNpmTasks 'grunt-lmd'
 	
-	grunt.registerTask 'default', ['recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout']
+	grunt.registerTask 'default', ['recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout', 'lmd']
 	grunt.registerTask 'all', ['default', 'bootstrap']
 	grunt.registerTask 'test', ['jade:test', 'coffee:test']
 	grunt.registerTask 'bootstrap', ['concat:bootstrap']

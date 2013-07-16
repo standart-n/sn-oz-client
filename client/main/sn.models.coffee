@@ -1,16 +1,18 @@
 
-###
-Загрузка моделей
-----------------
-###
+# Загрузка моделей
+
+require('jquery')
+require('ejs')
 
 $ ->
 
-	$this =
+	class window.snModels
+
+		constructor: (@options = {}) ->
 
 		# по-умолчанию, загруказ в #main
 
-		init: (elem = '#main', options = {}) ->
+		get: (elem = '#main', options = {}) ->
 
 			console.log 'models into ' + elem
 
@@ -20,26 +22,24 @@ $ ->
 
 			def.elem = elem
 
-			$(this).snModels 'append', def
+			@append def
 
 
 
 		append: (def = {}) ->
 
-			_this = this
-
 		# если нужно зарузить файл
 
 			if def.file?
-				$(this).snModels 'load', def.file, (s) ->
+				@load def.file, (s) =>
 					def.text = s
-					$(_this).snModels 'inner', def
+					@inner def
 
 			# если в параметре передается текст
 
 			else
 				if def.text?
-					$(_this).snModels 'inner', def
+					@inner def
 
 
 				# если в параметре передается путь к представлению
@@ -49,7 +49,7 @@ $ ->
 					if def.view?
 						if window.EJS?
 							def.text = new EJS(url: 'view/' + def.view, ext: '.html').render(window.sn)
-							$(_this).snModels 'inner', def
+							@inner def
 
 					# если в параметре передается путь к шаблону
 					# загружаем спомощью EJS
@@ -58,7 +58,7 @@ $ ->
 						if def.layout?
 							if window.EJS?
 								def.text = new EJS(url: 'layout/' + window.sn.region.name + '/' + def.layout , ext: '.html').render(window.sn)
-								$(_this).snModels 'inner', def
+								@inner def
 
 		# вставка текста
 
@@ -80,8 +80,8 @@ $ ->
 				
 				# обрабатываем вики-разметку
 
-				if def.wiki is on and window.sn.wiki?
-					def.text = $(this).snWiki(def.text) 
+				if def.wiki is on and window.wiki?
+					def.text = window.wiki.render(def.text)
 		
 				# вставляем текст в нужный блок
 
@@ -119,10 +119,3 @@ $ ->
 							console.log 'success'
 							callback(text) if callback
 
-	# инициализация
-
-	$.fn.snModels = (sn = {}) ->
-		if $this[sn]
-			$this[sn].apply @, Array.prototype.slice.call arguments, 1
-		else 
-			$this.init.apply @, arguments

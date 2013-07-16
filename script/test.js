@@ -23,26 +23,15 @@ test('запись cookies после перехода по страницам',
 module('Проверка глобальные переменных');
 
 test('наличие window.sn', function() {
-  var _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+  var _ref, _ref1, _ref2, _ref3;
   ok(window.sn != null, 'window.sn');
   ok((((_ref = window.sn.region) != null ? _ref.name : void 0) != null) && window.sn.region.name !== 'unknow', 'window.sn.region.name');
   ok((((_ref1 = window.sn.region) != null ? _ref1.caption : void 0) != null) && window.sn.region.caption !== 'unknow', 'window.sn.region.caption');
   ok((((_ref2 = window.sn.theme) != null ? _ref2.name : void 0) != null) && window.sn.theme.name !== 'unknow', 'window.sn.theme.name');
-  ok((((_ref3 = window.sn.theme) != null ? _ref3.caption : void 0) != null) && window.sn.theme.caption !== 'unknow', 'window.sn.theme.caption');
-  ok(((_ref4 = window.sn.wiki) != null ? (_ref5 = _ref4.images) != null ? _ref5.url : void 0 : void 0) != null, 'window.sn.wiki.images');
-  ok(((_ref6 = window.sn.wiki) != null ? (_ref7 = _ref6.files) != null ? _ref7.url : void 0 : void 0) != null, 'window.sn.wiki.files');
-  return ok(((_ref8 = window.sn.wiki) != null ? (_ref9 = _ref8.gismeteo) != null ? _ref9.url : void 0 : void 0) != null, 'window.sn.wiki.gismeteo');
+  return ok((((_ref3 = window.sn.theme) != null ? _ref3.caption : void 0) != null) && window.sn.theme.caption !== 'unknow', 'window.sn.theme.caption');
 });
 
 module('Проверка целостности пакета');
-
-test('наличие файлов-настроек в пакете', function() {
-  var sn;
-  sn = $('#sn').data('sn');
-  ok(sn.conf.main != null, '/conf/main.json');
-  ok(sn.conf.theme != null, '/conf/themes.json');
-  return ok(sn.conf.settings != null, '/conf/settings.json');
-});
 
 test('наличие необходимых библиотек', function() {
   ok(window.jQuery != null, 'jQuery');
@@ -52,8 +41,8 @@ test('наличие необходимых библиотек', function() {
 });
 
 test('наличиние необходимых шаблонов и текстов', function() {
-  ok($('#bar').html() !== '', 'layout/' + sn.region.name + '/bar.html');
-  ok($('#main').html() !== '', 'layout/' + sn.region.name + '/main.html');
-  ok($('#primary').html() !== '', 'content/' + sn.region.name + '/main.html');
-  return ok($('#side').html() !== '', 'content/' + sn.region.name + '/side_main.html');
+  ok($('#bar').html() !== '', 'layout/' + window.sn.region.name + '/bar.html');
+  ok($('#main').html() !== '', 'layout/' + window.sn.region.name + '/main.html');
+  ok($('#primary').html() !== '', 'content/' + window.sn.region.name + '/main.html');
+  return ok($('#side').html() !== '', 'content/' + window.sn.region.name + '/side_main.html');
 });
