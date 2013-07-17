@@ -2,6 +2,7 @@
 # Роутинг приложения
 
 require('jquery')
+require('cookie')
 
 $ ->
 
@@ -21,17 +22,12 @@ $ ->
 				$.extend true, def, options
 				href = def.href
 			
-			if href isnt '#' and href.match(/#([a-zA-Z0-9\_\-]+)/)
+
+			if href isnt '#' and href.match(/#[a-zA-Z0-9\_\-]+/)
 
 				# парсинг адресной строки
 				
-				levels =
-					one: href.match /#([a-zA-Z0-9\_\-]+)/, '$2'
-					two: href.match /#[a-zA-Z0-9\_\-]+\/([a-zA-Z0-9\_\-]+)/, '$3'
-					three: href.match /#[a-zA-Z0-9\_\-]+\/[a-zA-Z0-9\_\-]+\/([a-zA-Z0-9\_\-]+)/, '$4'
-					anchor: href.match /\:([a-zA-Z0-9\_\-]+)/
-
-
+				levels = href.match /[a-zA-Z0-9\_\-]+/g
 
 				# выводим в логи
 
@@ -40,8 +36,8 @@ $ ->
 
 				# роутинг
 
-				if levels.one? and levels.one[1] isnt 'spoiler'
-					switch levels.one[1]
+				if levels[0]? and levels[0] isnt 'spoiler'
+					switch levels[0]
 
 						# при начальной загрузке приложения
 
@@ -65,7 +61,7 @@ $ ->
 							
 							# в других случаях
 
-							if levels.two? and levels.three?
+							if levels[1]? and levels[2]?
 
 								# сохраняем в cookies последнюю ссылку, по которой был сделан переход, чтобы
 								# проверить работают ли cookie при переходах между страницами
@@ -75,24 +71,24 @@ $ ->
 
 								# поднимаем экран в самый вверх
 
-								$('html,body').animate scrollTop:0, 0
+								$('html,body').animate scrollTop: 0, 0
 								
 								# если нужно загрузить простую текстовую страницу
 
-								if levels.two[1] is 'text' and levels.one[1] isnt window.sn.part
+								if levels[1] is 'text' and levels[0] isnt window.sn.part
 
 
 										# загрузка html
 
-										window.models.get '#side', file: 'side_' + levels.one[1] + '.html'
-										window.models.get '#primary', file: levels.three[1] + '.html'
+										window.models.get '#side', file: 'side_' + levels[0] + '.html'
+										window.models.get '#primary', file: levels[2] + '.html'
 
 										# включение триггеров
 
 										window.triggers.links 'side'
 										window.triggers.links 'primary'
-										window.triggers.switch 'bar', levels.one[1]
-										window.triggers.switch 'side', levels.three[1]
+										window.triggers.switch 'bar', levels[0]
+										window.triggers.switch 'side', levels[2]
 										window.triggers.hover 'side'
 										window.triggers.plugins '#primary'
 										window.triggers.plugins '#side'
@@ -100,12 +96,12 @@ $ ->
 									# если нужно отобразить какой то модуль
 
 									else
-										window.models.get '#primary', file: levels.three[1] + '.html'
+										window.models.get '#primary', file: levels[2] + '.html'
 										window.triggers.links 'primary'
-										window.triggers.switch 'side', levels.three[1]
+										window.triggers.switch 'side', levels[2]
 										window.triggers.plugins '#primary'
 
-								window.sn.part = levels.one[1]
+								window.sn.part = levels[0]
 					
 					# @anchor levels # проверяем вызывались ли якоря
 
