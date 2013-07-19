@@ -67,14 +67,14 @@ module.exports = (grunt) ->
 				#src: ['client/main/*', 'client/users/*', 'client/widgets/*']
 				#dest: 'script/sn.js'
 				files:
-					'script/main/sn.js': 			'client/main/sn.coffee'
-					'script/main/sn.conf.js': 		'client/main/sn.conf.coffee'
-					'script/main/sn.design.js': 	'client/main/sn.design.coffee'
-					'script/main/sn.events.js': 	'client/main/sn.events.coffee'
-					'script/main/sn.layout.js': 	'client/main/sn.layout.coffee'
-					'script/main/sn.models.js': 	'client/main/sn.models.coffee'
-					'script/main/sn.triggers.js': 	'client/main/sn.triggers.coffee'
-					'script/main/sn.wiki.js': 		'client/main/sn.wiki.coffee'
+					'script/main/sn.js': 			'app/main/sn.coffee'
+					'script/main/sn.conf.js': 		'app/main/sn.conf.coffee'
+					'script/main/sn.design.js': 	'app/main/sn.design.coffee'
+					'script/main/sn.events.js': 	'app/main/sn.events.coffee'
+					'script/main/sn.layout.js': 	'app/main/sn.layout.coffee'
+					'script/main/sn.models.js': 	'app/main/sn.models.coffee'
+					'script/main/sn.triggers.js': 	'app/main/sn.triggers.coffee'
+					'script/main/sn.wiki.js': 		'app/main/sn.wiki.coffee'
 
 			test:
 				options:

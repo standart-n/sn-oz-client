@@ -21,6 +21,7 @@ module.exports = snEvents = (function() {
       $.extend(true, def, options);
       href = def.href;
     }
+    href = href.replace(/.*(?=#[^\s]+$)/, '');
     if (href !== '#' && href.match(/#[a-zA-Z0-9\_\-]+/)) {
       levels = href.match(/[a-zA-Z0-9\_\-]+/g);
       console.info('url: ' + href);
