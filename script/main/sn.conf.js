@@ -1,8 +1,8 @@
-var snConf;
+var snConf, snWiki;
 
 require('jquery');
 
-require('wiki');
+snWiki = require('wiki');
 
 module.exports = snConf = (function() {
   function snConf(options) {

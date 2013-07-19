@@ -2904,11 +2904,11 @@ $(function() {
 
 }),
 "conf": (function (require, exports, module) { /* wrapped by builder */
-var snConf;
+var snConf, snWiki;
 
 require('jquery');
 
-require('wiki');
+snWiki = require('wiki');
 
 module.exports = snConf = (function() {
   function snConf(options) {
@@ -3466,7 +3466,9 @@ module.exports = snTriggers = (function() {
 
 }),
 "wiki": (function (require, exports, module) { /* wrapped by builder */
-window.snWiki = (function() {
+var snWiki;
+
+module.exports = snWiki = (function() {
   function snWiki(options) {
     this.options = options;
     if (this.options == null) {

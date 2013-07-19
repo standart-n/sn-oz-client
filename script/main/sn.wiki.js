@@ -1,4 +1,6 @@
-window.snWiki = (function() {
+var snWiki;
+
+module.exports = snWiki = (function() {
   function snWiki(options) {
     this.options = options;
     if (this.options == null) {
