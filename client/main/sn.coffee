@@ -4,12 +4,13 @@
 require('jquery')
 require('cookie')
 require('bootstrap')
-require('conf')
-require('design')
-require('models')
-require('layout')
-require('triggers')
-require('events')
+
+snConf = 		require('conf')
+snDesign = 		require('design')
+snModels = 		require('models')
+snLayout = 		require('layout')
+snTriggers = 	require('triggers')
+snEvents = 		require('events')
 
 $ () ->
 
@@ -20,7 +21,7 @@ $ () ->
 			error: () ->
 			warn: () ->
 
-	class window.snApp
+	class snApp
 
 		constructor: (@options = {}) ->
 

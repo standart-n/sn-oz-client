@@ -4,118 +4,116 @@
 require('jquery')
 require('ejs')
 
-$ ->
+module.exports = class snModels
 
-	class window.snModels
+	constructor: (@options = {}) ->
 
-		constructor: (@options = {}) ->
+	# по-умолчанию, загруказ в #main
 
-		# по-умолчанию, загруказ в #main
+	get: (elem = '#main', options = {}) ->
 
-		get: (elem = '#main', options = {}) ->
+		console.log 'models into ' + elem
 
-			console.log 'models into ' + elem
+		def =
+			wiki:		on
+		$.extend def, options
 
-			def =
-				wiki:		on
-			$.extend def, options
+		def.elem = elem
 
-			def.elem = elem
-
-			@append def
+		@append def
 
 
 
-		append: (def = {}) ->
+	append: (def = {}) ->
 
-		# если нужно зарузить файл
+	# если нужно зарузить файл
 
-			if def.file?
-				@load def.file, (s) =>
-					def.text = s
-					@inner def
+		if def.file?
+			@load def.file, (s) =>
+				def.text = s
+				@inner def
 
-			# если в параметре передается текст
+		# если в параметре передается текст
+
+		else
+			if def.text?
+				@inner def
+
+
+			# если в параметре передается путь к представлению
+			# загружаем спомощью EJS
 
 			else
-				if def.text?
-					@inner def
+				if def.view?
+					if window.EJS?
+						def.text = new EJS(url: 'view/' + def.view, ext: '.html').render(window.sn)
+						@inner def
 
-
-				# если в параметре передается путь к представлению
+				# если в параметре передается путь к шаблону
 				# загружаем спомощью EJS
 
 				else
-					if def.view?
+					if def.layout?
 						if window.EJS?
-							def.text = new EJS(url: 'view/' + def.view, ext: '.html').render(window.sn)
+							def.text = new EJS(url: 'layout/' + window.sn.region.name + '/' + def.layout , ext: '.html').render(window.sn)
 							@inner def
 
-					# если в параметре передается путь к шаблону
-					# загружаем спомощью EJS
+	# вставка текста
 
-					else
-						if def.layout?
-							if window.EJS?
-								def.text = new EJS(url: 'layout/' + window.sn.region.name + '/' + def.layout , ext: '.html').render(window.sn)
-								@inner def
+	inner: (options = {}) ->
 
-		# вставка текста
+		# параметры по умолчанию
 
-		inner: (options = {}) ->
+		def =
+			elem:		'#main'
+			wiki:		on
+			position: 	'place'
+		$.extend def, options
 
-			# параметры по умолчанию
+		if def.text?
 
-			def =
-				elem:		'#main'
-				wiki:		on
-				position: 	'place'
-			$.extend def, options
+			# вывод в логи
 
-			if def.text?
+			console.log 'innerText'
+			
+			# обрабатываем вики-разметку
 
-				# вывод в логи
+			if def.wiki is on and window.wiki?
+				def.text = window.wiki.render(def.text)
+	
+			# вставляем текст в нужный блок
 
-				console.log 'innerText'
-				
-				# обрабатываем вики-разметку
+			switch def.position
+				when 'place'
+					$(def.elem).html def.text
+				when 'after'
+					$(def.elem).html $(def.elem).html() + def.text
+				when 'before'
+					$(def.elem).html def.text + $(def.elem).html()
 
-				if def.wiki is on and window.wiki?
-					def.text = window.wiki.render(def.text)
-		
-				# вставляем текст в нужный блок
+	# скрипт для загрузки текста из файла
 
-				switch def.position
-					when 'place'
-						$(def.elem).html def.text
-					when 'after'
-						$(def.elem).html $(def.elem).html() + def.text
-					when 'before'
-						$(def.elem).html def.text + $(def.elem).html()
+	load: (file, callback) ->
 
-		# скрипт для загрузки текста из файла
+		# параметры по-умолчанию
 
-		load: (file, callback) ->
+		if file?
 
-			# параметры по-умолчанию
+			url = 'content/' + window.sn.region.name + '/' + file
 
-			if file?
+			# запись в логи
+			
+			console.log 'file: ' + file
 
-				url = 'content/' + window.sn.region.name + '/' + file
+			# берем текст спомощью ajax
 
-				# запись в логи
-				
-				console.log 'file: ' + file
-
-				# берем текст спомощью ajax
-
-				$.ajax
-					url: url
-					async: off
-					cache: off
-					dataType: 'html'
-					success: (text) ->
-						if text?
-							console.log 'success'
-							callback(text) if callback
+			$.ajax
+				url: url
+				async: off
+				cache: off
+				dataType: 'html'
+				success: (text) ->
+					if text?
+						console.log 'success'
+						callback(text) if callback
 

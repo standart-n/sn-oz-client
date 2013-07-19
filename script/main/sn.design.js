@@ -1,12 +1,10 @@
-require('jquery');
+var snDesign;
 
-$(function() {
-  return window.snDesign = (function() {
-    function snDesign() {
-      console.log('design');
-    }
+module.exports = snDesign = (function() {
+  function snDesign() {
+    console.log('design');
+  }
 
-    return snDesign;
+  return snDesign;
 
-  })();
-});
+})();

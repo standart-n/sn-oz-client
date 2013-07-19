@@ -1,23 +1,19 @@
 
 # Шаблон
 
-require('jquery')
+module.exports = class snLayout
 
-$ ->
+	constructor: (@options = {}) ->
 
-	class window.snLayout
+		# загрузка верхей панели, она фиксированная, поэтому ее див должен идти
+		# непосредственно после body
 
-		constructor: (@options = {}) ->
-
-			# загрузка верхей панели, она фиксированная, поэтому ее див должен идти
-			# непосредственно после body
-
-			window.models.get '#bar', layout: 'bar.html', wiki: off
+		window.models.get '#bar', layout: 'bar.html', wiki: off
 
 
-			# загрузка остального шаблона, который изначально хранится в jade формате и 
-			# генерируется в html спомощью make'файла
+		# загрузка остального шаблона, который изначально хранится в jade формате и 
+		# генерируется в html спомощью make'файла
 
-			window.models.get '#main', layout: 'main.html', wiki: off
+		window.models.get '#main', layout: 'main.html', wiki: off
 
 

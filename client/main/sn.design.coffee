@@ -1,13 +1,8 @@
 
 # Дизайн
 
-require('jquery')
+module.exports = class snDesign
 
-$ ->
-
-
-	class window.snDesign
-
-		constructor: () ->
-			# nothing
-			console.log 'design'
+	constructor: () ->
+		# nothing
+		console.log 'design'

@@ -248,23 +248,25 @@ sb.on('*:request-indexof', function (arrayIndexOf) {
     main(lmd_trigger('lmd-register:decorate-require', 'main', lmd_require)[1], output.exports, output);
 })/*DO NOT ADD ; !*/
 (this,(function (require, exports, module) { /* wrapped by builder */
+var snConf, snDesign, snEvents, snLayout, snModels, snTriggers;
+
 require('jquery');
 
 require('cookie');
 
 require('bootstrap');
 
-require('conf');
+snConf = require('conf');
 
-require('design');
+snDesign = require('design');
 
-require('models');
+snModels = require('models');
 
-require('layout');
+snLayout = require('layout');
 
-require('triggers');
+snTriggers = require('triggers');
 
-require('events');
+snEvents = require('events');
 
 $(function() {
   if (window.console == null) {
@@ -2900,571 +2902,564 @@ $(function() {
 
 }),
 "conf": (function (require, exports, module) { /* wrapped by builder */
+var snConf;
+
 require('jquery');
 
 require('wiki');
 
-$(function() {
-  return window.snConf = (function() {
-    function snConf(options) {
-      this.options = options != null ? options : {};
-      this.main();
-      this.theme();
-      this.css();
-      this.js();
-      this.settings();
-      this.wiki();
+module.exports = snConf = (function() {
+  function snConf(options) {
+    this.options = options != null ? options : {};
+    this.main();
+    this.theme();
+    this.css();
+    this.js();
+    this.settings();
+    this.wiki();
+  }
+
+  snConf.prototype.main = function() {
+    return $.ajax({
+      url: 'conf/main.json',
+      async: false,
+      dataType: 'json',
+      success: function(s) {
+        if (s != null) {
+          console.log('conf: ' + 'main.json');
+          if ((s.region != null) && (s.theme != null)) {
+            return $.extend(window.sn, s);
+          }
+        }
+      }
+    });
+  };
+
+  snConf.prototype.theme = function() {
+    return $.ajax({
+      url: 'conf/themes.json',
+      async: false,
+      dataType: 'json',
+      success: function(s) {
+        if (s != null) {
+          console.log('conf: ' + 'themes.json');
+          if (s[window.sn.theme.name] != null) {
+            return $.extend(window.sn.theme, s[window.sn.theme.name]);
+          }
+        }
+      }
+    });
+  };
+
+  snConf.prototype.css = function() {
+    console.log('conf: ' + 'css');
+    if (window.sn.theme.css != null) {
+      return $.each(window.sn.theme.css, function(i) {
+        var head, link;
+        head = document.getElementsByTagName('head')[0];
+        link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = this;
+        return head.appendChild(link);
+      });
     }
+  };
 
-    snConf.prototype.main = function() {
-      return $.ajax({
-        url: 'conf/main.json',
-        async: false,
-        dataType: 'json',
-        success: function(s) {
-          if (s != null) {
-            console.log('conf: ' + 'main.json');
-            if ((s.region != null) && (s.theme != null)) {
-              return $.extend(window.sn, s);
-            }
-          }
-        }
+  snConf.prototype.js = function() {
+    console.log('conf: ' + 'js');
+    if (window.sn.theme.js != null) {
+      return $.each(window.sn.theme.js, function(i) {
+        return $.getScript(this);
       });
-    };
+    }
+  };
 
-    snConf.prototype.theme = function() {
-      return $.ajax({
-        url: 'conf/themes.json',
-        async: false,
-        dataType: 'json',
-        success: function(s) {
-          if (s != null) {
-            console.log('conf: ' + 'themes.json');
-            if (s[window.sn.theme.name] != null) {
-              return $.extend(window.sn.theme, s[window.sn.theme.name]);
-            }
-          }
+  snConf.prototype.settings = function() {
+    return $.ajax({
+      url: 'conf/settings.json',
+      async: false,
+      dataType: 'json',
+      success: function(s) {
+        if (s != null) {
+          console.log('conf: ' + 'settings.json');
+          return window.sn.settings = s;
         }
-      });
-    };
-
-    snConf.prototype.css = function() {
-      console.log('conf: ' + 'css');
-      if (window.sn.theme.css != null) {
-        return $.each(window.sn.theme.css, function(i) {
-          var head, link;
-          head = document.getElementsByTagName('head')[0];
-          link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.type = 'text/css';
-          link.href = this;
-          return head.appendChild(link);
-        });
       }
-    };
+    });
+  };
 
-    snConf.prototype.js = function() {
-      console.log('conf: ' + 'js');
-      if (window.sn.theme.js != null) {
-        return $.each(window.sn.theme.js, function(i) {
-          return $.getScript(this);
-        });
+  snConf.prototype.wiki = function() {
+    return window.wiki = new snWiki({
+      images: {
+        url: window.sn.settings.paths.images.url + sn.region.name + '/'
+      },
+      files: {
+        url: window.sn.settings.paths.files.url + sn.region.name + '/'
+      },
+      gismeteo: {
+        url: window.sn.settings.paths.widgets.gismeteo.url + sn.region.name + '/'
       }
-    };
+    });
+  };
 
-    snConf.prototype.settings = function() {
-      return $.ajax({
-        url: 'conf/settings.json',
-        async: false,
-        dataType: 'json',
-        success: function(s) {
-          if (s != null) {
-            console.log('conf: ' + 'settings.json');
-            return window.sn.settings = s;
-          }
-        }
-      });
-    };
+  return snConf;
 
-    snConf.prototype.wiki = function() {
-      return window.wiki = new snWiki({
-        images: {
-          url: window.sn.settings.paths.images.url + sn.region.name + '/'
-        },
-        files: {
-          url: window.sn.settings.paths.files.url + sn.region.name + '/'
-        },
-        gismeteo: {
-          url: window.sn.settings.paths.widgets.gismeteo.url + sn.region.name + '/'
-        }
-      });
-    };
-
-    return snConf;
-
-  })();
-});
+})();
 
 }),
 "design": (function (require, exports, module) { /* wrapped by builder */
-require('jquery');
+var snDesign;
 
-$(function() {
-  return window.snDesign = (function() {
-    function snDesign() {
-      console.log('design');
-    }
+module.exports = snDesign = (function() {
+  function snDesign() {
+    console.log('design');
+  }
 
-    return snDesign;
+  return snDesign;
 
-  })();
-});
+})();
 
 }),
 "events": (function (require, exports, module) { /* wrapped by builder */
+var snEvents;
+
 require('jquery');
 
-$(function() {
-  return window.snEvents = (function() {
-    function snEvents() {}
+require('cookie');
 
-    snEvents.prototype.get = function(options) {
-      var def, href, levels;
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        href: '#autoload'
-      };
-      if (typeof options !== 'object') {
-        href = options;
-      } else {
-        $.extend(true, def, options);
-        href = def.href;
-      }
-      if (href !== '#' && href.match(/#([a-zA-Z0-9\_\-]+)/)) {
-        levels = {
-          one: href.match(/#([a-zA-Z0-9\_\-]+)/, '$2'),
-          two: href.match(/#[a-zA-Z0-9\_\-]+\/([a-zA-Z0-9\_\-]+)/, '$3'),
-          three: href.match(/#[a-zA-Z0-9\_\-]+\/[a-zA-Z0-9\_\-]+\/([a-zA-Z0-9\_\-]+)/, '$4'),
-          anchor: href.match(/\:([a-zA-Z0-9\_\-]+)/)
-        };
-        console.info('url: ' + href);
-        console.info('levels: ', levels);
-        if ((levels.one != null) && levels.one[1] !== 'spoiler') {
-          switch (levels.one[1]) {
-            case 'autoload':
-              window.models.get('#primary', {
-                file: 'main.html'
+module.exports = snEvents = (function() {
+  function snEvents() {}
+
+  snEvents.prototype.get = function(options) {
+    var def, href, levels;
+    if (options == null) {
+      options = {};
+    }
+    def = {
+      href: '#autoload'
+    };
+    if (typeof options !== 'object') {
+      href = options;
+    } else {
+      $.extend(true, def, options);
+      href = def.href;
+    }
+    if (href !== '#' && href.match(/#[a-zA-Z0-9\_\-]+/)) {
+      levels = href.match(/[a-zA-Z0-9\_\-]+/g);
+      console.info('url: ' + href);
+      console.info('levels: ', levels);
+      if ((levels[0] != null) && levels[0] !== 'spoiler') {
+        switch (levels[0]) {
+          case 'autoload':
+            window.models.get('#primary', {
+              file: 'main.html'
+            });
+            window.models.get('#side', {
+              file: 'side_main.html'
+            });
+            window.triggers["switch"]('side', 'main');
+            window.triggers.links('bar');
+            window.triggers.links('side');
+            window.triggers.links('primary');
+            window.triggers.hover('bar');
+            window.triggers.hover('side');
+            window.triggers.plugins('#primary');
+            window.triggers.plugins('#side');
+            return window.sn.part = 'main';
+          default:
+            if ((levels[1] != null) && (levels[2] != null)) {
+              $.cookie('last_href', href, {
+                expires: 7
               });
-              window.models.get('#side', {
-                file: 'side_main.html'
-              });
-              window.triggers["switch"]('side', 'main');
-              window.triggers.links('bar');
-              window.triggers.links('side');
-              window.triggers.links('primary');
-              window.triggers.hover('bar');
-              window.triggers.hover('side');
-              window.triggers.plugins('#primary');
-              window.triggers.plugins('#side');
-              return window.sn.part = 'main';
-            default:
-              if ((levels.two != null) && (levels.three != null)) {
-                $.cookie('last_href', href, {
-                  expires: 7
+              $('html,body').animate({
+                scrollTop: 0
+              }, 0);
+              if (levels[1] === 'text' && levels[0] !== window.sn.part) {
+                window.models.get('#side', {
+                  file: 'side_' + levels[0] + '.html'
                 });
-                $('html,body').animate({
-                  scrollTop: 0
-                }, 0);
-                if (levels.two[1] === 'text' && levels.one[1] !== window.sn.part) {
-                  window.models.get('#side', {
-                    file: 'side_' + levels.one[1] + '.html'
-                  });
-                  window.models.get('#primary', {
-                    file: levels.three[1] + '.html'
-                  });
-                  window.triggers.links('side');
-                  window.triggers.links('primary');
-                  window.triggers["switch"]('bar', levels.one[1]);
-                  window.triggers["switch"]('side', levels.three[1]);
-                  window.triggers.hover('side');
-                  window.triggers.plugins('#primary');
-                  window.triggers.plugins('#side');
-                } else {
-                  window.models.get('#primary', {
-                    file: levels.three[1] + '.html'
-                  });
-                  window.triggers.links('primary');
-                  window.triggers["switch"]('side', levels.three[1]);
-                  window.triggers.plugins('#primary');
-                }
-                return window.sn.part = levels.one[1];
+                window.models.get('#primary', {
+                  file: levels[2] + '.html'
+                });
+                window.triggers.links('side');
+                window.triggers.links('primary');
+                window.triggers["switch"]('bar', levels[0]);
+                window.triggers["switch"]('side', levels[2]);
+                window.triggers.hover('side');
+                window.triggers.plugins('#primary');
+                window.triggers.plugins('#side');
+              } else {
+                window.models.get('#primary', {
+                  file: levels[2] + '.html'
+                });
+                window.triggers.links('primary');
+                window.triggers["switch"]('side', levels[2]);
+                window.triggers.plugins('#primary');
               }
-          }
+              return window.sn.part = levels[0];
+            }
         }
       }
-    };
+    }
+  };
 
-    return snEvents;
+  return snEvents;
 
-  })();
-});
+})();
 
 }),
 "layout": (function (require, exports, module) { /* wrapped by builder */
-require('jquery');
+var snLayout;
 
-$(function() {
-  return window.snLayout = (function() {
-    function snLayout(options) {
-      this.options = options != null ? options : {};
-      window.models.get('#bar', {
-        layout: 'bar.html',
-        wiki: false
-      });
-      window.models.get('#main', {
-        layout: 'main.html',
-        wiki: false
-      });
-    }
+module.exports = snLayout = (function() {
+  function snLayout(options) {
+    this.options = options != null ? options : {};
+    window.models.get('#bar', {
+      layout: 'bar.html',
+      wiki: false
+    });
+    window.models.get('#main', {
+      layout: 'main.html',
+      wiki: false
+    });
+  }
 
-    return snLayout;
+  return snLayout;
 
-  })();
-});
+})();
 
 }),
 "models": (function (require, exports, module) { /* wrapped by builder */
+var snModels;
+
 require('jquery');
 
 require('ejs');
 
-$(function() {
-  return window.snModels = (function() {
-    function snModels(options) {
-      this.options = options != null ? options : {};
+module.exports = snModels = (function() {
+  function snModels(options) {
+    this.options = options != null ? options : {};
+  }
+
+  snModels.prototype.get = function(elem, options) {
+    var def;
+    if (elem == null) {
+      elem = '#main';
     }
-
-    snModels.prototype.get = function(elem, options) {
-      var def;
-      if (elem == null) {
-        elem = '#main';
-      }
-      if (options == null) {
-        options = {};
-      }
-      console.log('models into ' + elem);
-      def = {
-        wiki: true
-      };
-      $.extend(def, options);
-      def.elem = elem;
-      return this.append(def);
+    if (options == null) {
+      options = {};
+    }
+    console.log('models into ' + elem);
+    def = {
+      wiki: true
     };
+    $.extend(def, options);
+    def.elem = elem;
+    return this.append(def);
+  };
 
-    snModels.prototype.append = function(def) {
-      var _this = this;
-      if (def == null) {
-        def = {};
-      }
-      if (def.file != null) {
-        return this.load(def.file, function(s) {
-          def.text = s;
-          return _this.inner(def);
-        });
+  snModels.prototype.append = function(def) {
+    var _this = this;
+    if (def == null) {
+      def = {};
+    }
+    if (def.file != null) {
+      return this.load(def.file, function(s) {
+        def.text = s;
+        return _this.inner(def);
+      });
+    } else {
+      if (def.text != null) {
+        return this.inner(def);
       } else {
-        if (def.text != null) {
-          return this.inner(def);
+        if (def.view != null) {
+          if (window.EJS != null) {
+            def.text = new EJS({
+              url: 'view/' + def.view,
+              ext: '.html'
+            }).render(window.sn);
+            return this.inner(def);
+          }
         } else {
-          if (def.view != null) {
+          if (def.layout != null) {
             if (window.EJS != null) {
               def.text = new EJS({
-                url: 'view/' + def.view,
+                url: 'layout/' + window.sn.region.name + '/' + def.layout,
                 ext: '.html'
               }).render(window.sn);
               return this.inner(def);
             }
-          } else {
-            if (def.layout != null) {
-              if (window.EJS != null) {
-                def.text = new EJS({
-                  url: 'layout/' + window.sn.region.name + '/' + def.layout,
-                  ext: '.html'
-                }).render(window.sn);
-                return this.inner(def);
-              }
-            }
           }
         }
       }
-    };
+    }
+  };
 
-    snModels.prototype.inner = function(options) {
-      var def;
-      if (options == null) {
-        options = {};
-      }
-      def = {
-        elem: '#main',
-        wiki: true,
-        position: 'place'
-      };
-      $.extend(def, options);
-      if (def.text != null) {
-        console.log('innerText');
-        if (def.wiki === true && (window.wiki != null)) {
-          def.text = window.wiki.render(def.text);
-        }
-        switch (def.position) {
-          case 'place':
-            return $(def.elem).html(def.text);
-          case 'after':
-            return $(def.elem).html($(def.elem).html() + def.text);
-          case 'before':
-            return $(def.elem).html(def.text + $(def.elem).html());
-        }
-      }
+  snModels.prototype.inner = function(options) {
+    var def;
+    if (options == null) {
+      options = {};
+    }
+    def = {
+      elem: '#main',
+      wiki: true,
+      position: 'place'
     };
+    $.extend(def, options);
+    if (def.text != null) {
+      console.log('innerText');
+      if (def.wiki === true && (window.wiki != null)) {
+        def.text = window.wiki.render(def.text);
+      }
+      switch (def.position) {
+        case 'place':
+          return $(def.elem).html(def.text);
+        case 'after':
+          return $(def.elem).html($(def.elem).html() + def.text);
+        case 'before':
+          return $(def.elem).html(def.text + $(def.elem).html());
+      }
+    }
+  };
 
-    snModels.prototype.load = function(file, callback) {
-      var url;
-      if (file != null) {
-        url = 'content/' + window.sn.region.name + '/' + file;
-        console.log('file: ' + file);
-        return $.ajax({
-          url: url,
-          async: false,
-          cache: false,
-          dataType: 'html',
-          success: function(text) {
-            if (text != null) {
-              console.log('success');
-              if (callback) {
-                return callback(text);
-              }
+  snModels.prototype.load = function(file, callback) {
+    var url;
+    if (file != null) {
+      url = 'content/' + window.sn.region.name + '/' + file;
+      console.log('file: ' + file);
+      return $.ajax({
+        url: url,
+        async: false,
+        cache: false,
+        dataType: 'html',
+        success: function(text) {
+          if (text != null) {
+            console.log('success');
+            if (callback) {
+              return callback(text);
             }
           }
-        });
-      }
-    };
+        }
+      });
+    }
+  };
 
-    return snModels;
+  return snModels;
 
-  })();
-});
+})();
 
 }),
 "triggers": (function (require, exports, module) { /* wrapped by builder */
+var snTriggers;
+
 require('jquery');
 
 require('bootstrap');
 
-$(function() {
-  return window.snTriggers = (function() {
-    function snTriggers(options) {
-      this.options = options != null ? options : {};
+module.exports = snTriggers = (function() {
+  function snTriggers(options) {
+    this.options = options != null ? options : {};
+  }
+
+  snTriggers.prototype["switch"] = function(type, link) {
+    if (type == null) {
+      type = '';
     }
+    if (link == null) {
+      link = '';
+    }
+    switch (type) {
+      case 'side':
+        return this.switchSide(link);
+      case 'bar':
+        return this.switchBar(link);
+    }
+  };
 
-    snTriggers.prototype["switch"] = function(type, link) {
-      if (type == null) {
-        type = '';
+  snTriggers.prototype.plugins = function(elem) {
+    var _this;
+    if (elem == null) {
+      elem = '#main';
+    }
+    _this = this;
+    return setTimeout(function() {
+      if ($(elem + ' .tooltip-toggle').length) {
+        $(elem + ' .tooltip-toggle').tooltip();
       }
-      if (link == null) {
-        link = '';
+      if ($.isFunction($.bootstrapIE6)) {
+        $.bootstrapIE6(elem);
       }
-      switch (type) {
-        case 'side':
-          return this.switchSide(link);
-        case 'bar':
-          return this.switchBar(link);
+      if ($(elem + ' .spoiler').length) {
+        return _this.spoiler(elem);
       }
-    };
+    }, 1);
+  };
 
-    snTriggers.prototype.plugins = function(elem) {
-      var _this;
-      if (elem == null) {
-        elem = '#main';
-      }
-      _this = this;
-      return setTimeout(function() {
-        if ($(elem + ' .tooltip-toggle').length) {
-          $(elem + ' .tooltip-toggle').tooltip();
-        }
-        if ($.isFunction($.bootstrapIE6)) {
-          $.bootstrapIE6(elem);
-        }
-        if ($(elem + ' .spoiler').length) {
-          return _this.spoiler(elem);
-        }
-      }, 1);
-    };
+  snTriggers.prototype.hover = function(type) {
+    if (type == null) {
+      type = '';
+    }
+    switch (type) {
+      case 'side':
+        return this.switcherSide();
+      case 'bar':
+        return this.switcherBar();
+    }
+  };
 
-    snTriggers.prototype.hover = function(type) {
-      if (type == null) {
-        type = '';
-      }
-      switch (type) {
-        case 'side':
-          return this.switcherSide();
-        case 'bar':
-          return this.switcherBar();
-      }
-    };
+  snTriggers.prototype.links = function(type) {
+    if (type == null) {
+      type = '';
+    }
+    switch (type) {
+      case 'side':
+        return this.linksSide();
+      case 'primary':
+        return this.linksPrimary();
+      case 'bar':
+        return this.linksBar();
+    }
+  };
 
-    snTriggers.prototype.links = function(type) {
-      if (type == null) {
-        type = '';
-      }
-      switch (type) {
-        case 'side':
-          return this.linksSide();
-        case 'primary':
-          return this.linksPrimary();
-        case 'bar':
-          return this.linksBar();
-      }
-    };
-
-    snTriggers.prototype.linksSide = function() {
-      console.log('trigger: ' + 'linksSide');
-      if ($('#primary a').length) {
-        return $('#side a').on('click', function(e) {
-          if ($(this).attr('href') !== '#' && !$(this).data('noevent')) {
-            $('#side li').removeClass('active');
-            $(this).parent('li').addClass('active');
-            return window.events.get($(this).attr('href'));
-          } else {
-            return e.preventDefault();
-          }
-        });
-      }
-    };
-
-    snTriggers.prototype.linksPrimary = function() {
-      console.log('trigger: ' + 'linksPrimary');
-      if ($('#primary a').length) {
-        return $('#primary a').on('click', function(e) {
-          if ($(this).attr('href') !== '#' && !$(this).data('noevent')) {
-            return window.events.get($(this).attr('href'));
-          } else {
-            return e.preventDefault();
-          }
-        });
-      }
-    };
-
-    snTriggers.prototype.linksBar = function() {
-      console.log('trigger: ' + 'linksBar');
-      if ($('#bar a').length && $('#bar li').length) {
-        return $('#bar a').on('click', function(e) {
-          if ($(this).attr('href') !== '#' && $(this).data('toggle') !== 'dropdown' && !$(this).data('noevent')) {
-            $('#bar li').removeClass('active');
-            $(this).parent('li').addClass('active');
-            return window.events.get($(this).attr('href'));
-          } else {
-            return e.preventDefault();
-          }
-        });
-      }
-    };
-
-    snTriggers.prototype.switchBar = function(link) {
-      if (link == null) {
-        return link = 'main';
-      }
-      /*
-      			console.log 'trigger: ' + 'switchBar'
-      
-      			$('.bar-button')
-      				.removeClass('bar-button-active')
-      				.removeClass('bar-button-hover')
-      				.addClass('bar-button-normal')
-      
-      			$('#bar-' + link)
-      				.removeClass('bar-button-normal')
-      				.removeClass('bar-button-hover')
-      				.addClass('bar-button-active')
-      				.blur()
-      */
-
-    };
-
-    snTriggers.prototype.switchSide = function(link) {
-      if (link == null) {
-        return link = 'above';
-      }
-      /*
-      			console.log 'trigger: ' + 'switchSide'
-      
-      			$('.side-box-link')
-      				.removeClass('side-box-link-active')
-      				.removeClass('side-box-link-hover')
-      				.addClass('side-box-link-normal')
-      
-      			$('#side-' + link)
-      				.removeClass('side-box-link-normal')
-      				.removeClass('side-box-link-hover')
-      				.addClass('side-box-link-active')
-      				.blur()
-      */
-
-    };
-
-    snTriggers.prototype.switcherBar = function() {
-      console.log('trigger: ' + 'switcherBar');
-      $('.bar-link').on('mouseover', function() {
-        if (!$(this).parent('li').hasClass('active')) {
-          return $(this).parent('li').removeClass('normal').addClass('hover');
-        }
-      });
-      return $('.bar-link').on('mouseleave', function() {
-        if (!$(this).parent('li').hasClass('active')) {
-          return $(this).parent('li').removeClass('hover').addClass('normal');
-        }
-      });
-    };
-
-    snTriggers.prototype.switcherSide = function() {
-      console.log('trigger: ' + 'switcherSide');
-      $('.side-link').on('mouseover', function() {
-        if (!$(this).parent('li').hasClass('active')) {
-          return $(this).parent('li').removeClass('normal').addClass('hover');
-        }
-      });
-      return $('.side-link').on('mouseleave', function() {
-        if (!$(this).parent('li').hasClass('active')) {
-          return $(this).parent('li').removeClass('hover').addClass('normal');
-        }
-      });
-    };
-
-    snTriggers.prototype.spoiler = function(elem) {
-      if (elem == null) {
-        elem = 'body';
-      }
-      console.log('trigger: ' + 'spoiler');
-      return $(elem).find('.spoiler-caption').on('click', function(e) {
-        e.preventDefault();
-        if ($(this).hasClass('spoiler-open')) {
-          $(this).removeClass('spoiler-open').addClass('spoiler-close');
+  snTriggers.prototype.linksSide = function() {
+    console.log('trigger: ' + 'linksSide');
+    if ($('#side a').length) {
+      return $('#side a').on('click.nothing', function(e) {
+        if ($(this).attr('href') !== '#' && !$(this).data('noevent')) {
+          $('#side li').removeClass('active');
+          $(this).parent('li').addClass('active');
+          return window.events.get($(this).attr('href'));
         } else {
-          $(this).removeClass('spoiler-close').addClass('spoiler-open');
+          return e.preventDefault();
         }
-        return $(this).parent('.spoiler').children('.spoiler-body').each(function() {
-          if ($(this).hasClass('spoiler-open')) {
-            return $(this).removeClass('spoiler-open').addClass('spoiler-close').hide();
-          } else {
-            return $(this).removeClass('spoiler-close').addClass('spoiler-open').show();
-          }
-        });
       });
-    };
+    }
+  };
 
-    return snTriggers;
+  snTriggers.prototype.linksPrimary = function() {
+    console.log('trigger: ' + 'linksPrimary');
+    if ($('#primary a').length) {
+      return $('#primary a').on('click', function(e) {
+        if ($(this).attr('href') !== '#' && !$(this).data('noevent')) {
+          return window.events.get($(this).attr('href'));
+        } else {
+          return e.preventDefault();
+        }
+      });
+    }
+  };
 
-  })();
-});
+  snTriggers.prototype.linksBar = function() {
+    console.log('trigger: ' + 'linksBar');
+    if ($('#bar a').length && $('#bar li').length) {
+      return $('#bar a').on('click', function(e) {
+        if ($(this).attr('href') !== '#' && $(this).data('toggle') !== 'dropdown' && !$(this).data('noevent')) {
+          $('#bar li').removeClass('active');
+          $(this).parent('li').addClass('active');
+          return window.events.get($(this).attr('href'));
+        } else {
+          return e.preventDefault();
+        }
+      });
+    }
+  };
+
+  snTriggers.prototype.switchBar = function(link) {
+    if (link == null) {
+      return link = 'main';
+    }
+    /*
+    		console.log 'trigger: ' + 'switchBar'
+    
+    		$('.bar-button')
+    			.removeClass('bar-button-active')
+    			.removeClass('bar-button-hover')
+    			.addClass('bar-button-normal')
+    
+    		$('#bar-' + link)
+    			.removeClass('bar-button-normal')
+    			.removeClass('bar-button-hover')
+    			.addClass('bar-button-active')
+    			.blur()
+    */
+
+  };
+
+  snTriggers.prototype.switchSide = function(link) {
+    if (link == null) {
+      return link = 'above';
+    }
+    /*
+    		console.log 'trigger: ' + 'switchSide'
+    
+    		$('.side-box-link')
+    			.removeClass('side-box-link-active')
+    			.removeClass('side-box-link-hover')
+    			.addClass('side-box-link-normal')
+    
+    		$('#side-' + link)
+    			.removeClass('side-box-link-normal')
+    			.removeClass('side-box-link-hover')
+    			.addClass('side-box-link-active')
+    			.blur()
+    */
+
+  };
+
+  snTriggers.prototype.switcherBar = function() {
+    console.log('trigger: ' + 'switcherBar');
+    $('.bar-link').on('mouseover', function() {
+      if (!$(this).parent('li').hasClass('active')) {
+        return $(this).parent('li').removeClass('normal').addClass('hover');
+      }
+    });
+    return $('.bar-link').on('mouseleave', function() {
+      if (!$(this).parent('li').hasClass('active')) {
+        return $(this).parent('li').removeClass('hover').addClass('normal');
+      }
+    });
+  };
+
+  snTriggers.prototype.switcherSide = function() {
+    console.log('trigger: ' + 'switcherSide');
+    $('.side-link').on('mouseover', function() {
+      if (!$(this).parent('li').hasClass('active')) {
+        return $(this).parent('li').removeClass('normal').addClass('hover');
+      }
+    });
+    return $('.side-link').on('mouseleave', function() {
+      if (!$(this).parent('li').hasClass('active')) {
+        return $(this).parent('li').removeClass('hover').addClass('normal');
+      }
+    });
+  };
+
+  snTriggers.prototype.spoiler = function(elem) {
+    if (elem == null) {
+      elem = 'body';
+    }
+    console.log('trigger: ' + 'spoiler');
+    return $(elem).find('.spoiler-caption').on('click', function(e) {
+      e.preventDefault();
+      if ($(this).hasClass('spoiler-open')) {
+        $(this).removeClass('spoiler-open').addClass('spoiler-close');
+      } else {
+        $(this).removeClass('spoiler-close').addClass('spoiler-open');
+      }
+      return $(this).parent('.spoiler').children('.spoiler-body').each(function() {
+        if ($(this).hasClass('spoiler-open')) {
+          return $(this).removeClass('spoiler-open').addClass('spoiler-close').hide();
+        } else {
+          return $(this).removeClass('spoiler-close').addClass('spoiler-open').show();
+        }
+      });
+    });
+  };
+
+  return snTriggers;
+
+})();
 
 }),
 "wiki": (function() {

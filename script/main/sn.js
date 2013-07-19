@@ -1,20 +1,22 @@
+var snConf, snDesign, snEvents, snLayout, snModels, snTriggers;
+
 require('jquery');
 
 require('cookie');
 
 require('bootstrap');
 
-require('conf');
+snConf = require('conf');
 
-require('design');
+snDesign = require('design');
 
-require('models');
+snModels = require('models');
 
-require('layout');
+snLayout = require('layout');
 
-require('triggers');
+snTriggers = require('triggers');
 
-require('events');
+snEvents = require('events');
 
 $(function() {
   if (window.console == null) {
