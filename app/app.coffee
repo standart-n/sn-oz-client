@@ -3,7 +3,6 @@
 
 require('jquery')
 require('cookie')
-require('ejs')
 require('bootstrap')
 require('underscore')
 require('json2')
@@ -12,6 +11,8 @@ require('json2')
 CConsole = 			require('CConsole')
 CLayout = 			require('CLayout')
 Settings = 			require('Settings')
+ContentSide =  		require('ContentSide')
+
 
 class App
 
@@ -24,6 +25,7 @@ class App
 $ () ->
 
 	window.app = new App()
+	new ContentSide().render()
 
 
 

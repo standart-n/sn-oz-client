@@ -3,7 +3,7 @@ var Template;
 Template = require('Template');
 
 module.exports = Template.extend({
-  path: 'layout',
+  path: 'content',
   ext: '.html',
   render: function() {
     var region;

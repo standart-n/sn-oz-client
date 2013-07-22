@@ -1,11 +1,11 @@
 
-# Layout
+# Content
 
 Template = require('Template')
 
 module.exports = Template.extend
 
-	path: 'layout'
+	path: 'content'
 	ext: '.html'
 
 	render: () ->
@@ -18,6 +18,5 @@ module.exports = Template.extend
 		result = 
 			region: 	window.sn.get('region')
 			theme:		window.sn.get('theme')
-
 
 		

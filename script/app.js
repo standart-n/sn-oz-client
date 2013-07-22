@@ -1,10 +1,8 @@
-var App, CConsole, CLayout, Settings;
+var App, CConsole, CLayout, ContentSide, Settings;
 
 require('jquery');
 
 require('cookie');
-
-require('ejs');
 
 require('bootstrap');
 
@@ -17,6 +15,8 @@ CConsole = require('CConsole');
 CLayout = require('CLayout');
 
 Settings = require('Settings');
+
+ContentSide = require('ContentSide');
 
 App = (function() {
   function App() {
@@ -32,5 +32,6 @@ App = (function() {
 })();
 
 $(function() {
-  return window.app = new App();
+  window.app = new App();
+  return new ContentSide().render();
 });

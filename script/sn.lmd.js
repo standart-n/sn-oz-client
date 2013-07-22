@@ -248,13 +248,11 @@ sb.on('*:request-indexof', function (arrayIndexOf) {
     main(lmd_trigger('lmd-register:decorate-require', 'main', lmd_require)[1], output.exports, output);
 })/*DO NOT ADD ; !*/
 (this,(function (require, exports, module) { /* wrapped by builder */
-var App, CConsole, CLayout, Settings;
+var App, CConsole, CLayout, ContentSide, Settings;
 
 require('jquery');
 
 require('cookie');
-
-require('ejs');
 
 require('bootstrap');
 
@@ -267,6 +265,8 @@ CConsole = require('CConsole');
 CLayout = require('CLayout');
 
 Settings = require('Settings');
+
+ContentSide = require('ContentSide');
 
 App = (function() {
   function App() {
@@ -282,7 +282,8 @@ App = (function() {
 })();
 
 $(function() {
-  return window.app = new App();
+  window.app = new App();
+  return new ContentSide().render();
 });
 
 }),{
@@ -3037,25 +3038,80 @@ module.exports = Backbone.Model.extend({
 });
 
 }),
-"Layout": (function (require, exports, module) { /* wrapped by builder */
+"Template": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
+
+require('ejs');
 
 Backbone = require('backbone');
 
 module.exports = Backbone.View.extend({
+  ext: '.html',
+  template: function() {
+    var _ref;
+    if ((_ref = this.url) != null ? _ref.match(/[\w]*\/[\w]*\/[\w]*.html/) : void 0) {
+      return this.$el.html(new EJS({
+        url: this.url,
+        ext: this.ext
+      }).render(this.data()));
+    }
+  },
+  data: function() {}
+});
+
+}),
+"Content": (function (require, exports, module) { /* wrapped by builder */
+var Template;
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  path: 'content',
+  ext: '.html',
+  render: function() {
+    var region;
+    if (this.file != null) {
+      region = window.sn.get('region').name;
+      this.url = this.path + '/' + region + '/' + this.file;
+      return this.template();
+    }
+  },
+  data: function() {
+    var result;
+    return result = {
+      region: window.sn.get('region'),
+      theme: window.sn.get('theme')
+    };
+  }
+});
+
+}),
+"ContentSide": (function (require, exports, module) { /* wrapped by builder */
+var Content;
+
+Content = require('Content');
+
+module.exports = Content.extend({
+  el: '#side',
+  file: 'side_main.html',
+  initialize: function() {}
+});
+
+}),
+"Layout": (function (require, exports, module) { /* wrapped by builder */
+var Template;
+
+Template = require('Template');
+
+module.exports = Template.extend({
   path: 'layout',
   ext: '.html',
   render: function() {
-    var region, url;
+    var region;
     if (this.file != null) {
       region = window.sn.get('region').name;
-      url = this.path + '/' + region + '/' + this.file;
-      if (url.match(/[\w]*\/[\w]*\/[\w]*.html/)) {
-        return this.$el.html(new EJS({
-          url: url,
-          ext: this.ext
-        }).render(this.data()));
-      }
+      this.url = this.path + '/' + region + '/' + this.file;
+      return this.template();
     }
   },
   data: function() {
