@@ -35,18 +35,23 @@ module.exports = (grunt) ->
 				files: 
 					'./layout/izhevsk/bar.html': 					'./jade/layout/izhevsk/bar.jade'
 					'./layout/izhevsk/main.html': 					'./jade/layout/izhevsk/main.jade'
+					'./layout/izhevsk/footer.html':					'./jade/layout/izhevsk/footer.jade'
 
 					'./layout/kirov/bar.html': 						'./jade/layout/kirov/bar.jade'
 					'./layout/kirov/main.html': 					'./jade/layout/kirov/main.jade'
+					'./layout/kirov/footer.html':					'./jade/layout/kirov/footer.jade'
 
 					'./layout/stavropol/bar.html': 					'./jade/layout/stavropol/bar.jade'
 					'./layout/stavropol/main.html': 				'./jade/layout/stavropol/main.jade'
+					'./layout/stavropol/footer.html':				'./jade/layout/stavropol/footer.jade'
 
 					'./layout/volgograd/bar.html': 					'./jade/layout/volgograd/bar.jade'
 					'./layout/volgograd/main.html': 				'./jade/layout/volgograd/main.jade'
+					'./layout/volgograd/footer.html':				'./jade/layout/volgograd/footer.jade'
 
 					'./layout/yoshkar/bar.html': 					'./jade/layout/yoshkar/bar.jade'
 					'./layout/yoshkar/main.html': 					'./jade/layout/yoshkar/main.jade'
+					'./layout/yoshkar/footer.html':					'./jade/layout/yoshkar/footer.jade'
 
 		recess:
 			css:
@@ -64,18 +69,15 @@ module.exports = (grunt) ->
 			sn:
 				options:
 					bare: on
-				#src: ['client/main/*', 'client/users/*', 'client/widgets/*']
-				#dest: 'script/sn.js'
 				files:
-					'script/main/sn.js': 			'app/main/sn.coffee'
-					'script/main/sn.conf.js': 		'app/main/sn.conf.coffee'
-					'script/main/sn.design.js': 	'app/main/sn.design.coffee'
-					'script/main/sn.events.js': 	'app/main/sn.events.coffee'
-					'script/main/sn.layout.js': 	'app/main/sn.layout.coffee'
-					'script/main/sn.models.js': 	'app/main/sn.models.coffee'
-					'script/main/sn.triggers.js': 	'app/main/sn.triggers.coffee'
-					'script/main/sn.wiki.js': 		'app/main/sn.wiki.coffee'
-
+					'script/app.js': 					'app/app.coffee'
+					'script/controllers/console.js':	'app/controllers/console.coffee'
+					'script/controllers/layout.js':		'app/controllers/layout.coffee'
+					'script/models/settings.js':		'app/models/settings.coffee'
+					'script/views/layout.js': 			'app/views/layout.coffee'
+					'script/views/layoutBar.js': 		'app/views/layoutBar.coffee'
+					'script/views/layoutMain.js': 		'app/views/layoutMain.coffee'
+					'script/views/layoutFooter.js': 	'app/views/layoutFooter.coffee'
 			test:
 				options:
 					bare: on

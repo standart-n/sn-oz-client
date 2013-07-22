@@ -3,18 +3,21 @@
 	"root": "../",
 	"output": "script/sn.lmd.js",
 	"modules": {
-		"main": "script/main/sn.js",
-		"jquery": "lib/js/jQuery.1.8.3.min.js",
-		"cookie": "lib/js/jquery.cookie.min.js",
-		"ejs": "lib/js/ejs.min.js",
-		"bootstrap": "script/bootstrap.js",
-		"conf": "script/main/sn.conf.js",
-		"design": "script/main/sn.design.js",
-		"events": "script/main/sn.events.js",
-		"layout": "script/main/sn.layout.js",
-		"models": "script/main/sn.models.js",
-		"triggers": "script/main/sn.triggers.js",
-		"wiki": "script/main/sn.wiki.js"
+		"jquery": 				"lib/js/jQuery.1.8.3.min.js",
+		"cookie": 				"lib/js/jquery.cookie.min.js",
+		"ejs": 					"lib/js/ejs.min.js",
+		"backbone": 			"lib/js/backbone.0.9.2.min.js",
+		"json2": 				"lib/js/json2.min.js",
+		"underscore": 			"lib/js/underscore.1.4.4.min.js",
+		"bootstrap": 			"script/bootstrap.js",
+		"app": 					"script/app.js",		
+		"CConsole": 			"script/controllers/console.js",
+		"CLayout": 				"script/controllers/layout.js",
+		"Settings":		 		"script/models/settings.js",
+		"Layout":	 			"script/views/layout.js",
+		"LayoutMain":	 		"script/views/layoutMain.js",
+		"LayoutFooter":		 	"script/views/layoutFooter.js",
+		"LayoutBar":		 	"script/views/layoutBar.js"
 	},
-	"main": "main"
+	"main": "app"
 }
