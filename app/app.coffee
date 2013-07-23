@@ -4,14 +4,15 @@
 require('jquery')
 require('cookie')
 require('bootstrap')
-require('underscore')
 require('json2')
 
-
+Backbone = 			require('backbone')
 CConsole = 			require('CConsole')
-CLayout = 			require('CLayout')
 Settings = 			require('Settings')
+CLayout = 			require('CLayout')
 ContentSide =  		require('ContentSide')
+ContentPrimary =	require('ContentPrimary')
+Router = 			require('Text')
 
 
 class App
@@ -26,6 +27,11 @@ $ () ->
 
 	window.app = new App()
 	new ContentSide().render()
+	new ContentPrimary().render()
+	router = new Router()
+	Backbone.history.start()
+	# router.navigate('#main/text/apteki')
+
 
 
 

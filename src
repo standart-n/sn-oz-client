@@ -1,0 +1,35 @@
+var CConsole;
+
+module.exports = CConsole = (function() {
+  function CConsole() {}
+
+  CConsole.prototype.info = function() {};
+
+  CConsole.prototype.log = function() {};
+
+  CConsole.prototype.error = function() {};
+
+  CConsole.prototype.warn = function() {};
+
+  return CConsole;
+
+})();
+
+var CLayout, LayoutBar, LayoutFooter, LayoutMain;
+
+LayoutBar = require('LayoutBar');
+
+LayoutMain = require('LayoutMain');
+
+LayoutFooter = require('LayoutFooter');
+
+module.exports = CLayout = (function() {
+  function CLayout() {
+    this.layoutBar = new LayoutBar();
+    this.layoutMain = new LayoutMain();
+    this.layoutFooter = new LayoutFooter();
+  }
+
+  return CLayout;
+
+})();

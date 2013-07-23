@@ -69,18 +69,15 @@ module.exports = (grunt) ->
 			sn:
 				options:
 					bare: on
-				files:
-					'script/app.js': 					'app/app.coffee'
-					'script/controllers/console.js':	'app/controllers/console.coffee'
-					'script/controllers/layout.js':		'app/controllers/layout.coffee'
-					'script/models/settings.js':		'app/models/settings.coffee'
-					'script/views/template.js':			'app/views/template.coffee'
-					'script/views/content.js': 			'app/views/content.coffee'
-					'script/views/contentSide.js': 		'app/views/contentSide.coffee'
-					'script/views/layout.js': 			'app/views/layout.coffee'
-					'script/views/layoutBar.js': 		'app/views/layoutBar.coffee'
-					'script/views/layoutMain.js': 		'app/views/layoutMain.coffee'
-					'script/views/layoutFooter.js': 	'app/views/layoutFooter.coffee'
+				files: [
+					{
+						expand:			true
+						cwd:			'app/'
+						src:			'**/*.coffee'
+						dest:			'script/'
+						ext:			'.js'
+					}
+				]
 			test:
 				options:
 					bare: on

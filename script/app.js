@@ -1,4 +1,4 @@
-var App, CConsole, CLayout, ContentSide, Settings;
+var App, Backbone, CConsole, CLayout, ContentPrimary, ContentSide, Router, Settings;
 
 require('jquery');
 
@@ -6,17 +6,21 @@ require('cookie');
 
 require('bootstrap');
 
-require('underscore');
-
 require('json2');
+
+Backbone = require('backbone');
 
 CConsole = require('CConsole');
 
-CLayout = require('CLayout');
-
 Settings = require('Settings');
 
+CLayout = require('CLayout');
+
 ContentSide = require('ContentSide');
+
+ContentPrimary = require('ContentPrimary');
+
+Router = require('Text');
 
 App = (function() {
   function App() {
@@ -32,6 +36,10 @@ App = (function() {
 })();
 
 $(function() {
+  var router;
   window.app = new App();
-  return new ContentSide().render();
+  new ContentSide().render();
+  new ContentPrimary().render();
+  router = new Router();
+  return Backbone.history.start();
 });
