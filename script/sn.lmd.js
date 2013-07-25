@@ -3261,7 +3261,10 @@ module.exports = Template.extend({
   },
   beforeRender: function() {},
   afterRender: function() {
-    return this.$el.find('.tooltip-toggle').tooltip();
+    this.$el.find('.tooltip-toggle').tooltip();
+    if ($.isFunction($.bootstrapIE6)) {
+      return $.bootstrapIE6(this.el);
+    }
   }
 });
 
