@@ -1,4 +1,4 @@
-var App, Backbone, CConsole, CLayout, ContentPrimary, ContentSide, Router, Settings;
+var App, Backbone, Markup, Settings;
 
 require('jquery');
 
@@ -8,38 +8,38 @@ require('bootstrap');
 
 require('json2');
 
-Backbone = require('backbone');
+require('Spoiler');
 
-CConsole = require('CConsole');
+Backbone = require('Backbone');
+
+App = require('App');
 
 Settings = require('Settings');
 
-CLayout = require('CLayout');
+Markup = require('Markup');
 
-ContentSide = require('ContentSide');
-
-ContentPrimary = require('ContentPrimary');
-
-Router = require('Text');
-
-App = (function() {
-  function App() {
-    if (window.console == null) {
-      window.console = new CConsole();
-    }
-    window.sn = new Settings();
-    this.layout = new CLayout();
-  }
-
-  return App;
-
-})();
+if (window.console == null) {
+  window.console = {
+    info: function() {},
+    log: function() {},
+    error: function() {},
+    warn: function() {}
+  };
+}
 
 $(function() {
-  var router;
+  window.sn = new Settings();
+  window.markup = new Markup({
+    images: {
+      url: window.sn.get('settings').paths.images.url + window.sn.get('region').name + '/'
+    },
+    files: {
+      url: window.sn.get('settings').paths.files.url + window.sn.get('region').name + '/'
+    },
+    gismeteo: {
+      url: window.sn.get('settings').paths.widgets.gismeteo.url + window.sn.get('region').name + '/'
+    }
+  });
   window.app = new App();
-  new ContentSide().render();
-  new ContentPrimary().render();
-  router = new Router();
   return Backbone.history.start();
 });

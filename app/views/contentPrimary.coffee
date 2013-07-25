@@ -9,8 +9,10 @@ module.exports = Content.extend
 	file:	'main.html'
 
 	initialize: () ->
+		this.render()
 
+	switch: (part,page) ->
 
-
-
-		
+		this.file = "#{page}.html"
+		this.render()
+			

@@ -2,18 +2,18 @@
 # Template
 
 require('ejs')
-Backbone = 		require('backbone')
+Backbone = 		require('Backbone')
 
 module.exports = Backbone.View.extend
 
-	ext: '.html'
+	ext: 		'.html'
+	markup: 	off
 
 	template: () ->
 		if this.url?.match(/[\w]*\/[\w]*\/[\w]*.html/)	
-			this.$el.html new EJS(url: this.url, ext: this.ext).render(this.data())
+			text = new EJS(url: this.url, ext: this.ext).render(this.data())
+			text = window.markup.render(text) if this.markup
+			this.$el.html text
 
 	data: () ->
-
-
-
 		

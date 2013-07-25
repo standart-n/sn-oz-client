@@ -16,7 +16,7 @@
 		"json2": 					"lib/js/json2.min.js",
 		"ejs": 						"lib/js/ejs.min.js",
 		"bootstrap": 				"script/bootstrap.js",
-		"backbone": {
+		"Backbone": {
 			"path": 				"lib/js/backbone.0.9.2.min.js",
 			"require": {
 				"underscore": 		"_",
@@ -31,8 +31,7 @@
 			}
 		},
 		"app": 						"script/app.js",
-		"C<%= file[0].toUpperCase() %><%= file.slice(1) %>": "script/controllers/*.js",
-		"<%= file[0].toUpperCase() %><%= file.slice(1) %>": "script/{routers,models,views}/*.js" 
+		"<%= file[0].toUpperCase() %><%= file.slice(1) %>": "script/{models,views,controllers}/*.js" 
 	},
 	"main": "app",
 	"shortcuts": true,

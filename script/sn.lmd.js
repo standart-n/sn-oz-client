@@ -309,7 +309,7 @@ sb.on('stats:before-require-count', function (moduleName, module) {
     main(lmd_trigger('lmd-register:decorate-require', 'main', lmd_require)[1], output.exports, output);
 })/*DO NOT ADD ; !*/
 (this,(function (require, exports, module) { /* wrapped by builder */
-var App, Backbone, CConsole, CLayout, ContentPrimary, ContentSide, Router, Settings;
+var App, Backbone, Markup, Settings;
 
 require('jquery');
 
@@ -319,39 +319,39 @@ require('bootstrap');
 
 require('json2');
 
-Backbone = require('backbone');
+require('Spoiler');
 
-CConsole = require('CConsole');
+Backbone = require('Backbone');
+
+App = require('App');
 
 Settings = require('Settings');
 
-CLayout = require('CLayout');
+Markup = require('Markup');
 
-ContentSide = require('ContentSide');
-
-ContentPrimary = require('ContentPrimary');
-
-Router = require('Text');
-
-App = (function() {
-  function App() {
-    if (window.console == null) {
-      window.console = new CConsole();
-    }
-    window.sn = new Settings();
-    this.layout = new CLayout();
-  }
-
-  return App;
-
-})();
+if (window.console == null) {
+  window.console = {
+    info: function() {},
+    log: function() {},
+    error: function() {},
+    warn: function() {}
+  };
+}
 
 $(function() {
-  var router;
+  window.sn = new Settings();
+  window.markup = new Markup({
+    images: {
+      url: window.sn.get('settings').paths.images.url + window.sn.get('region').name + '/'
+    },
+    files: {
+      url: window.sn.get('settings').paths.files.url + window.sn.get('region').name + '/'
+    },
+    gismeteo: {
+      url: window.sn.get('settings').paths.widgets.gismeteo.url + window.sn.get('region').name + '/'
+    }
+  });
   window.app = new App();
-  new ContentSide().render();
-  new ContentPrimary().render();
-  router = new Router();
   return Backbone.history.start();
 });
 
@@ -2953,7 +2953,7 @@ return jQuery;
 }(window.jQuery);
 
 }),
-"backbone": (function (require) { /* wrapped by builder */
+"Backbone": (function (require) { /* wrapped by builder */
 /* added by builder */
 var underscore = require("_"),
     jQuery = require("$");
@@ -3007,68 +3007,131 @@ var jQuery = require("$");
 
 !function($,document,undefined){function raw(s){return s}function decoded(s){return unRfc2068(decodeURIComponent(s.replace(pluses," ")))}function unRfc2068(value){return 0===value.indexOf('"')&&(value=value.slice(1,-1).replace(/\\"/g,'"').replace(/\\\\/g,"\\")),value}function fromJSON(value){return config.json?JSON.parse(value):value}var pluses=/\+/g,config=$.cookie=function(key,value,options){if(value!==undefined){if(options=$.extend({},config.defaults,options),null===value&&(options.expires=-1),"number"==typeof options.expires){var days=options.expires,t=options.expires=new Date;t.setDate(t.getDate()+days)}return value=config.json?JSON.stringify(value):String(value),document.cookie=[encodeURIComponent(key),"=",config.raw?value:encodeURIComponent(value),options.expires?"; expires="+options.expires.toUTCString():"",options.path?"; path="+options.path:"",options.domain?"; domain="+options.domain:"",options.secure?"; secure":""].join("")}for(var decode=config.raw?raw:decoded,cookies=document.cookie.split("; "),result=key?null:{},i=0,l=cookies.length;l>i;i++){var parts=cookies[i].split("="),name=decode(parts.shift()),cookie=decode(parts.join("="));if(key&&key===name){result=fromJSON(cookie);break}key||(result[name]=fromJSON(cookie))}return result};config.defaults={},$.removeCookie=function(key,options){return null!==$.cookie(key)?($.cookie(key,null,options),!0):!1}}(jQuery,document);
 }),
-"CConsole": (function (require, exports, module) { /* wrapped by builder */
-var CConsole;
+"Markup": (function (require, exports, module) { /* wrapped by builder */
+var Markup;
 
-module.exports = CConsole = (function() {
-  function CConsole() {}
+require('_');
 
-  CConsole.prototype.info = function() {};
+module.exports = Markup = (function() {
+  Markup.prototype.defaults = {
+    images: {
+      url: ''
+    },
+    files: {
+      url: ''
+    },
+    gismeteo: {
+      url: ''
+    }
+  };
 
-  CConsole.prototype.log = function() {};
-
-  CConsole.prototype.error = function() {};
-
-  CConsole.prototype.warn = function() {};
-
-  return CConsole;
-
-})();
-
-}),
-"CLayout": (function (require, exports, module) { /* wrapped by builder */
-var CLayout, LayoutBar, LayoutFooter, LayoutMain;
-
-LayoutBar = require('LayoutBar');
-
-LayoutMain = require('LayoutMain');
-
-LayoutFooter = require('LayoutFooter');
-
-module.exports = CLayout = (function() {
-  function CLayout() {
-    this.layoutBar = new LayoutBar();
-    this.layoutMain = new LayoutMain();
-    this.layoutFooter = new LayoutFooter();
+  function Markup(options) {
+    this.options = options != null ? options : {};
+    _.defaults(this.options, this.defaults);
   }
 
-  return CLayout;
+  Markup.prototype.render = function(text) {
+    text = this.before(text);
+    text = this.formating(text);
+    text = this.headings(text);
+    text = this.icons(text);
+    text = this.externalLinks(text);
+    text = this.fileLinks(text);
+    text = this.internalLinks(text);
+    text = this.mailTo(text);
+    text = this.image(text);
+    text = this.fonts(text);
+    text = this.anchor(text);
+    text = this.ind(text);
+    text = this.weather(text);
+    text = this.spoiler(text);
+    text = this.header(text);
+    text = this.spaces(text);
+    text = this.noevent(text);
+    return text;
+  };
+
+  Markup.prototype.before = function(text) {
+    return text.replace(/\|\n/g, '').replace(/\]\n\n/g, ']<br><br>').replace(/\]\n/g, ']<br>').replace(/>\n\n/g, '>\n');
+  };
+
+  Markup.prototype.formating = function(text) {
+    return text.replace(/'''''(.*?)'''''/g, "<i><b>$1</b></i>").replace(/'''(.*?)'''/g, "<b>$1</b>").replace(/''(.*?)''/g, "<i>$1</i>");
+  };
+
+  Markup.prototype.headings = function(text) {
+    text = text.replace(/======(.*?)======\n?/g, "<h6>$1</h6>");
+    text = text.replace(/=====(.*?)=====\n?/g, "<h5>$1</h5>");
+    text = text.replace(/====(.*?)====\n?/g, "<h4>$1</h4>");
+    text = text.replace(/===(.*?)===\n?/g, "<h3>$1</h3>");
+    return text = text.replace(/==(.*?)==\n?/g, "<h2>$1</h2>");
+  };
+
+  Markup.prototype.icons = function(text) {
+    return text.replace(/\[(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)\]/g, '<i class="icon-$2 icon-white"></i> ').replace(/\[(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)\]/g, '<i class="icon-$2 icon-white"></i> ').replace(/\[(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)\]/g, '<i class="icon-$2"></i> ').replace(/\[(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)\]/g, '<i class="icon-$2"></i> ').replace(/([\s]+)(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)([\s]+)/g, '$1<i class="icon-$3 icon-white"></i>$4').replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)[\s]+(inverse|white)([\s]+)/g, '$1<i class="icon-$3 icon-white"></i>$4').replace(/([\s]+)(i|ico|icon|icons):icon-([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4').replace(/([\s]+)(i|ico|icon|icons):([a-zA-Z0-9\_\-]+)([\s]+)/g, '$1<i class="icon-$3"></i>$4');
+  };
+
+  Markup.prototype.internalLinks = function(text) {
+    return text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" data-placement="$5" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn btn-$2" href="#$3">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a class="btn btn-$2" href="#$1">$1</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$2" class="btn tooltip-toggle" data-placement="$5" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$2" class="btn tooltip-toggle" rel="tooltip" title="$4">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$2" class="btn tooltip-toggle" data-placement="$4" rel="tooltip" title="$3">$2</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$2" class="btn tooltip-toggle" rel="tooltip" title="$3">$2</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="#$2">$3</a>').replace(/\[b(tn|utton)[\s]+#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$1" class="tooltip-toggle" data-placement="$4" rel="tooltip" title="$3">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1" class="tooltip-toggle" rel="tooltip" title="$3">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="#$1" class="tooltip-toggle" data-placement="$3" rel="tooltip" title="$2">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1" class="tooltip-toggle" rel="tooltip" title="$2">$1</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="#$1">$2</a>').replace(/\[#([a-zA-Z0-9\-\.\/\?%\#_\:]+)\]/g, '<a href="#$1">$1</a>').replace(/([\s+])#([a-zA-Z0-9\-\.\/\?%\#_\:]+)([\s]+)/g, '$1<a href="#$2">$2</a>$3');
+  };
+
+  Markup.prototype.externalLinks = function(text) {
+    return text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+) (left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$6" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$3" class="btn btn-$2" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a class="btn btn-$2" href="http://$2" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+) (left|top|right|bottom)\]/g, '<a href="http://$2" class="btn tooltip-toggle" data-placement="$5" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$2" class="btn tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$2" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="http://$2" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a class="btn" href="http://$2" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$1" class="tooltip-toggle" data-placement="$4" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="http://$1" class="tooltip-toggle" data-placement="$3" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="http://$1" target="_blank">$2</a>').replace(/\[https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a href="http://$1" target="_blank">$1</a>').replace(/([\s]+)https?:\/\/([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g, '$1<a href="http://$2" target="_blank">$2</a>$3');
+  };
+
+  Markup.prototype.fileLinks = function(text) {
+    return text.replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + this.options.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$6" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + this.options.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$5" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + this.options.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + this.options.files.url + '$3" class="btn btn-$2 tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn btn-$2" href="' + this.options.files.url + '$3" target="_blank">$4</a>').replace(/\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a class="btn btn-$2" href="' + this.options.files.url + '$3" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + this.options.files.url + '$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$5" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + this.options.files.url + '$2" class="btn tooltip-toggle" rel="tooltip" title="$4" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + this.options.files.url + '$2" class="btn tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + this.options.files.url + '$2" class="btn tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a class="btn" href="' + this.options.files.url + '$2" target="_blank">$3</a>').replace(/\[b(tn|utton)[\s]+files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a class="btn" href="' + this.options.files.url + '$2" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + this.options.files.url + '$1" class="tooltip-toggle" rel="tooltip" data-placement="$4" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + this.options.files.url + '$1" class="tooltip-toggle" rel="tooltip" title="$3" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(left|top|right|bottom)\]/g, '<a href="' + this.options.files.url + '$1" class="tooltip-toggle" rel="tooltip" data-placement="$3" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+\|[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + this.options.files.url + '$1" class="tooltip-toggle" rel="tooltip" title="$2" target="_blank">$1</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<a href="' + this.options.files.url + '$1" target="_blank">$2</a>').replace(/\[files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<a href="' + this.options.files.url + '$1" target="_blank">$1</a>').replace(/([\s]+)files?:([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g, '$1<a href="' + this.options.files.url + '$2" target="_blank">$2</a>$3');
+  };
+
+  Markup.prototype.mailTo = function(text) {
+    return text.replace(/\[e\-?mail:([a-zA-Z0-9@\-\.\/\?%\#_]+)[\s]+(.*?)\]/g, '<a href="mailto:$1">$2</a>').replace(/\[e\-?mail:([a-zA-Z0-9@\-\.\/\?%\#_]+)\]/g, '<a href="mailto:$1">$1</a>');
+  };
+
+  Markup.prototype.image = function(text, options) {
+    return text.replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+(right|left)\]/g, '<img class="pull-$3" src="' + this.options.images.url + '$2">').replace(/\[(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]/g, '<img src="' + this.options.images.url + '$2">').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)[\s]+(right|left)([\s]+)/g, '$1<img class="pull-$4" src="' + this.options.images.url + '$3">$5').replace(/([\s]+)(img|image|picture|photo):([a-zA-Z0-9\-\.\/\?\%\#\_]+)([\s]+)/g, '$1<img src="' + this.options.images.url + '$3">$4');
+  };
+
+  Markup.prototype.fonts = function(text) {
+    return text.replace(/\[badge[\s]+(success|warning|important|info|inverse)\][\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)/g, '<span class="badge badge-$1">$2</span>').replace(/\[badge[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(success|warning|important|info|inverse)\]/g, '<span class="badge badge-$2">$1</span>').replace(/\[badge[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="badge">$1</span>').replace(/\[label[\s]+(success|warning|important|info|inverse)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="label label-$1">$2</span>').replace(/\[label[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)[\s]+(success|warning|important|info|inverse)\]/g, '<span class="label label-$2">$1</span>').replace(/\[label[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="label">$1</span>').replace(/\[color:\#([a-zA-Z0-9]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<font style="color:#$1">$2</font>').replace(/\[color:([a-zA-Z0-9]+)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]/g, '<span class="$1">$2</span>').replace(/\[\[color:\#([a-zA-Z0-9]+)\](.*?)\]/g, '<font style="color:#$1">$2</font>').replace(/\[\[color:([a-zA-Z0-9]+)\](.*?)\]/g, '<span class="$1">$2</span>');
+  };
+
+  Markup.prototype.ind = function(text) {
+    return text.replace(/<<<\#?\:?([a-zA-Z0-9\-\.\/\?\_]+)\n?/g, '<div class="well well-small"><a id="anchor-$1"></a>').replace(/<<<\n?/g, '<div class="well well-small">').replace(/>>>\n?/g, '</div>');
+  };
+
+  Markup.prototype.anchor = function(text) {
+    return text.replace(/\[anchor:([a-zA-Z0-9\-\.\/\?\%\#\_]+)\]\n?/g, '<a id="anchor-$1"></a>');
+  };
+
+  Markup.prototype.weather = function(text) {
+    return text.replace(/\[gismeteo\]\n?/g, '<iframe src="' + this.options.gismeteo.url + '" width="96%" height="160" scrolling="no" marginheight="0" marginwidth="0" frameborder="0"></iframe>&nbsp;');
+  };
+
+  Markup.prototype.spoiler = function(text) {
+    return text.replace(/<<\[b(tn|utton)[\s]+(primary|info|success|warning|danger|inverse|link)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn btn-$2 spoiler-caption spoiler-close">' + '<span class="caret"></span>&nbsp;$3</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/<<\[b(tn|utton)[\s]+([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="btn spoiler-caption spoiler-close">' + '<span class="caret"></span>&nbsp;$2</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/<<\[([\s0-9a-zA-Zа-яА-Я\_\.\/\-\?\!\*\#\'\"\<\>\=\,\;\:\(\)\№\«\»]+)\]\n?/g, '<div class="spoiler">' + '<a href="#spoiler" class="spoiler-caption spoiler-close">' + '$1</a><p>' + '<div class="hide spoiler-body spoiler-close"><pre>').replace(/>>\n?/g, '</pre></div></p></div>');
+  };
+
+  Markup.prototype.header = function(text) {
+    return text.replace(/<\[\n?/g, '<div class="page-header">').replace(/\]>\n?/g, '</div>');
+  };
+
+  Markup.prototype.spaces = function(text) {
+    return text.replace(/^\n/, "").replace(/\n\n/g, "<br><br>").replace(/>\n?/g, '>').replace(/<pre><br>/g, '<pre>').replace(/\n/g, "<br>");
+  };
+
+  Markup.prototype.noevent = function(text) {
+    return text.replace(/(href="#")/g, '$1 data-noevent="true"');
+  };
+
+  return Markup;
 
 })();
-
-}),
-"Text": (function (require, exports, module) { /* wrapped by builder */
-var Backbone;
-
-Backbone = require('backbone');
-
-module.exports = Backbone.Router.extend({
-  routes: {
-    'main/text/apteki': 'apteki'
-  },
-  initialize: function() {
-    return alert('router');
-  },
-  apteki: function() {
-    return alert('apteki');
-  }
-});
 
 }),
 "Settings": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
-Backbone = require('backbone');
+Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
   defaults: {
@@ -3076,7 +3139,8 @@ module.exports = Backbone.Model.extend({
     type: 'json',
     conf: {
       main: 'conf/main.json',
-      themes: 'conf/themes.json'
+      themes: 'conf/themes.json',
+      settings: 'conf/settings.json'
     },
     region: {
       caption: 'unknow',
@@ -3085,11 +3149,15 @@ module.exports = Backbone.Model.extend({
     theme: {
       caption: 'unknow',
       name: 'unknow'
+    },
+    settings: {
+      paths: {}
     }
   },
   initialize: function() {
     this.main();
-    return this.theme();
+    this.theme();
+    return this.settings();
   },
   main: function() {
     var _this;
@@ -3139,6 +3207,28 @@ module.exports = Backbone.Model.extend({
         }
       }
     });
+  },
+  settings: function() {
+    var _this;
+    _this = this;
+    return $.ajax({
+      url: this.get('conf').settings,
+      async: this.get('async'),
+      dataType: this.get('type'),
+      success: function(s) {
+        var settings;
+        if (s != null) {
+          console.log('conf: ' + 'main.json');
+          settings = _this.get('settings');
+          if (s != null) {
+            $.extend(settings, s);
+          }
+          return _this.set({
+            settings: settings
+          });
+        }
+      }
+    });
   }
 });
 
@@ -3151,12 +3241,15 @@ Template = require('Template');
 module.exports = Template.extend({
   path: 'content',
   ext: '.html',
+  markup: true,
   render: function() {
     var region;
     if (this.file != null) {
+      this.beforeRender();
       region = window.sn.get('region').name;
-      this.url = this.path + '/' + region + '/' + this.file;
-      return this.template();
+      this.url = "" + this.path + "/" + region + "/" + this.file;
+      this.template();
+      return this.afterRender();
     }
   },
   data: function() {
@@ -3165,6 +3258,10 @@ module.exports = Template.extend({
       region: window.sn.get('region'),
       theme: window.sn.get('theme')
     };
+  },
+  beforeRender: function() {},
+  afterRender: function() {
+    return this.$el.find('.tooltip-toggle').tooltip();
   }
 });
 
@@ -3177,19 +3274,42 @@ Content = require('Content');
 module.exports = Content.extend({
   el: '#primary',
   file: 'main.html',
-  initialize: function() {}
+  initialize: function() {
+    return this.render();
+  },
+  "switch": function(part, page) {
+    this.file = "" + page + ".html";
+    return this.render();
+  }
 });
 
 }),
 "ContentSide": (function (require, exports, module) { /* wrapped by builder */
 var Content;
 
+require('jquery');
+
 Content = require('Content');
 
 module.exports = Content.extend({
   el: '#side',
   file: 'side_main.html',
-  initialize: function() {}
+  initialize: function() {
+    return this.render();
+  },
+  "switch": function(part, page) {
+    if (this.file !== ("side_" + part + ".html")) {
+      this.file = "side_" + part + ".html";
+      this.render();
+    }
+    return this.$el.find('.nav').find('li').each(function() {
+      if ($(this).find('a').attr('href').match("" + part + "/text/" + page)) {
+        return $(this).addClass('active');
+      } else {
+        return $(this).removeClass('active');
+      }
+    });
+  }
 });
 
 }),
@@ -3201,11 +3321,12 @@ Template = require('Template');
 module.exports = Template.extend({
   path: 'layout',
   ext: '.html',
+  markup: false,
   render: function() {
     var region;
     if (this.file != null) {
       region = window.sn.get('region').name;
-      this.url = this.path + '/' + region + '/' + this.file;
+      this.url = "" + this.path + "/" + region + "/" + this.file;
       return this.template();
     }
   },
@@ -3213,7 +3334,7 @@ module.exports = Template.extend({
     var result;
     return result = {
       region: window.sn.get('region'),
-      theme: window.sn.get('theme')
+      theme: window.sn.get('region')
     };
   }
 });
@@ -3261,25 +3382,83 @@ module.exports = Layout.extend({
 });
 
 }),
+"Spoiler": (function (require, exports, module) { /* wrapped by builder */
+$(function() {
+  return $(document).on('click', '.spoiler-caption', function(e) {
+    e.preventDefault();
+    if ($(this).hasClass('spoiler-open')) {
+      $(this).removeClass('spoiler-open').addClass('spoiler-close');
+    } else {
+      $(this).removeClass('spoiler-close').addClass('spoiler-open');
+    }
+    return $(this).parent('.spoiler').children('.spoiler-body').each(function() {
+      if ($(this).hasClass('spoiler-open')) {
+        return $(this).removeClass('spoiler-open').addClass('spoiler-close').hide();
+      } else {
+        return $(this).removeClass('spoiler-close').addClass('spoiler-open').show();
+      }
+    });
+  });
+});
+
+}),
 "Template": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
 require('ejs');
 
-Backbone = require('backbone');
+Backbone = require('Backbone');
 
 module.exports = Backbone.View.extend({
   ext: '.html',
+  markup: false,
   template: function() {
-    var _ref;
+    var text, _ref;
     if ((_ref = this.url) != null ? _ref.match(/[\w]*\/[\w]*\/[\w]*.html/) : void 0) {
-      return this.$el.html(new EJS({
+      text = new EJS({
         url: this.url,
         ext: this.ext
-      }).render(this.data()));
+      }).render(this.data());
+      if (this.markup) {
+        text = window.markup.render(text);
+      }
+      return this.$el.html(text);
     }
   },
   data: function() {}
+});
+
+}),
+"App": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain;
+
+Backbone = require('Backbone');
+
+LayoutBar = require('LayoutBar');
+
+LayoutMain = require('LayoutMain');
+
+LayoutFooter = require('LayoutFooter');
+
+ContentSide = require('ContentSide');
+
+ContentPrimary = require('ContentPrimary');
+
+module.exports = Backbone.Router.extend({
+  routes: {
+    ':part/text/:page': 'text'
+  },
+  initialize: function() {
+    this.layoutBar = new LayoutBar();
+    this.layoutMain = new LayoutMain();
+    this.layoutFooter = new LayoutFooter();
+    this.contentSide = new ContentSide();
+    return this.contentPrimary = new ContentPrimary();
+  },
+  text: function(part, page) {
+    this.contentSide["switch"](part, page);
+    return this.contentPrimary["switch"](part, page);
+  }
 });
 
 })

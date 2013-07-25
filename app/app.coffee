@@ -5,32 +5,35 @@ require('jquery')
 require('cookie')
 require('bootstrap')
 require('json2')
+require('Spoiler')
 
-Backbone = 			require('backbone')
-CConsole = 			require('CConsole')
-Settings = 			require('Settings')
-CLayout = 			require('CLayout')
-ContentSide =  		require('ContentSide')
-ContentPrimary =	require('ContentPrimary')
-Router = 			require('Text')
+Backbone = 		require('Backbone')
+App = 			require('App')
+Settings = 		require('Settings')
+Markup = 		require('Markup')
 
-
-class App
-
-	constructor: () ->
-
-		window.console = 	new CConsole() if !window.console?
-		window.sn = 		new Settings()
-		@layout = 			new CLayout()	
+if !window.console?
+	window.console = 
+		info: () ->
+		log: () ->
+		error: () ->
+		warn: () ->
 
 $ () ->
 
-	window.app = new App()
-	new ContentSide().render()
-	new ContentPrimary().render()
-	router = new Router()
+	window.sn =  		new Settings()
+
+	window.markup = 	new Markup
+		images:
+			url: window.sn.get('settings').paths.images.url + window.sn.get('region').name + '/'
+		files:
+			url: window.sn.get('settings').paths.files.url + window.sn.get('region').name + '/'
+		gismeteo:
+			url: window.sn.get('settings').paths.widgets.gismeteo.url + window.sn.get('region').name + '/'
+
+	window.app = 		new App()
+
 	Backbone.history.start()
-	# router.navigate('#main/text/apteki')
 
 
 

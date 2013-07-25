@@ -22,36 +22,28 @@ module.exports = (grunt) ->
 			view:
 				options:
 					pretty: on
-				files: 
-					'./view/users/signin.html':	 					'./jade/view/users/signin.jade'
-					'./view/users/signinBlockHelp.html':	 		'./jade/view/users/signinBlockHelp.jade'
-					'./view/users/signinFormEnter.html':	 		'./jade/view/users/signinFormEnter.jade'
-					'./view/users/signinFormReg.html':	 			'./jade/view/users/signinFormReg.jade'
-					'./view/users/signinSide.html':	 				'./jade/view/users/signinSide.jade'
+				files: [
+					{
+						expand:			true
+						cwd:			'./jade/view/'
+						src:			'**/*.jade'
+						dest:			'./view/'
+						ext:			'.html'
+					}
+				]
 
 			layout:
 				options:
 					pretty: on
-				files: 
-					'./layout/izhevsk/bar.html': 					'./jade/layout/izhevsk/bar.jade'
-					'./layout/izhevsk/main.html': 					'./jade/layout/izhevsk/main.jade'
-					'./layout/izhevsk/footer.html':					'./jade/layout/izhevsk/footer.jade'
-
-					'./layout/kirov/bar.html': 						'./jade/layout/kirov/bar.jade'
-					'./layout/kirov/main.html': 					'./jade/layout/kirov/main.jade'
-					'./layout/kirov/footer.html':					'./jade/layout/kirov/footer.jade'
-
-					'./layout/stavropol/bar.html': 					'./jade/layout/stavropol/bar.jade'
-					'./layout/stavropol/main.html': 				'./jade/layout/stavropol/main.jade'
-					'./layout/stavropol/footer.html':				'./jade/layout/stavropol/footer.jade'
-
-					'./layout/volgograd/bar.html': 					'./jade/layout/volgograd/bar.jade'
-					'./layout/volgograd/main.html': 				'./jade/layout/volgograd/main.jade'
-					'./layout/volgograd/footer.html':				'./jade/layout/volgograd/footer.jade'
-
-					'./layout/yoshkar/bar.html': 					'./jade/layout/yoshkar/bar.jade'
-					'./layout/yoshkar/main.html': 					'./jade/layout/yoshkar/main.jade'
-					'./layout/yoshkar/footer.html':					'./jade/layout/yoshkar/footer.jade'
+				files: [
+					{
+						expand:			true
+						cwd:			'./jade/layout/'
+						src:			'**/*.jade'
+						dest:			'./layout/'
+						ext:			'.html'
+					}
+				]
 
 		recess:
 			css:
@@ -72,9 +64,9 @@ module.exports = (grunt) ->
 				files: [
 					{
 						expand:			true
-						cwd:			'app/'
+						cwd:			'./app/'
 						src:			'**/*.coffee'
-						dest:			'script/'
+						dest:			'./script/'
 						ext:			'.js'
 					}
 				]

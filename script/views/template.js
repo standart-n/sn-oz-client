@@ -2,17 +2,22 @@ var Backbone;
 
 require('ejs');
 
-Backbone = require('backbone');
+Backbone = require('Backbone');
 
 module.exports = Backbone.View.extend({
   ext: '.html',
+  markup: false,
   template: function() {
-    var _ref;
+    var text, _ref;
     if ((_ref = this.url) != null ? _ref.match(/[\w]*\/[\w]*\/[\w]*.html/) : void 0) {
-      return this.$el.html(new EJS({
+      text = new EJS({
         url: this.url,
         ext: this.ext
-      }).render(this.data()));
+      }).render(this.data());
+      if (this.markup) {
+        text = window.markup.render(text);
+      }
+      return this.$el.html(text);
     }
   },
   data: function() {}

@@ -1,7 +1,7 @@
 
 # Settings
 
-Backbone = require('backbone')
+Backbone = require('Backbone')
 
 module.exports = Backbone.Model.extend
 
@@ -12,17 +12,23 @@ module.exports = Backbone.Model.extend
 		conf:
 			main: 		'conf/main.json'
 			themes:	 	'conf/themes.json'
+			settings: 	'conf/settings.json'
 
 		region:
 			caption: 'unknow'
 			name: 'unknow'
+
 		theme:
 			caption: 'unknow'
 			name: 'unknow'
 
+		settings:
+			paths: {}
+
 	initialize: () ->
 		this.main()
 		this.theme()
+		this.settings()
 
 
 	main: () ->
@@ -57,4 +63,16 @@ module.exports = Backbone.Model.extend
 						_this.set 
 							theme: 		theme
 
-
+	settings: () ->
+		_this = this
+		$.ajax
+			url: 		this.get('conf').settings
+			async: 		this.get('async')
+			dataType: 	this.get('type')
+			success: (s) ->
+				if s?
+					console.log 'conf: ' + 'main.json'
+					settings = 	_this.get('settings')
+					$.extend settings, s 	if s?
+					_this.set 
+						settings: 	settings

@@ -1,6 +1,6 @@
 var Backbone;
 
-Backbone = require('backbone');
+Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
   defaults: {
@@ -8,7 +8,8 @@ module.exports = Backbone.Model.extend({
     type: 'json',
     conf: {
       main: 'conf/main.json',
-      themes: 'conf/themes.json'
+      themes: 'conf/themes.json',
+      settings: 'conf/settings.json'
     },
     region: {
       caption: 'unknow',
@@ -17,11 +18,15 @@ module.exports = Backbone.Model.extend({
     theme: {
       caption: 'unknow',
       name: 'unknow'
+    },
+    settings: {
+      paths: {}
     }
   },
   initialize: function() {
     this.main();
-    return this.theme();
+    this.theme();
+    return this.settings();
   },
   main: function() {
     var _this;
@@ -68,6 +73,28 @@ module.exports = Backbone.Model.extend({
               theme: theme
             });
           }
+        }
+      }
+    });
+  },
+  settings: function() {
+    var _this;
+    _this = this;
+    return $.ajax({
+      url: this.get('conf').settings,
+      async: this.get('async'),
+      dataType: this.get('type'),
+      success: function(s) {
+        var settings;
+        if (s != null) {
+          console.log('conf: ' + 'main.json');
+          settings = _this.get('settings');
+          if (s != null) {
+            $.extend(settings, s);
+          }
+          return _this.set({
+            settings: settings
+          });
         }
       }
     });
