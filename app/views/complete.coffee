@@ -14,8 +14,9 @@ module.exports = Backbone.View.extend
 	initialize: () ->
 		_.defaults this.options, this.defaults
 		this.tooltips() if this.options.tooltips
+		this.buttonGroups() 	if this.options.buttonGroups
 		if navigator?.userAgent?.toLowerCase().indexOf('msie 6.0') > -1
-			this.icons() if this.options.icons
+			this.icons() 			if this.options.icons
 
 	icons: () ->
 		this.$el.find('[class^="icon-"],[class*=" icon-"]').each () ->

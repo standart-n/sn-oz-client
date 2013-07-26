@@ -14,6 +14,9 @@ module.exports = Backbone.View.extend({
     if (this.options.tooltips) {
       this.tooltips();
     }
+    if (this.options.buttonGroups) {
+      this.buttonGroups();
+    }
     if ((typeof navigator !== "undefined" && navigator !== null ? (_ref = navigator.userAgent) != null ? _ref.toLowerCase().indexOf('msie 6.0') : void 0 : void 0) > -1) {
       if (this.options.icons) {
         return this.icons();

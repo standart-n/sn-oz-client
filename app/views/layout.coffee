@@ -29,6 +29,6 @@ module.exports = Template.extend
 	afterRender: () ->
 		new Complete
 			el: 		this.el
-			icons:		on
+			icons:			on
 
 		
