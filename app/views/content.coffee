@@ -1,7 +1,8 @@
 
 # Content
 
-Template = require('Template')
+Template = 		require('Template')
+Complete = 		require('Complete')
 
 module.exports = Template.extend
 
@@ -12,8 +13,8 @@ module.exports = Template.extend
 	render: () ->
 		if this.file?
 			this.beforeRender()
-			region = 		window.sn.get('region').name
-			this.url = 		"#{this.path}/#{region}/#{this.file}"
+			this.region = 	window.sn.get('region').name
+			this.url = 		"#{this.path}/#{this.region}/#{this.file}"
 			this.template()
 			this.afterRender()
 
@@ -26,6 +27,7 @@ module.exports = Template.extend
 	beforeRender: () ->
 
 	afterRender: () ->
-		this.$el.find('.tooltip-toggle').tooltip()
-		if $.isFunction($.bootstrapIE6)
-			$.bootstrapIE6(this.el)
+		new Complete
+			el: 		this.el
+			icons:		on
+			tooltips:	on

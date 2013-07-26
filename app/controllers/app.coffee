@@ -12,6 +12,9 @@ ContentPrimary =	require('ContentPrimary')
 
 Signin =  			require('Signin')
 
+Spoiler = 			require('Spoiler')
+BootstrapButtons = 	require('BootstrapButtons')
+
 module.exports = Backbone.Router.extend
 
 	routes:
@@ -30,6 +33,11 @@ module.exports = Backbone.Router.extend
 
 		# views
 		this.signin = 				new Signin()
+
+		# triggers
+		new BootstrapButtons()
+		new Spoiler()
+
 
 	text: (part,page) ->
 

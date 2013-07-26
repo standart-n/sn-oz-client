@@ -14,6 +14,3 @@ module.exports = Backbone.View.extend
 			text = new EJS(url: this.url, ext: this.ext).render(this.data())
 			text = window.markup.render(text) if this.markup
 			this.$el.html text
-
-	data: () ->
-		

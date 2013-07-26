@@ -319,8 +319,6 @@ require('bootstrap');
 
 require('json2');
 
-require('Spoiler');
-
 Backbone = require('Backbone');
 
 App = require('App');
@@ -3233,21 +3231,64 @@ module.exports = Backbone.Model.extend({
 });
 
 }),
+"Complete": (function (require, exports, module) { /* wrapped by builder */
+var Backbone;
+
+Backbone = require('Backbone');
+
+module.exports = Backbone.View.extend({
+  defaults: {
+    icons: true,
+    tooltips: false,
+    buttonGroups: false
+  },
+  initialize: function() {
+    var _ref;
+    _.defaults(this.options, this.defaults);
+    if (this.options.tooltips) {
+      this.tooltips();
+    }
+    if ((typeof navigator !== "undefined" && navigator !== null ? (_ref = navigator.userAgent) != null ? _ref.toLowerCase().indexOf('msie 6.0') : void 0 : void 0) > -1) {
+      if (this.options.icons) {
+        return this.icons();
+      }
+    }
+  },
+  icons: function() {
+    return this.$el.find('[class^="icon-"],[class*=" icon-"]').each(function() {
+      if (!$(this).hasClass('icon-xxx')) {
+        return $(this).addClass('icon-xxx').css({
+          'background-position-y': (parseInt($(this).css('background-position-y')) + 1).toString() + 'px'
+        });
+      }
+    });
+  },
+  tooltips: function() {
+    return this.$el.find('.tooltip-toggle').tooltip();
+  },
+  buttonGroups: function() {
+    this.$el.find('.btn-group').parent().find('.btn-group:eq(0)').addClass('btn-group-first');
+    return this.$el.find('.btn').parent().find('.btn:eq(0)').addClass('btn-first');
+  }
+});
+
+}),
 "Content": (function (require, exports, module) { /* wrapped by builder */
-var Template;
+var Complete, Template;
 
 Template = require('Template');
+
+Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'content',
   ext: '.html',
   markup: true,
   render: function() {
-    var region;
     if (this.file != null) {
       this.beforeRender();
-      region = window.sn.get('region').name;
-      this.url = "" + this.path + "/" + region + "/" + this.file;
+      this.region = window.sn.get('region').name;
+      this.url = "" + this.path + "/" + this.region + "/" + this.file;
       this.template();
       return this.afterRender();
     }
@@ -3261,10 +3302,11 @@ module.exports = Template.extend({
   },
   beforeRender: function() {},
   afterRender: function() {
-    this.$el.find('.tooltip-toggle').tooltip();
-    if ($.isFunction($.bootstrapIE6)) {
-      return $.bootstrapIE6(this.el);
-    }
+    return new Complete({
+      el: this.el,
+      icons: true,
+      tooltips: true
+    });
   }
 });
 
@@ -3317,20 +3359,23 @@ module.exports = Content.extend({
 
 }),
 "Layout": (function (require, exports, module) { /* wrapped by builder */
-var Template;
+var Complete, Template;
 
 Template = require('Template');
+
+Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'layout',
   ext: '.html',
   markup: false,
   render: function() {
-    var region;
     if (this.file != null) {
-      region = window.sn.get('region').name;
-      this.url = "" + this.path + "/" + region + "/" + this.file;
-      return this.template();
+      this.beforeRender();
+      this.region = window.sn.get('region').name;
+      this.url = "" + this.path + "/" + this.region + "/" + this.file;
+      this.template();
+      return this.afterRender();
     }
   },
   data: function() {
@@ -3339,6 +3384,13 @@ module.exports = Template.extend({
       region: window.sn.get('region'),
       theme: window.sn.get('region')
     };
+  },
+  beforeRender: function() {},
+  afterRender: function() {
+    return new Complete({
+      el: this.el,
+      icons: true
+    });
   }
 });
 
@@ -3404,26 +3456,6 @@ module.exports = Backbone.View.extend({
 });
 
 }),
-"Spoiler": (function (require, exports, module) { /* wrapped by builder */
-$(function() {
-  return $(document).on('click', '.spoiler-caption', function(e) {
-    e.preventDefault();
-    if ($(this).hasClass('spoiler-open')) {
-      $(this).removeClass('spoiler-open').addClass('spoiler-close');
-    } else {
-      $(this).removeClass('spoiler-close').addClass('spoiler-open');
-    }
-    return $(this).parent('.spoiler').children('.spoiler-body').each(function() {
-      if ($(this).hasClass('spoiler-open')) {
-        return $(this).removeClass('spoiler-open').addClass('spoiler-close').hide();
-      } else {
-        return $(this).removeClass('spoiler-close').addClass('spoiler-open').show();
-      }
-    });
-  });
-});
-
-}),
 "Template": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
@@ -3446,13 +3478,12 @@ module.exports = Backbone.View.extend({
       }
       return this.$el.html(text);
     }
-  },
-  data: function() {}
+  }
 });
 
 }),
 "App": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Signin;
+var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Signin, Spoiler;
 
 Backbone = require('Backbone');
 
@@ -3468,6 +3499,10 @@ ContentPrimary = require('ContentPrimary');
 
 Signin = require('Signin');
 
+Spoiler = require('Spoiler');
+
+BootstrapButtons = require('BootstrapButtons');
+
 module.exports = Backbone.Router.extend({
   routes: {
     ':part/text/:page': 'text'
@@ -3478,13 +3513,87 @@ module.exports = Backbone.Router.extend({
     this.layoutFooter = new LayoutFooter();
     this.contentSide = new ContentSide();
     this.contentPrimary = new ContentPrimary();
-    return this.signin = new Signin();
+    this.signin = new Signin();
+    new BootstrapButtons();
+    return new Spoiler();
   },
   text: function(part, page) {
     this.contentSide["switch"](part, page);
     return this.contentPrimary["switch"](part, page);
   }
 });
+
+}),
+"BootstrapButtons": (function (require, exports, module) { /* wrapped by builder */
+var BootstrapButtons;
+
+module.exports = BootstrapButtons = (function() {
+  BootstrapButtons.prototype.options = {
+    btnColorCls: ['btn-primary', 'btn-warning', 'btn-danger', 'btn-success', 'btn-info', 'btn-inverse', 'btn-link'],
+    btnSizeCls: ['btn-mini', 'btn-small', 'btn-large']
+  };
+
+  function BootstrapButtons() {
+    var _ref, _this;
+    _this = this;
+    if ((typeof navigator !== "undefined" && navigator !== null ? (_ref = navigator.userAgent) != null ? _ref.toLowerCase().indexOf('msie 6.0') : void 0 : void 0) > -1) {
+      $(document).on('mouseenter', '.btn', function() {
+        var hover, __this;
+        __this = this;
+        hover = 'btn-hover';
+        $.each(_this.options.btnColorCls, function(k, v) {
+          if ($(__this).hasClass(v)) {
+            return hover = v + '-hover';
+          }
+        });
+        $(this).data('ie6hover', hover);
+        return $(this).addClass(hover);
+      });
+      $(document).on('mouseleave', '.btn', function() {
+        var hover;
+        hover = $(this).data('ie6hover');
+        $(this).removeData('ie6hover', hover);
+        if (hover) {
+          return $(this).removeClass(hover);
+        }
+      });
+    }
+  }
+
+  return BootstrapButtons;
+
+})();
+
+}),
+"Spoiler": (function (require, exports, module) { /* wrapped by builder */
+var Spoiler;
+
+require('_');
+
+module.exports = Spoiler = (function() {
+  function Spoiler() {
+    $(function() {
+      return $(document).on('click', '.spoiler-caption', function(e) {
+        e.preventDefault();
+        if ($(this).hasClass('spoiler-open')) {
+          $(this).removeClass('spoiler-open').addClass('spoiler-close');
+        } else {
+          $(this).removeClass('spoiler-close').addClass('spoiler-open');
+        }
+        return $(this).parent('.spoiler').children('.spoiler-body').each(function() {
+          if ($(this).hasClass('spoiler-open')) {
+            return $(this).removeClass('spoiler-open').addClass('spoiler-close').hide();
+          } else {
+            return $(this).removeClass('spoiler-close').addClass('spoiler-open').show();
+          }
+        });
+      });
+    });
+  }
+
+  return Spoiler;
+
+})();
 
 })
 },{},{});

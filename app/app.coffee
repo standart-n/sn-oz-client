@@ -5,7 +5,7 @@ require('jquery')
 require('cookie')
 require('bootstrap')
 require('json2')
-require('Spoiler')
+
 
 Backbone = 		require('Backbone')
 App = 			require('App')

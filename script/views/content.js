@@ -1,17 +1,18 @@
-var Template;
+var Complete, Template;
 
 Template = require('Template');
+
+Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'content',
   ext: '.html',
   markup: true,
   render: function() {
-    var region;
     if (this.file != null) {
       this.beforeRender();
-      region = window.sn.get('region').name;
-      this.url = "" + this.path + "/" + region + "/" + this.file;
+      this.region = window.sn.get('region').name;
+      this.url = "" + this.path + "/" + this.region + "/" + this.file;
       this.template();
       return this.afterRender();
     }
@@ -25,9 +26,10 @@ module.exports = Template.extend({
   },
   beforeRender: function() {},
   afterRender: function() {
-    this.$el.find('.tooltip-toggle').tooltip();
-    if ($.isFunction($.bootstrapIE6)) {
-      return $.bootstrapIE6(this.el);
-    }
+    return new Complete({
+      el: this.el,
+      icons: true,
+      tooltips: true
+    });
   }
 });

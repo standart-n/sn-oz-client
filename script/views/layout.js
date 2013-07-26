@@ -1,17 +1,20 @@
-var Template;
+var Complete, Template;
 
 Template = require('Template');
+
+Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'layout',
   ext: '.html',
   markup: false,
   render: function() {
-    var region;
     if (this.file != null) {
-      region = window.sn.get('region').name;
-      this.url = "" + this.path + "/" + region + "/" + this.file;
-      return this.template();
+      this.beforeRender();
+      this.region = window.sn.get('region').name;
+      this.url = "" + this.path + "/" + this.region + "/" + this.file;
+      this.template();
+      return this.afterRender();
     }
   },
   data: function() {
@@ -20,5 +23,12 @@ module.exports = Template.extend({
       region: window.sn.get('region'),
       theme: window.sn.get('region')
     };
+  },
+  beforeRender: function() {},
+  afterRender: function() {
+    return new Complete({
+      el: this.el,
+      icons: true
+    });
   }
 });

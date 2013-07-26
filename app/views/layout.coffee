@@ -1,7 +1,8 @@
 
 # Layout
 
-Template = require('Template')
+Template = 		require('Template')
+Complete = 		require('Complete')
 
 module.exports = Template.extend
 
@@ -11,14 +12,23 @@ module.exports = Template.extend
 
 	render: () ->
 		if this.file?
-			region = 		window.sn.get('region').name
-			this.url = 		"#{this.path}/#{region}/#{this.file}"
+			this.beforeRender()
+			this.region = 	window.sn.get('region').name
+			this.url = 		"#{this.path}/#{this.region}/#{this.file}"
 			this.template()
+			this.afterRender()
 
 	data: () ->
 		result = 
 			region: 	window.sn.get('region')
 			theme:		window.sn.get('region')
 
+
+	beforeRender: () ->
+
+	afterRender: () ->
+		new Complete
+			el: 		this.el
+			icons:		on
 
 		
