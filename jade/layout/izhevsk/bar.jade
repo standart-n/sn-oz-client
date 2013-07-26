@@ -8,15 +8,11 @@
 					.pull-left
 						a.brand(href = "#main/text/main") <%= region.caption %>
 
-						a.btn.btn-primary(href = "#", data-toggle = "modal", data-target = "#signin") 
-							i.icon-home.icon-white
-							&nbsp;
-							Войти
-						
-						&nbsp;
-						
-						a.btn(href = "#") Регистрация
-						
-						&nbsp;						
-						
-						a.btn(href = "#") Забыли пароль?
+						.btn-group
+							a.btn.btn-primary(href = "#", data-toggle = "modal", data-target = "#signin") 
+								i.icon-home.icon-white
+								&nbsp;
+								Войти
+							a.btn(href = "#") Регистрация
+								
+							a.btn(href = "#") Забыли пароль?
