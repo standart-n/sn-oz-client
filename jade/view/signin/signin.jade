@@ -1,0 +1,30 @@
+
+#signin.modal.hide.fade(role = "dialog")
+	.modal-header
+		button(type="button", class="close", data-dismiss="modal") &times;
+		h3 Авторизация
+	.modal-body
+		p
+		
+			.signin-alert-success.signin-alert.alert.alert-success.hide
+				button.close(type="button", data-dismiss="alert") &times
+				strong Поздравляем! 
+				Вы успешно авторизовались
+
+			.signin-alert-error.signin-alert.alert.alert-error.hide
+				button.close(type="button", data-dismiss="alert") &times
+				strong Ошибка! 
+				Вы указали неверный логин или пароль
+
+
+			form#signin-form.form-horizontal
+				.control-group
+					label.control-label Логин
+					.controls
+						input#signin-login.input-text(type = "text", value = "", placeholder = "Логин")
+				.control-group
+					label.control-label Пароль
+					.controls
+						input#signin-password.input-password(type = "password", value = "", placeholder = "Пароль")
+
+				button.btn.btn-primary.btn-block(type = "submit") Войти

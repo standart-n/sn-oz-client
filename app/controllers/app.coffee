@@ -10,6 +10,8 @@ LayoutFooter = 		require('LayoutFooter')
 ContentSide =  		require('ContentSide')
 ContentPrimary =	require('ContentPrimary')
 
+Signin =  			require('Signin')
+
 module.exports = Backbone.Router.extend
 
 	routes:
@@ -25,6 +27,9 @@ module.exports = Backbone.Router.extend
 		# content
 		this.contentSide = 			new ContentSide()
 		this.contentPrimary = 		new ContentPrimary()
+
+		# views
+		this.signin = 				new Signin()
 
 	text: (part,page) ->
 

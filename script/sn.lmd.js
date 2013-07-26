@@ -3385,6 +3385,25 @@ module.exports = Layout.extend({
 });
 
 }),
+"Signin": (function (require, exports, module) { /* wrapped by builder */
+var Backbone;
+
+require('jquery');
+
+Backbone = require('Backbone');
+
+module.exports = Backbone.View.extend({
+  el: '#signin',
+  events: {
+    'submit #signin-form': 'submit'
+  },
+  submit: function(e) {
+    e.preventDefault();
+    return alert('submit');
+  }
+});
+
+}),
 "Spoiler": (function (require, exports, module) { /* wrapped by builder */
 $(function() {
   return $(document).on('click', '.spoiler-caption', function(e) {
@@ -3433,7 +3452,7 @@ module.exports = Backbone.View.extend({
 
 }),
 "App": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain;
+var Backbone, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Signin;
 
 Backbone = require('Backbone');
 
@@ -3447,6 +3466,8 @@ ContentSide = require('ContentSide');
 
 ContentPrimary = require('ContentPrimary');
 
+Signin = require('Signin');
+
 module.exports = Backbone.Router.extend({
   routes: {
     ':part/text/:page': 'text'
@@ -3456,7 +3477,8 @@ module.exports = Backbone.Router.extend({
     this.layoutMain = new LayoutMain();
     this.layoutFooter = new LayoutFooter();
     this.contentSide = new ContentSide();
-    return this.contentPrimary = new ContentPrimary();
+    this.contentPrimary = new ContentPrimary();
+    return this.signin = new Signin();
   },
   text: function(part, page) {
     this.contentSide["switch"](part, page);

@@ -1,4 +1,4 @@
-var Backbone, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain;
+var Backbone, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Signin;
 
 Backbone = require('Backbone');
 
@@ -12,6 +12,8 @@ ContentSide = require('ContentSide');
 
 ContentPrimary = require('ContentPrimary');
 
+Signin = require('Signin');
+
 module.exports = Backbone.Router.extend({
   routes: {
     ':part/text/:page': 'text'
@@ -21,7 +23,8 @@ module.exports = Backbone.Router.extend({
     this.layoutMain = new LayoutMain();
     this.layoutFooter = new LayoutFooter();
     this.contentSide = new ContentSide();
-    return this.contentPrimary = new ContentPrimary();
+    this.contentPrimary = new ContentPrimary();
+    return this.signin = new Signin();
   },
   text: function(part, page) {
     this.contentSide["switch"](part, page);
