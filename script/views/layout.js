@@ -6,12 +6,12 @@ Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'layout',
-  ext: '.html',
   markup: false,
   render: function() {
-    if (this.file != null) {
+    var _ref, _ref1;
+    if ((this.file != null) && (this.path != null)) {
       this.beforeRender();
-      this.region = window.sn.get('region').name;
+      this.region = (_ref = (_ref1 = window.sn) != null ? _ref1.get('region').name : void 0) != null ? _ref : '';
       this.url = "" + this.path + "/" + this.region + "/" + this.file;
       this.template();
       return this.afterRender();

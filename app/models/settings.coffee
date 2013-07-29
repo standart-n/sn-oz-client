@@ -30,7 +30,6 @@ module.exports = Backbone.Model.extend
 		this.theme()
 		this.settings()
 
-
 	main: () ->
 		_this = this	
 		$.ajax

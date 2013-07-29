@@ -7,13 +7,12 @@ Complete = 		require('Complete')
 module.exports = Template.extend
 
 	path: 		'layout'
-	ext: 		'.html'
 	markup: 	off
 
 	render: () ->
-		if this.file?
+		if this.file? and this.path?
 			this.beforeRender()
-			this.region = 	window.sn.get('region').name
+			this.region = 	window.sn?.get('region').name ? ''
 			this.url = 		"#{this.path}/#{this.region}/#{this.file}"
 			this.template()
 			this.afterRender()

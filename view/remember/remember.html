@@ -1,39 +1,30 @@
 
 <div role="dialog" class="modal hide">
   <div class="modal-header"><a href="#" class="modal-close close">&times;</a>
-    <h3>Авторизация</h3>
+    <h3>Вспомнить пароль</h3>
   </div>
   <div class="modal-body">
     <p>
-      <div class="signin-alert-success signin-alert alert alert-success hide">
+      <div class="remember-alert-success remember-alert alert alert-success hide">
         <button type="button" data-dismiss="alert" class="close">&times</button><strong>Поздравляем! </strong>Вы успешно авторизовались
       </div>
-      <div class="signin-alert-error signin-alert alert alert-error hide">
+      <div class="remember-alert-error remember-alert alert alert-error hide">
         <button type="button" data-dismiss="alert" class="close">&times</button><strong>Ошибка! </strong>Вы указали неверный логин или пароль
       </div>
-      <form id="signin-form" class="form-horizontal">
+      <form id="remember-form" class="form-horizontal">
         <div class="control-group">
           <label class="control-label">Логин</label>
           <div class="controls">
-            <input id="signin-login" type="text" value="" placeholder="Логин" class="input-text"/>
+            <input id="remember-login" type="text" value="" placeholder="Логин" class="input-text"/>
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Пароль</label>
           <div class="controls">
-            <input id="signin-password" type="password" value="" placeholder="Пароль" class="input-password"/>
+            <input id="remember-password" type="password" value="" placeholder="Пароль" class="input-password"/>
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Войти</button>
-        <p>
-          <div class="control-group">
-            <label class="control-label">&nbsp;</label>
-            <div class="controls"><a href="#registration" class="modal-close">Регистрация</a>&nbsp;
-              &nbsp;
-              &nbsp;<a href="#remember" class="modal-close">Забыли пароль?</a>
-            </div>
-          </div>
-        </p>
       </form>
     </p>
   </div>

@@ -7,7 +7,6 @@ Complete = 		require('Complete')
 module.exports = Template.extend
 
 	path: 		'content'
-	ext: 		'.html'
 	markup: 	on
 
 	render: () ->

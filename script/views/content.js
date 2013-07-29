@@ -6,7 +6,6 @@ Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'content',
-  ext: '.html',
   markup: true,
   render: function() {
     if (this.file != null) {

@@ -8,16 +8,18 @@ module.exports = Backbone.View.extend({
   ext: '.html',
   markup: false,
   template: function() {
-    var text, _ref;
-    if ((_ref = this.url) != null ? _ref.match(/[\w]*\/[\w]*\/[\w]*.html/) : void 0) {
-      text = new EJS({
+    var text, _ref, _ref1, _ref2;
+    if (this.url != null) {
+      text = (_ref = new EJS({
         url: this.url,
         ext: this.ext
-      }).render(this.data());
-      if (this.markup) {
-        text = window.markup.render(text);
+      }).render(this.data())) != null ? _ref : '';
+      if ((_ref1 = this.markup) != null ? _ref1 : '') {
+        text = (_ref2 = window.markup) != null ? _ref2.render(text) : void 0;
       }
       return this.$el.html(text);
     }
-  }
+  },
+  render: function() {},
+  data: function() {}
 });

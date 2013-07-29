@@ -1,4 +1,4 @@
-var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Signin, Spoiler;
+var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, RegistrationView, RememberView, SigninView, Spoiler;
 
 Backbone = require('Backbone');
 
@@ -12,7 +12,11 @@ ContentSide = require('ContentSide');
 
 ContentPrimary = require('ContentPrimary');
 
-Signin = require('Signin');
+SigninView = require('SigninView');
+
+RegistrationView = require('RegistrationView');
+
+RememberView = require('RememberView');
 
 Spoiler = require('Spoiler');
 
@@ -20,7 +24,10 @@ BootstrapButtons = require('BootstrapButtons');
 
 module.exports = Backbone.Router.extend({
   routes: {
-    ':part/text/:page': 'text'
+    ':part/text/:page': 'routeText',
+    'signin': 'routeSignin',
+    'registration': 'routeRegistration',
+    'remember': 'routeRemember'
   },
   initialize: function() {
     this.layoutBar = new LayoutBar();
@@ -28,12 +35,23 @@ module.exports = Backbone.Router.extend({
     this.layoutFooter = new LayoutFooter();
     this.contentSide = new ContentSide();
     this.contentPrimary = new ContentPrimary();
-    this.signin = new Signin();
+    this.signinView = new SigninView();
+    this.registrationView = new RegistrationView();
+    this.rememberView = new RememberView();
     new BootstrapButtons();
     return new Spoiler();
   },
-  text: function(part, page) {
+  routeText: function(part, page) {
     this.contentSide["switch"](part, page);
     return this.contentPrimary["switch"](part, page);
+  },
+  routeSignin: function() {
+    return this.signinView.open();
+  },
+  routeRegistration: function() {
+    return this.registrationView.open();
+  },
+  routeRemember: function() {
+    return this.rememberView.open();
   }
 });

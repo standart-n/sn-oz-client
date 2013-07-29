@@ -3126,6 +3126,23 @@ module.exports = Markup = (function() {
 })();
 
 }),
+"Registration": (function (require, exports, module) { /* wrapped by builder */
+var Backbone;
+
+Backbone = require('Backbone');
+
+module.exports = Backbone.Model.extend({
+  defaults: {
+    id: 10012,
+    firstname: '',
+    lastname: '',
+    email: '',
+    company: '123'
+  },
+  initialize: function() {}
+});
+
+}),
 "Settings": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
@@ -3285,7 +3302,6 @@ Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'content',
-  ext: '.html',
   markup: true,
   render: function() {
     if (this.file != null) {
@@ -3370,12 +3386,12 @@ Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'layout',
-  ext: '.html',
   markup: false,
   render: function() {
-    if (this.file != null) {
+    var _ref, _ref1;
+    if ((this.file != null) && (this.path != null)) {
       this.beforeRender();
-      this.region = window.sn.get('region').name;
+      this.region = (_ref = (_ref1 = window.sn) != null ? _ref1.get('region').name : void 0) != null ? _ref : '';
       this.url = "" + this.path + "/" + this.region + "/" + this.file;
       this.template();
       return this.afterRender();
@@ -3440,21 +3456,91 @@ module.exports = Layout.extend({
 });
 
 }),
-"Signin": (function (require, exports, module) { /* wrapped by builder */
-var Backbone;
+"Modal": (function (require, exports, module) { /* wrapped by builder */
+var Template;
 
-require('jquery');
+Template = require('Template');
 
-Backbone = require('Backbone');
-
-module.exports = Backbone.View.extend({
-  el: '#signin',
+module.exports = Template.extend({
   events: {
-    'submit #signin-form': 'submit'
+    'submit .form': 'submit',
+    'click .modal-close': 'close'
+  },
+  render: function() {
+    return this.template();
+  },
+  open: function() {
+    return this.show();
+  },
+  show: function() {
+    return this.$el.find('.modal').modal('show');
+  },
+  close: function() {
+    return this.hide();
+  },
+  hide: function() {
+    return this.$el.find('.modal').modal('hide');
+  }
+});
+
+}),
+"RegistrationView": (function (require, exports, module) { /* wrapped by builder */
+var Modal, Registration;
+
+Modal = require('Modal');
+
+Registration = require('Registration');
+
+module.exports = Modal.extend({
+  el: '#registration',
+  url: 'view/registration/registration.html',
+  model: new Registration(),
+  initialize: function() {
+    return this.render();
   },
   submit: function(e) {
     e.preventDefault();
-    return alert('submit');
+    return this.model.save({}, {
+      url: '//dev.st-n.ru',
+      error: function() {
+        return alert('error');
+      },
+      dataType: 'jsonp'
+    });
+  }
+});
+
+}),
+"RememberView": (function (require, exports, module) { /* wrapped by builder */
+var Modal;
+
+Modal = require('Modal');
+
+module.exports = Modal.extend({
+  el: '#remember',
+  url: 'view/remember/remember.html',
+  initialize: function() {
+    return this.render();
+  },
+  submit: function(e) {
+    return e.preventDefault();
+  }
+});
+
+}),
+"SigninView": (function (require, exports, module) { /* wrapped by builder */
+var Modal;
+
+Modal = require('Modal');
+
+module.exports = Modal.extend({
+  el: '#signin',
+  url: 'view/signin/signin.html',
+  initialize: function() {
+    return this.render();
+  },
+  submit: function(e) {
+    return e.preventDefault();
   }
 });
 
@@ -3470,23 +3556,25 @@ module.exports = Backbone.View.extend({
   ext: '.html',
   markup: false,
   template: function() {
-    var text, _ref;
-    if ((_ref = this.url) != null ? _ref.match(/[\w]*\/[\w]*\/[\w]*.html/) : void 0) {
-      text = new EJS({
+    var text, _ref, _ref1, _ref2;
+    if (this.url != null) {
+      text = (_ref = new EJS({
         url: this.url,
         ext: this.ext
-      }).render(this.data());
-      if (this.markup) {
-        text = window.markup.render(text);
+      }).render(this.data())) != null ? _ref : '';
+      if ((_ref1 = this.markup) != null ? _ref1 : '') {
+        text = (_ref2 = window.markup) != null ? _ref2.render(text) : void 0;
       }
       return this.$el.html(text);
     }
-  }
+  },
+  render: function() {},
+  data: function() {}
 });
 
 }),
 "App": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Signin, Spoiler;
+var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, RegistrationView, RememberView, SigninView, Spoiler;
 
 Backbone = require('Backbone');
 
@@ -3500,7 +3588,11 @@ ContentSide = require('ContentSide');
 
 ContentPrimary = require('ContentPrimary');
 
-Signin = require('Signin');
+SigninView = require('SigninView');
+
+RegistrationView = require('RegistrationView');
+
+RememberView = require('RememberView');
 
 Spoiler = require('Spoiler');
 
@@ -3508,7 +3600,10 @@ BootstrapButtons = require('BootstrapButtons');
 
 module.exports = Backbone.Router.extend({
   routes: {
-    ':part/text/:page': 'text'
+    ':part/text/:page': 'routeText',
+    'signin': 'routeSignin',
+    'registration': 'routeRegistration',
+    'remember': 'routeRemember'
   },
   initialize: function() {
     this.layoutBar = new LayoutBar();
@@ -3516,13 +3611,24 @@ module.exports = Backbone.Router.extend({
     this.layoutFooter = new LayoutFooter();
     this.contentSide = new ContentSide();
     this.contentPrimary = new ContentPrimary();
-    this.signin = new Signin();
+    this.signinView = new SigninView();
+    this.registrationView = new RegistrationView();
+    this.rememberView = new RememberView();
     new BootstrapButtons();
     return new Spoiler();
   },
-  text: function(part, page) {
+  routeText: function(part, page) {
     this.contentSide["switch"](part, page);
     return this.contentPrimary["switch"](part, page);
+  },
+  routeSignin: function() {
+    return this.signinView.open();
+  },
+  routeRegistration: function() {
+    return this.registrationView.open();
+  },
+  routeRemember: function() {
+    return this.rememberView.open();
   }
 });
 

@@ -10,7 +10,9 @@ LayoutFooter = 		require('LayoutFooter')
 ContentSide =  		require('ContentSide')
 ContentPrimary =	require('ContentPrimary')
 
-Signin =  			require('Signin')
+SigninView =  		require('SigninView')
+RegistrationView =  require('RegistrationView')
+RememberView =  	require('RememberView')
 
 Spoiler = 			require('Spoiler')
 BootstrapButtons = 	require('BootstrapButtons')
@@ -18,7 +20,10 @@ BootstrapButtons = 	require('BootstrapButtons')
 module.exports = Backbone.Router.extend
 
 	routes:
-		':part/text/:page':		'text'
+		':part/text/:page':		'routeText'
+		'signin':				'routeSignin'
+		'registration':			'routeRegistration'
+		'remember':				'routeRemember'
 
 	initialize: () ->
 
@@ -32,14 +37,24 @@ module.exports = Backbone.Router.extend
 		this.contentPrimary = 		new ContentPrimary()
 
 		# views
-		this.signin = 				new Signin()
+		this.signinView = 			new SigninView()
+		this.registrationView = 	new RegistrationView()
+		this.rememberView = 		new RememberView()
 
 		# triggers
 		new BootstrapButtons()
 		new Spoiler()
 
 
-	text: (part,page) ->
-
+	routeText: (part,page) ->
 		this.contentSide.switch(part,page)
 		this.contentPrimary.switch(part,page)
+
+	routeSignin: () ->
+		this.signinView.open()
+
+	routeRegistration: () ->
+		this.registrationView.open()
+
+	routeRemember: () ->
+		this.rememberView.open()
