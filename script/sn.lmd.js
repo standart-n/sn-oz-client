@@ -337,6 +337,8 @@ if (window.console == null) {
 }
 
 $(function() {
+  Backbone.emulateJSON = true;
+  Backbone.emulateHTTP = true;
   window.sn = new Settings();
   window.markup = new Markup({
     images: {
@@ -3501,11 +3503,15 @@ module.exports = Modal.extend({
   submit: function(e) {
     e.preventDefault();
     return this.model.save({}, {
-      url: '//dev.st-n.ru',
+      url: 'http://dev.st-n.ru/registration',
+      dataType: 'jsonp',
       error: function() {
         return alert('error');
       },
-      dataType: 'jsonp'
+      success: function(s) {
+        alert(JSON.stringify(s));
+        return alert(s.id);
+      }
     });
   }
 });

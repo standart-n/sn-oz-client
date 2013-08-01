@@ -26,6 +26,8 @@ if (window.console == null) {
 }
 
 $(function() {
+  Backbone.emulateJSON = true;
+  Backbone.emulateHTTP = true;
   window.sn = new Settings();
   window.markup = new Markup({
     images: {

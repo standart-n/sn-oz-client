@@ -6,7 +6,6 @@ require('cookie')
 require('bootstrap')
 require('json2')
 
-
 Backbone = 		require('Backbone')
 App = 			require('App')
 Settings = 		require('Settings')
@@ -20,6 +19,9 @@ if !window.console?
 		warn: () ->
 
 $ () ->
+
+	Backbone.emulateJSON = on
+	Backbone.emulateHTTP = on
 
 	window.sn =  		new Settings()
 

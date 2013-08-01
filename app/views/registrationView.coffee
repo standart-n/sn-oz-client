@@ -16,10 +16,9 @@ module.exports = Modal.extend
 	submit: (e) ->
 		e.preventDefault()
 		this.model.save {},
-			url:			'//dev.st-n.ru'
-			error:			() -> alert 'error'
+			url:			'http://dev.st-n.ru/registration'
 			dataType:		'jsonp'
+			success: 		(s) -> 
+				alert JSON.stringify(s)
+				alert s.id
 
-
-
-		
