@@ -337,8 +337,8 @@ if (window.console == null) {
 }
 
 $(function() {
-  Backbone.emulateJSON = true;
   Backbone.emulateHTTP = true;
+  Backbone.emulateJSON = true;
   window.sn = new Settings();
   window.markup = new Markup({
     images: {
@@ -3135,11 +3135,10 @@ Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
   defaults: {
-    id: 10012,
     firstname: '',
     lastname: '',
     email: '',
-    company: '123'
+    company: ''
   },
   initialize: function() {}
 });
@@ -3465,8 +3464,7 @@ Template = require('Template');
 
 module.exports = Template.extend({
   events: {
-    'submit .form': 'submit',
-    'click .modal-close': 'close'
+    'submit .form': 'submit'
   },
   render: function() {
     return this.template();
@@ -3475,13 +3473,10 @@ module.exports = Template.extend({
     return this.show();
   },
   show: function() {
-    return this.$el.find('.modal').modal('show');
-  },
-  close: function() {
-    return this.hide();
-  },
-  hide: function() {
-    return this.$el.find('.modal').modal('hide');
+    this.$el.find('.modal').modal('show');
+    return this.$el.find('.modal').on('hide', function() {
+      return window.app.navigate('#');
+    });
   }
 });
 
@@ -3498,16 +3493,25 @@ module.exports = Modal.extend({
   url: 'view/registration/registration.html',
   model: new Registration(),
   initialize: function() {
-    return this.render();
+    this.render();
+    this.$firstname = this.$el.find('.registration-firstname');
+    this.$lastname = this.$el.find('.registration-lastname');
+    this.$email = this.$el.find('.registration-email');
+    return this.$company = this.$el.find('.registration-company');
+  },
+  data: function() {
+    return this.model.toJSON();
   },
   submit: function(e) {
     e.preventDefault();
-    return this.model.save({}, {
+    return this.model.save({
+      firstname: this.$firstname.val(),
+      lastname: this.$lastname.val(),
+      email: this.$email.val(),
+      company: this.$company.val()
+    }, {
       url: 'http://dev.st-n.ru/registration',
       dataType: 'jsonp',
-      error: function() {
-        return alert('error');
-      },
       success: function(s) {
         alert(JSON.stringify(s));
         return alert(s.id);
@@ -3566,7 +3570,8 @@ module.exports = Backbone.View.extend({
     if (this.url != null) {
       text = (_ref = new EJS({
         url: this.url,
-        ext: this.ext
+        ext: this.ext,
+        type: '['
       }).render(this.data())) != null ? _ref : '';
       if ((_ref1 = this.markup) != null ? _ref1 : '') {
         text = (_ref2 = window.markup) != null ? _ref2.render(text) : void 0;

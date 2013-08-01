@@ -9,16 +9,25 @@ module.exports = Modal.extend({
   url: 'view/registration/registration.html',
   model: new Registration(),
   initialize: function() {
-    return this.render();
+    this.render();
+    this.$firstname = this.$el.find('.registration-firstname');
+    this.$lastname = this.$el.find('.registration-lastname');
+    this.$email = this.$el.find('.registration-email');
+    return this.$company = this.$el.find('.registration-company');
+  },
+  data: function() {
+    return this.model.toJSON();
   },
   submit: function(e) {
     e.preventDefault();
-    return this.model.save({}, {
+    return this.model.save({
+      firstname: this.$firstname.val(),
+      lastname: this.$lastname.val(),
+      email: this.$email.val(),
+      company: this.$company.val()
+    }, {
       url: 'http://dev.st-n.ru/registration',
       dataType: 'jsonp',
-      error: function() {
-        return alert('error');
-      },
       success: function(s) {
         alert(JSON.stringify(s));
         return alert(s.id);

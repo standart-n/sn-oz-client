@@ -20,8 +20,8 @@ if !window.console?
 
 $ () ->
 
-	Backbone.emulateJSON = on
 	Backbone.emulateHTTP = on
+	Backbone.emulateJSON = on
 
 	window.sn =  		new Settings()
 

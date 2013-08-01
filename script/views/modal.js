@@ -4,8 +4,7 @@ Template = require('Template');
 
 module.exports = Template.extend({
   events: {
-    'submit .form': 'submit',
-    'click .modal-close': 'close'
+    'submit .form': 'submit'
   },
   render: function() {
     return this.template();
@@ -14,12 +13,9 @@ module.exports = Template.extend({
     return this.show();
   },
   show: function() {
-    return this.$el.find('.modal').modal('show');
-  },
-  close: function() {
-    return this.hide();
-  },
-  hide: function() {
-    return this.$el.find('.modal').modal('hide');
+    this.$el.find('.modal').modal('show');
+    return this.$el.find('.modal').on('hide', function() {
+      return window.app.navigate('#');
+    });
   }
 });

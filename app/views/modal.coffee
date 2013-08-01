@@ -7,7 +7,6 @@ module.exports = Template.extend
 
 	events:
 		'submit .form':		 		'submit'
-		'click .modal-close':		'close'
 
 	render: () ->
 		this.template()
@@ -17,9 +16,5 @@ module.exports = Template.extend
 
 	show: () ->
 		this.$el.find('.modal').modal 'show'
-
-	close: () ->
-		this.hide()
-
-	hide: () ->
-		this.$el.find('.modal').modal 'hide'
+		this.$el.find('.modal').on 'hide', () ->
+			window.app.navigate('#')

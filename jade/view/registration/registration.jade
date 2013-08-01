@@ -1,7 +1,7 @@
 
 .modal.hide(role = "dialog")
 	.modal-header
-		a.modal-close.close(href = "#") &times;
+		button.close(href = "#", data-dismiss = "modal") &times;
 		h3 Регистрация
 	.modal-body
 		p
@@ -22,22 +22,22 @@
 				.control-group
 					label.control-label Фамилия
 					.controls
-						input.registration-lastname.input-text(type = "text", value = "", placeholder = "Фамилия")
+						input.registration-lastname.input-text(type = "text", value = "[%= lastname %]", placeholder = "Фамилия")
 
 				.control-group
 					label.control-label Имя
 					.controls
-						input.registration-firstname.input-text(type = "text", value = "", placeholder = "Имя")
+						input.registration-firstname.input-text(type = "text", value = "[%= firstname %]", placeholder = "Имя")
 
 				.control-group
 					label.control-label E-mail
 					.controls
-						input.registration-email.input-text(type = "text", value = "", placeholder = "E-mail")
+						input.registration-email.input-text(type = "text", value = "[%= email %]", placeholder = "E-mail")
 
 				.control-group
 					label.control-label Компания
 					.controls
-						input.registration-company.input-text(type = "text", value = "", placeholder = "Компания")
+						input.registration-company.input-text(type = "text", value = "[%= company %]", placeholder = "Компания")
 
 				button.btn.btn-primary.btn-block(type = "submit") Зарегистрироваться
 
