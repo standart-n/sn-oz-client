@@ -3249,6 +3249,74 @@ module.exports = Backbone.Model.extend({
 });
 
 }),
+"RegistrationAlertError": (function (require, exports, module) { /* wrapped by builder */
+var Template;
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '.registration-alert-error',
+  url: 'view/registration/alertError.html',
+  initialize: function() {},
+  render: function() {
+    return this.template();
+  },
+  show: function(err) {
+    this.err = err;
+    switch (err.field) {
+      case "firstname":
+        this.err.field = "Имя";
+        break;
+      case "lastname":
+        this.err.field = "Фамилия";
+        break;
+      case "company":
+        this.err.field = "Компания";
+        break;
+      case "email":
+        this.err.field = "e-mail";
+    }
+    this.$el.show();
+    return this.render();
+  },
+  hide: function() {
+    this.$el.hide();
+    return this.render();
+  },
+  data: function() {
+    var result;
+    return result = {
+      field: this.err.field,
+      description: this.err.description
+    };
+  }
+});
+
+}),
+"RegistrationAlertSuccess": (function (require, exports, module) { /* wrapped by builder */
+var Template;
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '.registration-alert-success',
+  url: 'view/registration/alertSuccess.html',
+  initialize: function() {},
+  render: function() {
+    return this.template();
+  },
+  show: function() {
+    this.$el.show();
+    return this.render();
+  },
+  hide: function() {
+    this.$el.hide();
+    return this.render();
+  },
+  data: function() {}
+});
+
+}),
 "Complete": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
@@ -3482,11 +3550,15 @@ module.exports = Template.extend({
 
 }),
 "RegistrationView": (function (require, exports, module) { /* wrapped by builder */
-var Modal, Registration;
+var Modal, Registration, RegistrationAlertError, RegistrationAlertSuccess;
 
 Modal = require('Modal');
 
 Registration = require('Registration');
+
+RegistrationAlertSuccess = require('RegistrationAlertSuccess');
+
+RegistrationAlertError = require('RegistrationAlertError');
 
 module.exports = Modal.extend({
   el: '#registration',
@@ -3497,15 +3569,25 @@ module.exports = Modal.extend({
     this.$firstname = this.$el.find('.registration-firstname');
     this.$lastname = this.$el.find('.registration-lastname');
     this.$email = this.$el.find('.registration-email');
-    return this.$company = this.$el.find('.registration-company');
+    this.$company = this.$el.find('.registration-company');
+    this.alertSuccess = new RegistrationAlertSuccess();
+    return this.alertError = new RegistrationAlertError();
   },
   data: function() {
     return this.model.toJSON();
   },
+  checking: function() {
+    if (this.model.get('success')) {
+      this.alertSuccess.show();
+      return this.alertError.hide();
+    } else {
+      this.alertError.show(this.model.get('err'));
+      return this.alertSuccess.hide();
+    }
+  },
   submit: function(e) {
-    var _this;
+    var _this = this;
     e.preventDefault();
-    _this = this;
     return this.model.save({
       firstname: this.$firstname.val(),
       lastname: this.$lastname.val(),
@@ -3515,7 +3597,7 @@ module.exports = Modal.extend({
       url: 'http://dev.st-n.ru/registration',
       dataType: 'jsonp',
       success: function(s) {
-        return alert(JSON.stringify(_this.model.toJSON()));
+        return _this.checking();
       }
     });
   }

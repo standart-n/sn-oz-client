@@ -9,6 +9,6 @@ module.exports = Backbone.Model.extend
 		firstname:			''
 		lastname:			''
 		email:				''
-		company:			''		
+		company:			''
 
 	initialize: () ->
