@@ -31,7 +31,7 @@
 			}
 		},
 		"app": 						"script/app.js",
-		"<%= file[0].toUpperCase() %><%= file.slice(1) %>": "script/{models,views,controllers,triggers}/*.js" 
+		"<%= file[0].toUpperCase() %><%= file.slice(1) %>": "script/{models,views,controllers,triggers}/**/*.js" 
 	},
 	"main": "app",
 	"shortcuts": true,
