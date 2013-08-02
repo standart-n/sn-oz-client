@@ -19,7 +19,9 @@ module.exports = Modal.extend({
     return this.model.toJSON();
   },
   submit: function(e) {
+    var _this;
     e.preventDefault();
+    _this = this;
     return this.model.save({
       firstname: this.$firstname.val(),
       lastname: this.$lastname.val(),
@@ -29,8 +31,7 @@ module.exports = Modal.extend({
       url: 'http://dev.st-n.ru/registration',
       dataType: 'jsonp',
       success: function(s) {
-        alert(JSON.stringify(s));
-        return alert(s.id);
+        return alert(JSON.stringify(_this.model.toJSON()));
       }
     });
   }

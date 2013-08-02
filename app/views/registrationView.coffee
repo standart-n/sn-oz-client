@@ -22,6 +22,7 @@ module.exports = Modal.extend
 
 	submit: (e) ->
 		e.preventDefault()
+		_this = this
 		this.model.save
 			firstname: 		this.$firstname.val()
 			lastname: 		this.$lastname.val()
@@ -31,8 +32,9 @@ module.exports = Modal.extend
 			url:			'http://dev.st-n.ru/registration'
 			dataType:		'jsonp'
 			success: 		(s) -> 
-				alert JSON.stringify(s)
-				alert s.id
+				alert JSON.stringify(_this.model.toJSON())
+				# alert JSON.stringify(s)
+				# alert s.id
 
 
 
