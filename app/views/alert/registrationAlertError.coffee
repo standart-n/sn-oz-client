@@ -23,8 +23,7 @@ module.exports = Template.extend
 
 	hide: () ->
 		this.$el.hide()
-		this.render()
-
+		
 	data: () ->
 		result = 
 			field: 						this.err.field

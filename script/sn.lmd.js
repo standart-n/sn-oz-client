@@ -3280,8 +3280,7 @@ module.exports = Template.extend({
     return this.render();
   },
   hide: function() {
-    this.$el.hide();
-    return this.render();
+    return this.$el.hide();
   },
   data: function() {
     var result;
@@ -3310,8 +3309,7 @@ module.exports = Template.extend({
     return this.render();
   },
   hide: function() {
-    this.$el.hide();
-    return this.render();
+    return this.$el.hide();
   },
   data: function() {}
 });
@@ -3550,7 +3548,7 @@ module.exports = Template.extend({
 
 }),
 "RegistrationView": (function (require, exports, module) { /* wrapped by builder */
-var Modal, Registration, RegistrationAlertError, RegistrationAlertSuccess;
+var Modal, Registration, RegistrationAlertError, RegistrationAlertSuccess, RegistrationTextSuccess;
 
 Modal = require('Modal');
 
@@ -3559,6 +3557,8 @@ Registration = require('Registration');
 RegistrationAlertSuccess = require('RegistrationAlertSuccess');
 
 RegistrationAlertError = require('RegistrationAlertError');
+
+RegistrationTextSuccess = require('RegistrationTextSuccess');
 
 module.exports = Modal.extend({
   el: '#registration',
@@ -3570,19 +3570,31 @@ module.exports = Modal.extend({
     this.$lastname = this.$el.find('.registration-lastname');
     this.$email = this.$el.find('.registration-email');
     this.$company = this.$el.find('.registration-company');
+    this.$form = this.$el.find('.registration-form');
     this.alertSuccess = new RegistrationAlertSuccess();
-    return this.alertError = new RegistrationAlertError();
+    this.alertError = new RegistrationAlertError();
+    this.textSuccess = new RegistrationTextSuccess();
+    this.alertSuccess.hide();
+    this.textSuccess.hide();
+    return this.$form.show();
   },
   data: function() {
     return this.model.toJSON();
   },
   checking: function() {
     if (this.model.get('success')) {
+      this.$form.hide();
       this.alertSuccess.show();
-      return this.alertError.hide();
+      this.alertError.hide();
+      return this.textSuccess.show({
+        email: this.model.get('email'),
+        password: this.model.get('password')
+      });
     } else {
       this.alertError.show(this.model.get('err'));
-      return this.alertSuccess.hide();
+      this.alertSuccess.hide();
+      this.textSuccess.hide();
+      return this.$form.show();
     }
   },
   submit: function(e) {
@@ -3664,6 +3676,32 @@ module.exports = Backbone.View.extend({
   },
   render: function() {},
   data: function() {}
+});
+
+}),
+"RegistrationTextSuccess": (function (require, exports, module) { /* wrapped by builder */
+var Template;
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '.registration-text-success',
+  url: 'view/registration/textSuccess.html',
+  initialize: function() {},
+  render: function() {
+    return this.template();
+  },
+  show: function(res) {
+    this.res = res;
+    this.$el.show();
+    return this.render();
+  },
+  hide: function() {
+    return this.$el.hide();
+  },
+  data: function() {
+    return this.res;
+  }
 });
 
 }),

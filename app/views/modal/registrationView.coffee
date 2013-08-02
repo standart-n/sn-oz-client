@@ -5,6 +5,7 @@ Modal = 								require('Modal')
 Registration = 							require('Registration')
 RegistrationAlertSuccess = 				require('RegistrationAlertSuccess')
 RegistrationAlertError = 				require('RegistrationAlertError')
+RegistrationTextSuccess = 				require('RegistrationTextSuccess')
 
 module.exports = Modal.extend
 
@@ -19,19 +20,33 @@ module.exports = Modal.extend
 		this.$email = 					this.$el.find('.registration-email')
 		this.$company = 				this.$el.find('.registration-company')
 
+		this.$form = 					this.$el.find('.registration-form')
+
 		this.alertSuccess = 			new RegistrationAlertSuccess()
 		this.alertError = 				new RegistrationAlertError()
+
+		this.textSuccess = 				new RegistrationTextSuccess()
+
+		this.alertSuccess.hide()
+		this.textSuccess.hide()
+		this.$form.show()
 
 	data: () ->
 		this.model.toJSON()
 
 	checking: () ->
 		if this.model.get('success')
+			this.$form.hide()
 			this.alertSuccess.show()
 			this.alertError.hide()
+			this.textSuccess.show
+				email:					this.model.get('email')
+				password:				this.model.get('password')
 		else
 			this.alertError.show this.model.get('err')
 			this.alertSuccess.hide()
+			this.textSuccess.hide()
+			this.$form.show()
 
 	submit: (e) ->
 		e.preventDefault()

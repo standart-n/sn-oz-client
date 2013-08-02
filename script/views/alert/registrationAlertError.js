@@ -28,8 +28,7 @@ module.exports = Template.extend({
     return this.render();
   },
   hide: function() {
-    this.$el.hide();
-    return this.render();
+    return this.$el.hide();
   },
   data: function() {
     var result;
