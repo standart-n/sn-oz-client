@@ -1,4 +1,4 @@
-var App, Backbone, Markup, Settings;
+var App, Backbone, Markup, Settings, User;
 
 require('jquery');
 
@@ -11,6 +11,8 @@ require('json2');
 Backbone = require('Backbone');
 
 App = require('App');
+
+User = require('User');
 
 Settings = require('Settings');
 
@@ -41,5 +43,6 @@ $(function() {
     }
   });
   window.app = new App();
+  window.user = new User();
   return Backbone.history.start();
 });

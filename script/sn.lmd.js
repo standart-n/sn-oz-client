@@ -309,7 +309,7 @@ sb.on('stats:before-require-count', function (moduleName, module) {
     main(lmd_trigger('lmd-register:decorate-require', 'main', lmd_require)[1], output.exports, output);
 })/*DO NOT ADD ; !*/
 (this,(function (require, exports, module) { /* wrapped by builder */
-var App, Backbone, Markup, Settings;
+var App, Backbone, Markup, Settings, User;
 
 require('jquery');
 
@@ -322,6 +322,8 @@ require('json2');
 Backbone = require('Backbone');
 
 App = require('App');
+
+User = require('User');
 
 Settings = require('Settings');
 
@@ -352,6 +354,7 @@ $(function() {
     }
   });
   window.app = new App();
+  window.user = new User();
   return Backbone.history.start();
 });
 
@@ -3715,7 +3718,7 @@ module.exports = Template.extend({
 
 }),
 "App": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, RegistrationView, RememberView, SigninView, Spoiler;
+var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Spoiler;
 
 Backbone = require('Backbone');
 
@@ -3728,12 +3731,6 @@ LayoutFooter = require('LayoutFooter');
 ContentSide = require('ContentSide');
 
 ContentPrimary = require('ContentPrimary');
-
-SigninView = require('SigninView');
-
-RegistrationView = require('RegistrationView');
-
-RememberView = require('RememberView');
 
 Spoiler = require('Spoiler');
 
@@ -3752,15 +3749,37 @@ module.exports = Backbone.Router.extend({
     this.layoutFooter = new LayoutFooter();
     this.contentSide = new ContentSide();
     this.contentPrimary = new ContentPrimary();
-    this.signinView = new SigninView();
-    this.registrationView = new RegistrationView();
-    this.rememberView = new RememberView();
     new BootstrapButtons();
     return new Spoiler();
   },
   routeText: function(part, page) {
     this.contentSide["switch"](part, page);
     return this.contentPrimary["switch"](part, page);
+  }
+});
+
+}),
+"User": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, RegistrationView, RememberView, SigninView;
+
+Backbone = require('Backbone');
+
+SigninView = require('SigninView');
+
+RegistrationView = require('RegistrationView');
+
+RememberView = require('RememberView');
+
+module.exports = Backbone.Router.extend({
+  routes: {
+    'signin': 'routeSignin',
+    'registration': 'routeRegistration',
+    'remember': 'routeRemember'
+  },
+  initialize: function() {
+    this.signinView = new SigninView();
+    this.registrationView = new RegistrationView();
+    return this.rememberView = new RememberView();
   },
   routeSignin: function() {
     return this.signinView.open();
