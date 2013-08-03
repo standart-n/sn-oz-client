@@ -12,10 +12,15 @@ module.exports = Template.extend({
   open: function() {
     return this.show();
   },
+  afterOpen: function() {
+    return this.afterShow();
+  },
   show: function() {
     this.$el.find('.modal').modal('show');
-    return this.$el.find('.modal').on('hide', function() {
+    this.$el.find('.modal').on('hide', function() {
       return window.app.navigate('#');
     });
-  }
+    return this.afterShow();
+  },
+  afterShow: function() {}
 });

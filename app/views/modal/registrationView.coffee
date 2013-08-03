@@ -24,12 +24,17 @@ module.exports = Modal.extend
 
 		this.alertSuccess = 			new RegistrationAlertSuccess()
 		this.alertError = 				new RegistrationAlertError()
-
 		this.textSuccess = 				new RegistrationTextSuccess()
 
+	afterShow: () ->
 		this.alertSuccess.hide()
+		this.alertError.hide()
 		this.textSuccess.hide()
 		this.$form.show()
+
+		# this.textSuccess.show
+		# 	email:						'aleksnick@list.ru'
+		# 	password:					'252702'
 
 	data: () ->
 		this.model.toJSON()

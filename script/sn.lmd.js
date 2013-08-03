@@ -3538,12 +3538,17 @@ module.exports = Template.extend({
   open: function() {
     return this.show();
   },
+  afterOpen: function() {
+    return this.afterShow();
+  },
   show: function() {
     this.$el.find('.modal').modal('show');
-    return this.$el.find('.modal').on('hide', function() {
+    this.$el.find('.modal').on('hide', function() {
       return window.app.navigate('#');
     });
-  }
+    return this.afterShow();
+  },
+  afterShow: function() {}
 });
 
 }),
@@ -3573,8 +3578,11 @@ module.exports = Modal.extend({
     this.$form = this.$el.find('.registration-form');
     this.alertSuccess = new RegistrationAlertSuccess();
     this.alertError = new RegistrationAlertError();
-    this.textSuccess = new RegistrationTextSuccess();
+    return this.textSuccess = new RegistrationTextSuccess();
+  },
+  afterShow: function() {
     this.alertSuccess.hide();
+    this.alertError.hide();
     this.textSuccess.hide();
     return this.$form.show();
   },
@@ -3666,7 +3674,8 @@ module.exports = Backbone.View.extend({
       text = (_ref = new EJS({
         url: this.url,
         ext: this.ext,
-        type: '['
+        type: '[',
+        cache: false
       }).render(this.data())) != null ? _ref : '';
       if ((_ref1 = this.markup) != null ? _ref1 : '') {
         text = (_ref2 = window.markup) != null ? _ref2.render(text) : void 0;

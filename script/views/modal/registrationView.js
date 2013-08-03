@@ -23,8 +23,11 @@ module.exports = Modal.extend({
     this.$form = this.$el.find('.registration-form');
     this.alertSuccess = new RegistrationAlertSuccess();
     this.alertError = new RegistrationAlertError();
-    this.textSuccess = new RegistrationTextSuccess();
+    return this.textSuccess = new RegistrationTextSuccess();
+  },
+  afterShow: function() {
     this.alertSuccess.hide();
+    this.alertError.hide();
     this.textSuccess.hide();
     return this.$form.show();
   },

@@ -13,7 +13,8 @@ module.exports = Backbone.View.extend({
       text = (_ref = new EJS({
         url: this.url,
         ext: this.ext,
-        type: '['
+        type: '[',
+        cache: false
       }).render(this.data())) != null ? _ref : '';
       if ((_ref1 = this.markup) != null ? _ref1 : '') {
         text = (_ref2 = window.markup) != null ? _ref2.render(text) : void 0;
