@@ -1,6 +1,4 @@
 
-# Registration
-
 Modal = 								require('Modal')
 Registration = 							require('Registration')
 RegistrationAlertSuccess = 				require('RegistrationAlertSuccess')
@@ -32,10 +30,6 @@ module.exports = Modal.extend
 		this.textSuccess.hide()
 		this.$form.show()
 
-		# this.textSuccess.show
-		# 	email:						'aleksnick@list.ru'
-		# 	password:					'252702'
-
 	data: () ->
 		this.model.toJSON()
 
@@ -47,6 +41,9 @@ module.exports = Modal.extend
 			this.textSuccess.show
 				email:					this.model.get('email')
 				password:				this.model.get('password')
+
+			# window.app.user.trigger 'signin', 'after registration'
+
 		else
 			this.alertError.show this.model.get('err')
 			this.alertSuccess.hide()

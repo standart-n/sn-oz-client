@@ -8,7 +8,8 @@ require('json2')
 
 Backbone = 								require('Backbone')
 App = 									require('App')
-User = 									require('User')
+Authorization = 						require('Authorization')
+Social = 								require('Social')
 Settings = 								require('Settings')
 Markup = 								require('Markup')
 
@@ -35,6 +36,7 @@ $ () ->
 			url: window.sn.get('settings').paths.widgets.gismeteo.url + window.sn.get('region').name + '/'
 
 	window.app = 						new App()
-	window.user = 						new User()
+	window.authorization = 				new Authorization()
+	window.social = 					new Social()
 
 	Backbone.history.start()

@@ -8,13 +8,18 @@
 					.pull-left
 						a.brand(href = "#main/text/main") [%= region.caption %]
 
-						a.btn.btn-primary.btn-group-first(href = "#signin") 
+						a.bar-signin.btn.btn-primary(href = "#signin") 
 							i.icon-home.icon-white
 							&nbsp;
 							Войти
 
+						a.bar-logout.btn.hide(href = "#logout") 
+							i.icon-home.icon-white
+							&nbsp;
+							Выйти
+
 						&nbsp;
 
 						.btn-group
-							a.btn(href = "#registration") Регистрация
-							a.btn(href = "#remember") Забыли пароль?
+							a.bar-registration.btn(href = "#registration") Регистрация
+							a.bar-remember.btn(href = "#remember") Забыли пароль?

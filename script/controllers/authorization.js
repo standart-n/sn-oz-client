@@ -15,6 +15,7 @@ module.exports = Backbone.Router.extend({
     'remember': 'routeRemember'
   },
   initialize: function() {
+    _.extend(this, Backbone.Events);
     this.signinView = new SigninView();
     this.registrationView = new RegistrationView();
     return this.rememberView = new RememberView();

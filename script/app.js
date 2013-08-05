@@ -1,4 +1,4 @@
-var App, Backbone, Markup, Settings, User;
+var App, Authorization, Backbone, Markup, Settings, Social;
 
 require('jquery');
 
@@ -12,7 +12,9 @@ Backbone = require('Backbone');
 
 App = require('App');
 
-User = require('User');
+Authorization = require('Authorization');
+
+Social = require('Social');
 
 Settings = require('Settings');
 
@@ -43,6 +45,7 @@ $(function() {
     }
   });
   window.app = new App();
-  window.user = new User();
+  window.authorization = new Authorization();
+  window.social = new Social();
   return Backbone.history.start();
 });

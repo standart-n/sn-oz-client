@@ -17,7 +17,7 @@
 		"ejs": 						"lib/js/ejs.min.js",
 		"bootstrap": 				"script/bootstrap.js",
 		"Backbone": {
-			"path": 				"lib/js/backbone.0.9.2.min.js",
+			"path": 				"lib/js/backbone.1.0.0.min.js",
 			"require": {
 				"underscore": 		"_",
 				"jQuery": 			"$"
