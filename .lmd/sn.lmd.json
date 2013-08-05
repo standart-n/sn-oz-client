@@ -15,7 +15,6 @@
 		"jquery": 					"@$",
 		"json2": 					"lib/js/json2.min.js",
 		"ejs": 						"lib/js/ejs.min.js",
-		"qunit": 					"lib/js/qunit.min.js",
 		"bootstrap": 				"script/bootstrap.js",
 		"Backbone": {
 			"path": 				"lib/js/backbone.1.0.0.min.js",
@@ -32,7 +31,6 @@
 			}
 		},
 		"app": 						"script/app.js",
-		"test": 					"script/test.js",
 		"<%= file[0].toUpperCase() %><%= file.slice(1) %>": "script/{models,views,controllers,triggers}/**/*.js" 
 	},
 	"main": 						"app",

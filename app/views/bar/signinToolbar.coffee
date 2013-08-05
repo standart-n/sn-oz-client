@@ -7,10 +7,10 @@ module.exports = Backbone.View.extend
 
 	initialize: () ->
 
-		this.$signin = 					this.$el.find('bar-signin')
-		this.$logout = 					this.$el.find('bar-logout')
-		this.$registration = 			this.$el.find('bar-signin')
-		this.$remember = 				this.$el.find('bar-remember')
+		this.$signin = 					this.$el.find('.bar-signin')
+		this.$logout = 					this.$el.find('.bar-logout')
+		this.$registration = 			this.$el.find('.bar-registration')
+		this.$remember = 				this.$el.find('.bar-remember')
 
 	signin: () ->
 		this.$logout.show()
