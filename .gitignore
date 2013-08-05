@@ -31,8 +31,6 @@ nbproject
 *.komodoproject
 .komodotools
 
-/lib*
-/script*
 
 # Folders to ignore
 .hg
@@ -45,9 +43,15 @@ log
 yii
 materials
 framework
+lib
 demos
 photo
 users
 files
 content
 requirements
+
+
+# Script
+script/*
+!script/sn.lmd.js
