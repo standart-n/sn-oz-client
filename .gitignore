@@ -31,6 +31,9 @@ nbproject
 *.komodoproject
 .komodotools
 
+/lib*
+/script*
+
 # Folders to ignore
 .hg
 .svn
