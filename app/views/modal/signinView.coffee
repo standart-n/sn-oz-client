@@ -25,7 +25,6 @@ module.exports = Modal.extend
 
 	checking: () ->
 		if this.model.get('success')
-			alert 'success'
 			this.alertError.hide()
 			this.$form.hide()
 			this.hide()

@@ -313,8 +313,6 @@ var App, Authorization, Backbone, Markup, Settings, Social;
 
 require('jquery');
 
-require('cookie');
-
 require('bootstrap');
 
 require('json2');
@@ -3778,7 +3776,6 @@ module.exports = Modal.extend({
   },
   checking: function() {
     if (this.model.get('success')) {
-      alert('success');
       this.alertError.hide();
       this.$form.hide();
       return this.hide();
@@ -3811,6 +3808,33 @@ module.exports = Modal.extend({
 });
 
 }),
+"Profile": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, Template;
+
+Backbone = require('Backbone');
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '#profile',
+  url: 'view/profile/profile.html',
+  initialize: function() {
+    var _this = this;
+    this.model = window.social.self;
+    _.extend(this.model, Backbone.Events);
+    return this.model.on('change:signin', function() {
+      return _this.render();
+    });
+  },
+  render: function() {
+    return this.template();
+  },
+  data: function() {
+    return this.model.toJSON();
+  }
+});
+
+}),
 "Template": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
@@ -3836,7 +3860,9 @@ module.exports = Backbone.View.extend({
       return this.$el.html(text);
     }
   },
-  render: function() {},
+  render: function() {
+    return this.template();
+  },
   data: function() {}
 });
 
@@ -3945,11 +3971,15 @@ module.exports = Backbone.Router.extend({
 
 }),
 "Social": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, Self, SigninToolbar;
+var Backbone, Profile, Self, SigninToolbar;
+
+require('cookie');
 
 Backbone = require('Backbone');
 
 Self = require('Self');
+
+Profile = require('Profile');
 
 SigninToolbar = require('SigninToolbar');
 
@@ -3962,36 +3992,61 @@ module.exports = Backbone.Router.extend({
     _.extend(this, Backbone.Events);
     this.self = new Self();
     this.signinToolbar = new SigninToolbar();
-    this.listenTo(window.authorization.registrationView.model, 'change', function() {
+    this.listenTo(window.authorization.registrationView.model, 'change:success', function() {
       return _this.eventSignin(window.authorization.registrationView.model);
     });
-    return this.listenTo(window.authorization.signinView.model, 'change', function() {
+    this.listenTo(window.authorization.signinView.model, 'change:success', function() {
       return _this.eventSignin(window.authorization.signinView.model);
     });
+    return this.checkCookie();
   },
   checking: function() {
-    return alert(JSON.stringify(this.self));
+    if (this.profile == null) {
+      this.profile = new Profile();
+    }
+    if ((this.self.get('email') != null) && (this.self.get('firstname') != null)) {
+      this.signinToolbar.signin();
+      $.cookie('id', this.self.get('id'), {
+        expires: 365
+      });
+      $.cookie('key', this.self.get('key'), {
+        expires: 365
+      });
+      return this.self.set('signin', true);
+    }
+  },
+  fetch: function() {
+    var _this = this;
+    return this.self.fetch({
+      url: window.sn.get('server').host + '/signin/' + this.self.get('id') + '/' + this.self.get('key'),
+      dataType: 'jsonp',
+      success: function(s) {
+        return _this.checking();
+      }
+    });
   },
   eventSignin: function(model) {
-    var _this = this;
     if (model.get('success') === true) {
-      this.signinToolbar.signin();
       this.self.set('id', model.get('id'));
       this.self.set('key', model.get('key'));
-      return this.self.fetch({
-        url: window.sn.get('server').host + '/signin/' + this.self.get('id') + '/' + this.self.get('key'),
-        dataType: 'jsonp',
-        success: function(s) {
-          return _this.checking();
-        }
-      });
+      return this.fetch();
+    }
+  },
+  checkCookie: function() {
+    if (($.cookie('id') != null) && ($.cookie('key') != null)) {
+      this.self.set('id', $.cookie('id'));
+      this.self.set('key', $.cookie('key'));
+      return this.fetch();
     }
   },
   routeLogout: function() {
     this.signinToolbar.logout();
     window.authorization.registrationView.model.clear();
     window.authorization.signinView.model.clear();
-    return this.self.clear();
+    this.self.clear();
+    this.self.set('signin', false);
+    $.removeCookie('id');
+    return $.removeCookie('key');
   }
 });
 

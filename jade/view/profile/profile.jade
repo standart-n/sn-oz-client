@@ -1,0 +1,16 @@
+
+[% if (signin === true) { %]
+
+.well.well-small
+	ul.nav.nav-list
+		li
+			.lead
+				[%= firstname %] [%= lastname %]
+
+		li
+			a(href = "#")		
+				i.icon-cog
+				&nbsp;
+				Настройки
+
+[% } %]

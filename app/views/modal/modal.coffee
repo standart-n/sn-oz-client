@@ -1,6 +1,4 @@
 
-# modal
-
 Template = 		require('Template')
 
 module.exports = Template.extend

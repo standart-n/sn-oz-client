@@ -2,7 +2,6 @@
 # Старт приложения
 
 require('jquery')
-require('cookie')
 require('bootstrap')
 require('json2')
 

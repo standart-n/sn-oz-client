@@ -16,5 +16,6 @@ module.exports = Backbone.View.extend
 			this.$el.html text
 
 	render: () ->
+		this.template()
 
 	data: () ->
