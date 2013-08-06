@@ -3969,11 +3969,22 @@ module.exports = Backbone.Router.extend({
       return _this.eventSignin(window.authorization.signinView.model);
     });
   },
+  checking: function() {
+    return alert(JSON.stringify(this.self));
+  },
   eventSignin: function(model) {
+    var _this = this;
     if (model.get('success') === true) {
       this.signinToolbar.signin();
-      this.self.set('email', model.get('email'));
-      return this.self.set('key', model.get('key'));
+      this.self.set('id', model.get('id'));
+      this.self.set('key', model.get('key'));
+      return this.self.fetch({
+        url: window.sn.get('server').host + '/signin/' + this.self.get('id') + '/' + this.self.get('key'),
+        dataType: 'jsonp',
+        success: function(s) {
+          return _this.checking();
+        }
+      });
     }
   },
   routeLogout: function() {
