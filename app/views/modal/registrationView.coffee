@@ -22,6 +22,8 @@ module.exports = Modal.extend
 		this.$close = 					this.$el.find('.modal-header').find('.close')
 		this.$form = 					this.$el.find('.registration-form')
 
+		this.model.set region: 			window.sn.get('region')
+
 		this.alertSuccess = 			new RegistrationAlertSuccess()
 		this.alertError = 				new RegistrationAlertError()
 		this.textSuccess = 				new RegistrationTextSuccess()

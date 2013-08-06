@@ -10,3 +10,4 @@ module.exports = Backbone.Model.extend
 		company:			''
 
 	initialize: () ->
+
