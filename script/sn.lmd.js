@@ -3107,6 +3107,12 @@ var User;
 User = require('User');
 
 module.exports = User.extend({
+  defaults: {
+    firstname: '',
+    lastname: '',
+    email: '',
+    company: ''
+  },
   initialize: function() {}
 });
 
@@ -3133,6 +3139,7 @@ module.exports = Backbone.Model.extend({
     conf: {
       main: 'conf/main.json',
       themes: 'conf/themes.json',
+      server: 'conf/server.json',
       settings: 'conf/settings.json'
     },
     region: {
@@ -3145,12 +3152,16 @@ module.exports = Backbone.Model.extend({
     },
     settings: {
       paths: {}
+    },
+    server: {
+      host: ''
     }
   },
   initialize: function() {
     this.main();
     this.theme();
-    return this.settings();
+    this.settings();
+    return this.server();
   },
   main: function() {
     var _this;
@@ -3211,7 +3222,7 @@ module.exports = Backbone.Model.extend({
       success: function(s) {
         var settings;
         if (s != null) {
-          console.log('conf: ' + 'main.json');
+          console.log('conf: ' + 'settings.json');
           settings = _this.get('settings');
           if (s != null) {
             $.extend(settings, s);
@@ -3222,7 +3233,43 @@ module.exports = Backbone.Model.extend({
         }
       }
     });
+  },
+  server: function() {
+    var _this;
+    _this = this;
+    return $.ajax({
+      url: this.get('conf').server,
+      async: this.get('async'),
+      dataType: this.get('type'),
+      success: function(s) {
+        var server;
+        if (s != null) {
+          console.log('conf: ' + 'server.json');
+          server = _this.get('server');
+          if (s != null) {
+            $.extend(server, s);
+          }
+          return _this.set({
+            server: server
+          });
+        }
+      }
+    });
   }
+});
+
+}),
+"Signin": (function (require, exports, module) { /* wrapped by builder */
+var User;
+
+User = require('User');
+
+module.exports = User.extend({
+  defaults: {
+    email: '',
+    password: ''
+  },
+  initialize: function() {}
 });
 
 }),
@@ -3233,10 +3280,8 @@ Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
   defaults: {
-    firstname: '',
-    lastname: '',
     email: '',
-    company: ''
+    key: ''
   },
   initialize: function() {}
 });
@@ -3308,6 +3353,29 @@ module.exports = Template.extend({
 });
 
 }),
+"SigninAlertError": (function (require, exports, module) { /* wrapped by builder */
+var Template;
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '.signin-alert-error',
+  url: 'view/signin/alertError.html',
+  initialize: function() {},
+  render: function() {
+    return this.template();
+  },
+  show: function() {
+    this.$el.show();
+    return this.render();
+  },
+  hide: function() {
+    return this.$el.hide();
+  },
+  data: function() {}
+});
+
+}),
 "SigninToolbar": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
@@ -3322,16 +3390,16 @@ module.exports = Backbone.View.extend({
     return this.$remember = this.$el.find('.bar-remember');
   },
   signin: function() {
-    this.$logout.show();
-    this.$signin.hide();
-    this.$registration.hide();
-    return this.$remember.hide();
+    this.$logout.removeClass('hide');
+    this.$signin.addClass('hide');
+    this.$registration.addClass('hide');
+    return this.$remember.addClass('hide');
   },
   logout: function() {
-    this.$logout.hide();
-    this.$signin.show();
-    this.$registration.show();
-    return this.$remember.show();
+    this.$logout.addClass('hide');
+    this.$signin.removeClass('hide');
+    this.$registration.removeClass('hide');
+    return this.$remember.removeClass('hide');
   }
 });
 
@@ -3640,7 +3708,7 @@ module.exports = Modal.extend({
       email: this.$email.val(),
       company: this.$company.val()
     }, {
-      url: 'http://dev.st-n.ru/registration',
+      url: window.sn.get('server').host + '/registration',
       dataType: 'jsonp',
       success: function(s) {
         return _this.checking();
@@ -3670,20 +3738,57 @@ module.exports = Modal.extend({
 
 }),
 "SigninView": (function (require, exports, module) { /* wrapped by builder */
-var Modal;
+var Modal, Signin, SigninAlertError;
 
 Modal = require('Modal');
+
+Signin = require('Signin');
+
+SigninAlertError = require('SigninAlertError');
 
 module.exports = Modal.extend({
   el: '#signin',
   url: 'view/signin/signin.html',
+  model: new Signin(),
   initialize: function() {
     this.render();
+    this.$email = this.$el.find('.signin-email');
+    this.$password = this.$el.find('.signin-password');
     this.$modal = this.$el.find('.modal');
-    return this.$close = this.$el.find('.modal-header').find('.close');
+    this.$close = this.$el.find('.modal-header').find('.close');
+    this.$form = this.$el.find('.signin-form');
+    this.model.set({
+      region: window.sn.get('region')
+    });
+    return this.alertError = new SigninAlertError();
+  },
+  checking: function() {
+    alert('check');
+    if (this.model.get('success')) {
+      return alert('success');
+    }
   },
   submit: function(e) {
-    return e.preventDefault();
+    var _this = this;
+    alert('submit');
+    e.preventDefault();
+    return this.model.save({
+      email: this.$email.val(),
+      password: this.$password.val()
+    }, {
+      url: window.sn.get('server').host + '/signin',
+      dataType: 'jsonp',
+      success: function(s) {
+        return _this.checking();
+      }
+    });
+  },
+  afterShow: function() {
+    this.alertError.hide();
+    return this.$form.show();
+  },
+  data: function() {
+    return this.model.toJSON();
   }
 });
 

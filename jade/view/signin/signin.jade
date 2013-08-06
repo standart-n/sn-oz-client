@@ -5,36 +5,17 @@
 		h3 Авторизация
 	.modal-body
 		p
-		
-			.signin-alert-success.signin-alert.alert.alert-success.hide
-				button.close(type = "button", data-dismiss = "alert") &times
-				strong Поздравляем! 
-				Вы успешно авторизовались
 
-			.signin-alert-error.signin-alert.alert.alert-error.hide
-				button.close(type = "button", data-dismiss = "alert") &times
-				strong Ошибка! 
-				Вы указали неверный логин или пароль
+			.signin-alert-error
 
-
-			form#signin-form.form-horizontal
+			form.signin-form.form.form-horizontal
 				.control-group
-					label.control-label Логин
+					label.control-label E-mail
 					.controls
-						input#signin-login.input-text(type = "text", value = "", placeholder = "Логин")
+						input.signin-email.input-text(type = "text", value = "", placeholder = "E-mail")
 				.control-group
 					label.control-label Пароль
 					.controls
-						input#signin-password.input-password(type = "password", value = "", placeholder = "Пароль")
+						input.signin-password.input-password(type = "password", value = "", placeholder = "Пароль")
 
 				button.btn.btn-primary.btn-block(type = "submit") Войти
-
-				//- p
-				//- 	.control-group
-				//- 		label.control-label &nbsp;
-				//- 		.controls
-				//- 			a.modal-close(href = "#registration") Регистрация
-				//- 			&nbsp;
-				//- 			&nbsp;
-				//- 			&nbsp;
-				//- 			a.modal-close(href = "#remember") Забыли пароль?

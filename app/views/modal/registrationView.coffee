@@ -62,7 +62,7 @@ module.exports = Modal.extend
 			email:						this.$email.val()
 			company:					this.$company.val()
 		,
-			url:						'http://dev.st-n.ru/registration'
+			url:						window.sn.get('server').host + '/registration'
 			dataType:					'jsonp'
 			success: (s) => 
 				this.checking()

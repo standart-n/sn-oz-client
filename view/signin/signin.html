@@ -6,23 +6,18 @@
   </div>
   <div class="modal-body">
     <p>
-      <div class="signin-alert-success signin-alert alert alert-success hide">
-        <button type="button" data-dismiss="alert" class="close">&times</button><strong>Поздравляем! </strong>Вы успешно авторизовались
-      </div>
-      <div class="signin-alert-error signin-alert alert alert-error hide">
-        <button type="button" data-dismiss="alert" class="close">&times</button><strong>Ошибка! </strong>Вы указали неверный логин или пароль
-      </div>
-      <form id="signin-form" class="form-horizontal">
+      <div class="signin-alert-error"></div>
+      <form class="signin-form form form-horizontal">
         <div class="control-group">
-          <label class="control-label">Логин</label>
+          <label class="control-label">E-mail</label>
           <div class="controls">
-            <input id="signin-login" type="text" value="" placeholder="Логин" class="input-text"/>
+            <input type="text" value="" placeholder="E-mail" class="signin-email input-text"/>
           </div>
         </div>
         <div class="control-group">
           <label class="control-label">Пароль</label>
           <div class="controls">
-            <input id="signin-password" type="password" value="" placeholder="Пароль" class="input-password"/>
+            <input type="password" value="" placeholder="Пароль" class="signin-password input-password"/>
           </div>
         </div>
         <button type="submit" class="btn btn-primary btn-block">Войти</button>

@@ -1,5 +1,11 @@
 
+# Script
+script/*
+!script/sn.lmd.js
+
+# Conf
 conf/main.json
+conf/server.json
 
 # Numerous always-ignore extensions
 *.diff
@@ -49,8 +55,3 @@ users
 files
 content
 requirements
-
-
-# Script
-script/*
-!script/sn.lmd.js

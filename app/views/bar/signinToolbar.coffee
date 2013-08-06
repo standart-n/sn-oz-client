@@ -13,16 +13,16 @@ module.exports = Backbone.View.extend
 		this.$remember = 				this.$el.find('.bar-remember')
 
 	signin: () ->
-		this.$logout.show()
-		this.$signin.hide()
-		this.$registration.hide()
-		this.$remember.hide()
+		this.$logout.removeClass('hide')
+		this.$signin.addClass('hide')
+		this.$registration.addClass('hide')
+		this.$remember.addClass('hide')
 
 	logout: () ->
-		this.$logout.hide()
-		this.$signin.show()
-		this.$registration.show()
-		this.$remember.show()
+		this.$logout.addClass('hide')
+		this.$signin.removeClass('hide')
+		this.$registration.removeClass('hide')
+		this.$remember.removeClass('hide')
 
 
 

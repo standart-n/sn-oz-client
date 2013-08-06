@@ -12,6 +12,7 @@ module.exports = Backbone.Model.extend
 		conf:
 			main: 		'conf/main.json'
 			themes:	 	'conf/themes.json'
+			server: 	'conf/server.json'
 			settings: 	'conf/settings.json'
 
 		region:
@@ -25,10 +26,14 @@ module.exports = Backbone.Model.extend
 		settings:
 			paths: {}
 
+		server:
+			host: ''
+
 	initialize: () ->
 		this.main()
 		this.theme()
 		this.settings()
+		this.server()
 
 	main: () ->
 		_this = this	
@@ -70,8 +75,22 @@ module.exports = Backbone.Model.extend
 			dataType: 	this.get('type')
 			success: (s) ->
 				if s?
-					console.log 'conf: ' + 'main.json'
+					console.log 'conf: ' + 'settings.json'
 					settings = 	_this.get('settings')
 					$.extend settings, s 	if s?
 					_this.set 
 						settings: 	settings
+
+	server: () ->
+		_this = this
+		$.ajax
+			url: 		this.get('conf').server
+			async: 		this.get('async')
+			dataType: 	this.get('type')
+			success: (s) ->
+				if s?
+					console.log 'conf: ' + 'server.json'
+					server = 	_this.get('server')
+					$.extend server, s 	if s?
+					_this.set 
+						server: 	server
