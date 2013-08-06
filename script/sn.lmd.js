@@ -343,6 +343,13 @@ $(function() {
   $.fn.isNone = function() {
     return $(this).css('display') === 'none';
   };
+  $.fn.shown = function() {
+    if ($(this).hasClass('hide')) {
+      return $(this).removeClass('hide');
+    } else {
+      return $(this).show();
+    }
+  };
   Backbone.emulateHTTP = true;
   Backbone.emulateJSON = true;
   window.sn = new Settings();
@@ -3390,16 +3397,16 @@ module.exports = Backbone.View.extend({
     return this.$remember = this.$el.find('.bar-remember');
   },
   signin: function() {
-    this.$logout.removeClass('hide');
+    this.$logout.shown();
     this.$signin.addClass('hide');
     this.$registration.addClass('hide');
     return this.$remember.addClass('hide');
   },
   logout: function() {
     this.$logout.addClass('hide');
-    this.$signin.removeClass('hide');
-    this.$registration.removeClass('hide');
-    return this.$remember.removeClass('hide');
+    this.$signin.shown();
+    this.$registration.shown();
+    return this.$remember.shown();
   }
 });
 
@@ -3631,13 +3638,19 @@ module.exports = Template.extend({
     return this.afterShow();
   },
   show: function() {
-    this.$el.find('.modal').modal('show');
-    this.$el.find('.modal').on('hide', function() {
+    this.$modal.modal('show');
+    this.$modal.on('hide', function() {
       return window.app.navigate('#');
     });
     return this.afterShow();
   },
-  afterShow: function() {}
+  afterShow: function() {},
+  close: function() {
+    return this.hide();
+  },
+  hide: function() {
+    return this.$modal.modal('hide');
+  }
 });
 
 }),
@@ -3706,7 +3719,8 @@ module.exports = Modal.extend({
       firstname: this.$firstname.val(),
       lastname: this.$lastname.val(),
       email: this.$email.val(),
-      company: this.$company.val()
+      company: this.$company.val(),
+      region: window.sn.get('region')
     }, {
       url: window.sn.get('server').host + '/registration',
       dataType: 'jsonp',
@@ -3763,14 +3777,18 @@ module.exports = Modal.extend({
     return this.alertError = new SigninAlertError();
   },
   checking: function() {
-    alert('check');
     if (this.model.get('success')) {
-      return alert('success');
+      alert('success');
+      this.alertError.hide();
+      this.$form.hide();
+      return this.hide();
+    } else {
+      this.alertError.show();
+      return this.$form.show();
     }
   },
   submit: function(e) {
     var _this = this;
-    alert('submit');
     e.preventDefault();
     return this.model.save({
       email: this.$email.val(),
@@ -3944,23 +3962,24 @@ module.exports = Backbone.Router.extend({
     _.extend(this, Backbone.Events);
     this.self = new Self();
     this.signinToolbar = new SigninToolbar();
-    return this.listenTo(window.authorization.registrationView.model, 'change', function() {
+    this.listenTo(window.authorization.registrationView.model, 'change', function() {
       return _this.eventSignin(window.authorization.registrationView.model);
+    });
+    return this.listenTo(window.authorization.signinView.model, 'change', function() {
+      return _this.eventSignin(window.authorization.signinView.model);
     });
   },
   eventSignin: function(model) {
     if (model.get('success') === true) {
       this.signinToolbar.signin();
       this.self.set('email', model.get('email'));
-      this.self.set('key', model.get('password_hash'));
-      this.self.set('firstname', model.get('firstname'));
-      this.self.set('lastname', model.get('lastname'));
-      this.self.set('company', model.get('company'));
-      return this.self.set('signin', true);
+      return this.self.set('key', model.get('key'));
     }
   },
   routeLogout: function() {
     this.signinToolbar.logout();
+    window.authorization.registrationView.model.clear();
+    window.authorization.signinView.model.clear();
     return this.self.clear();
   }
 });

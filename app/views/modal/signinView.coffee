@@ -24,13 +24,16 @@ module.exports = Modal.extend
 		this.alertError = 				new SigninAlertError()
 
 	checking: () ->
-		alert 'check'
 		if this.model.get('success')
 			alert 'success'
-
+			this.alertError.hide()
+			this.$form.hide()
+			this.hide()
+		else
+			this.alertError.show()
+			this.$form.show()
 
 	submit: (e) ->
-		alert 'submit'
 		e.preventDefault()
 		this.model.save
 			email:						this.$email.val()

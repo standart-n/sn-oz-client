@@ -18,9 +18,16 @@ module.exports = Template.extend
 		this.afterShow()
 
 	show: () ->
-		this.$el.find('.modal').modal 'show'
-		this.$el.find('.modal').on 'hide', () ->
+		this.$modal.modal 'show'
+		this.$modal.on 'hide', () ->
 			window.app.navigate('#')
 		this.afterShow()
 
 	afterShow: () ->
+
+
+	close: () ->
+		this.hide()
+
+	hide: () ->
+		this.$modal.modal 'hide'

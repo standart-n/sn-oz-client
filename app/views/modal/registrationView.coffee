@@ -61,6 +61,7 @@ module.exports = Modal.extend
 			lastname: 					this.$lastname.val()
 			email:						this.$email.val()
 			company:					this.$company.val()
+			region: 					window.sn.get('region')
 		,
 			url:						window.sn.get('server').host + '/registration'
 			dataType:					'jsonp'

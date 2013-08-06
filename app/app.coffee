@@ -22,7 +22,14 @@ $ () ->
 			error: () ->
 			warn: () ->
 
-	$.fn.isNone = () -> $(this).css('display') is 'none'
+	$.fn.isNone = () -> 
+		$(this).css('display') is 'none'
+
+	$.fn.shown = () -> 
+		if $(this).hasClass('hide')
+			$(this).removeClass('hide')
+		else
+			$(this).show()
 
 	Backbone.emulateHTTP = on
 	Backbone.emulateJSON = on

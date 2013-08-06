@@ -24,23 +24,29 @@ module.exports = Backbone.Router.extend
 		this.listenTo window.authorization.registrationView.model, 'change', () =>
 			this.eventSignin(window.authorization.registrationView.model)
 
+		this.listenTo window.authorization.signinView.model, 'change', () =>
+			this.eventSignin(window.authorization.signinView.model)
+
 
 	eventSignin: (model) ->
 		if model.get('success') is true
 			this.signinToolbar.signin()
 
 			this.self.set('email', 			model.get('email'))
-			this.self.set('key', 			model.get('password_hash'))
+			this.self.set('key', 			model.get('key'))
 
-			this.self.set('firstname', 		model.get('firstname'))
-			this.self.set('lastname', 		model.get('lastname'))
-			this.self.set('company', 		model.get('company'))
+			# this.self.save()
+			# ,
+			# 	url:						window.sn.get('server').host + '/signin'
+			# 	dataType:					'jsonp'
+			# 	success: (s) => 
+			# 		this.checking()
 
-			this.self.set('signin', 		true)
 
 	routeLogout: () ->
 			this.signinToolbar.logout()
-			
+			window.authorization.registrationView.model.clear()
+			window.authorization.signinView.model.clear()
 			this.self.clear()
 
 
