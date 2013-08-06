@@ -19,6 +19,7 @@ module.exports = Modal.extend
 		this.$company = 				this.$el.find('.registration-company')
 
 		this.$modal = 					this.$el.find('.modal')
+		this.$close = 					this.$el.find('.modal-header').find('.close')
 		this.$form = 					this.$el.find('.registration-form')
 
 		this.alertSuccess = 			new RegistrationAlertSuccess()

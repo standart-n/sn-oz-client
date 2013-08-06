@@ -11,6 +11,9 @@ module.exports = Modal.extend
 	initialize: () ->
 		this.render()
 
+		this.$modal = 					this.$el.find('.modal')
+		this.$close = 					this.$el.find('.modal-header').find('.close')
+
 	submit: (e) ->
 		e.preventDefault()
 

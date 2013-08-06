@@ -13,14 +13,16 @@ Social = 								require('Social')
 Settings = 								require('Settings')
 Markup = 								require('Markup')
 
-if !window.console?
-	window.console = 
-		info: () ->
-		log: () ->
-		error: () ->
-		warn: () ->
-
 $ () ->
+
+	if !window.console?
+		window.console = 
+			info: () ->
+			log: () ->
+			error: () ->
+			warn: () ->
+
+	$.fn.isNone = () -> $(this).css('display') is 'none'
 
 	Backbone.emulateHTTP = on
 	Backbone.emulateJSON = on

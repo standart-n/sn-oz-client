@@ -331,16 +331,18 @@ Settings = require('Settings');
 
 Markup = require('Markup');
 
-if (window.console == null) {
-  window.console = {
-    info: function() {},
-    log: function() {},
-    error: function() {},
-    warn: function() {}
-  };
-}
-
 $(function() {
+  if (window.console == null) {
+    window.console = {
+      info: function() {},
+      log: function() {},
+      error: function() {},
+      warn: function() {}
+    };
+  }
+  $.fn.isNone = function() {
+    return $(this).css('display') === 'none';
+  };
   Backbone.emulateHTTP = true;
   Backbone.emulateJSON = true;
   window.sn = new Settings();
@@ -3595,6 +3597,7 @@ module.exports = Modal.extend({
     this.$email = this.$el.find('.registration-email');
     this.$company = this.$el.find('.registration-company');
     this.$modal = this.$el.find('.modal');
+    this.$close = this.$el.find('.modal-header').find('.close');
     this.$form = this.$el.find('.registration-form');
     this.alertSuccess = new RegistrationAlertSuccess();
     this.alertError = new RegistrationAlertError();
@@ -3653,7 +3656,9 @@ module.exports = Modal.extend({
   el: '#remember',
   url: 'view/remember/remember.html',
   initialize: function() {
-    return this.render();
+    this.render();
+    this.$modal = this.$el.find('.modal');
+    return this.$close = this.$el.find('.modal-header').find('.close');
   },
   submit: function(e) {
     return e.preventDefault();
@@ -3670,7 +3675,9 @@ module.exports = Modal.extend({
   el: '#signin',
   url: 'view/signin/signin.html',
   initialize: function() {
-    return this.render();
+    this.render();
+    this.$modal = this.$el.find('.modal');
+    return this.$close = this.$el.find('.modal-header').find('.close');
   },
   submit: function(e) {
     return e.preventDefault();
@@ -3844,7 +3851,7 @@ module.exports = Backbone.Router.extend({
       return this.self.set('signin', true);
     }
   },
-  eventLogout: function() {
+  routeLogout: function() {
     this.signinToolbar.logout();
     return this.self.clear();
   }

@@ -38,7 +38,7 @@ module.exports = Backbone.Router.extend
 
 			this.self.set('signin', 		true)
 
-	eventLogout: () ->
+	routeLogout: () ->
 			this.signinToolbar.logout()
 			
 			this.self.clear()
