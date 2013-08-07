@@ -1,34 +1,14 @@
 
-p
+.well.well-small
 
-	.profile-alert-success
+	.tabbable
+		ul.nav.nav-tabs
+			li.active
+				a(data-target = "#tab-profile-personal", href = "#", data-toggle = "tab") Личное
+			li				
+				a(data-target = "#tab-profile-security", href = "#", data-toggle = "tab") Аккаунт
 
-	.profile-alert-error
+		.tab-content
+			#tab-profile-personal.tab-pane.active
 
-	.profile-text-success
-
-	form.profile-form.form.form-horizontal
-
-		.control-group
-			label.control-label Имя
-			.controls
-				input.profile-firstname.input-text(type = "text", value = "[%= firstname %]", placeholder = "Имя")
-		
-		.control-group
-			label.control-label Фамилия
-			.controls
-				input.profile-lastname.input-text(type = "text", value = "[%= lastname %]", placeholder = "Фамилия")
-
-		.control-group
-			label.control-label E-mail
-			.controls
-				input.profile-email.input-text(type = "text", value = "[%= email %]", placeholder = "E-mail")
-
-		.control-group
-			label.control-label Компания
-			.controls
-				input.profile-company.input-text(type = "text", value = "[%= company %]", placeholder = "Компания")
-
-
-		button.btn.btn-primary(type = "submit") Сохранить
-
+			#tab-profile-security.tab-pane

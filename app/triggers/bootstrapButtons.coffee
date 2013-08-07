@@ -1,6 +1,8 @@
 
 # bootstrap buttons
 
+require('jquery')
+
 module.exports = class BootstrapButtons
 
 	options:
@@ -12,20 +14,22 @@ module.exports = class BootstrapButtons
 
 		_this = this
 
-		if 	navigator?.userAgent?.toLowerCase().indexOf('msie 6.0') > -1
+		$ () ->
 
-			$(document).on 'mouseenter', '.btn', () ->
-				__this = this
-				hover = 'btn-hover'
-				
-				$.each _this.options.btnColorCls, (k,v) ->				
-					hover = v + '-hover' if $(__this).hasClass(v)
-				
-				$(this).data 'ie6hover', hover
-				$(this).addClass hover
+			if 	navigator?.userAgent?.toLowerCase().indexOf('msie 6.0') > -1
 
-			$(document).on 'mouseleave', '.btn', () ->			
-				hover = $(this).data('ie6hover')
+				$(document).on 'mouseenter', '.btn', () ->
+					__this = this
+					hover = 'btn-hover'
+					
+					$.each _this.options.btnColorCls, (k,v) ->				
+						hover = v + '-hover' if $(__this).hasClass(v)
+					
+					$(this).data 'ie6hover', hover
+					$(this).addClass hover
 
-				$(this).removeData 'ie6hover', hover
-				if (hover) then $(this).removeClass hover
+				$(document).on 'mouseleave', '.btn', () ->			
+					hover = $(this).data('ie6hover')
+
+					$(this).removeData 'ie6hover', hover
+					if (hover) then $(this).removeClass hover

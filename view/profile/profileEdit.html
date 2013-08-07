@@ -1,33 +1,13 @@
 
-<p>
-  <div class="profile-alert-success"></div>
-  <div class="profile-alert-error"></div>
-  <div class="profile-text-success"></div>
-  <form class="profile-form form form-horizontal">
-    <div class="control-group">
-      <label class="control-label">Имя</label>
-      <div class="controls">
-        <input type="text" value="[%= firstname %]" placeholder="Имя" class="profile-firstname input-text"/>
-      </div>
+<div class="well well-small">
+  <div class="tabbable">
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-target="#tab-profile-personal" href="#" data-toggle="tab">Личное</a></li>
+      <li>				<a data-target="#tab-profile-security" href="#" data-toggle="tab">Аккаунт</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="tab-profile-personal" class="tab-pane active"></div>
+      <div id="tab-profile-security" class="tab-pane"></div>
     </div>
-    <div class="control-group">
-      <label class="control-label">Фамилия</label>
-      <div class="controls">
-        <input type="text" value="[%= lastname %]" placeholder="Фамилия" class="profile-lastname input-text"/>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label">E-mail</label>
-      <div class="controls">
-        <input type="text" value="[%= email %]" placeholder="E-mail" class="profile-email input-text"/>
-      </div>
-    </div>
-    <div class="control-group">
-      <label class="control-label">Компания</label>
-      <div class="controls">
-        <input type="text" value="[%= company %]" placeholder="Компания" class="profile-company input-text"/>
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-  </form>
-</p>
+  </div>
+</div>

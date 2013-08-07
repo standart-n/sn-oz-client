@@ -3128,6 +3128,12 @@ var User;
 User = require('User');
 
 module.exports = User.extend({
+  defaults: {
+    firstname: '',
+    lastname: '',
+    email: '',
+    company: ''
+  },
   initialize: function() {}
 });
 
@@ -3661,8 +3667,8 @@ RegistrationTextSuccess = require('RegistrationTextSuccess');
 module.exports = Modal.extend({
   el: '#registration',
   url: 'view/registration/registration.html',
-  model: new Registration(),
   initialize: function() {
+    this.model = new Registration();
     this.render();
     this.$firstname = this.$el.find('.registration-firstname');
     this.$lastname = this.$el.find('.registration-lastname');
@@ -3677,6 +3683,10 @@ module.exports = Modal.extend({
     this.alertSuccess = new RegistrationAlertSuccess();
     this.alertError = new RegistrationAlertError();
     return this.textSuccess = new RegistrationTextSuccess();
+  },
+  reset: function() {
+    this.model.unset('id');
+    return this.model.set('success', false);
   },
   afterShow: function() {
     this.alertSuccess.hide();
@@ -3754,8 +3764,8 @@ SigninAlertError = require('SigninAlertError');
 module.exports = Modal.extend({
   el: '#signin',
   url: 'view/signin/signin.html',
-  model: new Signin(),
   initialize: function() {
+    this.model = new Signin();
     this.render();
     this.$email = this.$el.find('.signin-email');
     this.$password = this.$el.find('.signin-password');
@@ -3766,6 +3776,10 @@ module.exports = Modal.extend({
       region: window.sn.get('region')
     });
     return this.alertError = new SigninAlertError();
+  },
+  reset: function() {
+    this.model.unset('id');
+    return this.model.set('success', false);
   },
   checking: function() {
     if (this.model.get('success')) {
@@ -3802,25 +3816,113 @@ module.exports = Modal.extend({
 
 }),
 "ProfileEdit": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, Complete, Template;
+var Backbone, ProfileEditPersonal, ProfileEditSecurity, Template;
 
 Backbone = require('Backbone');
 
 Template = require('Template');
 
-Complete = require('Complete');
+ProfileEditPersonal = require('ProfileEditPersonal');
+
+ProfileEditSecurity = require('ProfileEditSecurity');
 
 module.exports = Template.extend({
   el: '#primary',
   url: 'view/profile/profileEdit.html',
   initialize: function() {
-    return this.model = window.self;
+    var _ref;
+    return this.model = (_ref = window.user) != null ? _ref : Backbone.Model.extend();
+  },
+  render: function() {
+    this.template();
+    this.personal = new ProfileEditPersonal();
+    return this.security = new ProfileEditSecurity();
+  },
+  data: function() {
+    return this.model.toJSON();
+  }
+});
+
+}),
+"ProfileEditPersonal": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, Template;
+
+Backbone = require('Backbone');
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '#tab-profile-personal',
+  url: 'view/profile/profileEditPersonal.html',
+  initialize: function() {
+    var _this = this;
+    _.extend(this, Backbone.Event);
+    this.model = window.user;
+    this.render();
+    this.$firstname = this.$el.find('.profile-firstname');
+    this.$lastname = this.$el.find('.profile-lastname');
+    this.model.on('change:firstname', function() {
+      return _this.$firstname.val(_this.model.get('firstname'));
+    });
+    return this.model.on('change:lastname', function() {
+      return _this.$lastname.val(_this.model.get('lastname'));
+    });
   },
   render: function() {
     return this.template();
   },
   data: function() {
     return this.model.toJSON();
+  }
+});
+
+}),
+"ProfileEditSecurity": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, Template;
+
+Backbone = require('Backbone');
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '#tab-profile-security',
+  url: 'view/profile/profileEditSecurity.html',
+  events: {
+    'submit .profile-security-form': 'submit'
+  },
+  initialize: function() {
+    var _ref;
+    this.model = (_ref = window.user) != null ? _ref : Backbone.Model.extend();
+    this.render();
+    this.$password = this.$el.find('.profile-password');
+    this.$password_new = this.$el.find('.profile-password-new');
+    this.$password_repeat = this.$el.find('.profile-password-repeat');
+    this.$success = this.$el.find('.alert-success');
+    return this.$error = this.$el.find('.alert-error');
+  },
+  render: function() {
+    return this.template();
+  },
+  data: function() {
+    return this.model.toJSON();
+  },
+  checking: function() {
+    return alert(JSON.stringify(this.model.toJSON()));
+  },
+  submit: function(e) {
+    var _this = this;
+    e.preventDefault();
+    return this.model.save({
+      password: this.$password.val(),
+      password_new: this.$password_new.val(),
+      password_repeat: this.$password_repeat.val()
+    }, {
+      url: window.sn.get('server').host + '/edit/password',
+      dataType: 'jsonp',
+      success: function(s) {
+        return _this.checking();
+      }
+    });
   }
 });
 
@@ -3838,11 +3940,17 @@ module.exports = Template.extend({
   el: '#profile',
   url: 'view/profile/profile.html',
   initialize: function() {
-    var _this = this;
-    this.model = window.self;
+    var _ref,
+      _this = this;
+    this.model = (_ref = window.user) != null ? _ref : Backbone.Model.extend();
     _.extend(this.model, Backbone.Events);
     return this.model.on('change:signin', function() {
-      return _this.render();
+      if (_this.model.get('signin') === true) {
+        _this.$el.show();
+        return _this.render();
+      } else {
+        return _this.$el.html('').hide();
+      }
     });
   },
   render: function() {
@@ -3950,13 +4058,17 @@ module.exports = Backbone.Router.extend({
     this.layoutFooter = new LayoutFooter();
     this.contentSide = new ContentSide();
     this.contentPrimary = new ContentPrimary();
-    new BootstrapButtons();
-    new Spoiler();
-    return new Links();
+    this.bootstrapButtons = new BootstrapButtons();
+    this.spoiler = new Spoiler();
+    return this.links = new Links({
+      auto: false
+    });
   },
   routeText: function(part, page) {
+    var _ref;
     this.contentSide["switch"](part, page);
-    return this.contentPrimary["switch"](part, page);
+    this.contentPrimary["switch"](part, page);
+    return (_ref = this.links) != null ? _ref["switch"]() : void 0;
   }
 });
 
@@ -3987,7 +4099,7 @@ module.exports = Backbone.Router.extend({
   },
   initialize: function() {
     var _this = this;
-    window.self = new Self();
+    window.user = new Self();
     _.extend(this, Backbone.Events);
     this.signinView = new SigninView();
     this.registrationView = new RegistrationView();
@@ -4012,29 +4124,31 @@ module.exports = Backbone.Router.extend({
   },
   routeLogout: function() {
     this.signinToolbar.logout();
-    this.registrationView.model.clear();
-    this.signinView.model.clear();
-    window.self.clear();
-    window.self.set('signin', false);
+    this.signinView.reset();
+    this.registrationView.reset();
+    window.user.unset('id');
+    window.user.unset('key');
+    window.user.set('signin', false);
     $.removeCookie('id');
-    return $.removeCookie('key');
+    $.removeCookie('key');
+    return window.location.href = '#main/text/main';
   },
   checking: function() {
-    if ((window.self.get('email') != null) && (window.self.get('firstname') != null)) {
+    if ((window.user.get('email') != null) && (window.user.get('firstname') != null)) {
       this.signinToolbar.signin();
-      $.cookie('id', window.self.get('id'), {
+      $.cookie('id', window.user.get('id'), {
         expires: 365
       });
-      $.cookie('key', window.self.get('key'), {
+      $.cookie('key', window.user.get('key'), {
         expires: 365
       });
-      return window.self.set('signin', true);
+      return window.user.set('signin', true);
     }
   },
   fetch: function() {
     var _this = this;
-    return window.self.fetch({
-      url: window.sn.get('server').host + '/signin/' + window.self.get('id') + '/' + window.self.get('key'),
+    return window.user.fetch({
+      url: window.sn.get('server').host + '/signin/' + window.user.get('id') + '/' + window.user.get('key'),
       dataType: 'jsonp',
       success: function(s) {
         return _this.checking();
@@ -4043,15 +4157,15 @@ module.exports = Backbone.Router.extend({
   },
   eventSignin: function(model) {
     if (model.get('success') === true) {
-      window.self.set('id', model.get('id'));
-      window.self.set('key', model.get('key'));
+      window.user.set('id', model.get('id'));
+      window.user.set('key', model.get('key'));
       return this.fetch();
     }
   },
   checkCookie: function() {
     if (($.cookie('id') != null) && ($.cookie('key') != null)) {
-      window.self.set('id', $.cookie('id'));
-      window.self.set('key', $.cookie('key'));
+      window.user.set('id', $.cookie('id'));
+      window.user.set('key', $.cookie('key'));
       return this.fetch();
     }
   }
@@ -4077,13 +4191,17 @@ module.exports = Backbone.Router.extend({
     return this.profileEdit = new ProfileEdit();
   },
   routeEdit: function() {
-    return this.profileEdit.render();
+    var _ref, _ref1;
+    this.profileEdit.render();
+    return (_ref = window.app) != null ? (_ref1 = _ref.links) != null ? _ref1["switch"]() : void 0 : void 0;
   }
 });
 
 }),
 "BootstrapButtons": (function (require, exports, module) { /* wrapped by builder */
 var BootstrapButtons;
+
+require('jquery');
 
 module.exports = BootstrapButtons = (function() {
   BootstrapButtons.prototype.options = {
@@ -4092,30 +4210,33 @@ module.exports = BootstrapButtons = (function() {
   };
 
   function BootstrapButtons() {
-    var _ref, _this;
+    var _this;
     _this = this;
-    if ((typeof navigator !== "undefined" && navigator !== null ? (_ref = navigator.userAgent) != null ? _ref.toLowerCase().indexOf('msie 6.0') : void 0 : void 0) > -1) {
-      $(document).on('mouseenter', '.btn', function() {
-        var hover, __this;
-        __this = this;
-        hover = 'btn-hover';
-        $.each(_this.options.btnColorCls, function(k, v) {
-          if ($(__this).hasClass(v)) {
-            return hover = v + '-hover';
+    $(function() {
+      var _ref;
+      if ((typeof navigator !== "undefined" && navigator !== null ? (_ref = navigator.userAgent) != null ? _ref.toLowerCase().indexOf('msie 6.0') : void 0 : void 0) > -1) {
+        $(document).on('mouseenter', '.btn', function() {
+          var hover, __this;
+          __this = this;
+          hover = 'btn-hover';
+          $.each(_this.options.btnColorCls, function(k, v) {
+            if ($(__this).hasClass(v)) {
+              return hover = v + '-hover';
+            }
+          });
+          $(this).data('ie6hover', hover);
+          return $(this).addClass(hover);
+        });
+        return $(document).on('mouseleave', '.btn', function() {
+          var hover;
+          hover = $(this).data('ie6hover');
+          $(this).removeData('ie6hover', hover);
+          if (hover) {
+            return $(this).removeClass(hover);
           }
         });
-        $(this).data('ie6hover', hover);
-        return $(this).addClass(hover);
-      });
-      $(document).on('mouseleave', '.btn', function() {
-        var hover;
-        hover = $(this).data('ie6hover');
-        $(this).removeData('ie6hover', hover);
-        if (hover) {
-          return $(this).removeClass(hover);
-        }
-      });
-    }
+      }
+    });
   }
 
   return BootstrapButtons;
@@ -4126,26 +4247,45 @@ module.exports = BootstrapButtons = (function() {
 "Links": (function (require, exports, module) { /* wrapped by builder */
 var Links;
 
+require('_');
+
+require('jquery');
+
 module.exports = Links = (function() {
-  function Links() {
+  Links.prototype.options = {};
+
+  Links.prototype.defaults = {
+    auto: true
+  };
+
+  function Links(options) {
+    var _this = this;
+    this.options = options != null ? options : {};
+    _.defaults(this.options, this.defaults);
     $(function() {
-      return $(document).on('click', 'a', function(e) {
-        var href, _ref;
-        href = $(this).attr('href');
-        return (_ref = $(document).find('.nav-links')) != null ? _ref.each(function() {
-          var _ref1;
-          return (_ref1 = $(this).find('li')) != null ? _ref1.each(function() {
-            var _ref2, _ref3;
-            if ((_ref2 = $(this).find('a')) != null ? (_ref3 = _ref2.attr('href')) != null ? _ref3.match(href) : void 0 : void 0) {
-              return $(this).addClass('active');
-            } else {
-              return $(this).removeClass('active');
-            }
-          }) : void 0;
-        }) : void 0;
-      });
+      if (_this.options.auto === true) {
+        return $(document).on('click', 'a', function(e) {
+          return _this["switch"]();
+        });
+      }
     });
   }
+
+  Links.prototype["switch"] = function() {
+    var href, _ref;
+    href = window.location.href.replace(/.*(?=#[^\s]+$)/, '');
+    return (_ref = $(document).find('.nav-links')) != null ? _ref.each(function() {
+      var _ref1;
+      return (_ref1 = $(this).find('li')) != null ? _ref1.each(function() {
+        var _ref2, _ref3;
+        if ((_ref2 = $(this).find('a')) != null ? (_ref3 = _ref2.attr('href')) != null ? _ref3.match(href) : void 0 : void 0) {
+          return $(this).addClass('active');
+        } else {
+          return $(this).removeClass('active');
+        }
+      }) : void 0;
+    }) : void 0;
+  };
 
   return Links;
 
@@ -4156,6 +4296,8 @@ module.exports = Links = (function() {
 var Spoiler;
 
 require('_');
+
+require('jquery');
 
 module.exports = Spoiler = (function() {
   function Spoiler() {

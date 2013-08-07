@@ -9,9 +9,9 @@ module.exports = Modal.extend
 
 	el:									'#registration'
 	url:								'view/registration/registration.html'
-	model:								new Registration()
 
 	initialize: () ->
+		this.model = 					new Registration()
 		this.render()
 		this.$firstname = 				this.$el.find('.registration-firstname')
 		this.$lastname = 				this.$el.find('.registration-lastname')
@@ -27,6 +27,10 @@ module.exports = Modal.extend
 		this.alertSuccess = 			new RegistrationAlertSuccess()
 		this.alertError = 				new RegistrationAlertError()
 		this.textSuccess = 				new RegistrationTextSuccess()
+
+	reset: () ->
+		this.model.unset('id')
+		this.model.set('success',false)
 
 	afterShow: () ->
 		this.alertSuccess.hide()

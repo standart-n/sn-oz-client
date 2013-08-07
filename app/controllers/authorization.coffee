@@ -20,11 +20,10 @@ module.exports = Backbone.Router.extend
 
 	initialize: () ->
 
-		window.self = 						new Self()
+		window.user = 						new Self()
 
 		_.extend this, Backbone.Events
 
-		# views
 		this.signinView = 					new SigninView()
 		this.registrationView = 			new RegistrationView()
 		this.rememberView = 				new RememberView()
@@ -49,28 +48,31 @@ module.exports = Backbone.Router.extend
 
 	routeLogout: () ->
 			this.signinToolbar.logout()
-			this.registrationView.model.clear()
-			this.signinView.model.clear()
-			window.self.clear()
-			window.self.set('signin',false)
+			this.signinView.reset()
+			this.registrationView.reset()
+			window.user.unset('id')
+			window.user.unset('key')
+			window.user.set('signin',false)
 			$.removeCookie 'id'
 			$.removeCookie 'key'
+
+			window.location.href = '#main/text/main'
 
 
 	checking: () ->
 		# this.profile ?= 					new Profile()
 
-		if window.self.get('email')? and window.self.get('firstname')?
+		if window.user.get('email')? and window.user.get('firstname')?
 			this.signinToolbar.signin()
 
-			$.cookie 'id', 		window.self.get('id'), 			expires: 365
-			$.cookie 'key', 	window.self.get('key'), 		expires: 365
+			$.cookie 'id', 		window.user.get('id'), 			expires: 365
+			$.cookie 'key', 	window.user.get('key'), 		expires: 365
 
-			window.self.set('signin',true)
+			window.user.set('signin',true)
 
 	fetch: () ->
-		window.self.fetch
-			url: window.sn.get('server').host + '/signin/' + window.self.get('id') + '/' + window.self.get('key')
+		window.user.fetch
+			url: window.sn.get('server').host + '/signin/' + window.user.get('id') + '/' + window.user.get('key')
 			dataType: 'jsonp'
 			success: (s) => 
 				this.checking()
@@ -80,15 +82,15 @@ module.exports = Backbone.Router.extend
 
 		if model.get('success') is true
 
-			window.self.set 'id', 			model.get('id')
-			window.self.set 'key', 			model.get('key')
+			window.user.set 'id', 			model.get('id')
+			window.user.set 'key', 			model.get('key')
 			this.fetch()
 
 
 	checkCookie: () ->
 		if $.cookie('id')? and $.cookie('key')?
 
-			window.self.set 'id', 			$.cookie 'id'
-			window.self.set 'key', 			$.cookie 'key'
+			window.user.set 'id', 			$.cookie 'id'
+			window.user.set 'key', 			$.cookie 'key'
 			this.fetch()
 

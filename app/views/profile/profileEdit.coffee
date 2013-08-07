@@ -1,7 +1,9 @@
 
 Backbone = 									require('Backbone')
 Template = 									require('Template')
-Complete = 									require('Complete')
+
+ProfileEditPersonal = 						require('ProfileEditPersonal')
+ProfileEditSecurity = 						require('ProfileEditSecurity')
 
 module.exports = Template.extend
 
@@ -10,10 +12,12 @@ module.exports = Template.extend
 
 	initialize: () ->
 
-		this.model = 						window.self
+		this.model = 						window.user ? Backbone.Model.extend()
 
 	render: () ->
 		this.template()
+		this.personal = 					new ProfileEditPersonal()
+		this.security = 					new ProfileEditSecurity()
 		
 
 	data: () ->

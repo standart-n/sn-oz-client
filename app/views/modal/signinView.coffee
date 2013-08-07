@@ -7,9 +7,11 @@ module.exports = Modal.extend
 
 	el:									'#signin'
 	url:								'view/signin/signin.html'
-	model:								new Signin()
 
 	initialize: () ->
+
+		this.model = 					new Signin()
+
 		this.render()
 
 		this.$email = 					this.$el.find('.signin-email')
@@ -22,6 +24,11 @@ module.exports = Modal.extend
 		this.model.set region: 			window.sn.get('region')
 
 		this.alertError = 				new SigninAlertError()
+
+	reset: () ->
+		this.model.unset('id')
+		this.model.set('success',false)
+		
 
 	checking: () ->
 		if this.model.get('success')

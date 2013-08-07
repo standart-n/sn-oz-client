@@ -34,11 +34,14 @@ module.exports = Backbone.Router.extend
 		this.contentPrimary = 		new ContentPrimary()
 
 		# triggers
-		new BootstrapButtons()
-		new Spoiler()
-		new Links()
+		this.bootstrapButtons = 	new BootstrapButtons()
+		this.spoiler = 				new Spoiler()
+		this.links = 				new Links auto: off
 
 
 	routeText: (part,page) ->
 		this.contentSide.switch(part,page)
 		this.contentPrimary.switch(part,page)
+		this.links?.switch()
+
+

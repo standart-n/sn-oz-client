@@ -10,12 +10,16 @@ module.exports = Template.extend
 
 	initialize: () ->
 
-		this.model = 						window.self
+		this.model = 						window.user ? Backbone.Model.extend()
 
 		_.extend this.model, Backbone.Events
 
 		this.model.on 'change:signin', () =>
-			this.render()
+			if this.model.get('signin') is true
+				this.$el.show()
+				this.render()
+			else
+				this.$el.html('').hide()
 
 	render: () ->
 		this.template()

@@ -1,0 +1,30 @@
+
+
+.alert.alert-success.hide
+	Пароль успешно изменен.
+
+.alert.alert-error.hide
+	strong Ошибка!
+	Возможно, вы неверно ввели данные.
+
+form.profile-security-form.form.form-horizontal
+
+	.control-group
+		label.control-label Текущий пароль
+		.controls
+			input.profile-password.input-text(type = "password", value = "")
+
+	.control-group
+		label.control-label Новый пароль
+		.controls
+			input.profile-password-new.input-text(type = "password", value = "")
+
+	.control-group
+		label.control-label Повторите пароль
+		.controls
+			input.profile-password-repeat.input-text(type = "password", value = "")
+
+	.control-group
+		label.control-label
+		.controls
+			button.btn.btn-primary(type = "submit") Изменить

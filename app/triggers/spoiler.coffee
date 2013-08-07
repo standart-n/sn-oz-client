@@ -1,7 +1,6 @@
 
-# spoiler
-
 require('_')
+require('jquery')
 
 module.exports = class Spoiler
 
