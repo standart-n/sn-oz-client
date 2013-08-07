@@ -48,11 +48,9 @@ module.exports = Backbone.Router.extend
 
 	routeLogout: () ->
 			this.signinToolbar.logout()
-			this.signinView.reset()
-			this.registrationView.reset()
-			window.user.unset('id')
-			window.user.unset('key')
-			window.user.set('signin',false)
+			this.signinView.model.reset()
+			this.registrationView.model.reset()
+			window.user.reset()
 			$.removeCookie 'id'
 			$.removeCookie 'key'
 
@@ -62,7 +60,7 @@ module.exports = Backbone.Router.extend
 	checking: () ->
 		# this.profile ?= 					new Profile()
 
-		if window.user.get('email')? and window.user.get('firstname')?
+		if window.user.get('email')? isnt '' and window.user.get('firstname')? isnt ''
 			this.signinToolbar.signin()
 
 			$.cookie 'id', 		window.user.get('id'), 			expires: 365

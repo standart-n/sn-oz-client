@@ -24,10 +24,6 @@ module.exports = Modal.extend
 		this.model.set region: 			window.sn.get('region')
 
 		this.alertError = 				new SigninAlertError()
-
-	reset: () ->
-		this.model.unset('id')
-		this.model.set('success',false)
 		
 
 	checking: () ->
@@ -38,6 +34,9 @@ module.exports = Modal.extend
 		else
 			this.alertError.show()
 			this.$form.show()
+
+		this.model.unset 	'notice'
+		this.model.unset 	'password'
 
 	submit: (e) ->
 		e.preventDefault()

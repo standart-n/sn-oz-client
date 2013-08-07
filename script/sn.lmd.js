@@ -3112,11 +3112,13 @@ var User;
 User = require('User');
 
 module.exports = User.extend({
-  defaults: {
-    firstname: '',
-    lastname: '',
-    email: '',
-    company: ''
+  defaults: function() {
+    return {
+      firstname: '',
+      lastname: '',
+      email: '',
+      company: ''
+    };
   },
   initialize: function() {}
 });
@@ -3128,11 +3130,13 @@ var User;
 User = require('User');
 
 module.exports = User.extend({
-  defaults: {
-    firstname: '',
-    lastname: '',
-    email: '',
-    company: ''
+  defaults: function() {
+    return {
+      firstname: '',
+      lastname: '',
+      email: '',
+      company: ''
+    };
   },
   initialize: function() {}
 });
@@ -3276,9 +3280,11 @@ var User;
 User = require('User');
 
 module.exports = User.extend({
-  defaults: {
-    email: '',
-    password: ''
+  defaults: function() {
+    return {
+      email: '',
+      password: ''
+    };
   },
   initialize: function() {}
 });
@@ -3290,11 +3296,26 @@ var Backbone;
 Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
-  defaults: {
-    email: '',
-    key: ''
+  defaults: function() {
+    return {
+      email: '',
+      key: ''
+    };
   },
-  initialize: function() {}
+  initialize: function() {},
+  reset: function() {
+    this.set('signin', false);
+    this.set('firstname', '');
+    this.set('lastname', '');
+    this.set('email', '');
+    this.set('company', '');
+    this.unset('id');
+    this.unset('key');
+    this.unset('reg_dt');
+    this.unset('success');
+    this.unset('_id');
+    return this.unset('__v');
+  }
 });
 
 }),
@@ -3684,10 +3705,6 @@ module.exports = Modal.extend({
     this.alertError = new RegistrationAlertError();
     return this.textSuccess = new RegistrationTextSuccess();
   },
-  reset: function() {
-    this.model.unset('id');
-    return this.model.set('success', false);
-  },
   afterShow: function() {
     this.alertSuccess.hide();
     this.alertError.hide();
@@ -3702,7 +3719,7 @@ module.exports = Modal.extend({
       this.$form.hide();
       this.alertSuccess.show();
       this.alertError.hide();
-      return this.textSuccess.show({
+      this.textSuccess.show({
         email: this.model.get('email'),
         password: this.model.get('password')
       });
@@ -3710,8 +3727,11 @@ module.exports = Modal.extend({
       this.alertError.show(this.model.get('err'));
       this.alertSuccess.hide();
       this.textSuccess.hide();
-      return this.$form.show();
+      this.$form.show();
     }
+    this.model.unset('password');
+    this.model.unset('valid');
+    return this.model.unset('err');
   },
   submit: function(e) {
     var _this = this;
@@ -3777,19 +3797,17 @@ module.exports = Modal.extend({
     });
     return this.alertError = new SigninAlertError();
   },
-  reset: function() {
-    this.model.unset('id');
-    return this.model.set('success', false);
-  },
   checking: function() {
     if (this.model.get('success')) {
       this.alertError.hide();
       this.$form.hide();
-      return this.hide();
+      this.hide();
     } else {
       this.alertError.show();
-      return this.$form.show();
+      this.$form.show();
     }
+    this.model.unset('notice');
+    return this.model.unset('password');
   },
   submit: function(e) {
     var _this = this;
@@ -4124,17 +4142,15 @@ module.exports = Backbone.Router.extend({
   },
   routeLogout: function() {
     this.signinToolbar.logout();
-    this.signinView.reset();
-    this.registrationView.reset();
-    window.user.unset('id');
-    window.user.unset('key');
-    window.user.set('signin', false);
+    this.signinView.model.reset();
+    this.registrationView.model.reset();
+    window.user.reset();
     $.removeCookie('id');
     $.removeCookie('key');
     return window.location.href = '#main/text/main';
   },
   checking: function() {
-    if ((window.user.get('email') != null) && (window.user.get('firstname') != null)) {
+    if ((window.user.get('email') != null) !== '' && (window.user.get('firstname') != null) !== '') {
       this.signinToolbar.signin();
       $.cookie('id', window.user.get('id'), {
         expires: 365

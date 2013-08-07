@@ -28,9 +28,6 @@ module.exports = Modal.extend
 		this.alertError = 				new RegistrationAlertError()
 		this.textSuccess = 				new RegistrationTextSuccess()
 
-	reset: () ->
-		this.model.unset('id')
-		this.model.set('success',false)
 
 	afterShow: () ->
 		this.alertSuccess.hide()
@@ -57,6 +54,10 @@ module.exports = Modal.extend
 			this.alertSuccess.hide()
 			this.textSuccess.hide()
 			this.$form.show()
+
+		this.model.unset 	'password'
+		this.model.unset 	'valid'
+		this.model.unset 	'err'
 
 	submit: (e) ->
 		e.preventDefault()

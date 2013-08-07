@@ -1,10 +1,10 @@
 
-User = require('User')
+User = 								require('User')
 
 module.exports = User.extend
 
-	defaults:
-		email:				''
-		password:			''
+	defaults: () ->
+		email: 						''
+		password: 					''
 
 	initialize: () ->
