@@ -27,6 +27,8 @@ module.exports = Modal.extend
 		
 
 	checking: () ->
+		this.$password.val('')
+
 		if this.model.get('success')
 			this.alertError.hide()
 			this.$form.hide()
@@ -53,6 +55,7 @@ module.exports = Modal.extend
 	afterShow: () ->
 		this.alertError.hide()
 		this.$form.show()
+		this.$password.val('')
 
 	data: () ->
 		this.model.toJSON()

@@ -3798,6 +3798,7 @@ module.exports = Modal.extend({
     return this.alertError = new SigninAlertError();
   },
   checking: function() {
+    this.$password.val('');
     if (this.model.get('success')) {
       this.alertError.hide();
       this.$form.hide();
@@ -3825,7 +3826,8 @@ module.exports = Modal.extend({
   },
   afterShow: function() {
     this.alertError.hide();
-    return this.$form.show();
+    this.$form.show();
+    return this.$password.val('');
   },
   data: function() {
     return this.model.toJSON();
