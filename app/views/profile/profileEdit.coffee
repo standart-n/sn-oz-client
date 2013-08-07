@@ -1,23 +1,20 @@
 
 Backbone = 									require('Backbone')
 Template = 									require('Template')
+Complete = 									require('Complete')
 
 module.exports = Template.extend
 
-	el:										'#profile'
-	url:									'view/profile/profile.html'
+	el:										'#primary'
+	url:									'view/profile/profileEdit.html'
 
 	initialize: () ->
 
-		this.model = 						window.social.self
-
-		_.extend this.model, Backbone.Events
-
-		this.model.on 'change:signin', () =>
-			this.render()
+		this.model = 						window.self
 
 	render: () ->
 		this.template()
+		
 
 	data: () ->
 		this.model.toJSON()

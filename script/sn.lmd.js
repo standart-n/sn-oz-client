@@ -309,7 +309,7 @@ sb.on('stats:before-require-count', function (moduleName, module) {
     main(lmd_trigger('lmd-register:decorate-require', 'main', lmd_require)[1], output.exports, output);
 })/*DO NOT ADD ; !*/
 (this,(function (require, exports, module) { /* wrapped by builder */
-var App, Authorization, Backbone, Markup, Settings, Social;
+var App, Authorization, Backbone, Markup, Profile, Settings;
 
 require('jquery');
 
@@ -323,7 +323,7 @@ App = require('App');
 
 Authorization = require('Authorization');
 
-Social = require('Social');
+Profile = require('Profile');
 
 Settings = require('Settings');
 
@@ -364,7 +364,7 @@ $(function() {
   });
   window.app = new App();
   window.authorization = new Authorization();
-  window.social = new Social();
+  window.profile = new Profile();
   return Backbone.history.start();
 });
 
@@ -3525,15 +3525,8 @@ module.exports = Content.extend({
   "switch": function(part, page) {
     if (this.file !== ("side_" + part + ".html")) {
       this.file = "side_" + part + ".html";
-      this.render();
+      return this.render();
     }
-    return this.$el.find('.nav').find('li').each(function() {
-      if ($(this).find('a').attr('href').match("" + part + "/text/" + page)) {
-        return $(this).addClass('active');
-      } else {
-        return $(this).removeClass('active');
-      }
-    });
   }
 });
 
@@ -3808,26 +3801,56 @@ module.exports = Modal.extend({
 });
 
 }),
-"Profile": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, Template;
+"ProfileEdit": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, Complete, Template;
 
 Backbone = require('Backbone');
 
 Template = require('Template');
+
+Complete = require('Complete');
+
+module.exports = Template.extend({
+  el: '#primary',
+  url: 'view/profile/profileEdit.html',
+  initialize: function() {
+    return this.model = window.self;
+  },
+  render: function() {
+    return this.template();
+  },
+  data: function() {
+    return this.model.toJSON();
+  }
+});
+
+}),
+"ProfileView": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, Complete, Template;
+
+Backbone = require('Backbone');
+
+Template = require('Template');
+
+Complete = require('Complete');
 
 module.exports = Template.extend({
   el: '#profile',
   url: 'view/profile/profile.html',
   initialize: function() {
     var _this = this;
-    this.model = window.social.self;
+    this.model = window.self;
     _.extend(this.model, Backbone.Events);
     return this.model.on('change:signin', function() {
       return _this.render();
     });
   },
   render: function() {
-    return this.template();
+    this.template();
+    return new Complete({
+      el: this.el,
+      icons: true
+    });
   },
   data: function() {
     return this.model.toJSON();
@@ -3894,7 +3917,7 @@ module.exports = Template.extend({
 
 }),
 "App": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Spoiler;
+var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Links, Spoiler;
 
 Backbone = require('Backbone');
 
@@ -3909,6 +3932,8 @@ ContentSide = require('ContentSide');
 ContentPrimary = require('ContentPrimary');
 
 Spoiler = require('Spoiler');
+
+Links = require('Links');
 
 BootstrapButtons = require('BootstrapButtons');
 
@@ -3926,7 +3951,8 @@ module.exports = Backbone.Router.extend({
     this.contentSide = new ContentSide();
     this.contentPrimary = new ContentPrimary();
     new BootstrapButtons();
-    return new Spoiler();
+    new Spoiler();
+    return new Links();
   },
   routeText: function(part, page) {
     this.contentSide["switch"](part, page);
@@ -3936,7 +3962,9 @@ module.exports = Backbone.Router.extend({
 
 }),
 "Authorization": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, RegistrationView, RememberView, SigninView;
+var Backbone, RegistrationView, RememberView, Self, SigninToolbar, SigninView;
+
+require('cookie');
 
 Backbone = require('Backbone');
 
@@ -3946,17 +3974,32 @@ RegistrationView = require('RegistrationView');
 
 RememberView = require('RememberView');
 
+SigninToolbar = require('SigninToolbar');
+
+Self = require('Self');
+
 module.exports = Backbone.Router.extend({
   routes: {
     'signin': 'routeSignin',
     'registration': 'routeRegistration',
-    'remember': 'routeRemember'
+    'remember': 'routeRemember',
+    'logout': 'routeLogout'
   },
   initialize: function() {
+    var _this = this;
+    window.self = new Self();
     _.extend(this, Backbone.Events);
     this.signinView = new SigninView();
     this.registrationView = new RegistrationView();
-    return this.rememberView = new RememberView();
+    this.rememberView = new RememberView();
+    this.signinToolbar = new SigninToolbar();
+    this.listenTo(this.registrationView.model, 'change:success', function() {
+      return _this.eventSignin(_this.registrationView.model);
+    });
+    this.listenTo(this.signinView.model, 'change:success', function() {
+      return _this.eventSignin(_this.signinView.model);
+    });
+    return this.checkCookie();
   },
   routeSignin: function() {
     return this.signinView.open();
@@ -3966,59 +4009,32 @@ module.exports = Backbone.Router.extend({
   },
   routeRemember: function() {
     return this.rememberView.open();
-  }
-});
-
-}),
-"Social": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, Profile, Self, SigninToolbar;
-
-require('cookie');
-
-Backbone = require('Backbone');
-
-Self = require('Self');
-
-Profile = require('Profile');
-
-SigninToolbar = require('SigninToolbar');
-
-module.exports = Backbone.Router.extend({
-  routes: {
-    'logout': 'routeLogout'
   },
-  initialize: function() {
-    var _this = this;
-    _.extend(this, Backbone.Events);
-    this.self = new Self();
-    this.signinToolbar = new SigninToolbar();
-    this.listenTo(window.authorization.registrationView.model, 'change:success', function() {
-      return _this.eventSignin(window.authorization.registrationView.model);
-    });
-    this.listenTo(window.authorization.signinView.model, 'change:success', function() {
-      return _this.eventSignin(window.authorization.signinView.model);
-    });
-    return this.checkCookie();
+  routeLogout: function() {
+    this.signinToolbar.logout();
+    this.registrationView.model.clear();
+    this.signinView.model.clear();
+    window.self.clear();
+    window.self.set('signin', false);
+    $.removeCookie('id');
+    return $.removeCookie('key');
   },
   checking: function() {
-    if (this.profile == null) {
-      this.profile = new Profile();
-    }
-    if ((this.self.get('email') != null) && (this.self.get('firstname') != null)) {
+    if ((window.self.get('email') != null) && (window.self.get('firstname') != null)) {
       this.signinToolbar.signin();
-      $.cookie('id', this.self.get('id'), {
+      $.cookie('id', window.self.get('id'), {
         expires: 365
       });
-      $.cookie('key', this.self.get('key'), {
+      $.cookie('key', window.self.get('key'), {
         expires: 365
       });
-      return this.self.set('signin', true);
+      return window.self.set('signin', true);
     }
   },
   fetch: function() {
     var _this = this;
-    return this.self.fetch({
-      url: window.sn.get('server').host + '/signin/' + this.self.get('id') + '/' + this.self.get('key'),
+    return window.self.fetch({
+      url: window.sn.get('server').host + '/signin/' + window.self.get('id') + '/' + window.self.get('key'),
       dataType: 'jsonp',
       success: function(s) {
         return _this.checking();
@@ -4027,26 +4043,41 @@ module.exports = Backbone.Router.extend({
   },
   eventSignin: function(model) {
     if (model.get('success') === true) {
-      this.self.set('id', model.get('id'));
-      this.self.set('key', model.get('key'));
+      window.self.set('id', model.get('id'));
+      window.self.set('key', model.get('key'));
       return this.fetch();
     }
   },
   checkCookie: function() {
     if (($.cookie('id') != null) && ($.cookie('key') != null)) {
-      this.self.set('id', $.cookie('id'));
-      this.self.set('key', $.cookie('key'));
+      window.self.set('id', $.cookie('id'));
+      window.self.set('key', $.cookie('key'));
       return this.fetch();
     }
+  }
+});
+
+}),
+"Profile": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, ProfileEdit, ProfileView;
+
+Backbone = require('Backbone');
+
+ProfileView = require('ProfileView');
+
+ProfileEdit = require('ProfileEdit');
+
+module.exports = Backbone.Router.extend({
+  routes: {
+    'profile/edit': 'routeEdit'
   },
-  routeLogout: function() {
-    this.signinToolbar.logout();
-    window.authorization.registrationView.model.clear();
-    window.authorization.signinView.model.clear();
-    this.self.clear();
-    this.self.set('signin', false);
-    $.removeCookie('id');
-    return $.removeCookie('key');
+  initialize: function() {
+    _.extend(this, Backbone.Events);
+    this.profileView = new ProfileView();
+    return this.profileEdit = new ProfileEdit();
+  },
+  routeEdit: function() {
+    return this.profileEdit.render();
   }
 });
 
@@ -4088,6 +4119,35 @@ module.exports = BootstrapButtons = (function() {
   }
 
   return BootstrapButtons;
+
+})();
+
+}),
+"Links": (function (require, exports, module) { /* wrapped by builder */
+var Links;
+
+module.exports = Links = (function() {
+  function Links() {
+    $(function() {
+      return $(document).on('click', 'a', function(e) {
+        var href, _ref;
+        href = $(this).attr('href');
+        return (_ref = $(document).find('.nav-links')) != null ? _ref.each(function() {
+          var _ref1;
+          return (_ref1 = $(this).find('li')) != null ? _ref1.each(function() {
+            var _ref2, _ref3;
+            if ((_ref2 = $(this).find('a')) != null ? (_ref3 = _ref2.attr('href')) != null ? _ref3.match(href) : void 0 : void 0) {
+              return $(this).addClass('active');
+            } else {
+              return $(this).removeClass('active');
+            }
+          }) : void 0;
+        }) : void 0;
+      });
+    });
+  }
+
+  return Links;
 
 })();
 

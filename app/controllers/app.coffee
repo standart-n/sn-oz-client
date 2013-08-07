@@ -11,6 +11,7 @@ ContentSide =  						require('ContentSide')
 ContentPrimary =					require('ContentPrimary')
 
 Spoiler = 							require('Spoiler')
+Links = 							require('Links')
 BootstrapButtons = 					require('BootstrapButtons')
 
 module.exports = Backbone.Router.extend
@@ -35,6 +36,7 @@ module.exports = Backbone.Router.extend
 		# triggers
 		new BootstrapButtons()
 		new Spoiler()
+		new Links()
 
 
 	routeText: (part,page) ->

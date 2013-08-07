@@ -1,0 +1,34 @@
+
+p
+
+	.profile-alert-success
+
+	.profile-alert-error
+
+	.profile-text-success
+
+	form.profile-form.form.form-horizontal
+
+		.control-group
+			label.control-label Имя
+			.controls
+				input.profile-firstname.input-text(type = "text", value = "[%= firstname %]", placeholder = "Имя")
+		
+		.control-group
+			label.control-label Фамилия
+			.controls
+				input.profile-lastname.input-text(type = "text", value = "[%= lastname %]", placeholder = "Фамилия")
+
+		.control-group
+			label.control-label E-mail
+			.controls
+				input.profile-email.input-text(type = "text", value = "[%= email %]", placeholder = "E-mail")
+
+		.control-group
+			label.control-label Компания
+			.controls
+				input.profile-company.input-text(type = "text", value = "[%= company %]", placeholder = "Компания")
+
+
+		button.btn.btn-primary(type = "submit") Сохранить
+

@@ -8,7 +8,7 @@ require('json2')
 Backbone = 								require('Backbone')
 App = 									require('App')
 Authorization = 						require('Authorization')
-Social = 								require('Social')
+Profile = 								require('Profile')
 Settings = 								require('Settings')
 Markup = 								require('Markup')
 
@@ -45,6 +45,6 @@ $ () ->
 
 	window.app = 						new App()
 	window.authorization = 				new Authorization()
-	window.social = 					new Social()
+	window.profile = 					new Profile()
 
 	Backbone.history.start()

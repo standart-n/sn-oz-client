@@ -2,15 +2,15 @@
 [% if (signin === true) { %]
 
 .well.well-small
-	ul.nav.nav-list
+	ul.nav.nav-list.nav-links
 		li
 			.lead
 				[%= firstname %] [%= lastname %]
 
 		li
-			a(href = "#")		
+			a(href = "#profile/edit")		
 				i.icon-cog
 				&nbsp;
-				Настройки
+				Редактировать
 
 [% } %]
