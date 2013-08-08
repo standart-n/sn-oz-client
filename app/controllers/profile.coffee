@@ -11,8 +11,6 @@ module.exports = Backbone.Router.extend
 
 	initialize: () ->
 
-		_.extend this, Backbone.Events
-
 		this.profileView = 					new ProfileView()
 		this.profileEdit = 					new ProfileEdit()
 

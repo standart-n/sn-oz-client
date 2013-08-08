@@ -18,9 +18,6 @@ module.exports = Backbone.Router.extend
 
 	routes:
 		':part/text/:page':			'routeText'
-		'signin':					'routeSignin'
-		'registration':				'routeRegistration'
-		'remember':					'routeRemember'
 
 	initialize: () ->
 

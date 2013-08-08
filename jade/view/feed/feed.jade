@@ -1,0 +1,18 @@
+
+.well.well-small
+	.tabbable
+		ul.nav.nav-tabs
+			li.active
+				a(data-target = "#tab-feed-news", href = "#", data-toggle = "tab")
+					Новости
+
+	.tab-content
+		#tab-feed-news.tab-pane.active
+			
+			.feed-post-box
+				form.feed-post-form.form.form-horizontal			
+					.row-fluid
+						textarea.span11(wrap = "hard", rows = "3")
+						button.btn.btn-primary(type = "submit") Отправить
+
+

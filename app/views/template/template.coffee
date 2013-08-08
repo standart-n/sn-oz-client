@@ -10,7 +10,7 @@ module.exports = Backbone.View.extend
 	markup: 	off
 
 	template: () ->
-		if this.url?	
+		if this.url? and this.$el.length?
 			text = new EJS(url: this.url, ext: this.ext, type: '[', cache: off).render(this.data()) ? ''
 			text = window.markup?.render(text) if this.markup ? ''
 			this.$el.html text

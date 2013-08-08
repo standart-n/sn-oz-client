@@ -9,6 +9,7 @@ Backbone = 								require('Backbone')
 App = 									require('App')
 Authorization = 						require('Authorization')
 Profile = 								require('Profile')
+News = 									require('News')
 Settings = 								require('Settings')
 Markup = 								require('Markup')
 
@@ -49,5 +50,6 @@ $ () ->
 	window.app = 						new App()
 	window.authorization = 				new Authorization()
 	window.profile = 					new Profile()
+	window.news = 						new News()
 
 	Backbone.history.start()

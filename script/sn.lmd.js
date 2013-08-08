@@ -309,7 +309,7 @@ sb.on('stats:before-require-count', function (moduleName, module) {
     main(lmd_trigger('lmd-register:decorate-require', 'main', lmd_require)[1], output.exports, output);
 })/*DO NOT ADD ; !*/
 (this,(function (require, exports, module) { /* wrapped by builder */
-var App, Authorization, Backbone, Markup, Profile, Settings;
+var App, Authorization, Backbone, Markup, News, Profile, Settings;
 
 require('jquery');
 
@@ -324,6 +324,8 @@ App = require('App');
 Authorization = require('Authorization');
 
 Profile = require('Profile');
+
+News = require('News');
 
 Settings = require('Settings');
 
@@ -368,6 +370,7 @@ $(function() {
   window.app = new App();
   window.authorization = new Authorization();
   window.profile = new Profile();
+  window.news = new News();
   return Backbone.history.start();
 });
 
@@ -3427,6 +3430,7 @@ module.exports = Template.extend({
       this.region = window.sn.get('region').name;
       this.url = "" + this.path + "/" + this.region + "/" + this.file;
       this.template();
+      this.afterTemlate();
       return this.afterRender();
     }
   },
@@ -3438,6 +3442,7 @@ module.exports = Template.extend({
     };
   },
   beforeRender: function() {},
+  afterTemlate: function() {},
   afterRender: function() {
     return new Complete({
       el: this.el,
@@ -3456,10 +3461,20 @@ Content = require('Content');
 module.exports = Content.extend({
   el: '#primary',
   file: 'main.html',
+  page: 'main',
   initialize: function() {
     return this.render();
   },
+  afterTemplate: function() {
+    var _ref;
+    if (this.page === 'main') {
+      if (((_ref = window.news) != null ? _ref.feed : void 0) != null) {
+        return window.news.feed.render();
+      }
+    }
+  },
   "switch": function(part, page) {
+    this.page = page;
     this.file = "" + page + ".html";
     return this.render();
   }
@@ -3484,6 +3499,23 @@ module.exports = Content.extend({
       this.file = "side_" + part + ".html";
       return this.render();
     }
+  }
+});
+
+}),
+"Feed": (function (require, exports, module) { /* wrapped by builder */
+var Template;
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '#feed',
+  url: 'view/feed/feed.html',
+  initialize: function() {
+    return this.render();
+  },
+  render: function() {
+    return this.template();
   }
 });
 
@@ -3962,7 +3994,7 @@ module.exports = Backbone.View.extend({
   markup: false,
   template: function() {
     var text, _ref, _ref1, _ref2;
-    if (this.url != null) {
+    if ((this.url != null) && (this.$el.length != null)) {
       text = (_ref = new EJS({
         url: this.url,
         ext: this.ext,
@@ -4031,10 +4063,7 @@ BootstrapButtons = require('BootstrapButtons');
 
 module.exports = Backbone.Router.extend({
   routes: {
-    ':part/text/:page': 'routeText',
-    'signin': 'routeSignin',
-    'registration': 'routeRegistration',
-    'remember': 'routeRemember'
+    ':part/text/:page': 'routeText'
   },
   initialize: function() {
     this.layoutBar = new LayoutBar();
@@ -4150,6 +4179,20 @@ module.exports = Backbone.Router.extend({
 });
 
 }),
+"News": (function (require, exports, module) { /* wrapped by builder */
+var Backbone, Feed;
+
+Backbone = require('Backbone');
+
+Feed = require('Feed');
+
+module.exports = Backbone.Router.extend({
+  initialize: function() {
+    return this.feed = new Feed();
+  }
+});
+
+}),
 "Profile": (function (require, exports, module) { /* wrapped by builder */
 var Backbone, ProfileEdit, ProfileView;
 
@@ -4164,7 +4207,6 @@ module.exports = Backbone.Router.extend({
     'profile/edit': 'routeEdit'
   },
   initialize: function() {
-    _.extend(this, Backbone.Events);
     this.profileView = new ProfileView();
     return this.profileEdit = new ProfileEdit();
   },

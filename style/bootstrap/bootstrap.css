@@ -2074,9 +2074,6 @@ input.search-query {
 .form-search input,
 .form-inline input,
 .form-horizontal input,
-.form-search textarea,
-.form-inline textarea,
-.form-horizontal textarea,
 .form-search select,
 .form-inline select,
 .form-horizontal select,
@@ -2095,6 +2092,16 @@ input.search-query {
   display: inline-block;
   *display: inline;
   margin-bottom: 0;
+  vertical-align: middle;
+  *zoom: 1;
+}
+
+.form-search textarea,
+.form-inline textarea,
+.form-horizontal textarea {
+  display: inline-block;
+  *display: inline;
+  margin-bottom: 5px;
   vertical-align: middle;
   *zoom: 1;
 }
