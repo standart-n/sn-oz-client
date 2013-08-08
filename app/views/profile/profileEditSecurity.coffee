@@ -28,13 +28,13 @@ module.exports = Template.extend
 		this.model.toJSON()
 
 	checking: () ->
-		if this.model.get('password_change')? is true
-			this.$success.show()
+		if this.model.get('password_change') is true
+			this.$success.show().html(this.model.get('notice') + '.')
 			this.$error.hide()
 			this.model.updateCookie()
 		else 
 			this.$success.hide()
-			this.$error.show()
+			this.$error.show().html('<b>Ошибка!</b> ' + this.model.get('notice').replace('Error: ','') + '.')
 
 		this.$password_new.val('')
 		this.$password_repeat.val('')

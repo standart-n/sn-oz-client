@@ -46,12 +46,12 @@ module.exports = Template.extend
 				this.checking()
 
 	checking: () ->
-		if this.model.get('personal_change')? is true
-			this.$success.show()
+		if this.model.get('personal_change') is true
+			this.$success.show().html(this.model.get('notice') + '.')
 			this.$error.hide()
 		else 
 			this.$success.hide()
-			this.$error.show()
+			this.$error.show().html('<b>Ошибка!</b> ' + this.model.get('notice').replace('Error: ','') + '.')
 
 		this.model.unset 'notice'
 		this.model.unset 'firstname_new'

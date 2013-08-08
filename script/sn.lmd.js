@@ -3835,12 +3835,12 @@ module.exports = Template.extend({
     });
   },
   checking: function() {
-    if ((this.model.get('personal_change') != null) === true) {
-      this.$success.show();
+    if (this.model.get('personal_change') === true) {
+      this.$success.show().html(this.model.get('notice') + '.');
       this.$error.hide();
     } else {
       this.$success.hide();
-      this.$error.show();
+      this.$error.show().html('<b>Ошибка!</b> ' + this.model.get('notice').replace('Error: ', '') + '.');
     }
     this.model.unset('notice');
     this.model.unset('firstname_new');
@@ -3877,13 +3877,13 @@ module.exports = Template.extend({
     return this.model.toJSON();
   },
   checking: function() {
-    if ((this.model.get('password_change') != null) === true) {
-      this.$success.show();
+    if (this.model.get('password_change') === true) {
+      this.$success.show().html(this.model.get('notice') + '.');
       this.$error.hide();
       this.model.updateCookie();
     } else {
       this.$success.hide();
-      this.$error.show();
+      this.$error.show().html('<b>Ошибка!</b> ' + this.model.get('notice').replace('Error: ', '') + '.');
     }
     this.$password_new.val('');
     this.$password_repeat.val('');
@@ -3925,13 +3925,16 @@ module.exports = Template.extend({
   initialize: function() {
     var _this = this;
     this.model = window.user;
-    return this.model.on('change:signin', function() {
+    this.model.on('change:signin', function() {
       if (_this.model.get('signin') === true) {
         _this.$el.show();
         return _this.render();
       } else {
         return _this.$el.html('').hide();
       }
+    });
+    return this.model.on('change:firstname change:lastname', function() {
+      return _this.render();
     });
   },
   render: function() {

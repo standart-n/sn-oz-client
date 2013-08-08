@@ -19,6 +19,9 @@ module.exports = Template.extend
 			else
 				this.$el.html('').hide()
 
+		this.model.on 'change:firstname change:lastname', () =>
+			this.render()
+
 	render: () ->
 		this.template()
 		new Complete
