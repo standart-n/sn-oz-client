@@ -3430,7 +3430,6 @@ module.exports = Template.extend({
       this.region = window.sn.get('region').name;
       this.url = "" + this.path + "/" + this.region + "/" + this.file;
       this.template();
-      this.afterTemlate();
       return this.afterRender();
     }
   },
@@ -3442,7 +3441,6 @@ module.exports = Template.extend({
     };
   },
   beforeRender: function() {},
-  afterTemlate: function() {},
   afterRender: function() {
     return new Complete({
       el: this.el,
@@ -3464,14 +3462,6 @@ module.exports = Content.extend({
   page: 'main',
   initialize: function() {
     return this.render();
-  },
-  afterTemplate: function() {
-    var _ref;
-    if (this.page === 'main') {
-      if (((_ref = window.news) != null ? _ref.feed : void 0) != null) {
-        return window.news.feed.render();
-      }
-    }
   },
   "switch": function(part, page) {
     this.page = page;
@@ -3512,7 +3502,16 @@ module.exports = Template.extend({
   el: '#feed',
   url: 'view/feed/feed.html',
   initialize: function() {
-    return this.render();
+    var _this = this;
+    if (this.$el.length != null) {
+      this.render();
+    }
+    return window.app.on('switch', function() {
+      if (_this.$el.length != null) {
+        _this.setElement('#feed');
+        return _this.render();
+      }
+    });
   },
   render: function() {
     return this.template();
@@ -3958,16 +3957,25 @@ module.exports = Template.extend({
     var _this = this;
     this.model = window.user;
     this.model.on('change:signin', function() {
-      if (_this.model.get('signin') === true) {
-        _this.$el.show();
-        return _this.render();
-      } else {
-        return _this.$el.html('').hide();
-      }
+      return _this.show();
     });
-    return this.model.on('change:firstname change:lastname', function() {
+    this.model.on('change:firstname change:lastname', function() {
       return _this.render();
     });
+    return window.app.on('switch', function() {
+      if (_this.$el.length != null) {
+        _this.setElement('#profile');
+        return _this.show();
+      }
+    });
+  },
+  show: function() {
+    if (this.model.get('signin') === true) {
+      this.$el.show();
+      return this.render();
+    } else {
+      return this.$el.html('').hide();
+    }
   },
   render: function() {
     this.template();
@@ -4066,6 +4074,7 @@ module.exports = Backbone.Router.extend({
     ':part/text/:page': 'routeText'
   },
   initialize: function() {
+    _.extend(this, Backbone.Event);
     this.layoutBar = new LayoutBar();
     this.layoutMain = new LayoutMain();
     this.layoutFooter = new LayoutFooter();
@@ -4078,10 +4087,12 @@ module.exports = Backbone.Router.extend({
     });
   },
   routeText: function(part, page) {
-    var _ref;
     this.contentSide["switch"](part, page);
     this.contentPrimary["switch"](part, page);
-    return (_ref = this.links) != null ? _ref["switch"]() : void 0;
+    if (this.links != null) {
+      this.links["switch"]();
+    }
+    return this.trigger('switch', part, page);
   }
 });
 

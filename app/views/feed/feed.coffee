@@ -7,7 +7,13 @@ module.exports = Template.extend
 	url: 									'view/feed/feed.html'
 
 	initialize: () ->
-		this.render()
+		if this.$el.length?
+			this.render()
+
+		window.app.on 'switch', () =>
+			if this.$el.length?
+				this.setElement('#feed')
+				this.render()
 
 	render: () ->
 		this.template()

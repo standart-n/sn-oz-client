@@ -13,14 +13,23 @@ module.exports = Template.extend
 		this.model = 						window.user
 
 		this.model.on 'change:signin', () =>
-			if this.model.get('signin') is true
-				this.$el.show()
-				this.render()
-			else
-				this.$el.html('').hide()
+			this.show()
 
 		this.model.on 'change:firstname change:lastname', () =>
 			this.render()
+
+		window.app.on 'switch', () =>
+			if this.$el.length?
+				this.setElement('#profile')
+				this.show()
+
+
+	show: () ->
+		if this.model.get('signin') is true
+			this.$el.show()
+			this.render()
+		else
+			this.$el.html('').hide()
 
 	render: () ->
 		this.template()

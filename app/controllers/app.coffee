@@ -21,6 +21,8 @@ module.exports = Backbone.Router.extend
 
 	initialize: () ->
 
+		_.extend this, Backbone.Event
+
 		# layout
 		this.layoutBar = 			new LayoutBar()
 		this.layoutMain = 			new LayoutMain()
@@ -39,6 +41,8 @@ module.exports = Backbone.Router.extend
 	routeText: (part,page) ->
 		this.contentSide.switch(part,page)
 		this.contentPrimary.switch(part,page)
-		this.links?.switch()
+		this.links.switch() if this.links?
+
+		this.trigger 'switch', part, page
 
 
