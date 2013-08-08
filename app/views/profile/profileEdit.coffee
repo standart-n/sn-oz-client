@@ -12,7 +12,7 @@ module.exports = Template.extend
 
 	initialize: () ->
 
-		this.model = 						window.user ? Backbone.Model.extend()
+		this.model = 						window.user
 
 	render: () ->
 		this.template()

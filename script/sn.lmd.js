@@ -338,6 +338,9 @@ $(function() {
       warn: function() {}
     };
   }
+  window.jalert = function(s) {
+    return alert(JSON.stringify(s));
+  };
   $.fn.isNone = function() {
     return $(this).css('display') === 'none';
   };
@@ -3127,6 +3130,8 @@ module.exports = User.extend({
 "Self": (function (require, exports, module) { /* wrapped by builder */
 var User;
 
+require('cookie');
+
 User = require('User');
 
 module.exports = User.extend({
@@ -3138,7 +3143,19 @@ module.exports = User.extend({
       company: ''
     };
   },
-  initialize: function() {}
+  initialize: function() {},
+  updateCookie: function() {
+    $.cookie('id', this.get('id'), {
+      expires: 365
+    });
+    return $.cookie('key', this.get('key'), {
+      expires: 365
+    });
+  },
+  removeCookie: function() {
+    $.removeCookie('id');
+    return $.removeCookie('key');
+  }
 });
 
 }),
@@ -3850,8 +3867,7 @@ module.exports = Template.extend({
   el: '#primary',
   url: 'view/profile/profileEdit.html',
   initialize: function() {
-    var _ref;
-    return this.model = (_ref = window.user) != null ? _ref : Backbone.Model.extend();
+    return this.model = window.user;
   },
   render: function() {
     this.template();
@@ -3911,10 +3927,8 @@ module.exports = Template.extend({
     'submit .profile-security-form': 'submit'
   },
   initialize: function() {
-    var _ref;
-    this.model = (_ref = window.user) != null ? _ref : Backbone.Model.extend();
+    this.model = window.user;
     this.render();
-    this.$password = this.$el.find('.profile-password');
     this.$password_new = this.$el.find('.profile-password-new');
     this.$password_repeat = this.$el.find('.profile-password-repeat');
     this.$success = this.$el.find('.alert-success');
@@ -3927,17 +3941,30 @@ module.exports = Template.extend({
     return this.model.toJSON();
   },
   checking: function() {
-    return alert(JSON.stringify(this.model.toJSON()));
+    if ((this.model.get('password_change') != null) === true) {
+      this.$success.show();
+      this.$error.hide();
+      this.model.updateCookie();
+    } else {
+      this.$success.hide();
+      this.$error.show();
+    }
+    this.$password_new.val('');
+    this.$password_repeat.val('');
+    this.model.unset('notice');
+    this.model.unset('key_new');
+    this.model.unset('password_new');
+    this.model.unset('password_repeat');
+    return this.model.unset('password_change');
   },
   submit: function(e) {
     var _this = this;
     e.preventDefault();
     return this.model.save({
-      password: this.$password.val(),
       password_new: this.$password_new.val(),
       password_repeat: this.$password_repeat.val()
     }, {
-      url: window.sn.get('server').host + '/edit/password',
+      url: window.sn.get('server').host + '/edit/password/' + window.user.get('id') + '/' + window.user.get('key'),
       dataType: 'jsonp',
       success: function(s) {
         return _this.checking();
@@ -3960,9 +3987,8 @@ module.exports = Template.extend({
   el: '#profile',
   url: 'view/profile/profile.html',
   initialize: function() {
-    var _ref,
-      _this = this;
-    this.model = (_ref = window.user) != null ? _ref : Backbone.Model.extend();
+    var _this = this;
+    this.model = window.user;
     _.extend(this.model, Backbone.Events);
     return this.model.on('change:signin', function() {
       if (_this.model.get('signin') === true) {
@@ -4147,20 +4173,16 @@ module.exports = Backbone.Router.extend({
     this.signinView.model.reset();
     this.registrationView.model.reset();
     window.user.reset();
-    $.removeCookie('id');
-    $.removeCookie('key');
+    window.user.removeCookie();
     return window.location.href = '#main/text/main';
   },
   checking: function() {
-    if ((window.user.get('email') != null) !== '' && (window.user.get('firstname') != null) !== '') {
+    if (window.user.get('id') !== '' && window.user.get('email') !== '' && window.user.get('firstname') !== '') {
       this.signinToolbar.signin();
-      $.cookie('id', window.user.get('id'), {
-        expires: 365
-      });
-      $.cookie('key', window.user.get('key'), {
-        expires: 365
-      });
+      window.user.updateCookie();
       return window.user.set('signin', true);
+    } else {
+      return this.routeLogout();
     }
   },
   fetch: function() {

@@ -10,7 +10,7 @@ module.exports = Template.extend
 
 	initialize: () ->
 
-		this.model = 						window.user ? Backbone.Model.extend()
+		this.model = 						window.user
 
 		_.extend this.model, Backbone.Events
 

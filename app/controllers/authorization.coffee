@@ -51,22 +51,19 @@ module.exports = Backbone.Router.extend
 			this.signinView.model.reset()
 			this.registrationView.model.reset()
 			window.user.reset()
-			$.removeCookie 'id'
-			$.removeCookie 'key'
-
+			window.user.removeCookie()
 			window.location.href = '#main/text/main'
 
 
 	checking: () ->
 		# this.profile ?= 					new Profile()
 
-		if window.user.get('email')? isnt '' and window.user.get('firstname')? isnt ''
+		if window.user.get('id') isnt '' and window.user.get('email') isnt '' and window.user.get('firstname') isnt ''
 			this.signinToolbar.signin()
-
-			$.cookie 'id', 		window.user.get('id'), 			expires: 365
-			$.cookie 'key', 	window.user.get('key'), 		expires: 365
-
+			window.user.updateCookie()
 			window.user.set('signin',true)
+		else 
+			this.routeLogout()
 
 	fetch: () ->
 		window.user.fetch

@@ -21,6 +21,9 @@ $ () ->
 			error: () ->
 			warn: () ->
 
+	window.jalert = (s) ->
+		alert JSON.stringify(s)
+
 	$.fn.isNone = () -> 
 		$(this).css('display') is 'none'
 
