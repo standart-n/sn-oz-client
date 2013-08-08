@@ -28,7 +28,6 @@ module.exports = Template.extend
 		this.model.toJSON()
 
 	checking: () ->
-		# alert JSON.stringify(this.model.toJSON())
 		if this.model.get('password_change')? is true
 			this.$success.show()
 			this.$error.hide()

@@ -8,6 +8,7 @@ module.exports = Backbone.Model.extend
 		key:						''
 
 	initialize: () ->
+		_.extend this, Backbone.Event
 
 	reset: () ->
 		this.set 		'signin',		false

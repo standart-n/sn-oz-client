@@ -12,8 +12,6 @@ module.exports = Template.extend
 
 		this.model = 						window.user
 
-		_.extend this.model, Backbone.Events
-
 		this.model.on 'change:signin', () =>
 			if this.model.get('signin') is true
 				this.$el.show()

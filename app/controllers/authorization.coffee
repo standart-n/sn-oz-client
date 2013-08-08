@@ -63,7 +63,7 @@ module.exports = Backbone.Router.extend
 			window.user.updateCookie()
 			window.user.set('signin',true)
 		else 
-			this.routeLogout()
+			# this.routeLogout()
 
 	fetch: () ->
 		window.user.fetch

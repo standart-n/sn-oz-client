@@ -3319,7 +3319,9 @@ module.exports = Backbone.Model.extend({
       key: ''
     };
   },
-  initialize: function() {},
+  initialize: function() {
+    return _.extend(this, Backbone.Event);
+  },
   reset: function() {
     this.set('signin', false);
     this.set('firstname', '');
@@ -3892,11 +3894,12 @@ module.exports = Template.extend({
   url: 'view/profile/profileEditPersonal.html',
   initialize: function() {
     var _this = this;
-    _.extend(this, Backbone.Event);
     this.model = window.user;
     this.render();
     this.$firstname = this.$el.find('.profile-firstname');
     this.$lastname = this.$el.find('.profile-lastname');
+    this.$success = this.$el.find('.alert-success');
+    this.$error = this.$el.find('.alert-error');
     this.model.on('change:firstname', function() {
       return _this.$firstname.val(_this.model.get('firstname'));
     });
@@ -3909,6 +3912,32 @@ module.exports = Template.extend({
   },
   data: function() {
     return this.model.toJSON();
+  },
+  submit: function(e) {
+    var _this = this;
+    e.preventDefault();
+    return this.model.save({
+      firstname_new: this.$firstname.val(),
+      lastname_new: this.$lastname.val()
+    }, {
+      url: window.sn.get('server').host + '/edit/personal/' + window.user.get('id') + '/' + window.user.get('key'),
+      dataType: 'jsonp',
+      success: function(s) {
+        return _this.checking();
+      }
+    });
+  },
+  checking: function() {
+    if ((this.model.get('personal_change') != null) === true) {
+      this.$success.show();
+      this.$error.hide();
+    } else {
+      this.$success.hide();
+      this.$error.show();
+    }
+    this.model.unset('notice');
+    this.model.unset('firstname_new');
+    return this.model.unset('lastname_new');
   }
 });
 
@@ -3989,7 +4018,6 @@ module.exports = Template.extend({
   initialize: function() {
     var _this = this;
     this.model = window.user;
-    _.extend(this.model, Backbone.Events);
     return this.model.on('change:signin', function() {
       if (_this.model.get('signin') === true) {
         _this.$el.show();
@@ -4182,7 +4210,7 @@ module.exports = Backbone.Router.extend({
       window.user.updateCookie();
       return window.user.set('signin', true);
     } else {
-      return this.routeLogout();
+
     }
   },
   fetch: function() {
