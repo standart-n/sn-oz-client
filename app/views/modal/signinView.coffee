@@ -1,7 +1,6 @@
 
 Modal = 								require('Modal')
 Signin = 								require('Signin')
-SigninAlertError = 						require('SigninAlertError')
 
 module.exports = Modal.extend
 
@@ -23,18 +22,18 @@ module.exports = Modal.extend
 
 		this.model.set region: 			window.sn.get('region')
 
-		this.alertError = 				new SigninAlertError()
+		this.$alertError = 				this.$el.find('.alert-error')
 		
 
 	checking: () ->
 		this.$password.val('')
 
 		if this.model.get('success')
-			this.alertError.hide()
+			this.$alertError.hide()
 			this.$form.hide()
 			this.hide()
 		else
-			this.alertError.show()
+			this.$alertError.show().html('<b>Ошибка!</b> ' + this.model.get('notice') + '.')
 			this.$form.show()
 
 		this.model.unset 	'notice'
@@ -53,7 +52,7 @@ module.exports = Modal.extend
 
 
 	afterShow: () ->
-		this.alertError.hide()
+		this.$alertError.hide()
 		this.$form.show()
 		this.$password.val('')
 

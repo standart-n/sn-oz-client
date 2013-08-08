@@ -1,8 +1,6 @@
 
 Modal = 								require('Modal')
 Registration = 							require('Registration')
-RegistrationAlertSuccess = 				require('RegistrationAlertSuccess')
-RegistrationAlertError = 				require('RegistrationAlertError')
 RegistrationTextSuccess = 				require('RegistrationTextSuccess')
 
 module.exports = Modal.extend
@@ -24,14 +22,14 @@ module.exports = Modal.extend
 
 		this.model.set region: 			window.sn.get('region')
 
-		this.alertSuccess = 			new RegistrationAlertSuccess()
-		this.alertError = 				new RegistrationAlertError()
 		this.textSuccess = 				new RegistrationTextSuccess()
 
+		this.$alertSuccess = 			this.$el.find('.alert-success')
+		this.$alertError = 				this.$el.find('.alert-error')
 
 	afterShow: () ->
-		this.alertSuccess.hide()
-		this.alertError.hide()
+		this.$alertSuccess.hide()
+		this.$alertError.hide()
 		this.textSuccess.hide()
 		this.$form.show()
 
@@ -41,23 +39,20 @@ module.exports = Modal.extend
 	checking: () ->
 		if this.model.get('success')
 			this.$form.hide()
-			this.alertSuccess.show()
-			this.alertError.hide()
+			this.$alertSuccess.show()
+			this.$alertError.hide()
 			this.textSuccess.show
 				email:					this.model.get('email')
 				password:				this.model.get('password')
 
-			# window.app.user.trigger 'signin', 'after registration'
-
 		else
-			this.alertError.show this.model.get('err')
-			this.alertSuccess.hide()
+			this.$alertError.show().html(this.model.get('valid').replace('Error:', '<b>Ошибка!</b>') + '.')
+			this.$alertSuccess.hide()
 			this.textSuccess.hide()
 			this.$form.show()
 
 		this.model.unset 	'password'
 		this.model.unset 	'valid'
-		this.model.unset 	'err'
 
 	submit: (e) ->
 		e.preventDefault()

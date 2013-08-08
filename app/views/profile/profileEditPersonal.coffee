@@ -7,6 +7,9 @@ module.exports = Template.extend
 	el:										'#tab-profile-personal'
 	url:									'view/profile/profileEditPersonal.html'
 
+	events:
+		'submit .profile-personal-form' 	: 'submit'
+
 	initialize: () ->
 
 		this.model = 						window.user

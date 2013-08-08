@@ -3338,95 +3338,6 @@ module.exports = Backbone.Model.extend({
 });
 
 }),
-"RegistrationAlertError": (function (require, exports, module) { /* wrapped by builder */
-var Template;
-
-Template = require('Template');
-
-module.exports = Template.extend({
-  el: '.registration-alert-error',
-  url: 'view/registration/alertError.html',
-  initialize: function() {},
-  render: function() {
-    return this.template();
-  },
-  show: function(err) {
-    this.err = err;
-    switch (err.field) {
-      case "firstname":
-        this.err.field = "Имя";
-        break;
-      case "lastname":
-        this.err.field = "Фамилия";
-        break;
-      case "company":
-        this.err.field = "Компания";
-        break;
-      case "email":
-        this.err.field = "e-mail";
-    }
-    this.$el.show();
-    return this.render();
-  },
-  hide: function() {
-    return this.$el.hide();
-  },
-  data: function() {
-    var result;
-    return result = {
-      field: this.err.field,
-      description: this.err.description
-    };
-  }
-});
-
-}),
-"RegistrationAlertSuccess": (function (require, exports, module) { /* wrapped by builder */
-var Template;
-
-Template = require('Template');
-
-module.exports = Template.extend({
-  el: '.registration-alert-success',
-  url: 'view/registration/alertSuccess.html',
-  initialize: function() {},
-  render: function() {
-    return this.template();
-  },
-  show: function() {
-    this.$el.show();
-    return this.render();
-  },
-  hide: function() {
-    return this.$el.hide();
-  },
-  data: function() {}
-});
-
-}),
-"SigninAlertError": (function (require, exports, module) { /* wrapped by builder */
-var Template;
-
-Template = require('Template');
-
-module.exports = Template.extend({
-  el: '.signin-alert-error',
-  url: 'view/signin/alertError.html',
-  initialize: function() {},
-  render: function() {
-    return this.template();
-  },
-  show: function() {
-    this.$el.show();
-    return this.render();
-  },
-  hide: function() {
-    return this.$el.hide();
-  },
-  data: function() {}
-});
-
-}),
 "SigninToolbar": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
@@ -3692,15 +3603,11 @@ module.exports = Template.extend({
 
 }),
 "RegistrationView": (function (require, exports, module) { /* wrapped by builder */
-var Modal, Registration, RegistrationAlertError, RegistrationAlertSuccess, RegistrationTextSuccess;
+var Modal, Registration, RegistrationTextSuccess;
 
 Modal = require('Modal');
 
 Registration = require('Registration');
-
-RegistrationAlertSuccess = require('RegistrationAlertSuccess');
-
-RegistrationAlertError = require('RegistrationAlertError');
 
 RegistrationTextSuccess = require('RegistrationTextSuccess');
 
@@ -3720,13 +3627,13 @@ module.exports = Modal.extend({
     this.model.set({
       region: window.sn.get('region')
     });
-    this.alertSuccess = new RegistrationAlertSuccess();
-    this.alertError = new RegistrationAlertError();
-    return this.textSuccess = new RegistrationTextSuccess();
+    this.textSuccess = new RegistrationTextSuccess();
+    this.$alertSuccess = this.$el.find('.alert-success');
+    return this.$alertError = this.$el.find('.alert-error');
   },
   afterShow: function() {
-    this.alertSuccess.hide();
-    this.alertError.hide();
+    this.$alertSuccess.hide();
+    this.$alertError.hide();
     this.textSuccess.hide();
     return this.$form.show();
   },
@@ -3736,21 +3643,20 @@ module.exports = Modal.extend({
   checking: function() {
     if (this.model.get('success')) {
       this.$form.hide();
-      this.alertSuccess.show();
-      this.alertError.hide();
+      this.$alertSuccess.show();
+      this.$alertError.hide();
       this.textSuccess.show({
         email: this.model.get('email'),
         password: this.model.get('password')
       });
     } else {
-      this.alertError.show(this.model.get('err'));
-      this.alertSuccess.hide();
+      this.$alertError.show().html(this.model.get('valid').replace('Error:', '<b>Ошибка!</b>') + '.');
+      this.$alertSuccess.hide();
       this.textSuccess.hide();
       this.$form.show();
     }
     this.model.unset('password');
-    this.model.unset('valid');
-    return this.model.unset('err');
+    return this.model.unset('valid');
   },
   submit: function(e) {
     var _this = this;
@@ -3792,13 +3698,11 @@ module.exports = Modal.extend({
 
 }),
 "SigninView": (function (require, exports, module) { /* wrapped by builder */
-var Modal, Signin, SigninAlertError;
+var Modal, Signin;
 
 Modal = require('Modal');
 
 Signin = require('Signin');
-
-SigninAlertError = require('SigninAlertError');
 
 module.exports = Modal.extend({
   el: '#signin',
@@ -3814,16 +3718,16 @@ module.exports = Modal.extend({
     this.model.set({
       region: window.sn.get('region')
     });
-    return this.alertError = new SigninAlertError();
+    return this.$alertError = this.$el.find('.alert-error');
   },
   checking: function() {
     this.$password.val('');
     if (this.model.get('success')) {
-      this.alertError.hide();
+      this.$alertError.hide();
       this.$form.hide();
       this.hide();
     } else {
-      this.alertError.show();
+      this.$alertError.show().html('<b>Ошибка!</b> ' + this.model.get('notice') + '.');
       this.$form.show();
     }
     this.model.unset('notice');
@@ -3844,7 +3748,7 @@ module.exports = Modal.extend({
     });
   },
   afterShow: function() {
-    this.alertError.hide();
+    this.$alertError.hide();
     this.$form.show();
     return this.$password.val('');
   },
@@ -3892,6 +3796,9 @@ Template = require('Template');
 module.exports = Template.extend({
   el: '#tab-profile-personal',
   url: 'view/profile/profileEditPersonal.html',
+  events: {
+    'submit .profile-personal-form': 'submit'
+  },
   initialize: function() {
     var _this = this;
     this.model = window.user;
