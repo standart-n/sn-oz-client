@@ -1,5 +1,6 @@
 
 Template = 									require('Template')
+Post = 										require('Post')
 
 module.exports = Template.extend
 
@@ -8,34 +9,50 @@ module.exports = Template.extend
 
 	events:
 		'submit .feed-post-form' 			: 'submit'
+		'focus .feed-post-form' 			: 'focus'
+	# 'blur .feed-post-form' 				: 'blur'
 
 	initialize: () ->
 
-		this.user = 						window.user
+		this.post = 						new Post()
 
 		this.render()
 
 		this.$message = 					this.$el.find('.feed-post-message')
+		this.$alertError = 					this.$el.find('.alert-eror')
 
 
 	render: () ->
 		this.template()
 
 
-	checking: () ->
+	focus: () ->
+		this.$message.attr('rows',7)
 
-		this.user.unset('message')
+	blur: () ->
+		this.$message.attr('rows',3)
+
+	checking: () ->
+		jalert this.post.toJSON()
+
+		this.post.unset('message')
 
 	submit: (e) ->
 
 		e.preventDefault()
 
-		this.user.save
-			message:						this.$message.val()
-		,
-			url: window.sn.get('server').host + '/feed/post/' + window.user.get('id') + '/' + window.user.get('key')
-			dataType: 'jsonp'
-			success: (s) => 
-				this.checking()
+		if window.user?
+
+			this.post.set
+				id:								window.user.get('id')
+				key:							window.user.get('key')
+
+			this.post.save
+				message:						this.$message.val()
+			,
+				url: 							window.sn.get('server').host + '/feed/post/'
+				dataType: 						'jsonp'
+				success: (s) => 
+					this.checking()
 
 

@@ -3115,6 +3115,23 @@ module.exports = Markup = (function() {
 })();
 
 }),
+"Post": (function (require, exports, module) { /* wrapped by builder */
+var Backbone;
+
+Backbone = require('Backbone');
+
+module.exports = Backbone.Model.extend({
+  defaults: function() {
+    return {
+      id: '',
+      key: '',
+      message: ''
+    };
+  },
+  initialize: function() {}
+});
+
+}),
 "Registration": (function (require, exports, module) { /* wrapped by builder */
 var User;
 
@@ -3536,39 +3553,56 @@ module.exports = Template.extend({
 
 }),
 "FeedNews": (function (require, exports, module) { /* wrapped by builder */
-var Template;
+var Post, Template;
 
 Template = require('Template');
+
+Post = require('Post');
 
 module.exports = Template.extend({
   el: '#tab-feed-news',
   url: 'view/feed/feedNews.html',
   events: {
-    'submit .feed-post-form': 'submit'
+    'submit .feed-post-form': 'submit',
+    'focus .feed-post-form': 'focus'
   },
   initialize: function() {
-    this.user = window.user;
+    this.post = new Post();
     this.render();
-    return this.$message = this.$el.find('.feed-post-message');
+    this.$message = this.$el.find('.feed-post-message');
+    return this.$alertError = this.$el.find('.alert-eror');
   },
   render: function() {
     return this.template();
   },
+  focus: function() {
+    return this.$message.attr('rows', 7);
+  },
+  blur: function() {
+    return this.$message.attr('rows', 3);
+  },
   checking: function() {
-    return this.user.unset('message');
+    jalert(this.post.toJSON());
+    return this.post.unset('message');
   },
   submit: function(e) {
     var _this = this;
     e.preventDefault();
-    return this.user.save({
-      message: this.$message.val()
-    }, {
-      url: window.sn.get('server').host + '/feed/post/' + window.user.get('id') + '/' + window.user.get('key'),
-      dataType: 'jsonp',
-      success: function(s) {
-        return _this.checking();
-      }
-    });
+    if (window.user != null) {
+      this.post.set({
+        id: window.user.get('id'),
+        key: window.user.get('key')
+      });
+      return this.post.save({
+        message: this.$message.val()
+      }, {
+        url: window.sn.get('server').host + '/feed/post/',
+        dataType: 'jsonp',
+        success: function(s) {
+          return _this.checking();
+        }
+      });
+    }
   }
 });
 
