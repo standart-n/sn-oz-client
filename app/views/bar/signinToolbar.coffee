@@ -12,6 +12,15 @@ module.exports = Backbone.View.extend
 		this.$registration = 			this.$el.find('.bar-registration')
 		this.$remember = 				this.$el.find('.bar-remember')
 
+		if window.user?
+			
+			window.user.on 'change:signin', () =>
+				if window.user.get('signin') is true
+					this.signin()
+				else
+					this.logout()
+
+
 	signin: () ->
 		this.$logout.shown()
 		this.$signin.addClass('hide')

@@ -8,8 +8,6 @@ RegistrationView =  						require('RegistrationView')
 RememberView =  							require('RememberView')
 SigninToolbar =  							require('SigninToolbar')
 
-Self = 		 								require('Self')
-
 module.exports = Backbone.Router.extend
 
 	routes:
@@ -19,8 +17,6 @@ module.exports = Backbone.Router.extend
 		'logout':							'routeLogout'
 
 	initialize: () ->
-
-		window.user = 						new Self()
 
 		_.extend this, Backbone.Events
 
@@ -47,45 +43,37 @@ module.exports = Backbone.Router.extend
 		this.rememberView.open()
 
 	routeLogout: () ->
-			this.signinToolbar.logout()
-			this.signinView.model.reset()
-			this.registrationView.model.reset()
+
+		if window.user?
 			window.user.reset()
 			window.user.removeCookie()
-			window.location.href = '#main/text/main'
+
+		window.location.href = '#main/text/main'
 
 
 	checking: () ->
-		# this.profile ?= 					new Profile()
+		if window.user?
+			if window.user.get('id') isnt '' and window.user.get('email') isnt '' and window.user.get('firstname') isnt ''
 
-		if window.user.get('id') isnt '' and window.user.get('email') isnt '' and window.user.get('firstname') isnt ''
-			this.signinToolbar.signin()
-			window.user.updateCookie()
-			window.user.set('signin',true)
-		else 
-			# this.routeLogout()
+				window.user.set('signin',true)
+				window.user.updateCookie()
 
-	fetch: () ->
-		window.user.fetch
-			url: window.sn.get('server').host + '/signin/' + window.user.get('id') + '/' + window.user.get('key')
-			dataType: 'jsonp'
-			success: (s) => 
-				this.checking()
+	fetch: (id, key) ->
+		if id? and key?
+			window.user.fetch
+				url: window.sn.get('server').host + '/signin/' + id + '/' + key
+				dataType: 'jsonp'
+				success: (s) => 
+					this.checking()
 
 
 	eventSignin: (model) ->
 
 		if model.get('success') is true
-
-			window.user.set 'id', 			model.get('id')
-			window.user.set 'key', 			model.get('key')
-			this.fetch()
+			this.fetch(model.get('id'), model.get('key'))
 
 
 	checkCookie: () ->
 		if $.cookie('id')? and $.cookie('key')?
-
-			window.user.set 'id', 			$.cookie 'id'
-			window.user.set 'key', 			$.cookie 'key'
-			this.fetch()
+			this.fetch($.cookie('id'), $.cookie('key'))
 

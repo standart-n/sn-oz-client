@@ -10,22 +10,22 @@ module.exports = Template.extend
 
 	initialize: () ->
 
-		this.model = 						window.user
+		if window.user?
 
-		this.model.on 'change:signin', () =>
-			this.show()
-
-		this.model.on 'change:firstname change:lastname', () =>
-			this.render()
-
-		window.app.on 'switch', () =>
-			if this.$el.length?
-				this.setElement('#profile')
+			window.user.on 'change:signin', () =>
 				this.show()
+
+			window.user.on 'change:firstname change:lastname', () =>
+				this.render()
+
+			window.app.on 'switch', () =>
+				if this.$el.length?
+					this.setElement('#profile')
+					this.show()
 
 
 	show: () ->
-		if this.model.get('signin') is true
+		if window.user.get('signin') is true
 			this.$el.show()
 			this.render()
 		else
@@ -38,5 +38,5 @@ module.exports = Template.extend
 			icons:							on
 
 	data: () ->
-		this.model.toJSON()
+		window.user.toJSON()
 

@@ -12,8 +12,6 @@ module.exports = Template.extend
 
 	initialize: () ->
 
-		this.model = 						window.user
-
 	render: () ->
 		this.template()
 		this.personal = 					new ProfileEditPersonal()
@@ -21,5 +19,5 @@ module.exports = Template.extend
 		
 
 	data: () ->
-		this.model.toJSON()
+		if window.user? then window.user.toJSON() else {}
 

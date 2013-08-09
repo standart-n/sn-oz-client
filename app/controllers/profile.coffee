@@ -17,7 +17,7 @@ module.exports = Backbone.Router.extend
 
 	routeEdit: () ->
 		this.profileEdit.render()
-		window.app?.links?.switch()
+		window.app.links.switch() if window.app?.links?
 
 
 

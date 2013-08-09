@@ -8,11 +8,11 @@ module.exports = Template.extend
 	url:									'view/profile/profileEditSecurity.html'
 
 	events:
-		'submit .profile-security-form' 	: 'submit'
+		'submit .profile-security-form'		: 'submit'
 
 
 	initialize: () ->
-		this.model = 						window.user
+
 		this.render()
 
 		this.$password_new = 				this.$el.find('.profile-password-new')
@@ -25,34 +25,40 @@ module.exports = Template.extend
 		this.template()		
 
 	data: () ->
-		this.model.toJSON()
+		if window.user? then window.user.toJSON() else {}
 
 	checking: () ->
-		if this.model.get('password_change') is true
-			this.$success.show().html(this.model.get('notice') + '.')
-			this.$error.hide()
-			this.model.updateCookie()
-		else 
-			this.$success.hide()
-			this.$error.show().html('<b>Ошибка!</b> ' + this.model.get('notice').replace('Error: ','') + '.')
 
-		this.$password_new.val('')
-		this.$password_repeat.val('')
+		if window.user?
 
-		this.model.unset 'notice'
-		this.model.unset 'key_new'
-		this.model.unset 'password_new'
-		this.model.unset 'password_repeat'
-		this.model.unset 'password_change'
+			if window.user.get('password_change') is true
+				this.$success.show().html(window.user.get('notice') + '.')
+				this.$error.hide()
+				window.user.updateCookie()
+			else 
+				this.$success.hide()
+				this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ','') + '.')
+
+			this.$password_new.val('')
+			this.$password_repeat.val('')
+
+			window.user.unset 'notice'
+			window.user.unset 'key_new'
+			window.user.unset 'password_new'
+			window.user.unset 'password_repeat'
+			window.user.unset 'password_change'
 
 	submit: (e) ->
 		e.preventDefault()
-		this.model.save
-			password_new:				this.$password_new.val()
-			password_repeat:			this.$password_repeat.val()
-		,
-			url: window.sn.get('server').host + '/edit/password/' + window.user.get('id') + '/' + window.user.get('key')
-			dataType: 'jsonp'
-			success: (s) => 
-				this.checking()
+
+		if window.user?
+
+			window.user.save
+				password_new:				this.$password_new.val()
+				password_repeat:			this.$password_repeat.val()
+			,
+				url: 						window.sn.get('server').host + '/edit/password/'
+				dataType: 'jsonp'
+				success: (s) => 
+					this.checking()
 

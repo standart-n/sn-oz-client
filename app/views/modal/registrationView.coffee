@@ -27,6 +27,13 @@ module.exports = Modal.extend
 		this.$alertSuccess = 			this.$el.find('.alert-success')
 		this.$alertError = 				this.$el.find('.alert-error')
 
+		if window.user?
+			
+			window.user.on 'change:signin', () =>
+				if window.user.get('signin') is false
+					this.model.reset()
+
+
 	afterShow: () ->
 		this.$alertSuccess.hide()
 		this.$alertError.hide()

@@ -23,6 +23,12 @@ module.exports = Modal.extend
 		this.model.set region: 			window.sn.get('region')
 
 		this.$alertError = 				this.$el.find('.alert-error')
+
+		if window.user?
+			
+			window.user.on 'change:signin', () =>
+				if window.user.get('signin') is false
+					this.model.reset()
 		
 
 	checking: () ->

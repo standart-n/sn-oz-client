@@ -309,7 +309,7 @@ sb.on('stats:before-require-count', function (moduleName, module) {
     main(lmd_trigger('lmd-register:decorate-require', 'main', lmd_require)[1], output.exports, output);
 })/*DO NOT ADD ; !*/
 (this,(function (require, exports, module) { /* wrapped by builder */
-var App, Authorization, Backbone, Markup, News, Profile, Settings;
+var App, Authorization, Backbone, Markup, News, Profile, Self, Settings;
 
 require('jquery');
 
@@ -320,6 +320,8 @@ require('json2');
 Backbone = require('Backbone');
 
 App = require('App');
+
+Self = require('Self');
 
 Authorization = require('Authorization');
 
@@ -367,6 +369,7 @@ $(function() {
       url: window.sn.get('settings').paths.widgets.gismeteo.url + window.sn.get('region').name + '/'
     }
   });
+  window.user = new Self();
   window.app = new App();
   window.authorization = new Authorization();
   window.profile = new Profile();
@@ -3349,10 +3352,20 @@ Backbone = require('Backbone');
 module.exports = Backbone.View.extend({
   el: '#bar',
   initialize: function() {
+    var _this = this;
     this.$signin = this.$el.find('.bar-signin');
     this.$logout = this.$el.find('.bar-logout');
     this.$registration = this.$el.find('.bar-registration');
-    return this.$remember = this.$el.find('.bar-remember');
+    this.$remember = this.$el.find('.bar-remember');
+    if (window.user != null) {
+      return window.user.on('change:signin', function() {
+        if (window.user.get('signin') === true) {
+          return _this.signin();
+        } else {
+          return _this.logout();
+        }
+      });
+    }
   },
   signin: function() {
     this.$logout.shown();
@@ -3494,9 +3507,11 @@ module.exports = Content.extend({
 
 }),
 "Feed": (function (require, exports, module) { /* wrapped by builder */
-var Template;
+var FeedNews, Template;
 
 Template = require('Template');
+
+FeedNews = require('FeedNews');
 
 module.exports = Template.extend({
   el: '#feed',
@@ -3514,7 +3529,46 @@ module.exports = Template.extend({
     });
   },
   render: function() {
+    this.template();
+    return this.news = new FeedNews();
+  }
+});
+
+}),
+"FeedNews": (function (require, exports, module) { /* wrapped by builder */
+var Template;
+
+Template = require('Template');
+
+module.exports = Template.extend({
+  el: '#tab-feed-news',
+  url: 'view/feed/feedNews.html',
+  events: {
+    'submit .feed-post-form': 'submit'
+  },
+  initialize: function() {
+    this.user = window.user;
+    this.render();
+    return this.$message = this.$el.find('.feed-post-message');
+  },
+  render: function() {
     return this.template();
+  },
+  checking: function() {
+    return this.user.unset('message');
+  },
+  submit: function(e) {
+    var _this = this;
+    e.preventDefault();
+    return this.user.save({
+      message: this.$message.val()
+    }, {
+      url: window.sn.get('server').host + '/feed/post/' + window.user.get('id') + '/' + window.user.get('key'),
+      dataType: 'jsonp',
+      success: function(s) {
+        return _this.checking();
+      }
+    });
   }
 });
 
@@ -3646,6 +3700,7 @@ module.exports = Modal.extend({
   el: '#registration',
   url: 'view/registration/registration.html',
   initialize: function() {
+    var _this = this;
     this.model = new Registration();
     this.render();
     this.$firstname = this.$el.find('.registration-firstname');
@@ -3660,7 +3715,14 @@ module.exports = Modal.extend({
     });
     this.textSuccess = new RegistrationTextSuccess();
     this.$alertSuccess = this.$el.find('.alert-success');
-    return this.$alertError = this.$el.find('.alert-error');
+    this.$alertError = this.$el.find('.alert-error');
+    if (window.user != null) {
+      return window.user.on('change:signin', function() {
+        if (window.user.get('signin') === false) {
+          return _this.model.reset();
+        }
+      });
+    }
   },
   afterShow: function() {
     this.$alertSuccess.hide();
@@ -3739,6 +3801,7 @@ module.exports = Modal.extend({
   el: '#signin',
   url: 'view/signin/signin.html',
   initialize: function() {
+    var _this = this;
     this.model = new Signin();
     this.render();
     this.$email = this.$el.find('.signin-email');
@@ -3749,7 +3812,14 @@ module.exports = Modal.extend({
     this.model.set({
       region: window.sn.get('region')
     });
-    return this.$alertError = this.$el.find('.alert-error');
+    this.$alertError = this.$el.find('.alert-error');
+    if (window.user != null) {
+      return window.user.on('change:signin', function() {
+        if (window.user.get('signin') === false) {
+          return _this.model.reset();
+        }
+      });
+    }
   },
   checking: function() {
     this.$password.val('');
@@ -3803,16 +3873,18 @@ ProfileEditSecurity = require('ProfileEditSecurity');
 module.exports = Template.extend({
   el: '#primary',
   url: 'view/profile/profileEdit.html',
-  initialize: function() {
-    return this.model = window.user;
-  },
+  initialize: function() {},
   render: function() {
     this.template();
     this.personal = new ProfileEditPersonal();
     return this.security = new ProfileEditSecurity();
   },
   data: function() {
-    return this.model.toJSON();
+    if (window.user != null) {
+      return window.user.toJSON();
+    } else {
+      return {};
+    }
   }
 });
 
@@ -3832,50 +3904,59 @@ module.exports = Template.extend({
   },
   initialize: function() {
     var _this = this;
-    this.model = window.user;
     this.render();
     this.$firstname = this.$el.find('.profile-firstname');
     this.$lastname = this.$el.find('.profile-lastname');
     this.$success = this.$el.find('.alert-success');
     this.$error = this.$el.find('.alert-error');
-    this.model.on('change:firstname', function() {
-      return _this.$firstname.val(_this.model.get('firstname'));
-    });
-    return this.model.on('change:lastname', function() {
-      return _this.$lastname.val(_this.model.get('lastname'));
-    });
+    if (window.user != null) {
+      window.user.on('change:firstname', function() {
+        return _this.$firstname.val(window.user.get('firstname'));
+      });
+      return window.user.on('change:lastname', function() {
+        return _this.$lastname.val(window.user.get('lastname'));
+      });
+    }
   },
   render: function() {
     return this.template();
   },
   data: function() {
-    return this.model.toJSON();
+    if (window.user != null) {
+      return window.user.toJSON();
+    } else {
+      return {};
+    }
   },
   submit: function(e) {
     var _this = this;
     e.preventDefault();
-    return this.model.save({
-      firstname_new: this.$firstname.val(),
-      lastname_new: this.$lastname.val()
-    }, {
-      url: window.sn.get('server').host + '/edit/personal/' + window.user.get('id') + '/' + window.user.get('key'),
-      dataType: 'jsonp',
-      success: function(s) {
-        return _this.checking();
-      }
-    });
+    if ((window.user != null) && (window.sn != null)) {
+      return window.user.save({
+        firstname_new: this.$firstname.val(),
+        lastname_new: this.$lastname.val()
+      }, {
+        url: window.sn.get('server').host + '/edit/personal/',
+        dataType: 'jsonp',
+        success: function(s) {
+          return _this.checking();
+        }
+      });
+    }
   },
   checking: function() {
-    if (this.model.get('personal_change') === true) {
-      this.$success.show().html(this.model.get('notice') + '.');
-      this.$error.hide();
-    } else {
-      this.$success.hide();
-      this.$error.show().html('<b>Ошибка!</b> ' + this.model.get('notice').replace('Error: ', '') + '.');
+    if (window.user != null) {
+      if (window.user.get('personal_change') === true) {
+        this.$success.show().html(window.user.get('notice') + '.');
+        this.$error.hide();
+      } else {
+        this.$success.hide();
+        this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ', '') + '.');
+      }
+      window.user.unset('notice');
+      window.user.unset('firstname_new');
+      return window.user.unset('lastname_new');
     }
-    this.model.unset('notice');
-    this.model.unset('firstname_new');
-    return this.model.unset('lastname_new');
   }
 });
 
@@ -3894,7 +3975,6 @@ module.exports = Template.extend({
     'submit .profile-security-form': 'submit'
   },
   initialize: function() {
-    this.model = window.user;
     this.render();
     this.$password_new = this.$el.find('.profile-password-new');
     this.$password_repeat = this.$el.find('.profile-password-repeat');
@@ -3905,38 +3985,46 @@ module.exports = Template.extend({
     return this.template();
   },
   data: function() {
-    return this.model.toJSON();
+    if (window.user != null) {
+      return window.user.toJSON();
+    } else {
+      return {};
+    }
   },
   checking: function() {
-    if (this.model.get('password_change') === true) {
-      this.$success.show().html(this.model.get('notice') + '.');
-      this.$error.hide();
-      this.model.updateCookie();
-    } else {
-      this.$success.hide();
-      this.$error.show().html('<b>Ошибка!</b> ' + this.model.get('notice').replace('Error: ', '') + '.');
+    if (window.user != null) {
+      if (window.user.get('password_change') === true) {
+        this.$success.show().html(window.user.get('notice') + '.');
+        this.$error.hide();
+        window.user.updateCookie();
+      } else {
+        this.$success.hide();
+        this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ', '') + '.');
+      }
+      this.$password_new.val('');
+      this.$password_repeat.val('');
+      window.user.unset('notice');
+      window.user.unset('key_new');
+      window.user.unset('password_new');
+      window.user.unset('password_repeat');
+      return window.user.unset('password_change');
     }
-    this.$password_new.val('');
-    this.$password_repeat.val('');
-    this.model.unset('notice');
-    this.model.unset('key_new');
-    this.model.unset('password_new');
-    this.model.unset('password_repeat');
-    return this.model.unset('password_change');
   },
   submit: function(e) {
     var _this = this;
     e.preventDefault();
-    return this.model.save({
-      password_new: this.$password_new.val(),
-      password_repeat: this.$password_repeat.val()
-    }, {
-      url: window.sn.get('server').host + '/edit/password/' + window.user.get('id') + '/' + window.user.get('key'),
-      dataType: 'jsonp',
-      success: function(s) {
-        return _this.checking();
-      }
-    });
+    if (window.user != null) {
+      return window.user.save({
+        password_new: this.$password_new.val(),
+        password_repeat: this.$password_repeat.val()
+      }, {
+        url: window.sn.get('server').host + '/edit/password/',
+        dataType: 'jsonp',
+        success: function(s) {
+          return _this.checking();
+        }
+      });
+    }
   }
 });
 
@@ -3955,22 +4043,23 @@ module.exports = Template.extend({
   url: 'view/profile/profile.html',
   initialize: function() {
     var _this = this;
-    this.model = window.user;
-    this.model.on('change:signin', function() {
-      return _this.show();
-    });
-    this.model.on('change:firstname change:lastname', function() {
-      return _this.render();
-    });
-    return window.app.on('switch', function() {
-      if (_this.$el.length != null) {
-        _this.setElement('#profile');
+    if (window.user != null) {
+      window.user.on('change:signin', function() {
         return _this.show();
-      }
-    });
+      });
+      window.user.on('change:firstname change:lastname', function() {
+        return _this.render();
+      });
+      return window.app.on('switch', function() {
+        if (_this.$el.length != null) {
+          _this.setElement('#profile');
+          return _this.show();
+        }
+      });
+    }
   },
   show: function() {
-    if (this.model.get('signin') === true) {
+    if (window.user.get('signin') === true) {
       this.$el.show();
       return this.render();
     } else {
@@ -3985,7 +4074,7 @@ module.exports = Template.extend({
     });
   },
   data: function() {
-    return this.model.toJSON();
+    return window.user.toJSON();
   }
 });
 
@@ -4098,7 +4187,7 @@ module.exports = Backbone.Router.extend({
 
 }),
 "Authorization": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, RegistrationView, RememberView, Self, SigninToolbar, SigninView;
+var Backbone, RegistrationView, RememberView, SigninToolbar, SigninView;
 
 require('cookie');
 
@@ -4112,8 +4201,6 @@ RememberView = require('RememberView');
 
 SigninToolbar = require('SigninToolbar');
 
-Self = require('Self');
-
 module.exports = Backbone.Router.extend({
   routes: {
     'signin': 'routeSignin',
@@ -4123,7 +4210,6 @@ module.exports = Backbone.Router.extend({
   },
   initialize: function() {
     var _this = this;
-    window.user = new Self();
     _.extend(this, Backbone.Events);
     this.signinView = new SigninView();
     this.registrationView = new RegistrationView();
@@ -4147,44 +4233,40 @@ module.exports = Backbone.Router.extend({
     return this.rememberView.open();
   },
   routeLogout: function() {
-    this.signinToolbar.logout();
-    this.signinView.model.reset();
-    this.registrationView.model.reset();
-    window.user.reset();
-    window.user.removeCookie();
+    if (window.user != null) {
+      window.user.reset();
+      window.user.removeCookie();
+    }
     return window.location.href = '#main/text/main';
   },
   checking: function() {
-    if (window.user.get('id') !== '' && window.user.get('email') !== '' && window.user.get('firstname') !== '') {
-      this.signinToolbar.signin();
-      window.user.updateCookie();
-      return window.user.set('signin', true);
-    } else {
-
+    if (window.user != null) {
+      if (window.user.get('id') !== '' && window.user.get('email') !== '' && window.user.get('firstname') !== '') {
+        window.user.set('signin', true);
+        return window.user.updateCookie();
+      }
     }
   },
-  fetch: function() {
+  fetch: function(id, key) {
     var _this = this;
-    return window.user.fetch({
-      url: window.sn.get('server').host + '/signin/' + window.user.get('id') + '/' + window.user.get('key'),
-      dataType: 'jsonp',
-      success: function(s) {
-        return _this.checking();
-      }
-    });
+    if ((id != null) && (key != null)) {
+      return window.user.fetch({
+        url: window.sn.get('server').host + '/signin/' + id + '/' + key,
+        dataType: 'jsonp',
+        success: function(s) {
+          return _this.checking();
+        }
+      });
+    }
   },
   eventSignin: function(model) {
     if (model.get('success') === true) {
-      window.user.set('id', model.get('id'));
-      window.user.set('key', model.get('key'));
-      return this.fetch();
+      return this.fetch(model.get('id'), model.get('key'));
     }
   },
   checkCookie: function() {
     if (($.cookie('id') != null) && ($.cookie('key') != null)) {
-      window.user.set('id', $.cookie('id'));
-      window.user.set('key', $.cookie('key'));
-      return this.fetch();
+      return this.fetch($.cookie('id'), $.cookie('key'));
     }
   }
 });
@@ -4222,9 +4304,11 @@ module.exports = Backbone.Router.extend({
     return this.profileEdit = new ProfileEdit();
   },
   routeEdit: function() {
-    var _ref, _ref1;
+    var _ref;
     this.profileEdit.render();
-    return (_ref = window.app) != null ? (_ref1 = _ref.links) != null ? _ref1["switch"]() : void 0 : void 0;
+    if (((_ref = window.app) != null ? _ref.links : void 0) != null) {
+      return window.app.links["switch"]();
+    }
   }
 });
 

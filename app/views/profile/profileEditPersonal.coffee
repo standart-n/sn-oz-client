@@ -12,7 +12,6 @@ module.exports = Template.extend
 
 	initialize: () ->
 
-		this.model = 						window.user
 		this.render()
 
 		this.$firstname = 					this.$el.find('.profile-firstname')
@@ -21,41 +20,49 @@ module.exports = Template.extend
 		this.$success = 					this.$el.find('.alert-success')
 		this.$error = 						this.$el.find('.alert-error')
 
-		this.model.on 'change:firstname', () =>
-			this.$firstname.val this.model.get('firstname')
+		if window.user?
 
-		this.model.on 'change:lastname', () =>
-			this.$lastname.val this.model.get('lastname')
+			window.user.on 'change:firstname', () =>
+				this.$firstname.val window.user.get('firstname')
+
+			window.user.on 'change:lastname', () =>
+				this.$lastname.val window.user.get('lastname')
 
 	render: () ->
 		this.template()
 		
 
 	data: () ->
-		this.model.toJSON()
+		if window.user? then window.user.toJSON() else {}
 
 	submit: (e) ->
 		e.preventDefault()
-		this.model.save
-			firstname_new:				this.$firstname.val()
-			lastname_new:				this.$lastname.val()
-		,
-			url: window.sn.get('server').host + '/edit/personal/' + window.user.get('id') + '/' + window.user.get('key')
-			dataType: 'jsonp'
-			success: (s) => 
-				this.checking()
+
+		if window.user? and window.sn?
+
+			window.user.save
+				firstname_new:				this.$firstname.val()
+				lastname_new:				this.$lastname.val()
+			,
+				url: 						window.sn.get('server').host + '/edit/personal/'
+				dataType: 					'jsonp'
+				success: (s) => 
+					this.checking()
 
 	checking: () ->
-		if this.model.get('personal_change') is true
-			this.$success.show().html(this.model.get('notice') + '.')
-			this.$error.hide()
-		else 
-			this.$success.hide()
-			this.$error.show().html('<b>Ошибка!</b> ' + this.model.get('notice').replace('Error: ','') + '.')
 
-		this.model.unset 'notice'
-		this.model.unset 'firstname_new'
-		this.model.unset 'lastname_new'
+		if window.user?
+
+			if window.user.get('personal_change') is true
+				this.$success.show().html(window.user.get('notice') + '.')
+				this.$error.hide()
+			else 
+				this.$success.hide()
+				this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ','') + '.')
+
+			window.user.unset 'notice'
+			window.user.unset 'firstname_new'
+			window.user.unset 'lastname_new'
 
 
 

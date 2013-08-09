@@ -1,5 +1,6 @@
 
 Template = 									require('Template')
+FeedNews = 									require('FeedNews')
 
 module.exports = Template.extend
 
@@ -7,6 +8,7 @@ module.exports = Template.extend
 	url: 									'view/feed/feed.html'
 
 	initialize: () ->
+
 		if this.$el.length?
 			this.render()
 
@@ -17,4 +19,5 @@ module.exports = Template.extend
 
 	render: () ->
 		this.template()
+		this.news = 						new FeedNews()
 

@@ -7,6 +7,7 @@ require('json2')
 
 Backbone = 								require('Backbone')
 App = 									require('App')
+Self = 		 							require('Self')
 Authorization = 						require('Authorization')
 Profile = 								require('Profile')
 News = 									require('News')
@@ -46,6 +47,8 @@ $ () ->
 			url: window.sn.get('settings').paths.files.url + window.sn.get('region').name + '/'
 		gismeteo:
 			url: window.sn.get('settings').paths.widgets.gismeteo.url + window.sn.get('region').name + '/'
+
+	window.user = 						new Self()
 
 	window.app = 						new App()
 	window.authorization = 				new Authorization()
