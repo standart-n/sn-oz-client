@@ -16,7 +16,7 @@ module.exports = Template.extend
 				this.show()
 
 			window.user.on 'change:firstname change:lastname', () =>
-				this.render()
+				this.show()
 
 			window.app.on 'switch', () =>
 				if this.$el.length?

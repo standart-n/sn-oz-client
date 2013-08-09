@@ -35,6 +35,8 @@ module.exports = Template.extend
 	checking: () ->
 		jalert this.post.toJSON()
 
+		this.post.unset('id')
+		this.post.unset('key')
 		this.post.unset('message')
 
 	submit: (e) ->

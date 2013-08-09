@@ -3115,6 +3115,24 @@ module.exports = Markup = (function() {
 })();
 
 }),
+"Password": (function (require, exports, module) { /* wrapped by builder */
+var Backbone;
+
+Backbone = require('Backbone');
+
+module.exports = Backbone.Model.extend({
+  defaults: function() {
+    return {
+      id: '',
+      key: '',
+      password_new: '',
+      password_repeat: ''
+    };
+  },
+  initialize: function() {}
+});
+
+}),
 "Post": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
@@ -3163,10 +3181,28 @@ module.exports = User.extend({
       firstname: '',
       lastname: '',
       email: '',
-      company: ''
+      company: '',
+      signin: false
     };
   },
-  initialize: function() {},
+  initialize: function() {
+    var _this = this;
+    this.on('change:key', function() {
+      if (_this.get('key') !== '') {
+        return _this.updateCookie();
+      }
+    });
+    return this.on('change:signin', function() {
+      if (_this.get('signin') === true) {
+        return _this.updateCookie();
+      }
+    });
+  },
+  logout: function() {
+    this.set('signin', false);
+    this.removeCookie();
+    return this.reset();
+  },
   updateCookie: function() {
     $.cookie('id', this.get('id'), {
       expires: 365
@@ -3346,11 +3382,12 @@ module.exports = Backbone.Model.extend({
     return _.extend(this, Backbone.Event);
   },
   reset: function() {
-    this.set('signin', false);
-    this.set('firstname', '');
-    this.set('lastname', '');
-    this.set('email', '');
-    this.set('company', '');
+    this.set({
+      firstname: '',
+      lastname: '',
+      email: '',
+      company: ''
+    });
     this.unset('id');
     this.unset('key');
     this.unset('reg_dt');
@@ -3583,6 +3620,8 @@ module.exports = Template.extend({
   },
   checking: function() {
     jalert(this.post.toJSON());
+    this.post.unset('id');
+    this.post.unset('key');
     return this.post.unset('message');
   },
   submit: function(e) {
@@ -3996,11 +4035,13 @@ module.exports = Template.extend({
 
 }),
 "ProfileEditSecurity": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, Template;
+var Backbone, Password, Template;
 
 Backbone = require('Backbone');
 
 Template = require('Template');
+
+Password = require('Password');
 
 module.exports = Template.extend({
   el: '#tab-profile-security',
@@ -4009,6 +4050,7 @@ module.exports = Template.extend({
     'submit .profile-security-form': 'submit'
   },
   initialize: function() {
+    this.password = new Password();
     this.render();
     this.$password_new = this.$el.find('.profile-password-new');
     this.$password_repeat = this.$el.find('.profile-password-repeat');
@@ -4019,36 +4061,38 @@ module.exports = Template.extend({
     return this.template();
   },
   data: function() {
-    if (window.user != null) {
-      return window.user.toJSON();
-    } else {
-      return {};
-    }
+    return this.password.toJSON();
   },
   checking: function() {
     if (window.user != null) {
-      if (window.user.get('password_change') === true) {
-        this.$success.show().html(window.user.get('notice') + '.');
+      if (this.password.get('password_change') === true) {
+        this.$success.show().html(this.password.get('notice') + '.');
         this.$error.hide();
-        window.user.updateCookie();
+        window.user.set('key', this.password.get('key'));
       } else {
         this.$success.hide();
-        this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ', '') + '.');
+        this.$error.show().html('<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ', '') + '.');
       }
       this.$password_new.val('');
       this.$password_repeat.val('');
-      window.user.unset('notice');
-      window.user.unset('key_new');
-      window.user.unset('password_new');
-      window.user.unset('password_repeat');
-      return window.user.unset('password_change');
+      this.password.unset('id');
+      this.password.unset('key');
+      this.password.unset('notice');
+      this.password.unset('key_new');
+      this.password.unset('password_new');
+      this.password.unset('password_repeat');
+      return this.password.unset('password_change');
     }
   },
   submit: function(e) {
     var _this = this;
     e.preventDefault();
     if (window.user != null) {
-      return window.user.save({
+      this.password.set({
+        id: window.user.get('id'),
+        key: window.user.get('key')
+      });
+      return this.password.save({
         password_new: this.$password_new.val(),
         password_repeat: this.$password_repeat.val()
       }, {
@@ -4082,7 +4126,7 @@ module.exports = Template.extend({
         return _this.show();
       });
       window.user.on('change:firstname change:lastname', function() {
-        return _this.render();
+        return _this.show();
       });
       return window.app.on('switch', function() {
         if (_this.$el.length != null) {
@@ -4268,28 +4312,15 @@ module.exports = Backbone.Router.extend({
   },
   routeLogout: function() {
     if (window.user != null) {
-      window.user.reset();
-      window.user.removeCookie();
+      window.user.logout();
     }
     return window.location.href = '#main/text/main';
   },
-  checking: function() {
-    if (window.user != null) {
-      if (window.user.get('id') !== '' && window.user.get('email') !== '' && window.user.get('firstname') !== '') {
-        window.user.set('signin', true);
-        return window.user.updateCookie();
-      }
-    }
-  },
   fetch: function(id, key) {
-    var _this = this;
     if ((id != null) && (key != null)) {
       return window.user.fetch({
         url: window.sn.get('server').host + '/signin/' + id + '/' + key,
-        dataType: 'jsonp',
-        success: function(s) {
-          return _this.checking();
-        }
+        dataType: 'jsonp'
       });
     }
   },

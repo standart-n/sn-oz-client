@@ -1,6 +1,7 @@
 
 Backbone = 									require('Backbone')
 Template = 									require('Template')
+Password = 									require('Password')
 
 module.exports = Template.extend
 
@@ -12,6 +13,8 @@ module.exports = Template.extend
 
 
 	initialize: () ->
+
+		this.password = 					new Password()
 
 		this.render()
 
@@ -25,35 +28,41 @@ module.exports = Template.extend
 		this.template()		
 
 	data: () ->
-		if window.user? then window.user.toJSON() else {}
+		this.password.toJSON()
 
 	checking: () ->
 
 		if window.user?
 
-			if window.user.get('password_change') is true
-				this.$success.show().html(window.user.get('notice') + '.')
+			if this.password.get('password_change') is true
+				this.$success.show().html(this.password.get('notice') + '.')
 				this.$error.hide()
-				window.user.updateCookie()
+				window.user.set('key', this.password.get('key'))
 			else 
 				this.$success.hide()
-				this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ','') + '.')
+				this.$error.show().html('<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ','') + '.')
 
 			this.$password_new.val('')
 			this.$password_repeat.val('')
 
-			window.user.unset 'notice'
-			window.user.unset 'key_new'
-			window.user.unset 'password_new'
-			window.user.unset 'password_repeat'
-			window.user.unset 'password_change'
+			this.password.unset 'id'
+			this.password.unset 'key'
+			this.password.unset 'notice'
+			this.password.unset 'key_new'
+			this.password.unset 'password_new'
+			this.password.unset 'password_repeat'
+			this.password.unset 'password_change'
 
 	submit: (e) ->
 		e.preventDefault()
 
 		if window.user?
 
-			window.user.save
+			this.password.set 
+				id:							window.user.get('id')
+				key: 						window.user.get('key')
+
+			this.password.save
 				password_new:				this.$password_new.val()
 				password_repeat:			this.$password_repeat.val()
 			,

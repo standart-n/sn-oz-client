@@ -45,26 +45,15 @@ module.exports = Backbone.Router.extend
 	routeLogout: () ->
 
 		if window.user?
-			window.user.reset()
-			window.user.removeCookie()
+			window.user.logout()
 
 		window.location.href = '#main/text/main'
-
-
-	checking: () ->
-		if window.user?
-			if window.user.get('id') isnt '' and window.user.get('email') isnt '' and window.user.get('firstname') isnt ''
-
-				window.user.set('signin',true)
-				window.user.updateCookie()
 
 	fetch: (id, key) ->
 		if id? and key?
 			window.user.fetch
 				url: window.sn.get('server').host + '/signin/' + id + '/' + key
 				dataType: 'jsonp'
-				success: (s) => 
-					this.checking()
 
 
 	eventSignin: (model) ->
