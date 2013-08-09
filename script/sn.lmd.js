@@ -3732,6 +3732,8 @@ Template = require('Template');
 
 module.exports = Template.extend({
   events: {
+    'focus input': 'change',
+    'keyUp input': 'change',
     'submit .form': 'submit'
   },
   render: function() {
@@ -3744,7 +3746,10 @@ module.exports = Template.extend({
     return this.afterShow();
   },
   show: function() {
-    this.$modal.modal('show');
+    this.$modal.modal({
+      backdrop: true,
+      show: true
+    });
     this.$modal.on('hide', function() {
       return window.app.navigate('#');
     });
@@ -3756,7 +3761,9 @@ module.exports = Template.extend({
   },
   hide: function() {
     return this.$modal.modal('hide');
-  }
+  },
+  change: function() {},
+  submit: function() {}
 });
 
 }),
@@ -3801,12 +3808,14 @@ module.exports = Modal.extend({
     this.$alertSuccess.hide();
     this.$alertError.hide();
     this.textSuccess.hide();
-    return this.$form.show();
+    this.$form.show();
+    return this.$firstname.focus();
   },
   data: function() {
     return this.model.toJSON();
   },
   checking: function() {
+    var _this = this;
     if (this.model.get('success')) {
       this.$form.hide();
       this.$alertSuccess.show();
@@ -3820,9 +3829,16 @@ module.exports = Modal.extend({
       this.$alertSuccess.hide();
       this.textSuccess.hide();
       this.$form.show();
+      setTimeout(function() {
+        return _this.$alertError.hide();
+      }, 1500);
     }
     this.model.unset('password');
     return this.model.unset('valid');
+  },
+  focus: function(e) {
+    e.preventDefault();
+    return this.$alertError.hide();
   },
   submit: function(e) {
     var _this = this;
@@ -3882,6 +3898,7 @@ module.exports = Modal.extend({
     this.$modal = this.$el.find('.modal');
     this.$close = this.$el.find('.modal-header').find('.close');
     this.$form = this.$el.find('.signin-form');
+    this.$button = this.$el.find('button');
     this.model.set({
       region: window.sn.get('region')
     });
@@ -3895,6 +3912,7 @@ module.exports = Modal.extend({
     }
   },
   checking: function() {
+    var _this = this;
     this.$password.val('');
     if (this.model.get('success')) {
       this.$alertError.hide();
@@ -3903,6 +3921,9 @@ module.exports = Modal.extend({
     } else {
       this.$alertError.show().html('<b>Ошибка!</b> ' + this.model.get('notice') + '.');
       this.$form.show();
+      setTimeout(function() {
+        return _this.$alertError.hide();
+      }, 1500);
     }
     this.model.unset('notice');
     return this.model.unset('password');
@@ -3910,21 +3931,27 @@ module.exports = Modal.extend({
   submit: function(e) {
     var _this = this;
     e.preventDefault();
+    this.$button.button('loading');
     return this.model.save({
       email: this.$email.val(),
       password: this.$password.val()
     }, {
       url: window.sn.get('server').host + '/signin',
       dataType: 'jsonp',
+      timeout: 2000,
       success: function(s) {
         return _this.checking();
+      },
+      error: function() {
+        return _this.$button.button('reset');
       }
     });
   },
   afterShow: function() {
     this.$alertError.hide();
     this.$form.show();
-    return this.$password.val('');
+    this.$password.val('');
+    return this.$email.focus();
   },
   data: function() {
     return this.model.toJSON();
@@ -4018,13 +4045,20 @@ module.exports = Template.extend({
     }
   },
   checking: function() {
+    var _this = this;
     if (window.user != null) {
       if (window.user.get('personal_change') === true) {
         this.$success.show().html(window.user.get('notice') + '.');
         this.$error.hide();
+        setTimeout(function() {
+          return _this.$success.hide();
+        }, 1000);
       } else {
         this.$success.hide();
         this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ', '') + '.');
+        setTimeout(function() {
+          return _this.$error.hide();
+        }, 1500);
       }
       window.user.unset('notice');
       window.user.unset('firstname_new');
@@ -4046,8 +4080,8 @@ Password = require('Password');
 module.exports = Template.extend({
   el: '#tab-profile-security',
   url: 'view/profile/profileEditSecurity.html',
-  events: {
-    'submit .profile-security-form': 'submit'
+  test: function() {
+    return alert('show');
   },
   initialize: function() {
     this.password = new Password();
@@ -4064,14 +4098,21 @@ module.exports = Template.extend({
     return this.password.toJSON();
   },
   checking: function() {
+    var _this = this;
     if (window.user != null) {
       if (this.password.get('password_change') === true) {
         this.$success.show().html(this.password.get('notice') + '.');
         this.$error.hide();
         window.user.set('key', this.password.get('key'));
+        setTimeout(function() {
+          return _this.$success.hide();
+        }, 1500);
       } else {
         this.$success.hide();
         this.$error.show().html('<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ', '') + '.');
+        setTimeout(function() {
+          return _this.$error.hide();
+        }, 1500);
       }
       this.$password_new.val('');
       this.$password_repeat.val('');

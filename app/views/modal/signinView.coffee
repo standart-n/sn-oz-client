@@ -19,6 +19,7 @@ module.exports = Modal.extend
 		this.$modal = 					this.$el.find('.modal')
 		this.$close = 					this.$el.find('.modal-header').find('.close')
 		this.$form = 					this.$el.find('.signin-form')
+		this.$button = 					this.$el.find('button')
 
 		this.model.set region: 			window.sn.get('region')
 
@@ -42,25 +43,39 @@ module.exports = Modal.extend
 			this.$alertError.show().html('<b>Ошибка!</b> ' + this.model.get('notice') + '.')
 			this.$form.show()
 
+			setTimeout () =>
+				this.$alertError.hide()
+			, 1500
+
 		this.model.unset 	'notice'
 		this.model.unset 	'password'
 
 	submit: (e) ->
 		e.preventDefault()
+
+		this.$button.button('loading')
+
 		this.model.save
 			email:						this.$email.val()
 			password:					this.$password.val()
 		,
 			url:						window.sn.get('server').host + '/signin'
 			dataType:					'jsonp'
+			timeout:					2000
 			success: (s) => 
 				this.checking()
+			error: () =>
+				this.$button.button('reset')
+
+
+
 
 
 	afterShow: () ->
 		this.$alertError.hide()
 		this.$form.show()
 		this.$password.val('')
+		this.$email.focus()
 
 	data: () ->
 		this.model.toJSON()

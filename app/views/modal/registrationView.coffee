@@ -39,6 +39,7 @@ module.exports = Modal.extend
 		this.$alertError.hide()
 		this.textSuccess.hide()
 		this.$form.show()
+		this.$firstname.focus()
 
 	data: () ->
 		this.model.toJSON()
@@ -58,8 +59,16 @@ module.exports = Modal.extend
 			this.textSuccess.hide()
 			this.$form.show()
 
-		this.model.unset 	'password'
-		this.model.unset 	'valid'
+			setTimeout () =>
+				this.$alertError.hide()
+			, 1500
+
+		this.model.unset 				'password'
+		this.model.unset 				'valid'
+
+	focus: (e) ->
+		e.preventDefault()
+		this.$alertError.hide()
 
 	submit: (e) ->
 		e.preventDefault()
@@ -74,8 +83,6 @@ module.exports = Modal.extend
 			dataType:					'jsonp'
 			success: (s) => 
 				this.checking()
-				# alert JSON.stringify(s)
-				# alert s.id
 
 
 

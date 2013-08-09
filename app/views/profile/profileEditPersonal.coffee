@@ -56,9 +56,18 @@ module.exports = Template.extend
 			if window.user.get('personal_change') is true
 				this.$success.show().html(window.user.get('notice') + '.')
 				this.$error.hide()
+
+				setTimeout () =>
+					this.$success.hide()
+				, 1000
+
 			else 
 				this.$success.hide()
 				this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ','') + '.')
+
+				setTimeout () =>
+					this.$error.hide()
+				, 1500
 
 			window.user.unset 'notice'
 			window.user.unset 'firstname_new'

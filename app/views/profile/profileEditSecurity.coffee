@@ -8,9 +8,8 @@ module.exports = Template.extend
 	el:										'#tab-profile-security'
 	url:									'view/profile/profileEditSecurity.html'
 
-	events:
-		'submit .profile-security-form'		: 'submit'
-
+	test: () ->
+		alert 'show'
 
 	initialize: () ->
 
@@ -23,6 +22,7 @@ module.exports = Template.extend
 
 		this.$success = 					this.$el.find('.alert-success')
 		this.$error = 						this.$el.find('.alert-error')
+
 
 	render: () ->
 		this.template()		
@@ -38,9 +38,18 @@ module.exports = Template.extend
 				this.$success.show().html(this.password.get('notice') + '.')
 				this.$error.hide()
 				window.user.set('key', this.password.get('key'))
+
+				setTimeout () =>
+					this.$success.hide()
+				, 1500
+
 			else 
 				this.$success.hide()
 				this.$error.show().html('<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ','') + '.')
+
+				setTimeout () =>
+					this.$error.hide()
+				, 1500
 
 			this.$password_new.val('')
 			this.$password_repeat.val('')

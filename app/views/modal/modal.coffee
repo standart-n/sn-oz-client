@@ -4,6 +4,8 @@ Template = 		require('Template')
 module.exports = Template.extend
 
 	events:
+		'focus input': 				'change'
+		'keyUp input': 				'change'
 		'submit .form':		 		'submit'
 
 	render: () ->
@@ -16,9 +18,13 @@ module.exports = Template.extend
 		this.afterShow()
 
 	show: () ->
-		this.$modal.modal 'show'
+		this.$modal.modal
+			backdrop: 				true
+			show:					true
+
 		this.$modal.on 'hide', () ->
 			window.app.navigate('#')
+
 		this.afterShow()
 
 	afterShow: () ->
@@ -29,3 +35,9 @@ module.exports = Template.extend
 
 	hide: () ->
 		this.$modal.modal 'hide'
+
+	change: () ->
+		# if this.$alertError?
+		# 	this.$alertError.hide()
+
+	submit: () ->

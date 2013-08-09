@@ -17,7 +17,6 @@ module.exports = Template.extend
 		this.personal = 					new ProfileEditPersonal()
 		this.security = 					new ProfileEditSecurity()
 		
-
 	data: () ->
 		if window.user? then window.user.toJSON() else {}
 
