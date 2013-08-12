@@ -697,7 +697,7 @@ return jQuery;
   }
 
   $.fn.button.defaults = {
-    loadingText: 'loading...'
+    loadingText: 'загрузка...'
   }
 
   $.fn.button.Constructor = Button
@@ -3790,6 +3790,7 @@ module.exports = Modal.extend({
     this.$modal = this.$el.find('.modal');
     this.$close = this.$el.find('.modal-header').find('.close');
     this.$form = this.$el.find('.registration-form');
+    this.$button = this.$el.find('button');
     this.model.set({
       region: window.sn.get('region')
     });
@@ -3816,25 +3817,38 @@ module.exports = Modal.extend({
   },
   checking: function() {
     var _this = this;
+    setTimeout(function() {
+      return _this.$button.button('reset');
+    }, 400);
     if (this.model.get('success')) {
-      this.$form.hide();
-      this.$alertSuccess.show();
-      this.$alertError.hide();
-      this.textSuccess.show({
-        email: this.model.get('email'),
-        password: this.model.get('password')
-      });
+      this.success(this.model.get('email'), this.model.get('password'));
     } else {
-      this.$alertError.show().html(this.model.get('valid').replace('Error:', '<b>Ошибка!</b>') + '.');
-      this.$alertSuccess.hide();
-      this.textSuccess.hide();
-      this.$form.show();
-      setTimeout(function() {
-        return _this.$alertError.hide();
-      }, 1500);
+      this.error(this.model.get('valid').replace('Error:', '<b>Ошибка!</b>') + '.');
     }
     this.model.unset('password');
     return this.model.unset('valid');
+  },
+  success: function(email, password) {
+    this.$form.hide();
+    this.$alertSuccess.show();
+    this.$alertError.hide();
+    return this.textSuccess.show({
+      email: email,
+      password: password
+    });
+  },
+  error: function(notice) {
+    var _this = this;
+    if (notice == null) {
+      notice = '';
+    }
+    this.$alertError.show().html(notice);
+    this.$alertSuccess.hide();
+    this.textSuccess.hide();
+    this.$form.show();
+    return setTimeout(function() {
+      return _this.$alertError.hide();
+    }, 2000);
   },
   focus: function(e) {
     e.preventDefault();
@@ -3851,9 +3865,17 @@ module.exports = Modal.extend({
       region: window.sn.get('region')
     }, {
       url: window.sn.get('server').host + '/registration',
+      timeout: 3000,
       dataType: 'jsonp',
+      beforeSend: function() {
+        return _this.$button.button('loading');
+      },
       success: function(s) {
         return _this.checking();
+      },
+      error: function() {
+        _this.$button.button('reset');
+        return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
       }
     });
   }
@@ -3914,16 +3936,16 @@ module.exports = Modal.extend({
   checking: function() {
     var _this = this;
     this.$password.val('');
+    setTimeout(function() {
+      return _this.$button.button('reset');
+    }, 400);
     if (this.model.get('success')) {
       this.$alertError.hide();
       this.$form.hide();
       this.hide();
     } else {
-      this.$alertError.show().html('<b>Ошибка!</b> ' + this.model.get('notice') + '.');
+      this.error(this.model.get('notice') + '.');
       this.$form.show();
-      setTimeout(function() {
-        return _this.$alertError.hide();
-      }, 1500);
     }
     this.model.unset('notice');
     return this.model.unset('password');
@@ -3931,21 +3953,34 @@ module.exports = Modal.extend({
   submit: function(e) {
     var _this = this;
     e.preventDefault();
-    this.$button.button('loading');
     return this.model.save({
       email: this.$email.val(),
       password: this.$password.val()
     }, {
       url: window.sn.get('server').host + '/signin',
       dataType: 'jsonp',
-      timeout: 2000,
+      timeout: 3000,
+      beforeSend: function() {
+        return _this.$button.button('loading');
+      },
       success: function(s) {
         return _this.checking();
       },
       error: function() {
-        return _this.$button.button('reset');
+        _this.$button.button('reset');
+        return _this.error('Сервер не отвечает!');
       }
     });
+  },
+  error: function(notice) {
+    var _this = this;
+    if (notice == null) {
+      notice = '';
+    }
+    this.$alertError.show().html('<b>Ошибка!</b> ' + notice);
+    return setTimeout(function() {
+      return _this.$alertError.hide();
+    }, 3000);
   },
   afterShow: function() {
     this.$alertError.hide();
@@ -4009,6 +4044,7 @@ module.exports = Template.extend({
     this.$lastname = this.$el.find('.profile-lastname');
     this.$success = this.$el.find('.alert-success');
     this.$error = this.$el.find('.alert-error');
+    this.$button = this.$el.find('button');
     if (window.user != null) {
       window.user.on('change:firstname', function() {
         return _this.$firstname.val(window.user.get('firstname'));
@@ -4037,33 +4073,58 @@ module.exports = Template.extend({
         lastname_new: this.$lastname.val()
       }, {
         url: window.sn.get('server').host + '/edit/personal/',
+        timeout: 3000,
         dataType: 'jsonp',
+        beforeSend: function() {
+          return _this.$button.button('loading');
+        },
         success: function(s) {
           return _this.checking();
+        },
+        error: function() {
+          _this.$button.button('reset');
+          return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
         }
       });
     }
   },
   checking: function() {
     var _this = this;
+    setTimeout(function() {
+      return _this.$button.button('reset');
+    }, 400);
     if (window.user != null) {
       if (window.user.get('personal_change') === true) {
-        this.$success.show().html(window.user.get('notice') + '.');
-        this.$error.hide();
-        setTimeout(function() {
-          return _this.$success.hide();
-        }, 1000);
+        this.success(window.user.get('notice') + '.');
       } else {
-        this.$success.hide();
-        this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ', '') + '.');
-        setTimeout(function() {
-          return _this.$error.hide();
-        }, 1500);
+        this.error('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ', '') + '.');
       }
       window.user.unset('notice');
       window.user.unset('firstname_new');
       return window.user.unset('lastname_new');
     }
+  },
+  error: function(notice) {
+    var _this = this;
+    if (notice == null) {
+      notice = '';
+    }
+    this.$error.show().html(notice);
+    this.$success.hide();
+    return setTimeout(function() {
+      return _this.$error.hide();
+    }, 3000);
+  },
+  success: function(notice) {
+    var _this = this;
+    if (notice == null) {
+      notice = '';
+    }
+    this.$success.show().html(notice);
+    this.$error.hide();
+    return setTimeout(function() {
+      return _this.$success.hide();
+    }, 1500);
   }
 });
 
@@ -4080,8 +4141,8 @@ Password = require('Password');
 module.exports = Template.extend({
   el: '#tab-profile-security',
   url: 'view/profile/profileEditSecurity.html',
-  test: function() {
-    return alert('show');
+  events: {
+    'submit .profile-security-form': 'submit'
   },
   initialize: function() {
     this.password = new Password();
@@ -4089,7 +4150,8 @@ module.exports = Template.extend({
     this.$password_new = this.$el.find('.profile-password-new');
     this.$password_repeat = this.$el.find('.profile-password-repeat');
     this.$success = this.$el.find('.alert-success');
-    return this.$error = this.$el.find('.alert-error');
+    this.$error = this.$el.find('.alert-error');
+    return this.$button = this.$el.find('button');
   },
   render: function() {
     return this.template();
@@ -4099,20 +4161,17 @@ module.exports = Template.extend({
   },
   checking: function() {
     var _this = this;
+    setTimeout(function() {
+      return _this.$button.button('reset');
+    }, 400);
     if (window.user != null) {
       if (this.password.get('password_change') === true) {
-        this.$success.show().html(this.password.get('notice') + '.');
-        this.$error.hide();
-        window.user.set('key', this.password.get('key'));
-        setTimeout(function() {
-          return _this.$success.hide();
-        }, 1500);
+        this.success(this.password.get('notice') + '.');
+        window.user.set({
+          key: this.password.get('key')
+        });
       } else {
-        this.$success.hide();
-        this.$error.show().html('<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ', '') + '.');
-        setTimeout(function() {
-          return _this.$error.hide();
-        }, 1500);
+        this.error('<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ', '') + '.');
       }
       this.$password_new.val('');
       this.$password_repeat.val('');
@@ -4138,12 +4197,42 @@ module.exports = Template.extend({
         password_repeat: this.$password_repeat.val()
       }, {
         url: window.sn.get('server').host + '/edit/password/',
+        timeout: 3000,
         dataType: 'jsonp',
+        beforeSend: function() {
+          return _this.$button.button('loading');
+        },
         success: function(s) {
           return _this.checking();
+        },
+        error: function() {
+          _this.$button.button('reset');
+          return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
         }
       });
     }
+  },
+  error: function(notice) {
+    var _this = this;
+    if (notice == null) {
+      notice = '';
+    }
+    this.$error.show().html(notice);
+    this.$success.hide();
+    return setTimeout(function() {
+      return _this.$error.hide();
+    }, 3000);
+  },
+  success: function(notice) {
+    var _this = this;
+    if (notice == null) {
+      notice = '';
+    }
+    this.$success.show().html(notice);
+    this.$error.hide();
+    return setTimeout(function() {
+      return _this.$success.hide();
+    }, 1500);
   }
 });
 

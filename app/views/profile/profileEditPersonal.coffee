@@ -20,6 +20,8 @@ module.exports = Template.extend
 		this.$success = 					this.$el.find('.alert-success')
 		this.$error = 						this.$el.find('.alert-error')
 
+		this.$button = 						this.$el.find('button')
+
 		if window.user?
 
 			window.user.on 'change:firstname', () =>
@@ -45,33 +47,59 @@ module.exports = Template.extend
 				lastname_new:				this.$lastname.val()
 			,
 				url: 						window.sn.get('server').host + '/edit/personal/'
+				timeout: 					3000
 				dataType: 					'jsonp'
+
+				beforeSend: () =>
+					this.$button.button 	'loading'
+
 				success: (s) => 
 					this.checking()
 
+				error: () =>
+					this.$button.button		'reset'
+					this.error 				'<b>Ошибка!</b> Сервер не отвечает!'
+
 	checking: () ->
+
+		setTimeout () =>
+			this.$button.button				'reset'
+		, 400
 
 		if window.user?
 
 			if window.user.get('personal_change') is true
-				this.$success.show().html(window.user.get('notice') + '.')
-				this.$error.hide()
-
-				setTimeout () =>
-					this.$success.hide()
-				, 1000
+				this.success 				window.user.get('notice') + '.'
 
 			else 
-				this.$success.hide()
-				this.$error.show().html('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ','') + '.')
+				this.error 					'<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ','') + '.'
 
-				setTimeout () =>
-					this.$error.hide()
-				, 1500
 
 			window.user.unset 'notice'
 			window.user.unset 'firstname_new'
 			window.user.unset 'lastname_new'
+
+	error: (notice = '') ->
+
+		this.$error.show().html	 			notice
+		this.$success.hide()
+
+		setTimeout () =>
+			this.$error.hide()
+		, 3000
+
+
+	success: (notice = '') ->
+
+		this.$success.show().html 			notice
+		this.$error.hide()
+
+		setTimeout () =>
+			this.$success.hide()
+		, 1500
+
+
+
 
 
 

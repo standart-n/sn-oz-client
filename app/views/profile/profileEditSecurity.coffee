@@ -8,8 +8,8 @@ module.exports = Template.extend
 	el:										'#tab-profile-security'
 	url:									'view/profile/profileEditSecurity.html'
 
-	test: () ->
-		alert 'show'
+	events:
+		'submit .profile-security-form' 	: 'submit'
 
 	initialize: () ->
 
@@ -23,6 +23,7 @@ module.exports = Template.extend
 		this.$success = 					this.$el.find('.alert-success')
 		this.$error = 						this.$el.find('.alert-error')
 
+		this.$button = 						this.$el.find('button')
 
 	render: () ->
 		this.template()		
@@ -32,24 +33,22 @@ module.exports = Template.extend
 
 	checking: () ->
 
+		setTimeout () =>
+			this.$button.button				'reset'
+		, 400
+
 		if window.user?
 
 			if this.password.get('password_change') is true
-				this.$success.show().html(this.password.get('notice') + '.')
-				this.$error.hide()
-				window.user.set('key', this.password.get('key'))
 
-				setTimeout () =>
-					this.$success.hide()
-				, 1500
+				this.success 				this.password.get('notice') + '.'
+
+				window.user.set 
+					key: 					this.password.get('key')
 
 			else 
-				this.$success.hide()
-				this.$error.show().html('<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ','') + '.')
 
-				setTimeout () =>
-					this.$error.hide()
-				, 1500
+				this.error 					'<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ','') + '.'
 
 			this.$password_new.val('')
 			this.$password_repeat.val('')
@@ -76,7 +75,39 @@ module.exports = Template.extend
 				password_repeat:			this.$password_repeat.val()
 			,
 				url: 						window.sn.get('server').host + '/edit/password/'
+				timeout: 					3000
 				dataType: 'jsonp'
+
+				beforeSend: () =>
+					this.$button.button 	'loading'
+
 				success: (s) => 
 					this.checking()
+
+				error: () =>
+					this.$button.button		'reset'
+					this.error 				'<b>Ошибка!</b> Сервер не отвечает!'
+
+
+	error: (notice = '') ->
+
+		this.$error.show().html	 			notice
+		this.$success.hide()
+
+		setTimeout () =>
+			this.$error.hide()
+		, 3000
+
+
+	success: (notice = '') ->
+
+		this.$success.show().html 			notice
+		this.$error.hide()
+
+		setTimeout () =>
+			this.$success.hide()
+		, 1500
+
+
+
 

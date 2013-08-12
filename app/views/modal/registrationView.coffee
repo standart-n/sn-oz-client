@@ -19,6 +19,7 @@ module.exports = Modal.extend
 		this.$modal = 					this.$el.find('.modal')
 		this.$close = 					this.$el.find('.modal-header').find('.close')
 		this.$form = 					this.$el.find('.registration-form')
+		this.$button = 					this.$el.find('button')
 
 		this.model.set region: 			window.sn.get('region')
 
@@ -45,26 +46,38 @@ module.exports = Modal.extend
 		this.model.toJSON()
 
 	checking: () ->
+
+		setTimeout () =>
+			this.$button.button			'reset'
+		, 400
+
 		if this.model.get('success')
-			this.$form.hide()
-			this.$alertSuccess.show()
-			this.$alertError.hide()
-			this.textSuccess.show
-				email:					this.model.get('email')
-				password:				this.model.get('password')
-
+			this.success 				this.model.get('email'), this.model.get('password')
 		else
-			this.$alertError.show().html(this.model.get('valid').replace('Error:', '<b>Ошибка!</b>') + '.')
-			this.$alertSuccess.hide()
-			this.textSuccess.hide()
-			this.$form.show()
-
-			setTimeout () =>
-				this.$alertError.hide()
-			, 1500
+			this.error 					this.model.get('valid').replace('Error:', '<b>Ошибка!</b>') + '.'
 
 		this.model.unset 				'password'
 		this.model.unset 				'valid'
+
+	success: (email, password) ->
+		this.$form.hide()
+		this.$alertSuccess.show()
+		this.$alertError.hide()
+		this.textSuccess.show
+			email:						email
+			password: 					password
+
+
+	error: (notice = '') ->
+		this.$alertError.show().html 	notice
+		this.$alertSuccess.hide()
+		this.textSuccess.hide()
+		this.$form.show()
+
+		setTimeout () =>
+			this.$alertError.hide()
+		, 2000
+
 
 	focus: (e) ->
 		e.preventDefault()
@@ -80,9 +93,18 @@ module.exports = Modal.extend
 			region: 					window.sn.get('region')
 		,
 			url:						window.sn.get('server').host + '/registration'
+			timeout: 					3000
 			dataType:					'jsonp'
+
+			beforeSend: () =>
+				this.$button.button 	'loading'
+
 			success: (s) => 
 				this.checking()
+
+			error: () =>
+				this.$button.button		'reset'
+				this.error 				'<b>Ошибка!</b> Сервер не отвечает!'
 
 
 

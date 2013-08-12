@@ -33,19 +33,20 @@ module.exports = Modal.extend
 		
 
 	checking: () ->
-		this.$password.val('')
+
+		this.$password.val 				''
+
+		setTimeout () =>
+			this.$button.button			'reset'
+		, 400
 
 		if this.model.get('success')
 			this.$alertError.hide()
 			this.$form.hide()
 			this.hide()
 		else
-			this.$alertError.show().html('<b>Ошибка!</b> ' + this.model.get('notice') + '.')
+			this.error 					this.model.get('notice') + '.'
 			this.$form.show()
-
-			setTimeout () =>
-				this.$alertError.hide()
-			, 1500
 
 		this.model.unset 	'notice'
 		this.model.unset 	'password'
@@ -53,7 +54,6 @@ module.exports = Modal.extend
 	submit: (e) ->
 		e.preventDefault()
 
-		this.$button.button('loading')
 
 		this.model.save
 			email:						this.$email.val()
@@ -61,14 +61,26 @@ module.exports = Modal.extend
 		,
 			url:						window.sn.get('server').host + '/signin'
 			dataType:					'jsonp'
-			timeout:					2000
+			timeout:					3000
+
+			beforeSend: () =>
+				this.$button.button 	'loading'
+
 			success: (s) => 
 				this.checking()
+
 			error: () =>
-				this.$button.button('reset')
+				this.$button.button		'reset'
+				this.error 				'Сервер не отвечает!'
 
 
+	error: (notice = '') ->
 
+		this.$alertError.show().html('<b>Ошибка!</b> ' + notice)
+
+		setTimeout () =>
+			this.$alertError.hide()
+		, 3000
 
 
 	afterShow: () ->
