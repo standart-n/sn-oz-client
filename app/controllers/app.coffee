@@ -12,6 +12,7 @@ ContentPrimary =					require('ContentPrimary')
 
 Spoiler = 							require('Spoiler')
 Links = 							require('Links')
+Scroll = 							require('Scroll')
 BootstrapButtons = 					require('BootstrapButtons')
 
 module.exports = Backbone.Router.extend
@@ -35,6 +36,7 @@ module.exports = Backbone.Router.extend
 		# triggers
 		this.bootstrapButtons = 	new BootstrapButtons()
 		this.spoiler = 				new Spoiler()
+		this.scroll = 				new Scroll()
 		this.links = 				new Links auto: off
 
 

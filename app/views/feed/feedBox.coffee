@@ -39,7 +39,6 @@ module.exports = Template.extend
 
 	checking: () ->
 
-
 		setTimeout () =>
 			this.$button.button					'reset'
 		, 400
@@ -47,7 +46,8 @@ module.exports = Template.extend
 		if !this.post.get('post_result')
 			error()
 		else
-		this.$message.val						''
+			this.$el.trigger					'send.success'
+			this.$message.val					''
 
 
 		window.news.feed.news.fetch()

@@ -10,13 +10,19 @@ module.exports = Template.extend
 
 	initialize: () ->
 
-		if this.$el.length?
-			this.render()
+		this.render()
 
 		window.app.on 'switch', () =>
-			if this.$el.length?
-				this.setElement('#feed')
-				this.render()
+			this.setElement('#feed')
+			this.render()
+
+		$(document).on 'scrollDown', () =>	
+			this.news.fetch()
+
+		this.box.$el.on 'send.success', () =>
+			this.news.fetch()
+
+		
 
 	render: () ->
 		this.template()

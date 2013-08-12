@@ -346,11 +346,6 @@ $(function() {
       warn: function() {}
     };
   }
-  if (!Array.isArray) {
-    Array.isArray = function(vArg) {
-      return Object.prototype.toString.call(vArg) === "[object Array]";
-    };
-  }
   window.jalert = function(s) {
     return alert(JSON.stringify(s));
   };
@@ -3614,14 +3609,16 @@ module.exports = Template.extend({
   url: 'view/feed/feed.html',
   initialize: function() {
     var _this = this;
-    if (this.$el.length != null) {
-      this.render();
-    }
-    return window.app.on('switch', function() {
-      if (_this.$el.length != null) {
-        _this.setElement('#feed');
-        return _this.render();
-      }
+    this.render();
+    window.app.on('switch', function() {
+      _this.setElement('#feed');
+      return _this.render();
+    });
+    $(document).on('scrollDown', function() {
+      return _this.news.fetch();
+    });
+    return this.box.$el.on('send.success', function() {
+      return _this.news.fetch();
     });
   },
   render: function() {
@@ -3674,9 +3671,9 @@ module.exports = Template.extend({
     if (!this.post.get('post_result')) {
       error();
     } else {
-
+      this.$el.trigger('send.success');
+      this.$message.val('');
     }
-    this.$message.val('');
     window.news.feed.news.fetch();
     this.post.unset('id');
     this.post.unset('key');
@@ -3742,6 +3739,7 @@ Posts = require('Posts');
 module.exports = Template.extend({
   el: '#feed-news',
   url: 'view/feed/feedNews.html',
+  limit: 10,
   initialize: function() {
     this.posts = new Posts();
     return this.fetch();
@@ -3761,6 +3759,9 @@ module.exports = Template.extend({
       url: window.sn.get('server').host + '/feed/post/',
       timeout: 3000,
       dataType: 'jsonp',
+      data: {
+        limit: this.limit
+      },
       success: function(s) {
         return _this.checking();
       }
@@ -4415,6 +4416,8 @@ var Backbone;
 
 require('ejs');
 
+require('jquery');
+
 Backbone = require('Backbone');
 
 module.exports = Backbone.View.extend({
@@ -4422,11 +4425,11 @@ module.exports = Backbone.View.extend({
   markup: false,
   template: function() {
     var data, ms, res, text, _i, _len, _ref, _ref1;
-    if ((this.url != null) && (this.$el.length != null)) {
+    if (this.url != null) {
       text = '';
       ms = [];
       data = this.data();
-      if (!Array.isArray(data)) {
+      if (!$.isArray(data)) {
         ms[0] = data;
       } else {
         ms = data;
@@ -4480,7 +4483,7 @@ module.exports = Template.extend({
 
 }),
 "App": (function (require, exports, module) { /* wrapped by builder */
-var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Links, Spoiler;
+var Backbone, BootstrapButtons, ContentPrimary, ContentSide, LayoutBar, LayoutFooter, LayoutMain, Links, Scroll, Spoiler;
 
 Backbone = require('Backbone');
 
@@ -4498,6 +4501,8 @@ Spoiler = require('Spoiler');
 
 Links = require('Links');
 
+Scroll = require('Scroll');
+
 BootstrapButtons = require('BootstrapButtons');
 
 module.exports = Backbone.Router.extend({
@@ -4513,6 +4518,7 @@ module.exports = Backbone.Router.extend({
     this.contentPrimary = new ContentPrimary();
     this.bootstrapButtons = new BootstrapButtons();
     this.spoiler = new Spoiler();
+    this.scroll = new Scroll();
     return this.links = new Links({
       auto: false
     });
@@ -4732,6 +4738,32 @@ module.exports = Links = (function() {
   };
 
   return Links;
+
+})();
+
+}),
+"Scroll": (function (require, exports, module) { /* wrapped by builder */
+var Spoiler;
+
+require('jquery');
+
+module.exports = Spoiler = (function() {
+  function Spoiler() {
+    $(function() {
+      var _this = this;
+      return $(window).on('scroll', function() {
+        var documentHeight, scrollTop, windowHeight;
+        scrollTop = $(document).scrollTop();
+        documentHeight = $(document).height();
+        windowHeight = $(window).height();
+        if ((documentHeight - windowHeight) <= scrollTop) {
+          return $(document).trigger('scrollDown');
+        }
+      });
+    });
+  }
+
+  return Spoiler;
 
 })();
 

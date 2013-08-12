@@ -25,10 +25,6 @@ $ () ->
 			error: () ->
 			warn: () ->
 
-	if !Array.isArray	
-		Array.isArray = (vArg) ->
-			Object.prototype.toString.call(vArg) is "[object Array]"
-
 	window.jalert = (s) ->
 		alert JSON.stringify(s)
 

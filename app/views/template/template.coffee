@@ -2,6 +2,7 @@
 # Template
 
 require('ejs')
+require('jquery')
 
 Backbone = 											require('Backbone')
 
@@ -11,13 +12,13 @@ module.exports = Backbone.View.extend
 	markup: 	off
 
 	template: () ->
-		if this.url? and this.$el.length?
+		if this.url?
 
 			text = 									''
 			ms = 									[]
 			data = 									this.data()
 			
-			if !Array.isArray(data) then ms[0] = data else ms = data
+			if !$.isArray(data) then ms[0] = data else ms = data
 
 			for res in ms
 
