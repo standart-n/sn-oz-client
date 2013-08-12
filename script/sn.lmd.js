@@ -3615,7 +3615,7 @@ module.exports = Template.extend({
       return _this.render();
     });
     $(document).on('scrollDown', function() {
-      return _this.news.fetch();
+      return _this.news.down();
     });
     return this.box.$el.on('send.success', function() {
       return _this.news.fetch();
@@ -3739,8 +3739,9 @@ Posts = require('Posts');
 module.exports = Template.extend({
   el: '#feed-news',
   url: 'view/feed/feedNews.html',
-  limit: 10,
   initialize: function() {
+    this.limit = 10;
+    this.step = 10;
     this.posts = new Posts();
     return this.fetch();
   },
@@ -3752,6 +3753,10 @@ module.exports = Template.extend({
   },
   checking: function() {
     return this.render();
+  },
+  down: function() {
+    this.limit += this.step;
+    return this.fetch();
   },
   fetch: function() {
     var _this = this;

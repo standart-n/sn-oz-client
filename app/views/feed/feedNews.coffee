@@ -6,9 +6,11 @@ module.exports = Template.extend
 
 	el: 									'#feed-news'
 	url: 									'view/feed/feedNews.html'
-	limit: 									10
 
 	initialize: () ->
+
+		this.limit = 						10
+		this.step = 						10
 
 		this.posts = 						new Posts()
 
@@ -24,6 +26,11 @@ module.exports = Template.extend
 	checking: () ->
 
 		this.render()
+
+
+	down: () ->
+		this.limit += 						this.step
+		this.fetch()
 
 
 	fetch: () ->

@@ -17,7 +17,7 @@ module.exports = Template.extend
 			this.render()
 
 		$(document).on 'scrollDown', () =>	
-			this.news.fetch()
+			this.news.down()
 
 		this.box.$el.on 'send.success', () =>
 			this.news.fetch()
