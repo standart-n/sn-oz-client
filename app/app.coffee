@@ -4,6 +4,8 @@
 require('jquery')
 require('bootstrap')
 require('json2')
+require('moment')
+require('moment-ru')
 
 Backbone = 								require('Backbone')
 App = 									require('App')
@@ -23,6 +25,10 @@ $ () ->
 			error: () ->
 			warn: () ->
 
+	if !Array.isArray	
+		Array.isArray = (vArg) ->
+			Object.prototype.toString.call(vArg) is "[object Array]"
+
 	window.jalert = (s) ->
 		alert JSON.stringify(s)
 
@@ -37,6 +43,8 @@ $ () ->
 
 	Backbone.emulateHTTP = on
 	Backbone.emulateJSON = on
+
+	moment.lang('ru')
 
 	window.sn = 						new Settings()
 

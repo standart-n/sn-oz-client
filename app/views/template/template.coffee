@@ -2,7 +2,8 @@
 # Template
 
 require('ejs')
-Backbone = 		require('Backbone')
+
+Backbone = 											require('Backbone')
 
 module.exports = Backbone.View.extend
 
@@ -11,8 +12,19 @@ module.exports = Backbone.View.extend
 
 	template: () ->
 		if this.url? and this.$el.length?
-			text = new EJS(url: this.url, ext: this.ext, type: '[', cache: off).render(this.data()) ? ''
-			text = window.markup?.render(text) if this.markup ? ''
+
+			text = 									''
+			ms = 									[]
+			data = 									this.data()
+			
+			if !Array.isArray(data) then ms[0] = data else ms = data
+
+			for res in ms
+
+				text += new EJS(url: this.url, ext: this.ext, type: '[', cache: off).render(res) ? ''
+
+			text = window.markup?.render(text) if this.markup
+			
 			this.$el.html text
 
 	render: () ->

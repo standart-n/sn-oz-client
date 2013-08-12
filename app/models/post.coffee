@@ -5,7 +5,7 @@ module.exports = Backbone.Model.extend
 
 	defaults: () ->
 		id:							''
-		key:						''
+		key:						''		
 		message:					''
 
 	initialize: () ->

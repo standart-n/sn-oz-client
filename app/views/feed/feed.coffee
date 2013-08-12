@@ -1,5 +1,6 @@
 
 Template = 									require('Template')
+FeedBox = 									require('FeedBox')
 FeedNews = 									require('FeedNews')
 
 module.exports = Template.extend
@@ -19,5 +20,6 @@ module.exports = Template.extend
 
 	render: () ->
 		this.template()
+		this.box = 							new FeedBox()
 		this.news = 						new FeedNews()
 

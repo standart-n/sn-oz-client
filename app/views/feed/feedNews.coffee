@@ -1,60 +1,39 @@
-
+	
 Template = 									require('Template')
-Post = 										require('Post')
+Posts = 									require('Posts')
 
 module.exports = Template.extend
 
-	el: 									'#tab-feed-news'
+	el: 									'#feed-news'
 	url: 									'view/feed/feedNews.html'
 
-	events:
-		'submit .feed-post-form' 			: 'submit'
-		'focus .feed-post-form' 			: 'focus'
-	# 'blur .feed-post-form' 				: 'blur'
 
 	initialize: () ->
 
-		this.post = 						new Post()
+		this.posts = 						new Posts()
 
-		this.render()
-
-		this.$message = 					this.$el.find('.feed-post-message')
-		this.$alertError = 					this.$el.find('.alert-eror')
-
+		this.fetch()
 
 	render: () ->
 		this.template()
 
 
-	focus: () ->
-		this.$message.attr('rows',7)
-
-	blur: () ->
-		this.$message.attr('rows',3)
+	data: () ->
+		this.posts.toJSON()	
 
 	checking: () ->
-		jalert this.post.toJSON()
 
-		this.post.unset('id')
-		this.post.unset('key')
-		this.post.unset('message')
+		this.render()
 
-	submit: (e) ->
 
-		e.preventDefault()
+	fetch: () ->
 
-		if window.user?
+		this.posts.fetch
+			url: 							window.sn.get('server').host + '/feed/post/'
+			timeout: 						3000
+			dataType: 						'jsonp'
 
-			this.post.set
-				id:								window.user.get('id')
-				key:							window.user.get('key')
-
-			this.post.save
-				message:						this.$message.val()
-			,
-				url: 							window.sn.get('server').host + '/feed/post/'
-				dataType: 						'jsonp'
-				success: (s) => 
-					this.checking()
+			success: (s) => 
+				this.checking()
 
 

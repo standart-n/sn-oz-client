@@ -1,14 +1,13 @@
 
-.alert.alert-error.hide
-	strong Ошибка!
-	&nbsp;
-	Возможно, вы неверно ввели данные.
-			
 
-.feed-post-box
-	form.feed-post-form.form.form-horizontal			
-		.row-fluid
-			textarea.feed-post-message.span11(wrap = "hard", rows = "3")
-			button.btn.btn-primary(type = "submit") Отправить
+li.media
+	.pull-left
+		img.media-object(width = "48px", height = "48px", src = "http://oz.st-n.ru/publish/users/userpics/48x48/photo.png")
 
-
+	.media-body
+		h4.media-heading
+			[%= author.firstname %] [%= author.lastname %]
+		[%= message.text %]
+		br
+		small.muted [%= moment(post_dt).fromNow() %]
+	hr
