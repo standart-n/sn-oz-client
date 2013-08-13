@@ -5,15 +5,15 @@ require('_')
 
 module.exports = class Markup
 
-	defaults:
-		images:
-			url: ''
-		files:
-			url: ''
-		gismeteo:
-			url: ''
-
 	constructor: (@options = {}) ->
+
+		this.defaults = 
+			images:
+				url: ''
+			files:
+				url: ''
+			gismeteo:
+				url: ''
 
 		_.defaults(this.options,this.defaults)
 

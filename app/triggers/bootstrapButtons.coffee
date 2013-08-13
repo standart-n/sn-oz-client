@@ -5,12 +5,11 @@ require('jquery')
 
 module.exports = class BootstrapButtons
 
-	options:
-		btnColorCls: 	['btn-primary','btn-warning','btn-danger','btn-success','btn-info','btn-inverse','btn-link']
-		btnSizeCls:		['btn-mini','btn-small','btn-large']
-
-
 	constructor: () ->
+
+		this.options =
+			btnColorCls: 	['btn-primary','btn-warning','btn-danger','btn-success','btn-info','btn-inverse','btn-link']
+			btnSizeCls:		['btn-mini','btn-small','btn-large']
 
 		_this = this
 

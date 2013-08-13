@@ -5,7 +5,7 @@ User = 									require('User')
 
 module.exports = User.extend
 
-	defaults: () ->
+	defaults:
 		firstname:						''
 		lastname:						''
 		email:							''

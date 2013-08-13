@@ -4,13 +4,11 @@ require('jquery')
 
 module.exports = class Links
 
-	options: {}
-
-	defaults:
-		auto: on
-
 
 	constructor: (@options = {}) ->
+
+		defaults =
+			auto: on
 
 		_.defaults(this.options,this.defaults)
 

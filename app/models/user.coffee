@@ -3,7 +3,7 @@ Backbone = 							require('Backbone')
 
 module.exports = Backbone.Model.extend
 
-	defaults: () ->
+	defaults:
 		email:						''
 		key:						''
 
