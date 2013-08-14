@@ -21,8 +21,6 @@ module.exports = Modal.extend
 		this.$form = 					this.$el.find('.registration-form')
 		this.$button = 					this.$el.find('button')
 
-		this.model.set region: 			window.sn.get('region')
-
 		this.textSuccess = 				new RegistrationTextSuccess()
 
 		this.$alertSuccess = 			this.$el.find('.alert-success')
@@ -51,11 +49,12 @@ module.exports = Modal.extend
 			this.$button.button			'reset'
 		, 400
 
-		if this.model.get('success')
+		if this.model.get('success') is true
 			this.success 				this.model.get('email'), this.model.get('password')
 		else
-			this.error 					this.model.get('valid').replace('Error:', '<b>Ошибка!</b>') + '.'
+			this.error 					'<b>Ошибка!</b> ' + this.model.get('valid') + '.'
 
+		this.model.unset 				'success'
 		this.model.unset 				'password'
 		this.model.unset 				'valid'
 
@@ -78,10 +77,6 @@ module.exports = Modal.extend
 			this.$alertError.hide()
 		, 2000
 
-
-	focus: (e) ->
-		e.preventDefault()
-		this.$alertError.hide()
 
 	submit: (e) ->
 		e.preventDefault()

@@ -6,26 +6,16 @@
   </div>
   <div class="modal-body">
     <p>
-      <div class="remember-alert-success remember-alert alert alert-success hide">
-        <button type="button" data-dismiss="alert" class="close">&times</button><strong>Поздравляем! </strong>Вы успешно авторизовались
-      </div>
-      <div class="remember-alert-error remember-alert alert alert-error hide">
-        <button type="button" data-dismiss="alert" class="close">&times</button><strong>Ошибка! </strong>Вы указали неверный логин или пароль
-      </div>
-      <form id="remember-form" class="form-horizontal">
+      <div class="alert alert-success hide">Новый пароль отправлен на ваш e-mail!</div>
+      <div class="alert alert-error hide"></div>
+      <form class="remember-form form form-horizontal">
         <div class="control-group">
-          <label class="control-label">Логин</label>
+          <label class="control-label">E-mail</label>
           <div class="controls">
-            <input id="remember-login" type="text" value="" placeholder="Логин" class="input-text"/>
+            <input type="text" value="[%= email %]" placeholder="E-mail" class="remember-email input-text"/>
           </div>
         </div>
-        <div class="control-group">
-          <label class="control-label">Пароль</label>
-          <div class="controls">
-            <input id="remember-password" type="password" value="" placeholder="Пароль" class="input-password"/>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Войти</button>
+        <button type="submit" class="btn btn-primary btn-block">Отправить</button>
       </form>
     </p>
   </div>

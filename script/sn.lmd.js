@@ -3196,6 +3196,19 @@ module.exports = User.extend({
 });
 
 }),
+"Remember": (function (require, exports, module) { /* wrapped by builder */
+var User;
+
+User = require('User');
+
+module.exports = User.extend({
+  defaults: {
+    email: ''
+  },
+  initialize: function() {}
+});
+
+}),
 "Self": (function (require, exports, module) { /* wrapped by builder */
 var User;
 
@@ -3690,7 +3703,7 @@ module.exports = Template.extend({
         },
         error: function() {
           _this.$button.button('reset');
-          return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
+          return _this.error('Ошибка! Сервер не отвечает!');
         }
       });
     }
@@ -3907,9 +3920,6 @@ module.exports = Modal.extend({
     this.$close = this.$el.find('.modal-header').find('.close');
     this.$form = this.$el.find('.registration-form');
     this.$button = this.$el.find('button');
-    this.model.set({
-      region: window.sn.get('region')
-    });
     this.textSuccess = new RegistrationTextSuccess();
     this.$alertSuccess = this.$el.find('.alert-success');
     this.$alertError = this.$el.find('.alert-error');
@@ -3936,11 +3946,12 @@ module.exports = Modal.extend({
     setTimeout(function() {
       return _this.$button.button('reset');
     }, 400);
-    if (this.model.get('success')) {
+    if (this.model.get('success') === true) {
       this.success(this.model.get('email'), this.model.get('password'));
     } else {
-      this.error(this.model.get('valid').replace('Error:', '<b>Ошибка!</b>') + '.');
+      this.error('<b>Ошибка!</b> ' + this.model.get('valid') + '.');
     }
+    this.model.unset('success');
     this.model.unset('password');
     return this.model.unset('valid');
   },
@@ -3965,10 +3976,6 @@ module.exports = Modal.extend({
     return setTimeout(function() {
       return _this.$alertError.hide();
     }, 2000);
-  },
-  focus: function(e) {
-    e.preventDefault();
-    return this.$alertError.hide();
   },
   submit: function(e) {
     var _this = this;
@@ -3999,20 +4006,97 @@ module.exports = Modal.extend({
 
 }),
 "RememberView": (function (require, exports, module) { /* wrapped by builder */
-var Modal;
+var Modal, Remember;
 
 Modal = require('Modal');
+
+Remember = require('Remember');
 
 module.exports = Modal.extend({
   el: '#remember',
   url: 'view/remember/remember.html',
   initialize: function() {
+    var _this = this;
+    this.model = new Remember();
     this.render();
+    this.$email = this.$el.find('.remember-email');
     this.$modal = this.$el.find('.modal');
-    return this.$close = this.$el.find('.modal-header').find('.close');
+    this.$close = this.$el.find('.modal-header').find('.close');
+    this.$form = this.$el.find('.remember-form');
+    this.$button = this.$el.find('button');
+    this.$alertSuccess = this.$el.find('.alert-success');
+    this.$alertError = this.$el.find('.alert-error');
+    if (window.user != null) {
+      return window.user.on('change:signin', function() {
+        if (window.user.get('signin') === false) {
+          return _this.model.reset();
+        }
+      });
+    }
+  },
+  data: function() {
+    return this.model.toJSON();
+  },
+  checking: function() {
+    var _this = this;
+    setTimeout(function() {
+      return _this.$button.button('reset');
+    }, 400);
+    if (this.model.get('success')) {
+      this.success();
+    } else {
+      this.error('<b>Ошибка!</b> ' + this.model.get('valid') + '.');
+    }
+    this.model.unset('success');
+    this.model.unset('password');
+    return this.model.unset('email');
+  },
+  afterShow: function() {
+    this.$alertSuccess.hide();
+    this.$alertError.hide();
+    this.$email.val('');
+    return this.$email.focus();
+  },
+  success: function() {
+    var _this = this;
+    this.$alertSuccess.show();
+    this.$alertError.hide();
+    return setTimeout(function() {
+      return _this.$alertSuccess.hide();
+    }, 2000);
+  },
+  error: function(notice) {
+    var _this = this;
+    if (notice == null) {
+      notice = '';
+    }
+    this.$alertError.show().html(notice);
+    this.$alertSuccess.hide();
+    return setTimeout(function() {
+      return _this.$alertError.hide();
+    }, 2000);
   },
   submit: function(e) {
-    return e.preventDefault();
+    var _this = this;
+    e.preventDefault();
+    return this.model.save({
+      email: this.$email.val(),
+      region: window.sn.get('region')
+    }, {
+      url: window.sn.get('server').host + '/remember',
+      timeout: 3000,
+      dataType: 'jsonp',
+      beforeSend: function() {
+        return _this.$button.button('loading');
+      },
+      success: function(s) {
+        return _this.checking();
+      },
+      error: function() {
+        _this.$button.button('reset');
+        return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
+      }
+    });
   }
 });
 
@@ -4060,9 +4144,10 @@ module.exports = Modal.extend({
       this.$form.hide();
       this.hide();
     } else {
-      this.error(this.model.get('notice') + '.');
+      this.error('<b>Ошибка!</b> ' + this.model.get('notice') + '.');
       this.$form.show();
     }
+    this.model.unset('success');
     this.model.unset('notice');
     return this.model.unset('password');
   },
@@ -4084,7 +4169,7 @@ module.exports = Modal.extend({
       },
       error: function() {
         _this.$button.button('reset');
-        return _this.error('Сервер не отвечает!');
+        return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
       }
     });
   },
@@ -4093,7 +4178,7 @@ module.exports = Modal.extend({
     if (notice == null) {
       notice = '';
     }
-    this.$alertError.show().html('<b>Ошибка!</b> ' + notice);
+    this.$alertError.show().html(notice);
     return setTimeout(function() {
       return _this.$alertError.hide();
     }, 3000);
@@ -4213,7 +4298,7 @@ module.exports = Template.extend({
       if (window.user.get('personal_change') === true) {
         this.success(window.user.get('notice') + '.');
       } else {
-        this.error('<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ', '') + '.');
+        this.error('<b>Ошибка!</b> ' + window.user.get('notice') + '.');
       }
       window.user.unset('notice');
       window.user.unset('firstname_new');
@@ -4287,7 +4372,7 @@ module.exports = Template.extend({
           key: this.password.get('key')
         });
       } else {
-        this.error('<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ', '') + '.');
+        this.error('<b>Ошибка!</b> ' + this.password.get('notice') + '.');
       }
       this.$password_new.val('');
       this.$password_repeat.val('');

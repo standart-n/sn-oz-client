@@ -45,9 +45,10 @@ module.exports = Modal.extend
 			this.$form.hide()
 			this.hide()
 		else
-			this.error 					this.model.get('notice') + '.'
+			this.error 					'<b>Ошибка!</b> ' + this.model.get('notice') + '.'
 			this.$form.show()
 
+		this.model.unset 	'success'
 		this.model.unset 	'notice'
 		this.model.unset 	'password'
 
@@ -71,12 +72,12 @@ module.exports = Modal.extend
 
 			error: () =>
 				this.$button.button		'reset'
-				this.error 				'Сервер не отвечает!'
+				this.error 				'<b>Ошибка!</b> Сервер не отвечает!'
 
 
 	error: (notice = '') ->
 
-		this.$alertError.show().html('<b>Ошибка!</b> ' + notice)
+		this.$alertError.show().html(notice)
 
 		setTimeout () =>
 			this.$alertError.hide()

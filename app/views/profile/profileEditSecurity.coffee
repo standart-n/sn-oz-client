@@ -48,7 +48,7 @@ module.exports = Template.extend
 
 			else 
 
-				this.error 					'<b>Ошибка!</b> ' + this.password.get('notice').replace('Error: ','') + '.'
+				this.error 					'<b>Ошибка!</b> ' + this.password.get('notice') + '.'
 
 			this.$password_new.val('')
 			this.$password_repeat.val('')

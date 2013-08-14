@@ -83,7 +83,7 @@ module.exports = Template.extend
 
 				error: () =>
 					this.$button.button			'reset'
-					this.error 					'<b>Ошибка!</b> Сервер не отвечает!'
+					this.error 					'Ошибка! Сервер не отвечает!'
 
 	keyup: (e) ->
 		if e.keyCode is 13 and e.ctrlKey

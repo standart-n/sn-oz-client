@@ -72,7 +72,7 @@ module.exports = Template.extend
 				this.success 				window.user.get('notice') + '.'
 
 			else 
-				this.error 					'<b>Ошибка!</b> ' + window.user.get('notice').replace('Error: ','') + '.'
+				this.error 					'<b>Ошибка!</b> ' + window.user.get('notice') + '.'
 
 
 			window.user.unset 'notice'
