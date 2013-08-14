@@ -3020,20 +3020,19 @@ var Markup;
 require('_');
 
 module.exports = Markup = (function() {
-  Markup.prototype.defaults = {
-    images: {
-      url: ''
-    },
-    files: {
-      url: ''
-    },
-    gismeteo: {
-      url: ''
-    }
-  };
-
   function Markup(options) {
     this.options = options != null ? options : {};
+    this.defaults = {
+      images: {
+        url: ''
+      },
+      files: {
+        url: ''
+      },
+      gismeteo: {
+        url: ''
+      }
+    };
     _.defaults(this.options, this.defaults);
   }
 
@@ -3141,13 +3140,11 @@ var Backbone;
 Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
-  defaults: function() {
-    return {
-      id: '',
-      key: '',
-      password_new: '',
-      password_repeat: ''
-    };
+  defaults: {
+    id: '',
+    key: '',
+    password_new: '',
+    password_repeat: ''
   },
   initialize: function() {}
 });
@@ -3159,12 +3156,10 @@ var Backbone;
 Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
-  defaults: function() {
-    return {
-      id: '',
-      key: '',
-      message: ''
-    };
+  defaults: {
+    id: '',
+    key: '',
+    message: ''
   },
   initialize: function() {}
 });
@@ -3191,13 +3186,11 @@ var User;
 User = require('User');
 
 module.exports = User.extend({
-  defaults: function() {
-    return {
-      firstname: '',
-      lastname: '',
-      email: '',
-      company: ''
-    };
+  defaults: {
+    firstname: '',
+    lastname: '',
+    email: '',
+    company: ''
   },
   initialize: function() {}
 });
@@ -3211,14 +3204,12 @@ require('cookie');
 User = require('User');
 
 module.exports = User.extend({
-  defaults: function() {
-    return {
-      firstname: '',
-      lastname: '',
-      email: '',
-      company: '',
-      signin: false
-    };
+  defaults: {
+    firstname: '',
+    lastname: '',
+    email: '',
+    company: '',
+    signin: false
   },
   initialize: function() {
     var _this = this;
@@ -3391,11 +3382,9 @@ var User;
 User = require('User');
 
 module.exports = User.extend({
-  defaults: function() {
-    return {
-      email: '',
-      password: ''
-    };
+  defaults: {
+    email: '',
+    password: ''
   },
   initialize: function() {}
 });
@@ -3407,11 +3396,9 @@ var Backbone;
 Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
-  defaults: function() {
-    return {
-      email: '',
-      key: ''
-    };
+  defaults: {
+    email: '',
+    key: ''
   },
   initialize: function() {
     return _.extend(this, Backbone.Event);
@@ -3761,7 +3748,7 @@ module.exports = Template.extend({
   fetch: function() {
     var _this = this;
     return this.posts.fetch({
-      url: window.sn.get('server').host + '/feed/post/',
+      url: window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name,
       timeout: 3000,
       dataType: 'jsonp',
       data: {
@@ -4659,13 +4646,12 @@ var BootstrapButtons;
 require('jquery');
 
 module.exports = BootstrapButtons = (function() {
-  BootstrapButtons.prototype.options = {
-    btnColorCls: ['btn-primary', 'btn-warning', 'btn-danger', 'btn-success', 'btn-info', 'btn-inverse', 'btn-link'],
-    btnSizeCls: ['btn-mini', 'btn-small', 'btn-large']
-  };
-
   function BootstrapButtons() {
     var _this;
+    this.options = {
+      btnColorCls: ['btn-primary', 'btn-warning', 'btn-danger', 'btn-success', 'btn-info', 'btn-inverse', 'btn-link'],
+      btnSizeCls: ['btn-mini', 'btn-small', 'btn-large']
+    };
     _this = this;
     $(function() {
       var _ref;
@@ -4707,15 +4693,13 @@ require('_');
 require('jquery');
 
 module.exports = Links = (function() {
-  Links.prototype.options = {};
-
-  Links.prototype.defaults = {
-    auto: true
-  };
-
   function Links(options) {
-    var _this = this;
+    var defaults,
+      _this = this;
     this.options = options != null ? options : {};
+    defaults = {
+      auto: true
+    };
     _.defaults(this.options, this.defaults);
     $(function() {
       if (_this.options.auto === true) {

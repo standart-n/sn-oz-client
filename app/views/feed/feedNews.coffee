@@ -36,7 +36,7 @@ module.exports = Template.extend
 	fetch: () ->
 
 		this.posts.fetch
-			url: 							window.sn.get('server').host + '/feed/post/'
+			url: 							window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name
 			timeout: 						3000
 			dataType: 						'jsonp'
 
