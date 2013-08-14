@@ -1,4 +1,6 @@
 
+require('moment')
+
 Modal = 								require('Modal')
 Registration = 							require('Registration')
 RegistrationTextSuccess = 				require('RegistrationTextSuccess')
@@ -68,13 +70,18 @@ module.exports = Modal.extend
 
 
 	error: (notice = '') ->
+
+		mark = moment().unix()
+
 		this.$alertError.show().html 	notice
+		this.$alertError.data 'mark',	mark
 		this.$alertSuccess.hide()
 		this.textSuccess.hide()
 		this.$form.show()
 
 		setTimeout () =>
-			this.$alertError.hide()
+			if this.$alertError.data('mark') is mark
+				this.$alertError.hide()
 		, 2000
 
 

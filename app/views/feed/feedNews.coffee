@@ -11,6 +11,7 @@ module.exports = Template.extend
 
 		this.limit = 						10
 		this.step = 						10
+		this.state = 						'ready'
 
 		this.posts = 						new Posts()
 
@@ -26,24 +27,33 @@ module.exports = Template.extend
 	checking: () ->
 
 		this.render()
+		this.state = 						'ready'
 
 
 	down: () ->
-		this.limit += 						this.step
+		this.limit = 						this.posts.length + this.step
 		this.fetch()
 
 
 	fetch: () ->
 
-		this.posts.fetch
-			url: 							window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name
-			timeout: 						3000
-			dataType: 						'jsonp'
+		if this.state is 'ready'
 
-			data:
-				limit:						this.limit
+			this.posts.fetch
+				url: 						window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name
+				timeout: 					3000
+				dataType: 					'jsonp'
 
-			success: (s) => 
-				this.checking()
+				data:
+					limit:					this.limit
+
+				beforeSend: () ->
+					this.state = 			'loading'
+
+				success: (s) => 
+					this.checking()
+
+				error: () ->
+					this.state = 			'ready'
 
 

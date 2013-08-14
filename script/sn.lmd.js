@@ -3617,7 +3617,7 @@ module.exports = Template.extend({
     $(document).on('scrollDown', function() {
       return _this.news.down();
     });
-    return this.box.$el.on('send.success', function() {
+    return this.box.$el.on('send', function() {
       return _this.news.fetch();
     });
   },
@@ -3657,12 +3657,6 @@ module.exports = Template.extend({
   render: function() {
     return this.template();
   },
-  focus: function() {
-    return this.$message.attr('rows', 7);
-  },
-  blur: function() {
-    return this.$message.attr('rows', 3);
-  },
   checking: function() {
     var _this = this;
     setTimeout(function() {
@@ -3671,10 +3665,9 @@ module.exports = Template.extend({
     if (!this.post.get('post_result')) {
       error();
     } else {
-      this.$el.trigger('send.success');
+      this.$el.trigger('send');
       this.$message.val('');
     }
-    window.news.feed.news.fetch();
     this.post.unset('id');
     this.post.unset('key');
     this.post.unset('notice');
@@ -3703,7 +3696,7 @@ module.exports = Template.extend({
         },
         error: function() {
           _this.$button.button('reset');
-          return _this.error('Ошибка! Сервер не отвечает!');
+          return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
         }
       });
     }
@@ -3742,6 +3735,7 @@ module.exports = Template.extend({
   initialize: function() {
     this.limit = 10;
     this.step = 10;
+    this.state = 'ready';
     this.posts = new Posts();
     return this.fetch();
   },
@@ -3752,25 +3746,34 @@ module.exports = Template.extend({
     return this.posts.toJSON();
   },
   checking: function() {
-    return this.render();
+    this.render();
+    return this.state = 'ready';
   },
   down: function() {
-    this.limit += this.step;
+    this.limit = this.posts.length + this.step;
     return this.fetch();
   },
   fetch: function() {
     var _this = this;
-    return this.posts.fetch({
-      url: window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name,
-      timeout: 3000,
-      dataType: 'jsonp',
-      data: {
-        limit: this.limit
-      },
-      success: function(s) {
-        return _this.checking();
-      }
-    });
+    if (this.state === 'ready') {
+      return this.posts.fetch({
+        url: window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name,
+        timeout: 3000,
+        dataType: 'jsonp',
+        data: {
+          limit: this.limit
+        },
+        beforeSend: function() {
+          return this.state = 'loading';
+        },
+        success: function(s) {
+          return _this.checking();
+        },
+        error: function() {
+          return this.state = 'ready';
+        }
+      });
+    }
   }
 });
 
@@ -3899,6 +3902,8 @@ module.exports = Template.extend({
 "RegistrationView": (function (require, exports, module) { /* wrapped by builder */
 var Modal, Registration, RegistrationTextSuccess;
 
+require('moment');
+
 Modal = require('Modal');
 
 Registration = require('Registration');
@@ -3965,16 +3970,21 @@ module.exports = Modal.extend({
     });
   },
   error: function(notice) {
-    var _this = this;
+    var mark,
+      _this = this;
     if (notice == null) {
       notice = '';
     }
+    mark = moment().unix();
     this.$alertError.show().html(notice);
+    this.$alertError.data('mark', mark);
     this.$alertSuccess.hide();
     this.textSuccess.hide();
     this.$form.show();
     return setTimeout(function() {
-      return _this.$alertError.hide();
+      if (_this.$alertError.data('mark') === mark) {
+        return _this.$alertError.hide();
+      }
     }, 2000);
   },
   submit: function(e) {
@@ -4008,6 +4018,8 @@ module.exports = Modal.extend({
 "RememberView": (function (require, exports, module) { /* wrapped by builder */
 var Modal, Remember;
 
+require('moment');
+
 Modal = require('Modal');
 
 Remember = require('Remember');
@@ -4039,6 +4051,8 @@ module.exports = Modal.extend({
   },
   checking: function() {
     var _this = this;
+    this.$email.val('');
+    this.$email.focus();
     setTimeout(function() {
       return _this.$button.button('reset');
     }, 400);
@@ -4058,22 +4072,32 @@ module.exports = Modal.extend({
     return this.$email.focus();
   },
   success: function() {
-    var _this = this;
+    var mark,
+      _this = this;
+    mark = moment().unix();
     this.$alertSuccess.show();
+    this.$alertSuccess.data('mark', mark);
     this.$alertError.hide();
     return setTimeout(function() {
-      return _this.$alertSuccess.hide();
+      if (_this.$alertSuccess.data('mark') === mark) {
+        return _this.$alertSuccess.hide();
+      }
     }, 2000);
   },
   error: function(notice) {
-    var _this = this;
+    var mark,
+      _this = this;
     if (notice == null) {
       notice = '';
     }
+    mark = moment().unix();
     this.$alertError.show().html(notice);
+    this.$alertError.data('mark', mark);
     this.$alertSuccess.hide();
     return setTimeout(function() {
-      return _this.$alertError.hide();
+      if (_this.$alertError.data('mark') === mark) {
+        return _this.$alertError.hide();
+      }
     }, 2000);
   },
   submit: function(e) {
@@ -4103,6 +4127,8 @@ module.exports = Modal.extend({
 }),
 "SigninView": (function (require, exports, module) { /* wrapped by builder */
 var Modal, Signin;
+
+require('moment');
 
 Modal = require('Modal');
 
@@ -4174,13 +4200,18 @@ module.exports = Modal.extend({
     });
   },
   error: function(notice) {
-    var _this = this;
+    var mark,
+      _this = this;
     if (notice == null) {
       notice = '';
     }
+    mark = moment().unix();
     this.$alertError.show().html(notice);
+    this.$alertError.data('mark', mark);
     return setTimeout(function() {
-      return _this.$alertError.hide();
+      if (_this.$alertError.data('mark') === mark) {
+        return _this.$alertError.hide();
+      }
     }, 3000);
   },
   afterShow: function() {
@@ -4227,6 +4258,8 @@ module.exports = Template.extend({
 }),
 "ProfileEditPersonal": (function (require, exports, module) { /* wrapped by builder */
 var Backbone, Template;
+
+require('moment');
 
 Backbone = require('Backbone');
 
@@ -4306,25 +4339,35 @@ module.exports = Template.extend({
     }
   },
   error: function(notice) {
-    var _this = this;
+    var mark,
+      _this = this;
     if (notice == null) {
       notice = '';
     }
+    mark = moment().unix();
     this.$error.show().html(notice);
+    this.$error.data('mark', mark);
     this.$success.hide();
     return setTimeout(function() {
-      return _this.$error.hide();
+      if (_this.$error.data('mark') === mark) {
+        return _this.$error.hide();
+      }
     }, 3000);
   },
   success: function(notice) {
-    var _this = this;
+    var mark,
+      _this = this;
     if (notice == null) {
       notice = '';
     }
+    mark = moment().unix();
     this.$success.show().html(notice);
+    this.$success.data('mark', mark);
     this.$error.hide();
     return setTimeout(function() {
-      return _this.$success.hide();
+      if (_this.$success.data('mark') === mark) {
+        return _this.$success.hide();
+      }
     }, 1500);
   }
 });
@@ -4332,6 +4375,8 @@ module.exports = Template.extend({
 }),
 "ProfileEditSecurity": (function (require, exports, module) { /* wrapped by builder */
 var Backbone, Password, Template;
+
+require('moment');
 
 Backbone = require('Backbone');
 
@@ -4414,25 +4459,35 @@ module.exports = Template.extend({
     }
   },
   error: function(notice) {
-    var _this = this;
+    var mark,
+      _this = this;
     if (notice == null) {
       notice = '';
     }
+    mark = moment().unix();
     this.$error.show().html(notice);
+    this.$error.data('mark', mark);
     this.$success.hide();
     return setTimeout(function() {
-      return _this.$error.hide();
+      if (_this.$error.data('mark') === mark) {
+        return _this.$error.hide();
+      }
     }, 3000);
   },
   success: function(notice) {
-    var _this = this;
+    var mark,
+      _this = this;
     if (notice == null) {
       notice = '';
     }
+    mark = moment().unix();
     this.$success.show().html(notice);
+    this.$success.data('mark', mark);
     this.$error.hide();
     return setTimeout(function() {
-      return _this.$success.hide();
+      if (_this.$success.data('mark') === mark) {
+        return _this.$success.hide();
+      }
     }, 1500);
   }
 });

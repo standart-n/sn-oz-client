@@ -1,4 +1,6 @@
 
+require('moment')
+
 Backbone = 									require('Backbone')
 Template = 									require('Template')
 
@@ -81,21 +83,29 @@ module.exports = Template.extend
 
 	error: (notice = '') ->
 
+		mark = moment().unix()
+
 		this.$error.show().html	 			notice
+		this.$error.data 'mark', 			mark
 		this.$success.hide()
 
 		setTimeout () =>
-			this.$error.hide()
+			if this.$error.data('mark') is mark
+				this.$error.hide()
 		, 3000
 
 
 	success: (notice = '') ->
 
+		mark = moment().unix()
+
 		this.$success.show().html 			notice
+		this.$success.data 'mark', 			mark
 		this.$error.hide()
 
 		setTimeout () =>
-			this.$success.hide()
+			if this.$success.data('mark') is mark
+				this.$success.hide()
 		, 1500
 
 

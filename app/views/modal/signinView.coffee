@@ -1,4 +1,6 @@
 
+require('moment')
+
 Modal = 								require('Modal')
 Signin = 								require('Signin')
 
@@ -34,10 +36,10 @@ module.exports = Modal.extend
 
 	checking: () ->
 
-		this.$password.val 				''
+		this.$password.val('')
 
 		setTimeout () =>
-			this.$button.button			'reset'
+			this.$button.button('reset')
 		, 400
 
 		if this.model.get('success')
@@ -77,10 +79,14 @@ module.exports = Modal.extend
 
 	error: (notice = '') ->
 
+		mark = moment().unix()
+
 		this.$alertError.show().html(notice)
+		this.$alertError.data 'mark', mark
 
 		setTimeout () =>
-			this.$alertError.hide()
+			if this.$alertError.data('mark') is mark
+				this.$alertError.hide()
 		, 3000
 
 

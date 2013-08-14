@@ -1,4 +1,6 @@
 
+require('moment')
+
 Modal = 								require('Modal')
 Remember = 								require('Remember')
 
@@ -33,6 +35,9 @@ module.exports = Modal.extend
 
 	checking: () ->
 
+		this.$email.val ''
+		this.$email.focus()
+
 		setTimeout () =>
 			this.$button.button			'reset'
 		, 400
@@ -55,20 +60,30 @@ module.exports = Modal.extend
 
 
 	success: () ->
+
+		mark = moment().unix()
+
 		this.$alertSuccess.show()
+		this.$alertSuccess.data 'mark',	mark
 		this.$alertError.hide()
 
 		setTimeout () =>
-			this.$alertSuccess.hide()
+			if this.$alertSuccess.data('mark') is mark
+				this.$alertSuccess.hide()
 		, 2000
 
 
 	error: (notice = '') ->
+
+		mark = moment().unix()
+
 		this.$alertError.show().html 	notice
+		this.$alertError.data 'mark',	mark
 		this.$alertSuccess.hide()
 
 		setTimeout () =>
-			this.$alertError.hide()
+			if this.$alertError.data('mark') is mark
+				this.$alertError.hide()
 		, 2000
 
 

@@ -31,12 +31,6 @@ module.exports = Template.extend
 		this.template()
 
 
-	focus: () ->
-		this.$message.attr('rows',7)
-
-	blur: () ->
-		this.$message.attr('rows',3)
-
 	checking: () ->
 
 		setTimeout () =>
@@ -46,11 +40,9 @@ module.exports = Template.extend
 		if !this.post.get('post_result')
 			error()
 		else
-			this.$el.trigger					'send.success'
+			this.$el.trigger					'send'
 			this.$message.val					''
 
-
-		window.news.feed.news.fetch()
 
 		this.post.unset('id')
 		this.post.unset('key')
@@ -83,7 +75,7 @@ module.exports = Template.extend
 
 				error: () =>
 					this.$button.button			'reset'
-					this.error 					'Ошибка! Сервер не отвечает!'
+					this.error 					'<b>Ошибка!</b> Сервер не отвечает!'
 
 	keyup: (e) ->
 		if e.keyCode is 13 and e.ctrlKey
