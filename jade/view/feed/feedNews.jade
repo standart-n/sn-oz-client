@@ -7,7 +7,7 @@ li.media(data-post-id = "[%= id %]")
 	.media-body
 		h4.media-heading
 			[%= author.firstname %] [%= author.lastname %]
-		.post-text [%= message.text %]
+		.post-text [%= markup.render(message.text) %]
 		.post-edit.hide
 			textarea.feed-post-edit.span12(wrap = "hard", rows = "4") [%= message.text %]
 		.post-footer

@@ -3,7 +3,7 @@
   <div class="pull-left"><img width="48px" height="48px" src="http://oz.st-n.ru/publish/users/userpics/48x48/photo.png" class="media-object"/></div>
   <div class="media-body">
     <h4 class="media-heading">[%= author.firstname %] [%= author.lastname %]</h4>
-    <div class="post-text">[%= message.text %]</div>
+    <div class="post-text">[%= markup.render(message.text) %]</div>
     <div class="post-edit hide">
       <textarea wrap="hard" rows="4" class="feed-post-edit span12">[%= message.text %]</textarea>
     </div>

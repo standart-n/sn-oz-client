@@ -29,6 +29,8 @@ module.exports = Template.extend
 
 
 	editPost: (id) ->
+		this.state = 						'edit'
+
 		$post = this.$el.find("[data-post-id=\"#{id}\"]")
 		$text = $post.find('.post-text')
 		$edit = $post.find('.post-edit')
@@ -38,6 +40,7 @@ module.exports = Template.extend
 
 
 	removePost: (id) ->
+		this.state = 						'remove'
 
 	checking: () ->
 

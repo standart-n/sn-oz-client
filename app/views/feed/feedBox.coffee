@@ -59,7 +59,7 @@ module.exports = Template.extend
 					key:							window.user.get('key')
 
 				message = 
-					text:							if window.markup? then window.markup.render(this.$message.val()) else this.$message.val()
+					text:							this.$message.val()
 
 
 				if message.text isnt ''

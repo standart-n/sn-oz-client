@@ -3775,7 +3775,7 @@ module.exports = Template.extend({
           key: window.user.get('key')
         };
         message = {
-          text: window.markup != null ? window.markup.render(this.$message.val()) : this.$message.val()
+          text: this.$message.val()
         };
         if (message.text !== '') {
           return this.post.save({
@@ -3851,13 +3851,16 @@ module.exports = Template.extend({
   removePost: function(id) {},
   editPost: function(id) {
     var $edit, $post, $text;
+    this.state = 'edit';
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $text = $post.find('.post-text');
     $edit = $post.find('.post-edit');
     $text.hide();
     return $edit.show();
   },
-  removePost: function(id) {},
+  removePost: function(id) {
+    return this.state = 'remove';
+  },
   checking: function() {
     this.render();
     return this.state = 'ready';
