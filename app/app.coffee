@@ -9,7 +9,7 @@ require('moment-ru')
 
 Backbone = 								require('Backbone')
 App = 									require('App')
-Self = 		 							require('Self')
+User = 		 							require('User')
 Authorization = 						require('Authorization')
 Profile = 								require('Profile')
 News = 									require('News')
@@ -52,7 +52,7 @@ $ () ->
 		gismeteo:
 			url: window.sn.get('settings').paths.widgets.gismeteo.url + window.sn.get('region').name + '/'
 
-	window.user = 						new Self()
+	window.user = 						new User()
 
 	window.app = 						new App()
 	window.authorization = 				new Authorization()

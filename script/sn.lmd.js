@@ -309,7 +309,7 @@ sb.on('stats:before-require-count', function (moduleName, module) {
     main(lmd_trigger('lmd-register:decorate-require', 'main', lmd_require)[1], output.exports, output);
 })/*DO NOT ADD ; !*/
 (this,(function (require, exports, module) { /* wrapped by builder */
-var App, Authorization, Backbone, Markup, News, Profile, Self, Settings;
+var App, Authorization, Backbone, Markup, News, Profile, Settings, User;
 
 require('jquery');
 
@@ -325,7 +325,7 @@ Backbone = require('Backbone');
 
 App = require('App');
 
-Self = require('Self');
+User = require('User');
 
 Authorization = require('Authorization');
 
@@ -374,7 +374,7 @@ $(function() {
       url: window.sn.get('settings').paths.widgets.gismeteo.url + window.sn.get('region').name + '/'
     }
   });
-  window.user = new Self();
+  window.user = new User();
   window.app = new App();
   window.authorization = new Authorization();
   window.profile = new Profile();
@@ -3141,8 +3141,6 @@ Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
   defaults: {
-    id: '',
-    key: '',
     password_new: '',
     password_repeat: ''
   },
@@ -3156,12 +3154,35 @@ var Backbone;
 Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
-  defaults: {
-    id: '',
-    key: '',
-    message: ''
+  defaults: function() {
+    var result;
+    return result = {
+      author: {
+        id: '',
+        firstname: '',
+        lastname: '',
+        email: '',
+        company: ''
+      },
+      message: {
+        text: ''
+      },
+      region: {
+        caption: '',
+        name: ''
+      },
+      post_dt: new Date()
+    };
   },
-  initialize: function() {}
+  initialize: function() {},
+  reset: function() {
+    this.set(this.defaults());
+    this.unset('id');
+    this.unset('key');
+    this.unset('notice');
+    this.unset('message');
+    return this.unset('post_result');
+  }
 });
 
 }),
@@ -3181,78 +3202,55 @@ module.exports = Backbone.Collection.extend({
 
 }),
 "Registration": (function (require, exports, module) { /* wrapped by builder */
-var User;
+var Backbone;
 
-User = require('User');
+Backbone = require('Backbone');
 
-module.exports = User.extend({
-  defaults: {
-    firstname: '',
-    lastname: '',
-    email: '',
-    company: ''
+module.exports = Backbone.Model.extend({
+  defaults: function() {
+    var result;
+    return result = {
+      firstname: '',
+      lastname: '',
+      email: '',
+      company: ''
+    };
   },
-  initialize: function() {}
+  initialize: function() {},
+  reset: function() {
+    this.set(this.defaults());
+    this.unset('id');
+    this.unset('key');
+    this.unset('reg_dt');
+    this.unset('_id');
+    this.unset('__v');
+    this.unset('success');
+    this.unset('password');
+    return this.unset('valid');
+  }
 });
 
 }),
 "Remember": (function (require, exports, module) { /* wrapped by builder */
-var User;
+var Backbone;
 
-User = require('User');
+Backbone = require('Backbone');
 
-module.exports = User.extend({
-  defaults: {
-    email: ''
+module.exports = Backbone.Model.extend({
+  defaults: function() {
+    var result;
+    return result = {
+      email: ''
+    };
   },
-  initialize: function() {}
-});
-
-}),
-"Self": (function (require, exports, module) { /* wrapped by builder */
-var User;
-
-require('cookie');
-
-User = require('User');
-
-module.exports = User.extend({
-  defaults: {
-    firstname: '',
-    lastname: '',
-    email: '',
-    company: '',
-    signin: false
-  },
-  initialize: function() {
-    var _this = this;
-    this.on('change:key', function() {
-      if (_this.get('key') !== '') {
-        return _this.updateCookie();
-      }
-    });
-    return this.on('change:signin', function() {
-      if (_this.get('signin') === true) {
-        return _this.updateCookie();
-      }
-    });
-  },
-  logout: function() {
-    this.set('signin', false);
-    this.removeCookie();
-    return this.reset();
-  },
-  updateCookie: function() {
-    $.cookie('id', this.get('id'), {
-      expires: 365
-    });
-    return $.cookie('key', this.get('key'), {
-      expires: 365
-    });
-  },
-  removeCookie: function() {
-    $.removeCookie('id');
-    return $.removeCookie('key');
+  initialize: function() {},
+  reset: function() {
+    this.set(this.defaults());
+    this.unset('id');
+    this.unset('key');
+    this.unset('reg_dt');
+    this.unset('_id');
+    return this.unset('__v');
   }
 });
 
@@ -3390,43 +3388,94 @@ module.exports = Backbone.Model.extend({
 
 }),
 "Signin": (function (require, exports, module) { /* wrapped by builder */
-var User;
+var Backbone;
 
-User = require('User');
+Backbone = require('Backbone');
 
-module.exports = User.extend({
-  defaults: {
-    email: '',
-    password: ''
+module.exports = Backbone.Model.extend({
+  defaults: function() {
+    var result;
+    return result = {
+      email: '',
+      password: ''
+    };
   },
-  initialize: function() {}
+  isNew: function() {
+    return true;
+  },
+  initialize: function() {},
+  reset: function() {
+    this.set(this.defaults());
+    this.unset('id');
+    this.unset('key');
+    this.unset('reg_dt');
+    this.unset('_id');
+    this.unset('__v');
+    this.unset('success');
+    this.unset('password');
+    return this.unset('notice');
+  }
 });
 
 }),
 "User": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
+require('cookie');
+
 Backbone = require('Backbone');
 
 module.exports = Backbone.Model.extend({
-  defaults: {
-    email: '',
-    key: ''
-  },
-  initialize: function() {
-    return _.extend(this, Backbone.Event);
-  },
-  reset: function() {
-    this.set({
+  defaults: function() {
+    var result;
+    return result = {
       firstname: '',
       lastname: '',
       email: '',
-      company: ''
+      company: '',
+      region: {
+        caption: '',
+        name: ''
+      },
+      signin: false,
+      reg_dt: new Date()
+    };
+  },
+  initialize: function() {
+    var _this = this;
+    this.on('change:key', function() {
+      if (_this.get('key') !== '') {
+        return _this.updateCookie();
+      }
     });
+    return this.on('change:signin', function() {
+      if (_this.get('signin') === true) {
+        return _this.updateCookie();
+      }
+    });
+  },
+  logout: function() {
+    this.set('signin', false);
+    this.removeCookie();
+    return this.reset();
+  },
+  updateCookie: function() {
+    $.cookie('id', this.get('id'), {
+      expires: 365
+    });
+    return $.cookie('key', this.get('key'), {
+      expires: 365
+    });
+  },
+  removeCookie: function() {
+    $.removeCookie('id');
+    return $.removeCookie('key');
+  },
+  reset: function() {
+    this.set(this.defaults());
     this.unset('id');
     this.unset('key');
     this.unset('reg_dt');
-    this.unset('success');
     this.unset('_id');
     return this.unset('__v');
   }
@@ -3622,7 +3671,7 @@ module.exports = Template.extend({
     });
     return setInterval(function() {
       return _this.news.fetch();
-    }, 60000);
+    }, 30000);
   },
   render: function() {
     this.template();
@@ -3666,27 +3715,29 @@ module.exports = Template.extend({
       return _this.$button.button('reset');
     }, 400);
     if (!this.post.get('post_result')) {
-      error();
+      this.error();
     } else {
       this.$el.trigger('send');
       this.$message.val('');
     }
-    this.post.unset('id');
-    this.post.unset('key');
-    this.post.unset('notice');
-    this.post.unset('message');
-    return this.post.unset('post_result');
+    return this.post.reset();
   },
   submit: function(e) {
-    var _this = this;
+    var author, message,
+      _this = this;
     e.preventDefault();
     if (window.user != null) {
-      this.post.set({
+      author = {
         id: window.user.get('id'),
         key: window.user.get('key')
-      });
+      };
+      message = {
+        text: window.markup != null ? window.markup.render(this.$message.val()) : this.$message.val()
+      };
       return this.post.save({
-        message: window.markup != null ? window.markup.render(this.$message.val()) : this.$message.val()
+        author: author,
+        message: message,
+        region: window.sn.get('region')
       }, {
         url: window.sn.get('server').host + '/feed/post/',
         timeout: 3000,
@@ -3695,6 +3746,7 @@ module.exports = Template.extend({
           return _this.$button.button('loading');
         },
         success: function(s) {
+          console.log(_this.post.get('author'));
           return _this.checking();
         },
         error: function() {
@@ -3959,9 +4011,7 @@ module.exports = Modal.extend({
     } else {
       this.error('<b>Ошибка!</b> ' + this.model.get('valid') + '.');
     }
-    this.model.unset('success');
-    this.model.unset('password');
-    return this.model.unset('valid');
+    return this.model.reset();
   },
   success: function(email, password) {
     this.$form.hide();
@@ -4176,9 +4226,7 @@ module.exports = Modal.extend({
       this.error('<b>Ошибка!</b> ' + this.model.get('notice') + '.');
       this.$form.show();
     }
-    this.model.unset('success');
-    this.model.unset('notice');
-    return this.model.unset('password');
+    return this.model.reset();
   },
   submit: function(e) {
     var _this = this;

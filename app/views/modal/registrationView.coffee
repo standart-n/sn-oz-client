@@ -56,9 +56,7 @@ module.exports = Modal.extend
 		else
 			this.error 					'<b>Ошибка!</b> ' + this.model.get('valid') + '.'
 
-		this.model.unset 				'success'
-		this.model.unset 				'password'
-		this.model.unset 				'valid'
+		this.model.reset()
 
 	success: (email, password) ->
 		this.$form.hide()

@@ -50,13 +50,10 @@ module.exports = Modal.extend
 			this.error 					'<b>Ошибка!</b> ' + this.model.get('notice') + '.'
 			this.$form.show()
 
-		this.model.unset 	'success'
-		this.model.unset 	'notice'
-		this.model.unset 	'password'
+		this.model.reset()
 
 	submit: (e) ->
 		e.preventDefault()
-
 
 		this.model.save
 			email:						this.$email.val()

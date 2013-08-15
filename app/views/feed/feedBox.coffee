@@ -38,17 +38,12 @@ module.exports = Template.extend
 		, 400
 
 		if !this.post.get('post_result')
-			error()
+			this.error()
 		else
 			this.$el.trigger					'send'
 			this.$message.val					''
 
-
-		this.post.unset('id')
-		this.post.unset('key')
-		this.post.unset('notice')
-		this.post.unset('message')
-		this.post.unset('post_result')
+		this.post.reset()
 
 	submit: (e) ->
 
@@ -56,12 +51,17 @@ module.exports = Template.extend
 
 		if window.user?
 
-			this.post.set
+			author = 
 				id:								window.user.get('id')
 				key:							window.user.get('key')
 
+			message = 
+				text:							if window.markup? then window.markup.render(this.$message.val()) else this.$message.val()
+
 			this.post.save
-				message:						if window.markup? then window.markup.render(this.$message.val()) else this.$message.val()
+				author:							author
+				message:						message
+				region:							window.sn.get('region')
 			,
 				url: 							window.sn.get('server').host + '/feed/post/'
 				timeout: 						3000
@@ -71,6 +71,7 @@ module.exports = Template.extend
 					this.$button.button 		'loading'
 
 				success: (s) => 
+					console.log this.post.get('author')
 					this.checking()
 
 				error: () =>
