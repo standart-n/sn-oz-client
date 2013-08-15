@@ -2,6 +2,7 @@
 Template = 									require('Template')
 FeedBox = 									require('FeedBox')
 FeedNews = 									require('FeedNews')
+AboutView = 								require('AboutView')
 
 module.exports = Template.extend
 
@@ -10,25 +11,55 @@ module.exports = Template.extend
 
 	initialize: () ->
 
+		_this = this
+
 		this.render()
 
-		window.app.on 'switch', () =>
-			this.setElement('#feed')
-			this.render()
+		this.aboutView = 					new AboutView()
 
-		$(document).on 'scrollDown', () =>	
-			this.news.down()
+		if window.app?
+			window.app.on 'switch', () =>
+				this.setElement('#feed')
+				this.render()
 
-		this.box.$el.on 'send', () =>
-			this.news.fetch()
+		if window.user?
+			window.user.on 'change:signin', () =>
+				this.news.fetch()
+
+		$(document).on 'scrollDown', () ->	
+			_this.news.down()
+
+
+		$(document).on 'click', '[data-action="edit post"]', (e) ->
+
+			e.preventDefault()
+
+			if $(this).data('post')?
+				_this.news.editPost $(this).data('post')
+
+
+		$(document).on 'click', '[data-action="remove post"]', (e) ->
+
+			e.preventDefault()
+
+			if $(this).data('post')?
+				_this.news.removePost $(this).data('post')
+
 
 		setInterval () =>
 			this.news.fetch()
 		, 30000
-		
+
 
 	render: () ->
 		this.template()
+		this.box.remove()					if this.box?
+		this.news.remove()					if this.news?
 		this.box = 							new FeedBox()
 		this.news = 						new FeedNews()
 
+		this.box.$el.on 'send', () =>
+			this.news.fetch()
+
+		this.box.$el.on 'not_signin', () =>
+			this.aboutView.show()

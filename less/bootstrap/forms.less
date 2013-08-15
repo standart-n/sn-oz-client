@@ -98,13 +98,17 @@ textarea,
 .uneditable-input {
   display: inline-block;
   height: @baseLineHeight;
-  padding: 4px 6px;
+  padding: 4px 6px 4px 6px;
   margin-bottom: @baseLineHeight / 2;
   font-size: @baseFontSize;
   line-height: @baseLineHeight;
   color: @gray;
   .border-radius(@inputBorderRadius);
   vertical-align: middle;
+}
+
+textarea {
+  padding: 4px 0 4px 4px;
 }
 
 // Reset appearance properties for textual inputs and textarea

@@ -24,6 +24,21 @@ module.exports = Template.extend
 	data: () ->
 		this.posts.toJSON()	
 
+
+	removePost: (id) ->
+
+
+	editPost: (id) ->
+		$post = this.$el.find("[data-post-id=\"#{id}\"]")
+		$text = $post.find('.post-text')
+		$edit = $post.find('.post-edit')
+
+		$text.hide()
+		$edit.show()
+
+
+	removePost: (id) ->
+
 	checking: () ->
 
 		this.render()

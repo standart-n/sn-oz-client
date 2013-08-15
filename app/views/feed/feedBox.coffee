@@ -47,36 +47,47 @@ module.exports = Template.extend
 
 	submit: (e) ->
 
+
 		e.preventDefault()
 
 		if window.user?
 
-			author = 
-				id:								window.user.get('id')
-				key:							window.user.get('key')
+			if window.user.get('signin') is true
 
-			message = 
-				text:							if window.markup? then window.markup.render(this.$message.val()) else this.$message.val()
+				author = 
+					id:								window.user.get('id')
+					key:							window.user.get('key')
 
-			this.post.save
-				author:							author
-				message:						message
-				region:							window.sn.get('region')
-			,
-				url: 							window.sn.get('server').host + '/feed/post/'
-				timeout: 						3000
-				dataType: 						'jsonp'
+				message = 
+					text:							if window.markup? then window.markup.render(this.$message.val()) else this.$message.val()
 
-				beforeSend: () =>
-					this.$button.button 		'loading'
 
-				success: (s) => 
-					console.log this.post.get('author')
-					this.checking()
+				if message.text isnt ''
 
-				error: () =>
-					this.$button.button			'reset'
-					this.error 					'<b>Ошибка!</b> Сервер не отвечает!'
+					this.post.save
+						author:							author
+						message:						message
+						region:							window.sn.get('region')
+					,
+						url: 							window.sn.get('server').host + '/feed/post/'
+						timeout: 						3000
+						dataType: 						'jsonp'
+
+						beforeSend: () =>
+							this.$button.button 		'loading'
+
+						success: (s) => 
+							console.log this.post.get('author')
+							this.checking()
+
+						error: () =>
+							this.$button.button			'reset'
+							this.error 					'<b>Ошибка!</b> Сервер не отвечает!'
+
+			else
+
+				this.$el.trigger 'not_signin'
+
 
 	keyup: (e) ->
 		if e.keyCode is 13 and e.ctrlKey

@@ -1,13 +1,24 @@
 
 
-li.media
+li.media(data-post-id = "[%= id %]")
 	.pull-left
 		img.media-object(width = "48px", height = "48px", src = "http://oz.st-n.ru/publish/users/userpics/48x48/photo.png")
 
 	.media-body
 		h4.media-heading
 			[%= author.firstname %] [%= author.lastname %]
-		[%= message.text %]
-		br
-		small.muted [%= moment(post_dt).fromNow() %]
+		.post-text [%= message.text %]
+		.post-edit.hide
+			textarea.feed-post-edit.span12(wrap = "hard", rows = "4") [%= message.text %]
+		.post-footer
+			small.muted 
+				[%= moment(post_dt).fromNow() %]
+				[% if (our === true) { %]
+				&nbsp;
+				&nbsp;
+				a(href = "#", data-action = "edit post", data-post = "[%= id %]") редактировать
+				&nbsp;
+				&nbsp;
+				a(href = "#", data-action = "remove post", data-post = "[%= id %]") удалить
+				[% } %]
 	hr

@@ -3,6 +3,8 @@ Template = 		require('Template')
 
 module.exports = Template.extend
 
+	el:								'modal'
+
 	events:
 		'focus input': 				'change'
 		'keyUp input': 				'change'
@@ -10,6 +12,9 @@ module.exports = Template.extend
 
 	render: () ->
 		this.template()
+
+	initialize: () ->
+		this.$modal = 				this.$el.find('.modal')
 
 	open: () ->
 		this.show()
@@ -22,8 +27,8 @@ module.exports = Template.extend
 			backdrop: 				true
 			show:					true
 
-		this.$modal.on 'hide', () ->
-			window.app.navigate('#')
+		# this.$modal.on 'hide', () ->
+		# 	window.app.navigate('#')
 
 		this.afterShow()
 
@@ -41,3 +46,5 @@ module.exports = Template.extend
 		# 	this.$alertError.hide()
 
 	submit: () ->
+
+		

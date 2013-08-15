@@ -3171,10 +3171,19 @@ module.exports = Backbone.Model.extend({
         caption: '',
         name: ''
       },
+      our: false,
       post_dt: new Date()
     };
   },
-  initialize: function() {},
+  initialize: function() {
+    if (window.user != null) {
+      if (window.user.get('signin') === true) {
+        if (this.get('author').id === window.user.get('id')) {
+          return this.set('our', true);
+        }
+      }
+    }
+  },
   reset: function() {
     this.set(this.defaults());
     this.unset('id');
@@ -3645,7 +3654,7 @@ module.exports = Content.extend({
 
 }),
 "Feed": (function (require, exports, module) { /* wrapped by builder */
-var FeedBox, FeedNews, Template;
+var AboutView, FeedBox, FeedNews, Template;
 
 Template = require('Template');
 
@@ -3653,30 +3662,63 @@ FeedBox = require('FeedBox');
 
 FeedNews = require('FeedNews');
 
+AboutView = require('AboutView');
+
 module.exports = Template.extend({
   el: '#feed',
   url: 'view/feed/feed.html',
   initialize: function() {
     var _this = this;
+    _this = this;
     this.render();
-    window.app.on('switch', function() {
-      _this.setElement('#feed');
-      return _this.render();
-    });
+    this.aboutView = new AboutView();
+    if (window.app != null) {
+      window.app.on('switch', function() {
+        _this.setElement('#feed');
+        return _this.render();
+      });
+    }
+    if (window.user != null) {
+      window.user.on('change:signin', function() {
+        return _this.news.fetch();
+      });
+    }
     $(document).on('scrollDown', function() {
       return _this.news.down();
     });
-    this.box.$el.on('send', function() {
-      return _this.news.fetch();
+    $(document).on('click', '[data-action="edit post"]', function(e) {
+      e.preventDefault();
+      if ($(this).data('post') != null) {
+        return _this.news.editPost($(this).data('post'));
+      }
+    });
+    $(document).on('click', '[data-action="remove post"]', function(e) {
+      e.preventDefault();
+      if ($(this).data('post') != null) {
+        return _this.news.removePost($(this).data('post'));
+      }
     });
     return setInterval(function() {
       return _this.news.fetch();
     }, 30000);
   },
   render: function() {
+    var _this = this;
     this.template();
+    if (this.box != null) {
+      this.box.remove();
+    }
+    if (this.news != null) {
+      this.news.remove();
+    }
     this.box = new FeedBox();
-    return this.news = new FeedNews();
+    this.news = new FeedNews();
+    this.box.$el.on('send', function() {
+      return _this.news.fetch();
+    });
+    return this.box.$el.on('not_signin', function() {
+      return _this.aboutView.show();
+    });
   }
 });
 
@@ -3727,33 +3769,39 @@ module.exports = Template.extend({
       _this = this;
     e.preventDefault();
     if (window.user != null) {
-      author = {
-        id: window.user.get('id'),
-        key: window.user.get('key')
-      };
-      message = {
-        text: window.markup != null ? window.markup.render(this.$message.val()) : this.$message.val()
-      };
-      return this.post.save({
-        author: author,
-        message: message,
-        region: window.sn.get('region')
-      }, {
-        url: window.sn.get('server').host + '/feed/post/',
-        timeout: 3000,
-        dataType: 'jsonp',
-        beforeSend: function() {
-          return _this.$button.button('loading');
-        },
-        success: function(s) {
-          console.log(_this.post.get('author'));
-          return _this.checking();
-        },
-        error: function() {
-          _this.$button.button('reset');
-          return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
+      if (window.user.get('signin') === true) {
+        author = {
+          id: window.user.get('id'),
+          key: window.user.get('key')
+        };
+        message = {
+          text: window.markup != null ? window.markup.render(this.$message.val()) : this.$message.val()
+        };
+        if (message.text !== '') {
+          return this.post.save({
+            author: author,
+            message: message,
+            region: window.sn.get('region')
+          }, {
+            url: window.sn.get('server').host + '/feed/post/',
+            timeout: 3000,
+            dataType: 'jsonp',
+            beforeSend: function() {
+              return _this.$button.button('loading');
+            },
+            success: function(s) {
+              console.log(_this.post.get('author'));
+              return _this.checking();
+            },
+            error: function() {
+              _this.$button.button('reset');
+              return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
+            }
+          });
         }
-      });
+      } else {
+        return this.$el.trigger('not_signin');
+      }
     }
   },
   keyup: function(e) {
@@ -3800,6 +3848,16 @@ module.exports = Template.extend({
   data: function() {
     return this.posts.toJSON();
   },
+  removePost: function(id) {},
+  editPost: function(id) {
+    var $edit, $post, $text;
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $text = $post.find('.post-text');
+    $edit = $post.find('.post-edit');
+    $text.hide();
+    return $edit.show();
+  },
+  removePost: function(id) {},
   checking: function() {
     this.render();
     return this.state = 'ready';
@@ -3912,12 +3970,39 @@ module.exports = Layout.extend({
 });
 
 }),
+"AboutView": (function (require, exports, module) { /* wrapped by builder */
+var Modal;
+
+Modal = require('Modal');
+
+module.exports = Modal.extend({
+  el: '#about',
+  url: 'view/feed/about.html',
+  events: {
+    'click .btn': 'btn'
+  },
+  initialize: function() {
+    this.render();
+    this.$modal = this.$el.find('.modal');
+    return this.$close = this.$el.find('.modal-header').find('.close');
+  },
+  data: function() {
+    var result;
+    return result = {};
+  },
+  btn: function() {
+    return this.close();
+  }
+});
+
+}),
 "Modal": (function (require, exports, module) { /* wrapped by builder */
 var Template;
 
 Template = require('Template');
 
 module.exports = Template.extend({
+  el: 'modal',
   events: {
     'focus input': 'change',
     'keyUp input': 'change',
@@ -3925,6 +4010,9 @@ module.exports = Template.extend({
   },
   render: function() {
     return this.template();
+  },
+  initialize: function() {
+    return this.$modal = this.$el.find('.modal');
   },
   open: function() {
     return this.show();
@@ -3936,9 +4024,6 @@ module.exports = Template.extend({
     this.$modal.modal({
       backdrop: true,
       show: true
-    });
-    this.$modal.on('hide', function() {
-      return window.app.navigate('#');
     });
     return this.afterShow();
   },
