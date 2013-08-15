@@ -3617,9 +3617,12 @@ module.exports = Template.extend({
     $(document).on('scrollDown', function() {
       return _this.news.down();
     });
-    return this.box.$el.on('send', function() {
+    this.box.$el.on('send', function() {
       return _this.news.fetch();
     });
+    return setInterval(function() {
+      return _this.news.fetch();
+    }, 60000);
   },
   render: function() {
     this.template();

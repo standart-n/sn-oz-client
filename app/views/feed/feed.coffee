@@ -22,6 +22,10 @@ module.exports = Template.extend
 		this.box.$el.on 'send', () =>
 			this.news.fetch()
 
+
+		setInterval () =>
+			this.news.fetch()
+		, 60000
 		
 
 	render: () ->
