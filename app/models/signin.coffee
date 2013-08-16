@@ -8,9 +8,6 @@ module.exports = Backbone.Model.extend
 			email: 					''
 			password: 				''
 
-	isNew: () ->
-		true
-
 	initialize: () ->
 
 

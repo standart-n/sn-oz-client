@@ -1,6 +1,7 @@
 	
 Template = 									require('Template')
 Posts = 									require('Posts')
+Complete = 									require('Complete')
 
 module.exports = Template.extend
 
@@ -89,10 +90,14 @@ module.exports = Template.extend
 
 
 	checking: () ->
-
-		this.render()
 		this.state = 						'ready'
 
+		this.render()
+
+		new Complete
+			el: 		this.el
+			icons:		on
+			tooltips:	on
 
 	down: () ->
 		this.limit = 						this.posts.length + this.step

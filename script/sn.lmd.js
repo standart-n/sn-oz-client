@@ -3409,9 +3409,6 @@ module.exports = Backbone.Model.extend({
       password: ''
     };
   },
-  isNew: function() {
-    return true;
-  },
   initialize: function() {},
   reset: function() {
     this.set(this.defaults());
@@ -3843,11 +3840,13 @@ module.exports = Template.extend({
 
 }),
 "FeedNews": (function (require, exports, module) { /* wrapped by builder */
-var Posts, Template;
+var Complete, Posts, Template;
 
 Template = require('Template');
 
 Posts = require('Posts');
+
+Complete = require('Complete');
 
 module.exports = Template.extend({
   el: '#feed-news',
@@ -3921,8 +3920,13 @@ module.exports = Template.extend({
     return $footer.show();
   },
   checking: function() {
+    this.state = 'ready';
     this.render();
-    return this.state = 'ready';
+    return new Complete({
+      el: this.el,
+      icons: true,
+      tooltips: true
+    });
   },
   down: function() {
     this.limit = this.posts.length + this.step;
