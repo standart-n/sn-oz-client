@@ -55,8 +55,8 @@ $ () ->
 	window.user = 						new User()
 
 	window.app = 						new App()
-	# window.authorization = 				new Authorization()
-	# window.profile = 					new Profile()
-	# window.news = 						new News()
+	window.authorization = 				new Authorization()
+	window.profile = 					new Profile()
+	window.news = 						new News()
 
 	Backbone.history.start()
