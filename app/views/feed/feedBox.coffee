@@ -77,7 +77,6 @@ module.exports = Template.extend
 							this.$button.button 		'loading'
 
 						success: (s) => 
-							console.log this.post.get('author')
 							this.checking()
 
 						error: () =>

@@ -38,12 +38,37 @@ module.exports = Template.extend
 				_this.news.editPost $(this).data('post')
 
 
+		$(document).on 'click', '[data-action="save post"]', (e) ->
+
+			e.preventDefault()
+
+			if $(this).data('post')?
+				_this.news.savePost $(this).data('post')
+
+
+		$(document).on 'click', '[data-action="blur post"]', (e) ->
+
+			e.preventDefault()
+
+			if $(this).data('post')?
+				_this.news.blurPost $(this).data('post')
+
+
+
 		$(document).on 'click', '[data-action="remove post"]', (e) ->
 
 			e.preventDefault()
 
 			if $(this).data('post')?
 				_this.news.removePost $(this).data('post')
+
+
+		$(document).on 'click', '[data-action="delete post"]', (e) ->
+
+			e.preventDefault()
+
+			if $(this).data('post')?
+				_this.news.deletePost $(this).data('post')
 
 
 		setInterval () =>

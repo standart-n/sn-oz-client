@@ -3692,10 +3692,28 @@ module.exports = Template.extend({
         return _this.news.editPost($(this).data('post'));
       }
     });
+    $(document).on('click', '[data-action="save post"]', function(e) {
+      e.preventDefault();
+      if ($(this).data('post') != null) {
+        return _this.news.savePost($(this).data('post'));
+      }
+    });
+    $(document).on('click', '[data-action="blur post"]', function(e) {
+      e.preventDefault();
+      if ($(this).data('post') != null) {
+        return _this.news.blurPost($(this).data('post'));
+      }
+    });
     $(document).on('click', '[data-action="remove post"]', function(e) {
       e.preventDefault();
       if ($(this).data('post') != null) {
         return _this.news.removePost($(this).data('post'));
+      }
+    });
+    $(document).on('click', '[data-action="delete post"]', function(e) {
+      e.preventDefault();
+      if ($(this).data('post') != null) {
+        return _this.news.deletePost($(this).data('post'));
       }
     });
     return setInterval(function() {
@@ -3790,7 +3808,6 @@ module.exports = Template.extend({
               return _this.$button.button('loading');
             },
             success: function(s) {
-              console.log(_this.post.get('author'));
               return _this.checking();
             },
             error: function() {
@@ -3848,18 +3865,60 @@ module.exports = Template.extend({
   data: function() {
     return this.posts.toJSON();
   },
-  removePost: function(id) {},
+  removePost: function(id) {
+    var $footer, $post, $text, $toolsRemove, post;
+    this.state = 'remove';
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $text = $post.find('.post-text');
+    $footer = $post.find('.post-footer');
+    $toolsRemove = $post.find('.post-tools-remove');
+    post = this.posts.get(id);
+    $text.hide();
+    $toolsRemove.show();
+    return $footer.hide();
+  },
   editPost: function(id) {
-    var $edit, $post, $text;
+    var $area, $edit, $footer, $post, $text, $toolsEdit, post, text;
     this.state = 'edit';
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $text = $post.find('.post-text');
     $edit = $post.find('.post-edit');
+    $footer = $post.find('.post-footer');
+    $toolsEdit = $post.find('.post-tools-edit');
+    $area = $post.find('textarea');
+    post = this.posts.get(id);
+    text = post.get('message').text;
     $text.hide();
-    return $edit.show();
+    $edit.show();
+    $toolsEdit.show();
+    if ($area.val() === '') {
+      $area.val(text);
+    }
+    return $footer.hide();
   },
-  removePost: function(id) {
-    return this.state = 'remove';
+  savePost: function(id) {
+    return alert(id);
+  },
+  deletePost: function(id) {
+    return alert(id);
+  },
+  blurPost: function(id) {
+    var $area, $edit, $footer, $post, $text, $toolsEdit, $toolsRemove, post, text;
+    this.state = 'ready';
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $text = $post.find('.post-text');
+    $edit = $post.find('.post-edit');
+    $footer = $post.find('.post-footer');
+    $toolsEdit = $post.find('.post-tools-edit');
+    $toolsRemove = $post.find('.post-tools-remove');
+    $area = $post.find('textarea');
+    post = this.posts.get(id);
+    text = post.get('message').text;
+    $text.show();
+    $edit.hide();
+    $toolsEdit.hide();
+    $toolsRemove.hide();
+    return $footer.show();
   },
   checking: function() {
     this.render();

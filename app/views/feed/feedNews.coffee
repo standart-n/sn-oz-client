@@ -26,21 +26,67 @@ module.exports = Template.extend
 
 
 	removePost: (id) ->
+		this.state = 						'remove'
+
+		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
+		$text = 							$post.find('.post-text')
+		$footer = 							$post.find('.post-footer')
+		$toolsRemove = 						$post.find('.post-tools-remove')
+
+		post = 								this.posts.get(id)
+
+		$text.hide()
+		$toolsRemove.show()
+		$footer.hide()
 
 
 	editPost: (id) ->
 		this.state = 						'edit'
 
-		$post = this.$el.find("[data-post-id=\"#{id}\"]")
-		$text = $post.find('.post-text')
-		$edit = $post.find('.post-edit')
+		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
+		$text = 							$post.find('.post-text')
+		$edit = 							$post.find('.post-edit')
+		$footer = 							$post.find('.post-footer')
+		$toolsEdit = 						$post.find('.post-tools-edit')
+		$area = 							$post.find('textarea')
+
+		post = 								this.posts.get(id)
+		text = 								post.get('message').text
 
 		$text.hide()
 		$edit.show()
+		$toolsEdit.show()
+		$area.val(text)						if $area.val() is ''
+		$footer.hide()
 
 
-	removePost: (id) ->
-		this.state = 						'remove'
+	savePost: (id) ->
+		alert id
+
+	deletePost: (id) ->
+		alert id
+
+
+	blurPost: (id) ->
+		this.state = 						'ready'
+
+		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
+		$text = 							$post.find('.post-text')
+		$edit = 							$post.find('.post-edit')
+		$footer = 							$post.find('.post-footer')
+		$toolsEdit = 						$post.find('.post-tools-edit')
+		$toolsRemove = 						$post.find('.post-tools-remove')
+		$area = 							$post.find('textarea')
+
+		post = 								this.posts.get(id)
+		text = 								post.get('message').text
+
+		$text.show()
+		$edit.hide()
+		$toolsEdit.hide()
+		$toolsRemove.hide()
+		$footer.show()
+
 
 	checking: () ->
 
