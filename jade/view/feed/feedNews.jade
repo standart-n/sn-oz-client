@@ -9,17 +9,26 @@ li.media(data-post-id = "[%= id %]")
 			[%= author.firstname %] [%= author.lastname %]
 			&nbsp;
 			small.muted [%= author.company %]
+
+		.alert.alert-success.hide
+
+		.alert.alert-error.hide
+
 		.post-text [%= markup.render(message.text) %]
+
 		.post-edit.hide
 			textarea.feed-post-edit.span12(wrap = "hard", rows = "4")
+
 		.post-tools-edit.hide
 			a.btn.btn-success.btn-small(href = "#", data-action = "save post", data-post = "[%= id %]") Сохранить
 			&nbsp;
 			a.btn.btn-small(href = "#", data-action = "blur post", data-post = "[%= id %]") Отмена
+
 		.post-tools-remove.hide
 			a.btn.btn-danger.btn-small(href = "#", data-action = "delete post", data-post = "[%= id %]") Удалить
 			&nbsp;
 			a.btn.btn-small(href = "#", data-action = "blur post", data-post = "[%= id %]") Отмена
+
 		.post-footer
 			small.muted 
 				[%= moment(post_dt).fromNow() %]

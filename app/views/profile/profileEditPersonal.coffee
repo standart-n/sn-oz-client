@@ -70,7 +70,7 @@ module.exports = Template.extend
 
 		if window.user?
 
-			if window.user.get('personal_change') is true
+			if window.user.get('success') is true
 				this.success 				window.user.get('notice') + '.'
 
 			else 

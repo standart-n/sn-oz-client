@@ -45,7 +45,7 @@ module.exports = Modal.extend
 		if this.model.get('success')
 			this.success()
 		else
-			this.error 					'<b>Ошибка!</b> ' + this.model.get('valid') + '.'
+			this.error 					'<b>Ошибка!</b> ' + this.model.get('notice') + '.'
 
 		this.model.unset 				'success'
 		this.model.unset 				'password'

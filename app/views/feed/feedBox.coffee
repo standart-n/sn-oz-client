@@ -37,7 +37,7 @@ module.exports = Template.extend
 			this.$button.button					'reset'
 		, 400
 
-		if !this.post.get('post_result')
+		if !this.post.get('success')
 			this.error()
 		else
 			this.$el.trigger					'send'

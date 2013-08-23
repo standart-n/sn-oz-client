@@ -6,6 +6,8 @@
       [%= author.firstname %] [%= author.lastname %]
       &nbsp;<small class="muted">[%= author.company %]</small>
     </h4>
+    <div class="alert alert-success hide"></div>
+    <div class="alert alert-error hide"></div>
     <div class="post-text">[%= markup.render(message.text) %]</div>
     <div class="post-edit hide">
       <textarea wrap="hard" rows="4" class="feed-post-edit span12"></textarea>

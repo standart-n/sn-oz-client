@@ -3771,7 +3771,7 @@ module.exports = Template.extend({
     setTimeout(function() {
       return _this.$button.button('reset');
     }, 400);
-    if (!this.post.get('post_result')) {
+    if (!this.post.get('success')) {
       this.error();
     } else {
       this.$el.trigger('send');
@@ -3840,13 +3840,13 @@ module.exports = Template.extend({
 
 }),
 "FeedNews": (function (require, exports, module) { /* wrapped by builder */
-var Complete, Posts, Template;
+var Posts, Template;
+
+require('moment');
 
 Template = require('Template');
 
 Posts = require('Posts');
-
-Complete = require('Complete');
 
 module.exports = Template.extend({
   el: '#feed-news',
@@ -3893,16 +3893,114 @@ module.exports = Template.extend({
     if ($area.val() === '') {
       $area.val(text);
     }
+    $area.focus();
     return $footer.hide();
   },
   savePost: function(id) {
-    return alert(id);
+    var $area, $button, $post, author, message, post,
+      _this = this;
+    this.state = 'save';
+    post = this.posts.get(id);
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $area = $post.find('textarea');
+    $button = $post.find('.post-tools-edit').find('.btn-success');
+    if (window.user != null) {
+      if (window.user.get('signin') === true) {
+        author = {
+          id: window.user.get('id'),
+          key: window.user.get('key')
+        };
+        message = {
+          text: $area.val()
+        };
+        if (message.text !== '---') {
+          return post.save({
+            author: author,
+            message: message
+          }, {
+            url: window.sn.get('server').host + '/feed/post/edit',
+            timeout: 3000,
+            dataType: 'jsonp',
+            beforeSend: function() {
+              return $button.button('loading');
+            },
+            success: function(s) {
+              return _this.afterSavePost(id);
+            },
+            error: function() {
+              return $button.button('reset');
+            }
+          });
+        }
+      }
+    }
+  },
+  afterSavePost: function(id) {
+    var $button, $post, post,
+      _this = this;
+    post = this.posts.get(id);
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $button = $post.find('.post-tools-edit').find('.btn-success');
+    setTimeout(function() {
+      return $button.button('reset');
+    }, 400);
+    if (post.get('success') === true) {
+      this.state = 'ready';
+      return this.fetch();
+    } else {
+      return this.error(id, post.get('notice'));
+    }
   },
   deletePost: function(id) {
-    return alert(id);
+    var $button, $post, author, post,
+      _this = this;
+    this.state = 'save';
+    post = this.posts.get(id);
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $button = $post.find('.post-tools-edit').find('.btn-success');
+    if (window.user != null) {
+      if (window.user.get('signin') === true) {
+        author = {
+          id: window.user.get('id'),
+          key: window.user.get('key')
+        };
+        return post.save({
+          author: author
+        }, {
+          url: window.sn.get('server').host + '/feed/post/delete',
+          timeout: 3000,
+          dataType: 'jsonp',
+          beforeSend: function() {
+            return $button.button('loading');
+          },
+          success: function(s) {
+            return _this.afterDeletePost(id);
+          },
+          error: function() {
+            return $button.button('reset');
+          }
+        });
+      }
+    }
+  },
+  afterDeletePost: function(id) {
+    var $button, $post, post,
+      _this = this;
+    post = this.posts.get(id);
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $button = $post.find('.post-tools-edit').find('.btn-success');
+    setTimeout(function() {
+      return $button.button('reset');
+    }, 400);
+    if (post.get('success') === true) {
+      this.state = 'ready';
+      return this.fetch();
+    } else {
+      return this.error(id, post.get('notice'));
+    }
   },
   blurPost: function(id) {
-    var $area, $edit, $footer, $post, $text, $toolsEdit, $toolsRemove, post, text;
+    var $alertError, $alertSuccess, $area, $edit, $footer, $post, $text, $toolsEdit, $toolsRemove, post, text;
     this.state = 'ready';
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $text = $post.find('.post-text');
@@ -3911,22 +4009,39 @@ module.exports = Template.extend({
     $toolsEdit = $post.find('.post-tools-edit');
     $toolsRemove = $post.find('.post-tools-remove');
     $area = $post.find('textarea');
+    $alertError = $post.find('.alert-error');
+    $alertSuccess = $post.find('.alert-success');
     post = this.posts.get(id);
     text = post.get('message').text;
     $text.show();
     $edit.hide();
     $toolsEdit.hide();
     $toolsRemove.hide();
-    return $footer.show();
+    $footer.show();
+    $alertError.hide();
+    return $alertSuccess.hide();
+  },
+  error: function(id, notice) {
+    var $alertError, $post, mark,
+      _this = this;
+    if (notice == null) {
+      notice = '';
+    }
+    mark = moment().unix();
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $alertError = $post.find('.alert-error');
+    $alertError.show().html(notice);
+    $alertError.data('mark', mark);
+    $alertSuccess.hide();
+    return setTimeout(function() {
+      if ($alertError.data('mark') === mark) {
+        return $alertError.hide();
+      }
+    }, 2000);
   },
   checking: function() {
     this.state = 'ready';
-    this.render();
-    return new Complete({
-      el: this.el,
-      icons: true,
-      tooltips: true
-    });
+    return this.render();
   },
   down: function() {
     this.limit = this.posts.length + this.step;
@@ -4160,7 +4275,7 @@ module.exports = Modal.extend({
     if (this.model.get('success') === true) {
       this.success(this.model.get('email'), this.model.get('password'));
     } else {
-      this.error('<b>Ошибка!</b> ' + this.model.get('valid') + '.');
+      this.error('<b>Ошибка!</b> ' + this.model.get('notice') + '.');
     }
     return this.model.reset();
   },
@@ -4263,7 +4378,7 @@ module.exports = Modal.extend({
     if (this.model.get('success')) {
       this.success();
     } else {
-      this.error('<b>Ошибка!</b> ' + this.model.get('valid') + '.');
+      this.error('<b>Ошибка!</b> ' + this.model.get('notice') + '.');
     }
     this.model.unset('success');
     this.model.unset('password');
@@ -4530,7 +4645,7 @@ module.exports = Template.extend({
       return _this.$button.button('reset');
     }, 400);
     if (window.user != null) {
-      if (window.user.get('personal_change') === true) {
+      if (window.user.get('success') === true) {
         this.success(window.user.get('notice') + '.');
       } else {
         this.error('<b>Ошибка!</b> ' + window.user.get('notice') + '.');
@@ -4613,7 +4728,7 @@ module.exports = Template.extend({
       return _this.$button.button('reset');
     }, 400);
     if (window.user != null) {
-      if (this.password.get('password_change') === true) {
+      if (this.password.get('success') === true) {
         this.success(this.password.get('notice') + '.');
         window.user.set({
           key: this.password.get('key')
@@ -4623,13 +4738,7 @@ module.exports = Template.extend({
       }
       this.$password_new.val('');
       this.$password_repeat.val('');
-      this.password.unset('id');
-      this.password.unset('key');
-      this.password.unset('notice');
-      this.password.unset('key_new');
-      this.password.unset('password_new');
-      this.password.unset('password_repeat');
-      return this.password.unset('password_change');
+      return this.password.clear();
     }
   },
   submit: function(e) {

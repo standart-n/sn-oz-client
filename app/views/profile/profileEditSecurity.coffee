@@ -41,7 +41,7 @@ module.exports = Template.extend
 
 		if window.user?
 
-			if this.password.get('password_change') is true
+			if this.password.get('success') is true
 
 				this.success 				this.password.get('notice') + '.'
 
@@ -55,13 +55,7 @@ module.exports = Template.extend
 			this.$password_new.val('')
 			this.$password_repeat.val('')
 
-			this.password.unset 'id'
-			this.password.unset 'key'
-			this.password.unset 'notice'
-			this.password.unset 'key_new'
-			this.password.unset 'password_new'
-			this.password.unset 'password_repeat'
-			this.password.unset 'password_change'
+			this.password.clear()
 
 	submit: (e) ->
 		e.preventDefault()
