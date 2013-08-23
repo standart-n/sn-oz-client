@@ -1,8 +1,10 @@
 
 require('moment')
+require('_')
 	
 Template = 									require('Template')
 Posts = 									require('Posts')
+Update = 									require('Update')
 # Complete = 									require('Complete')
 
 module.exports = Template.extend
@@ -17,6 +19,7 @@ module.exports = Template.extend
 		this.state = 						'ready'
 
 		this.posts = 						new Posts()
+		this.update = 						new Update()
 
 		this.fetch()
 
@@ -82,7 +85,7 @@ module.exports = Template.extend
 				message = 
 					text:					$area.val()
 
-				if message.text isnt '---'
+				if message.text isnt ''
 
 					post.save
 						author:					author
@@ -120,6 +123,8 @@ module.exports = Template.extend
 		else
 			this.error id, post.get('notice')
 
+		post.unset('success')
+		post.unset('notice')
 
 
 	deletePost: (id) ->
@@ -172,7 +177,8 @@ module.exports = Template.extend
 		else
 			this.error id, post.get('notice')
 
-
+		post.unset('success')
+		post.unset('notice')
 
 	blurPost: (id) ->
 		this.state = 						'ready'
@@ -229,6 +235,29 @@ module.exports = Template.extend
 	down: () ->
 		this.limit = 						this.posts.length + this.step
 		this.fetch()
+
+
+	updating: () ->
+
+		post = this.posts.last()
+
+		if post.get('seria') isnt ''
+
+			this.update.fetch
+
+				url: 						window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name + '/' + post.get('seria')
+				timeout: 					3000
+				dataType: 					'jsonp'
+
+				data:
+					limit:					this.limit
+
+				success: () => 
+					if this.update.get('update') is true
+						this.fetch()
+						this.update.set 'update', false
+					else
+						this.render()
 
 
 	fetch: () ->

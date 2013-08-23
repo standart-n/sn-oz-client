@@ -46,6 +46,21 @@ module.exports = Template.extend
 				_this.news.savePost $(this).data('post')
 
 
+		$(document).on 'keyup', '.feed-post-edit', (e) ->
+
+			if e.keyCode is 13 and e.ctrlKey
+
+				if $(this).data('post')?
+					_this.news.savePost $(this).data('post')
+
+
+			if e.keyCode is 27
+
+				if $(this).data('post')?
+					_this.news.blurPost $(this).data('post')
+
+
+
 		$(document).on 'click', '[data-action="blur post"]', (e) ->
 
 			e.preventDefault()
@@ -72,7 +87,7 @@ module.exports = Template.extend
 
 
 		setInterval () =>
-			this.news.fetch()
+			this.news.updating()
 		, 30000
 
 

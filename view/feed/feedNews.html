@@ -10,7 +10,7 @@
     <div class="alert alert-error hide"></div>
     <div class="post-text">[%= markup.render(message.text) %]</div>
     <div class="post-edit hide">
-      <textarea wrap="hard" rows="4" class="feed-post-edit span12"></textarea>
+      <textarea wrap="hard" rows="4" data-post="[%= id %]" class="feed-post-edit span12"></textarea>
     </div>
     <div class="post-tools-edit hide"><a href="#" data-action="save post" data-post="[%= id %]" class="btn btn-success btn-small">Сохранить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
     <div class="post-tools-remove hide"><a href="#" data-action="delete post" data-post="[%= id %]" class="btn btn-danger btn-small">Удалить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>

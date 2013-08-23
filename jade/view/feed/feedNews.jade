@@ -17,7 +17,7 @@ li.media(data-post-id = "[%= id %]")
 		.post-text [%= markup.render(message.text) %]
 
 		.post-edit.hide
-			textarea.feed-post-edit.span12(wrap = "hard", rows = "4")
+			textarea.feed-post-edit.span12(wrap = "hard", rows = "4", data-post = "[%= id %]")
 
 		.post-tools-edit.hide
 			a.btn.btn-success.btn-small(href = "#", data-action = "save post", data-post = "[%= id %]") Сохранить

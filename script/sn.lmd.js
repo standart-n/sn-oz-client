@@ -3424,6 +3424,22 @@ module.exports = Backbone.Model.extend({
 });
 
 }),
+"Update": (function (require, exports, module) { /* wrapped by builder */
+var Backbone;
+
+Backbone = require('Backbone');
+
+module.exports = Backbone.Model.extend({
+  defaults: {
+    update: false
+  },
+  initialize: function() {},
+  reset: function() {
+    return this.set(update, false);
+  }
+});
+
+}),
 "User": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
@@ -3695,6 +3711,18 @@ module.exports = Template.extend({
         return _this.news.savePost($(this).data('post'));
       }
     });
+    $(document).on('keyup', '.feed-post-edit', function(e) {
+      if (e.keyCode === 13 && e.ctrlKey) {
+        if ($(this).data('post') != null) {
+          _this.news.savePost($(this).data('post'));
+        }
+      }
+      if (e.keyCode === 27) {
+        if ($(this).data('post') != null) {
+          return _this.news.blurPost($(this).data('post'));
+        }
+      }
+    });
     $(document).on('click', '[data-action="blur post"]', function(e) {
       e.preventDefault();
       if ($(this).data('post') != null) {
@@ -3714,7 +3742,7 @@ module.exports = Template.extend({
       }
     });
     return setInterval(function() {
-      return _this.news.fetch();
+      return _this.news.updating();
     }, 30000);
   },
   render: function() {
@@ -3840,13 +3868,17 @@ module.exports = Template.extend({
 
 }),
 "FeedNews": (function (require, exports, module) { /* wrapped by builder */
-var Posts, Template;
+var Posts, Template, Update;
 
 require('moment');
+
+require('_');
 
 Template = require('Template');
 
 Posts = require('Posts');
+
+Update = require('Update');
 
 module.exports = Template.extend({
   el: '#feed-news',
@@ -3856,6 +3888,7 @@ module.exports = Template.extend({
     this.step = 10;
     this.state = 'ready';
     this.posts = new Posts();
+    this.update = new Update();
     return this.fetch();
   },
   render: function() {
@@ -3913,7 +3946,7 @@ module.exports = Template.extend({
         message = {
           text: $area.val()
         };
-        if (message.text !== '---') {
+        if (message.text !== '') {
           return post.save({
             author: author,
             message: message
@@ -3946,10 +3979,12 @@ module.exports = Template.extend({
     }, 400);
     if (post.get('success') === true) {
       this.state = 'ready';
-      return this.fetch();
+      this.fetch();
     } else {
-      return this.error(id, post.get('notice'));
+      this.error(id, post.get('notice'));
     }
+    post.unset('success');
+    return post.unset('notice');
   },
   deletePost: function(id) {
     var $button, $post, author, post,
@@ -3994,10 +4029,12 @@ module.exports = Template.extend({
     }, 400);
     if (post.get('success') === true) {
       this.state = 'ready';
-      return this.fetch();
+      this.fetch();
     } else {
-      return this.error(id, post.get('notice'));
+      this.error(id, post.get('notice'));
     }
+    post.unset('success');
+    return post.unset('notice');
   },
   blurPost: function(id) {
     var $alertError, $alertSuccess, $area, $edit, $footer, $post, $text, $toolsEdit, $toolsRemove, post, text;
@@ -4046,6 +4083,29 @@ module.exports = Template.extend({
   down: function() {
     this.limit = this.posts.length + this.step;
     return this.fetch();
+  },
+  updating: function() {
+    var post,
+      _this = this;
+    post = this.posts.last();
+    if (post.get('seria') !== '') {
+      return this.update.fetch({
+        url: window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name + '/' + post.get('seria'),
+        timeout: 3000,
+        dataType: 'jsonp',
+        data: {
+          limit: this.limit
+        },
+        success: function() {
+          if (_this.update.get('update') === true) {
+            _this.fetch();
+            return _this.update.set('update', false);
+          } else {
+            return _this.render();
+          }
+        }
+      });
+    }
   },
   fetch: function() {
     var _this = this;
