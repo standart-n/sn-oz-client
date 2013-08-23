@@ -241,23 +241,25 @@ module.exports = Template.extend
 
 		post = this.posts.last()
 
-		if post.get('seria') isnt ''
+		if post?
 
-			this.update.fetch
+			if post.get('seria') isnt ''
 
-				url: 						window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name + '/' + post.get('seria')
-				timeout: 					3000
-				dataType: 					'jsonp'
+				this.update.fetch
 
-				data:
-					limit:					this.limit
+					url: 		window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name + '/' + post.get('seria')
+					timeout: 	3000
+					dataType: 	'jsonp'
 
-				success: () => 
-					if this.update.get('update') is true
-						this.fetch()
-						this.update.set 'update', false
-					else
-						this.render()
+					data:
+						limit:	this.limit
+
+					success: () => 
+						if this.update.get('update') is true
+							this.fetch()
+							this.update.set 'update', false
+						else
+							this.render()
 
 
 	fetch: () ->

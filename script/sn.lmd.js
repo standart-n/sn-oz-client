@@ -4088,23 +4088,25 @@ module.exports = Template.extend({
     var post,
       _this = this;
     post = this.posts.last();
-    if (post.get('seria') !== '') {
-      return this.update.fetch({
-        url: window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name + '/' + post.get('seria'),
-        timeout: 3000,
-        dataType: 'jsonp',
-        data: {
-          limit: this.limit
-        },
-        success: function() {
-          if (_this.update.get('update') === true) {
-            _this.fetch();
-            return _this.update.set('update', false);
-          } else {
-            return _this.render();
+    if (post != null) {
+      if (post.get('seria') !== '') {
+        return this.update.fetch({
+          url: window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name + '/' + post.get('seria'),
+          timeout: 3000,
+          dataType: 'jsonp',
+          data: {
+            limit: this.limit
+          },
+          success: function() {
+            if (_this.update.get('update') === true) {
+              _this.fetch();
+              return _this.update.set('update', false);
+            } else {
+              return _this.render();
+            }
           }
-        }
-      });
+        });
+      }
     }
   },
   fetch: function() {
@@ -4461,7 +4463,7 @@ module.exports = Modal.extend({
       if (_this.$alertSuccess.data('mark') === mark) {
         return _this.$alertSuccess.hide();
       }
-    }, 2000);
+    }, 2500);
   },
   error: function(notice) {
     var mark,
@@ -4477,7 +4479,7 @@ module.exports = Modal.extend({
       if (_this.$alertError.data('mark') === mark) {
         return _this.$alertError.hide();
       }
-    }, 2000);
+    }, 2500);
   },
   submit: function(e) {
     var _this = this;
