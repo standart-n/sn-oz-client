@@ -27,8 +27,8 @@ module.exports = Template.extend
 			backdrop: 				true
 			show:					true
 
-		# this.$modal.on 'hide', () ->
-		# 	window.app.navigate('#')
+		this.$modal.on 'hide', () ->
+			window.app.navigate('#')
 
 		this.afterShow()
 

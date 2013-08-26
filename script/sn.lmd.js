@@ -4268,6 +4268,9 @@ module.exports = Template.extend({
       backdrop: true,
       show: true
     });
+    this.$modal.on('hide', function() {
+      return window.app.navigate('#');
+    });
     return this.afterShow();
   },
   afterShow: function() {},
