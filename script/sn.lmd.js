@@ -3892,7 +3892,9 @@ module.exports = Template.extend({
     return this.fetch();
   },
   render: function() {
-    return this.template();
+    if (this.state === 'ready') {
+      return this.template();
+    }
   },
   data: function() {
     return this.posts.toJSON();

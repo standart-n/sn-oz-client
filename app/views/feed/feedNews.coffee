@@ -24,7 +24,8 @@ module.exports = Template.extend
 		this.fetch()
 
 	render: () ->
-		this.template()
+		if this.state is 'ready'
+			this.template()
 
 
 	data: () ->
