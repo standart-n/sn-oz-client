@@ -3963,7 +3963,8 @@ module.exports = Template.extend({
               return _this.afterSavePost(id);
             },
             error: function() {
-              return $button.button('reset');
+              $button.button('reset');
+              return _this.error(id, '<b>Ошибка!</b> Сервер не отвечает!');
             }
           });
         }
@@ -4014,7 +4015,8 @@ module.exports = Template.extend({
             return _this.afterDeletePost(id);
           },
           error: function() {
-            return $button.button('reset');
+            $button.button('reset');
+            return _this.error(id, '<b>Ошибка!</b> Сервер не отвечает!');
           }
         });
       }

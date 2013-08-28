@@ -104,7 +104,7 @@ module.exports = Template.extend
 
 						error: () =>
 							$button.button		'reset'
-							# this.error 		'<b>Ошибка!</b> Сервер не отвечает!'
+							this.error 			id, '<b>Ошибка!</b> Сервер не отвечает!'
 
 
 	afterSavePost: (id) ->
@@ -157,7 +157,7 @@ module.exports = Template.extend
 
 					error: () =>
 						$button.button		'reset'
-						# this.error 		'<b>Ошибка!</b> Сервер не отвечает!'
+						this.error 			id, '<b>Ошибка!</b> Сервер не отвечает!'
 
 
 
