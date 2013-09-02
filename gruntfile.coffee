@@ -103,7 +103,6 @@ module.exports = (grunt) ->
 			build_name: 'sn'
 
 
-
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-contrib-concat'
 	grunt.loadNpmTasks 'grunt-contrib-coffee'

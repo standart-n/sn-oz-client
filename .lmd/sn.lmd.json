@@ -4,22 +4,22 @@
 	"output": "script/sn.lmd.js",
 	"modules": {
 		"_": {
-			"path": 				"lib/js/underscore.1.4.4.min.js",
+			"path": 				"bower_components/underscore/underscore-min.js",
 			"exports": 				"_"
 		},
 		"underscore": 				"@_",
 		"$": {
-			"path": 				"lib/js/jQuery.1.8.3.min.js",
+			"path": 				"bower_components/jquery/jquery.min.js",
 			"exports": 				"jQuery"
 		},
 		"jquery": 					"@$",
-		"json2": 					"lib/js/json2.min.js",
-		"ejs": 						"lib/js/ejs.min.js",
-		"moment": 					"lib/js/moment.2.1.0.min.js",
-		"moment-ru": 				"lib/js/moment.lang.ru.min.js",
+		"json2": 					"bower_components/json2/json2.js",
+		"ejs": 						"lib/ejs/ejs.min.js",
+		"moment": 					"bower_components/moment/min/moment.min.js",
+		"moment-ru": 				"bower_components/moment/min/lang/ru.js",
 		"bootstrap": 				"script/bootstrap.js",
 		"Backbone": {
-			"path": 				"lib/js/backbone.1.0.0.min.js",
+			"path": 				"bower_components/backbone/backbone-min.js",
 			"require": {
 				"underscore": 		"_",
 				"jQuery": 			"$"
@@ -27,7 +27,7 @@
 			"exports": "Backbone"
 		},
 		"cookie": {
-			"path":					"lib/js/jquery.cookie.min.js",
+			"path":					"bower_components/jquery.cookie/jquery.cookie.js",
 			"require": {
 				"jQuery": 			"$"        		
 			}

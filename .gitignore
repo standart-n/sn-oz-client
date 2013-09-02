@@ -45,6 +45,7 @@ nbproject
 .CVS
 .idea
 node_modules
+bower_components
 dist
 log
 yii
