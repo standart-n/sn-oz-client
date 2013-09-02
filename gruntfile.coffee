@@ -111,6 +111,6 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks 'grunt-lmd'
 	
 	grunt.registerTask 'default', ['recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout', 'lmd']
-	grunt.registerTask 'all', ['default', 'bootstrap']
+	grunt.registerTask 'all', ['bootstrap','default']
 	grunt.registerTask 'test', ['jade:test', 'coffee:test']
 	grunt.registerTask 'bootstrap', ['concat:bootstrap']
