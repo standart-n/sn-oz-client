@@ -26,6 +26,19 @@
 			},
 			"exports": "Backbone"
 		},
+		"IframeTransport":			"bower_components/jquery-file-upload/js/jquery.iframe-transport.js",
+		"jQueryWidget": {
+			"path":					"bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js",
+			"require": {
+				"jQuery":			"$"
+			}
+		},		
+		"FileUpload": {
+			"path":					"bower_components/jquery-file-upload/js/jquery.fileupload.js",
+			"require": {
+				"jQuery":			"$"
+			}
+		},
 		"cookie": {
 			"path":					"bower_components/jquery.cookie/jquery.cookie.js",
 			"require": {

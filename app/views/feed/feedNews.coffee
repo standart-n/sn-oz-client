@@ -5,7 +5,6 @@ require('_')
 Template = 									require('Template')
 Posts = 									require('Posts')
 Update = 									require('Update')
-# Complete = 									require('Complete')
 
 module.exports = Template.extend
 
@@ -92,7 +91,7 @@ module.exports = Template.extend
 						author:					author
 						message:				message
 					,
-						url: 					window.sn.get('server').host + '/feed/post/edit'
+						url: 					"#{window.sn.get('server').host}/feed/post/edit"
 						timeout: 				3000
 						dataType: 				'jsonp'
 
@@ -142,10 +141,13 @@ module.exports = Template.extend
 					id:						window.user.get('id')
 					key:					window.user.get('key')
 
+				message = 
+					text:					''
+
 				post.save
 					author:					author
 				,
-					url: 					window.sn.get('server').host + '/feed/post/delete'
+					url: 					"#{window.sn.get('server').host}/feed/post/delete"
 					timeout: 				3000
 					dataType: 				'jsonp'
 
@@ -248,7 +250,7 @@ module.exports = Template.extend
 
 				this.update.fetch
 
-					url: 		window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name + '/' + post.get('seria')
+					url: 					"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}/#{post.get('seria')}"
 					timeout: 	3000
 					dataType: 	'jsonp'
 
@@ -268,7 +270,7 @@ module.exports = Template.extend
 		if this.state is 'ready'
 
 			this.posts.fetch
-				url: 						window.sn.get('server').host + '/feed/post/' + window.sn.get('region').name
+				url: 						"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}"
 				timeout: 					3000
 				dataType: 					'jsonp'
 

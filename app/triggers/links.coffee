@@ -7,7 +7,7 @@ module.exports = class Links
 
 	constructor: (@options = {}) ->
 
-		defaults =
+		this.defaults =
 			auto: on
 
 		_.defaults(this.options,this.defaults)

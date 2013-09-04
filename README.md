@@ -31,77 +31,18 @@ cd ./sn-oz-client
 устанавливаем необоходимые пакеты
 
 ```
-make install
-```
-собираем проект 
-
-```
 make
 ```
 
 #### Конфигурация
 
-```/conf/main.json``` - информация о регионе и теме, которая будет отображена
+  - ```/conf/main.json``` - информация о регионе и теме, которая будет отображена
 
-```
-	{
-		"region": {
-			"caption":"Ижевск",
-			"name":"izhevsk"
-		},
-		"theme":{
-			"caption":"bootstrap",
-			"name":"bootstrap"
-		}
-	}
-```
+  - ```/conf/server.json``` - адрес сервера 
 
-```/conf/server.json``` - адрес сервера 
+  - ```/conf/settings.json``` - пути к картинкам и файлам
 
-```
-	{
-		"host": "http://dev.st-n.ru"
-	}
-```
-
-```/conf/settings.json``` - пути к картинкам и файлам
-
-```
-	{
-		"paths":
-		{
-			"files":
-			{
-				"url": "http://oz.st-n.ru/publish/files/"
-			},
-			"images":
-			{
-				"url": "http://oz.st-n.ru/publish/photo/"
-			},
-			"widgets":
-			{
-				"gismeteo":
-				{
-					"url": "http://oz.st-n.ru/gismeteo/"
-				}
-			}
-
-		}
-
-	}
-```
-
-```/conf/themes.json``` - описание доступных тем
-
-```
-{
-	"bootstrap":
-	{
-		"css": [],
-		"js": []
-	}
-}
-```
+  - ```/conf/themes.json``` - описание доступных тем
 
 
 ### License

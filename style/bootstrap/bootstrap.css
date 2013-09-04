@@ -6870,6 +6870,35 @@ a.badge:hover {
   line-height: 30px;
 }
 
+/*
+ * jQuery File Upload UI Plugin CSS 8.8.1
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2010, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+
+.feed-post-file {
+  position: relative;
+  overflow: hidden;
+}
+
+.feed-post-file input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  font-size: 23px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  transform: translate(-300px, 0) scale(4);
+  direction: ltr;
+}
+
 .pull-right {
   float: right;
 }

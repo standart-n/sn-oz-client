@@ -13,5 +13,12 @@
 		.row-fluid
 			textarea.feed-post-message.span12(wrap = "hard", rows = "3")
 			button.btn.btn-primary(type = "submit") Отправить
+			&nbsp;
+			a.btn.feed-post-file.hide(href = "#")
+				i.icon-file
+				Прикрепить файл
+				input.feed-post-upload(type = "file", name = "files[]")
 
+
+.feed-post-files
 

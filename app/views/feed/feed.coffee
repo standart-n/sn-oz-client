@@ -1,8 +1,13 @@
 
+require('jQueryWidget')
+require('IframeTransport')
+require('FileUpload')
+
 Template = 									require('Template')
 FeedBox = 									require('FeedBox')
 FeedNews = 									require('FeedNews')
 AboutView = 								require('AboutView')
+
 
 module.exports = Template.extend
 
@@ -25,6 +30,7 @@ module.exports = Template.extend
 		if window.user?
 			window.user.on 'change:signin', () =>
 				this.news.fetch()
+				this.box.showFileInput()
 
 		$(document).on 'scrollDown', () ->	
 			_this.news.down()
@@ -89,6 +95,7 @@ module.exports = Template.extend
 		setInterval () =>
 			this.news.updating()
 		, 30000
+
 
 
 	render: () ->

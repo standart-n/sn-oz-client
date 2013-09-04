@@ -6,8 +6,9 @@ install:
 	@mkdir -p ./style/
 	@mkdir -p ./view/
 	@npm install
-	@./node_modules/.bin/bower install --force --allow-root
-	@./node_modules/.bin/grunt al
+	@cp ./install/conf/* ./conf/
+	@./node_modules/.bin/bower install --force --allow-root --production
+	@./node_modules/.bin/grunt all
 
 
 build:
@@ -27,4 +28,4 @@ finish:
 	@echo "\nSuccessfully built at ${DATE}."
 
 
-.PHONY: test bootstrap
+.PHONY: install test bootstrap
