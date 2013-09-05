@@ -8,19 +8,20 @@
     </h4>
     <div class="alert alert-success hide"></div>
     <div class="alert alert-error hide"></div>
-    <div class="post-text">[%= markup.render(message.text) %]</div>
+    <div class="post-text">[%= formatting %]</div>
     <div class="post-edit hide">
       <textarea wrap="hard" rows="4" data-post="[%= id %]" class="feed-post-edit span12"></textarea>
     </div>
     <div class="post-tools-edit hide"><a href="#" data-action="save post" data-post="[%= id %]" class="btn btn-success btn-small">Сохранить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
     <div class="post-tools-remove hide"><a href="#" data-action="delete post" data-post="[%= id %]" class="btn btn-danger btn-small">Удалить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
-    <div class="post-footer"><small class="muted">
-         
-        [%= moment(post_dt).fromNow() %]
-        [% if (our === true) { %]
-        &nbsp;
-        &nbsp;<a href="#" data-action="edit post" data-post="[%= id %]">редактировать</a>&nbsp;
-        &nbsp;<a href="#" data-action="remove post" data-post="[%= id %]">удалить</a>[% } %]</small></div>
+    <div class="post-footer"><small class="muted"> 
+        <div class="post-footer-date pull-left">[%= post_moment %]</div>
+        <div class="post-footer-tools pull-left">
+          [% if (our === true) { %]
+          &nbsp;
+          &nbsp;<a href="#" data-action="edit post" data-post="[%= id %]">редактировать</a>&nbsp;
+          &nbsp;<a href="#" data-action="remove post" data-post="[%= id %]">удалить</a>[% } %]
+        </div></small></div>
   </div>
   <hr/>
 </li>

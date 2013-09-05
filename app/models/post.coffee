@@ -16,24 +16,65 @@ module.exports = Backbone.Model.extend
 			message:
 				text:			''
 
+			formatting:			''
+
 			region:
 				caption:		''
 				name:			''
 
 			our:				false
 
-			post_dt:			new Date()
+			post_dt:			''
+			post_moment:		''
 
 
 	initialize: () ->
 
 		if window.user?
 
-			if window.user.get('signin') is true
+			this.checkOur()
 
-				if this.get('author').id is window.user.get('id')
+			window.user.on 'change:signin', () => this.checkOur()
 
-					this.set 'our', true
+
+		# this.checkMoment()
+
+		# this.on 'change', () => 
+
+		this.checkMoment()
+
+		setInterval () =>
+			this.checkMoment()
+		, 3000
+
+
+		this.checkFormatting()
+
+		this.on 'change:message', () => this.checkFormatting()
+
+		
+
+
+	checkFormatting: () ->
+
+		this.set 'formatting', markup.render(this.get('message').text) 		if window.markup?
+
+
+	checkMoment: () ->
+
+		# console.log this.get('post_dt'), window.moment().format()
+
+		# this.set 'post_moment', window.moment(this.get('post_dt').toString()).fromNow() 		if window.moment?
+
+
+	checkOur: () ->
+
+		if window.user.get('signin') is true
+
+			if this.get('author').id is window.user.get('id')
+
+				this.set 'our', true
+
 
 
 	reset: () ->

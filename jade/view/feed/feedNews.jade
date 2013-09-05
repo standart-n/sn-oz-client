@@ -14,7 +14,7 @@ li.media(data-post-id = "[%= id %]")
 
 		.alert.alert-error.hide
 
-		.post-text [%= markup.render(message.text) %]
+		.post-text [%= formatting %]
 
 		.post-edit.hide
 			textarea.feed-post-edit.span12(wrap = "hard", rows = "4", data-post = "[%= id %]")
@@ -31,17 +31,20 @@ li.media(data-post-id = "[%= id %]")
 
 		.post-footer
 			small.muted 
-				[%= moment(post_dt).fromNow() %]
-				[% if (our === true) { %]
-				&nbsp;
-				&nbsp;
-				a(href = "#", data-action = "edit post", data-post = "[%= id %]") редактировать
-				//- a.btn-link(href = "#", data-action = "edit post", data-post = "[%= id %]")
-				//- 	i.icon-edit
-				&nbsp;
-				&nbsp;
-				a(href = "#", data-action = "remove post", data-post = "[%= id %]") удалить
-				//- a.btn-link(href = "#", data-action = "remove post", data-post = "[%= id %]")
-				//- 	i.icon-remove
-				[% } %]
+				.post-footer-date.pull-left
+					[%= post_moment %]
+
+				.post-footer-tools.pull-left
+					[% if (our === true) { %]
+					&nbsp;
+					&nbsp;
+					a(href = "#", data-action = "edit post", data-post = "[%= id %]") редактировать
+					//- a.btn-link(href = "#", data-action = "edit post", data-post = "[%= id %]")
+					//- 	i.icon-edit
+					&nbsp;
+					&nbsp;
+					a(href = "#", data-action = "remove post", data-post = "[%= id %]") удалить
+					//- a.btn-link(href = "#", data-action = "remove post", data-post = "[%= id %]")
+					//- 	i.icon-remove
+					[% } %]
 	hr

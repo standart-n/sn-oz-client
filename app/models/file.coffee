@@ -13,6 +13,7 @@ module.exports = Backbone.Model.extend
 			size:						0
 			sizeFormat:					''
 			url:						''
+			group:						'files'
 
 			post_dt:					new Date()
 

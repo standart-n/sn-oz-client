@@ -2,11 +2,12 @@
 require('moment')
 require('_')
 	
-Template = 									require('Template')
+FeedSync = 									require('FeedSync')
 Posts = 									require('Posts')
 Update = 									require('Update')
+# Template = 									require('Template')
 
-module.exports = Template.extend
+module.exports = FeedSync.extend
 
 	el: 									'#feed-news'
 	url: 									'view/feed/feedNews.html'
@@ -22,9 +23,11 @@ module.exports = Template.extend
 
 		this.fetch()
 
+		this.startSync()
+
 	render: () ->
-		if this.state is 'ready'
-			this.template()
+		# if this.state is 'ready'
+		# 	this.template()
 
 
 	data: () ->
@@ -118,7 +121,7 @@ module.exports = Template.extend
 
 		if post.get('success') is true
 			this.state = 					'ready'
-			this.fetch()
+			this.blurPost(id)
 		
 		else
 			this.error id, post.get('notice')
@@ -174,11 +177,14 @@ module.exports = Template.extend
 		, 400
 
 		if post.get('success') is true
-			this.state = 					'ready'
-			this.fetch()
+			# this.state = 					'ready'
+			# this.fetch()
+			this.posts.remove(post)
 		
 		else
+			# alert post.get('notice')
 			this.error id, post.get('notice')
+			# this.blurPost(id)
 
 		post.unset('success')
 		post.unset('notice')
@@ -213,6 +219,7 @@ module.exports = Template.extend
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
 		$alertError = 						$post.find('.alert-error')
+		$alertSuccess = 					$post.find('.alert-success')
 
 		$alertError.show().html 			notice
 		$alertError.data 'mark',			mark
@@ -268,6 +275,8 @@ module.exports = Template.extend
 	fetch: () ->
 
 		if this.state is 'ready'
+
+			console.log 'fetch'
 
 			this.posts.fetch
 				url: 						"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}"

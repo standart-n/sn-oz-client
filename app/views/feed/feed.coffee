@@ -29,7 +29,7 @@ module.exports = Template.extend
 
 		if window.user?
 			window.user.on 'change:signin', () =>
-				this.news.fetch()
+				# this.news.fetch()
 				this.box.showFileInput()
 
 		$(document).on 'scrollDown', () ->	
@@ -94,7 +94,7 @@ module.exports = Template.extend
 
 		setInterval () =>
 			this.news.updating()
-		, 30000
+		, 3000
 
 
 

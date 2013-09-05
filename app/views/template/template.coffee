@@ -1,13 +1,11 @@
 
-# Template
-
-require('ejs')
 require('jquery')
 
-Backbone = 											require('Backbone')
+EjsEngine = 										require('EjsEngine')
 
-module.exports = Backbone.View.extend
+module.exports = EjsEngine.extend
 
+	url: 		''
 	ext: 		'.html'
 	markup: 	off
 
@@ -22,7 +20,7 @@ module.exports = Backbone.View.extend
 
 			for res in ms
 
-				text += new EJS(url: this.url, ext: this.ext, type: '[', cache: off).render(res) ? ''
+				text += this.ejs(res)
 
 			text = window.markup?.render(text) if this.markup
 			

@@ -49,25 +49,31 @@ module.exports = Template.extend
 			dataType: 	'json'
 			done: (e, data) =>
 				this.afterFileUpload(data)
+			fail: () =>
+				this.error('Произошла ошибка при загрузке файла')
 
 
 	afterFileUpload: (data) ->
-		if data.error?
-			switch data.error
-				when 'File is too big'
-					this.error('Размер файла не должен превышать <b>10mb</b>')
-				when 'User not found'
-					this.error('Вы не авторизованы')
-				else 
-					this.error data.error.toString()
-		else 
-			# alert data.result[0].name
-			this.fileList.files.add
-				name:		data.result[0].name
-				original:	data.result[0].original
-				type:		data.result[0].type
-				size:		data.result[0].size
-				url:		data.result[0].url
+		if data.result?
+			if data.result[0].error?
+				switch data.result[0].error
+					when 'File is too big'
+						this.error('Размер файла не должен превышать <b>10mb</b>')
+					when 'User not found'
+						this.error('Вы не авторизованы')
+					else 
+						this.error(data.error.toString())
+			else 
+				console.log data.result
+				this.fileList.files.add
+					name:		data.result[0].name
+					original:	data.result[0].original
+					type:		data.result[0].type
+					size:		data.result[0].size
+					url:		data.result[0].url
+
+		else
+			this.error('Ошибка при загрузке файла')
 
 
 
@@ -150,5 +156,5 @@ module.exports = Template.extend
 
 		setTimeout () =>
 			this.$alertError.hide()
-		, 2000
+		, 3000
 

@@ -5724,6 +5724,7 @@ module.exports = Backbone.Model.extend({
       size: 0,
       sizeFormat: '',
       url: '',
+      group: 'files',
       post_dt: new Date()
     };
   },
@@ -5902,20 +5903,43 @@ module.exports = Backbone.Model.extend({
       message: {
         text: ''
       },
+      formatting: '',
       region: {
         caption: '',
         name: ''
       },
       our: false,
-      post_dt: new Date()
+      post_dt: '',
+      post_moment: ''
     };
   },
   initialize: function() {
+    var _this = this;
     if (window.user != null) {
-      if (window.user.get('signin') === true) {
-        if (this.get('author').id === window.user.get('id')) {
-          return this.set('our', true);
-        }
+      this.checkOur();
+      window.user.on('change:signin', function() {
+        return _this.checkOur();
+      });
+    }
+    this.checkMoment();
+    setInterval(function() {
+      return _this.checkMoment();
+    }, 3000);
+    this.checkFormatting();
+    return this.on('change:message', function() {
+      return _this.checkFormatting();
+    });
+  },
+  checkFormatting: function() {
+    if (window.markup != null) {
+      return this.set('formatting', markup.render(this.get('message').text));
+    }
+  },
+  checkMoment: function() {},
+  checkOur: function() {
+    if (window.user.get('signin') === true) {
+      if (this.get('author').id === window.user.get('id')) {
+        return this.set('our', true);
       }
     }
   },
@@ -6434,7 +6458,6 @@ module.exports = Template.extend({
     }
     if (window.user != null) {
       window.user.on('change:signin', function() {
-        _this.news.fetch();
         return _this.box.showFileInput();
       });
     }
@@ -6485,7 +6508,7 @@ module.exports = Template.extend({
     });
     return setInterval(function() {
       return _this.news.updating();
-    }, 30000);
+    }, 3000);
   },
   render: function() {
     var _this = this;
@@ -6558,27 +6581,35 @@ module.exports = Template.extend({
       dataType: 'json',
       done: function(e, data) {
         return _this.afterFileUpload(data);
+      },
+      fail: function() {
+        return _this.error('Произошла ошибка при загрузке файла');
       }
     });
   },
   afterFileUpload: function(data) {
-    if (data.error != null) {
-      switch (data.error) {
-        case 'File is too big':
-          return this.error('Размер файла не должен превышать <b>10mb</b>');
-        case 'User not found':
-          return this.error('Вы не авторизованы');
-        default:
-          return this.error(data.error.toString());
+    if (data.result != null) {
+      if (data.result[0].error != null) {
+        switch (data.result[0].error) {
+          case 'File is too big':
+            return this.error('Размер файла не должен превышать <b>10mb</b>');
+          case 'User not found':
+            return this.error('Вы не авторизованы');
+          default:
+            return this.error(data.error.toString());
+        }
+      } else {
+        console.log(data.result);
+        return this.fileList.files.add({
+          name: data.result[0].name,
+          original: data.result[0].original,
+          type: data.result[0].type,
+          size: data.result[0].size,
+          url: data.result[0].url
+        });
       }
     } else {
-      return this.fileList.files.add({
-        name: data.result[0].name,
-        original: data.result[0].original,
-        type: data.result[0].type,
-        size: data.result[0].size,
-        url: data.result[0].url
-      });
+      return this.error('Ошибка при загрузке файла');
     }
   },
   render: function() {
@@ -6656,7 +6687,7 @@ module.exports = Template.extend({
     this.$alertError.show().html(notice);
     return setTimeout(function() {
       return _this.$alertError.hide();
-    }, 2000);
+    }, 3000);
   }
 });
 
@@ -6669,7 +6700,7 @@ Template = require('Template');
 Files = require('Files');
 
 module.exports = Template.extend({
-  el: '#feed-post-files',
+  el: '#feed-box-files',
   url: 'view/feed/feedBoxFiles.html',
   initialize: function() {
     return this.files = new Files();
@@ -6678,19 +6709,19 @@ module.exports = Template.extend({
 
 }),
 "FeedNews": (function (require, exports, module) { /* wrapped by builder */
-var Posts, Template, Update;
+var FeedSync, Posts, Update;
 
 require('moment');
 
 require('_');
 
-Template = require('Template');
+FeedSync = require('FeedSync');
 
 Posts = require('Posts');
 
 Update = require('Update');
 
-module.exports = Template.extend({
+module.exports = FeedSync.extend({
   el: '#feed-news',
   url: 'view/feed/feedNews.html',
   initialize: function() {
@@ -6699,13 +6730,10 @@ module.exports = Template.extend({
     this.state = 'ready';
     this.posts = new Posts();
     this.update = new Update();
-    return this.fetch();
+    this.fetch();
+    return this.startSync();
   },
-  render: function() {
-    if (this.state === 'ready') {
-      return this.template();
-    }
-  },
+  render: function() {},
   data: function() {
     return this.posts.toJSON();
   },
@@ -6792,7 +6820,7 @@ module.exports = Template.extend({
     }, 400);
     if (post.get('success') === true) {
       this.state = 'ready';
-      this.fetch();
+      this.blurPost(id);
     } else {
       this.error(id, post.get('notice'));
     }
@@ -6845,8 +6873,7 @@ module.exports = Template.extend({
       return $button.button('reset');
     }, 400);
     if (post.get('success') === true) {
-      this.state = 'ready';
-      this.fetch();
+      this.posts.remove(post);
     } else {
       this.error(id, post.get('notice'));
     }
@@ -6876,7 +6903,7 @@ module.exports = Template.extend({
     return $alertSuccess.hide();
   },
   error: function(id, notice) {
-    var $alertError, $post, mark,
+    var $alertError, $alertSuccess, $post, mark,
       _this = this;
     if (notice == null) {
       notice = '';
@@ -6884,6 +6911,7 @@ module.exports = Template.extend({
     mark = moment().unix();
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $alertError = $post.find('.alert-error');
+    $alertSuccess = $post.find('.alert-success');
     $alertError.show().html(notice);
     $alertError.data('mark', mark);
     $alertSuccess.hide();
@@ -6929,6 +6957,7 @@ module.exports = Template.extend({
   fetch: function() {
     var _this = this;
     if (this.state === 'ready') {
+      console.log('fetch');
       return this.posts.fetch({
         url: "" + (window.sn.get('server').host) + "/feed/post/" + (window.sn.get('region').name),
         timeout: 3000,
@@ -6947,6 +6976,52 @@ module.exports = Template.extend({
         }
       });
     }
+  }
+});
+
+}),
+"FeedSync": (function (require, exports, module) { /* wrapped by builder */
+var Sync;
+
+Sync = require('Sync');
+
+module.exports = Sync.extend({
+  startSync: function() {
+    if (this.posts != null) {
+      this.adding();
+      return this.removing();
+    }
+  },
+  adding: function() {
+    var _this = this;
+    return this.posts.on('add', function(post) {
+      console.log(post.toJSON());
+      post.on('change:formatting', function() {
+        var $post, $text;
+        $post = _this.$el.find("[data-post-id=\"" + (post.get('id')) + "\"]");
+        $text = $post.find('.post-text');
+        return $text.html(post.get('formatting'));
+      });
+      post.on('change:post_moment', function() {
+        var $moment, $post;
+        $post = _this.$el.find("[data-post-id=\"" + (post.get('id')) + "\"]");
+        $moment = _this.$el.find('.post-footer-date');
+        return $moment.html(post.get('post_moment'));
+      });
+      if (_this.isFirst(_this.posts, post)) {
+        return _this.prepend(post);
+      } else {
+        return _this.append(post);
+      }
+    });
+  },
+  removing: function() {
+    var _this = this;
+    return this.posts.on('remove', function(post) {
+      var $post;
+      $post = _this.$el.find("[data-post-id=\"" + (post.get('id')) + "\"]");
+      return $post.remove();
+    });
   }
 });
 
@@ -7736,20 +7811,89 @@ module.exports = Template.extend({
 });
 
 }),
-"Template": (function (require, exports, module) { /* wrapped by builder */
+"EjsEngine": (function (require, exports, module) { /* wrapped by builder */
 var Backbone;
 
 require('ejs');
 
-require('jquery');
-
 Backbone = require('Backbone');
 
 module.exports = Backbone.View.extend({
+  url: '',
+  ext: '.html',
+  ejs: function(res) {
+    var _ref;
+    if (res == null) {
+      res = {};
+    }
+    return (_ref = new EJS({
+      url: this.url,
+      ext: this.ext,
+      type: '[',
+      cache: false
+    }).render(res)) != null ? _ref : '';
+  }
+});
+
+}),
+"Sync": (function (require, exports, module) { /* wrapped by builder */
+var EjsEngine;
+
+require('jquery');
+
+EjsEngine = require('EjsEngine');
+
+module.exports = EjsEngine.extend({
+  adding: function(collection) {
+    var _this = this;
+    return collection.on('add', function(model) {
+      if (_this.isFirst(collection, model)) {
+        return _this.prepend(model);
+      } else {
+        return _this.append(model);
+      }
+    });
+  },
+  isLast: function(collection, model) {
+    var last;
+    last = collection.last();
+    if (last != null) {
+      return last.get('id') === model.get('id');
+    } else {
+      return true;
+    }
+  },
+  isFirst: function(collection, model) {
+    var firs;
+    firs = collection.first();
+    if (firs != null) {
+      return firs.get('id') === model.get('id');
+    } else {
+      return true;
+    }
+  },
+  append: function(model) {
+    return this.$el.append(this.ejs(model.toJSON()));
+  },
+  prepend: function(model) {
+    return this.$el.prepend(this.ejs(model.toJSON()));
+  }
+});
+
+}),
+"Template": (function (require, exports, module) { /* wrapped by builder */
+var EjsEngine;
+
+require('jquery');
+
+EjsEngine = require('EjsEngine');
+
+module.exports = EjsEngine.extend({
+  url: '',
   ext: '.html',
   markup: false,
   template: function() {
-    var data, ms, res, text, _i, _len, _ref, _ref1;
+    var data, ms, res, text, _i, _len, _ref;
     if (this.url != null) {
       text = '';
       ms = [];
@@ -7761,15 +7905,10 @@ module.exports = Backbone.View.extend({
       }
       for (_i = 0, _len = ms.length; _i < _len; _i++) {
         res = ms[_i];
-        text += (_ref = new EJS({
-          url: this.url,
-          ext: this.ext,
-          type: '[',
-          cache: false
-        }).render(res)) != null ? _ref : '';
+        text += this.ejs(res);
       }
       if (this.markup) {
-        text = (_ref1 = window.markup) != null ? _ref1.render(text) : void 0;
+        text = (_ref = window.markup) != null ? _ref.render(text) : void 0;
       }
       return this.$el.html(text);
     }

@@ -4,7 +4,7 @@ Files = 									require('Files')
 
 module.exports = Template.extend
 
-	el: 									'#feed-post-files'
+	el: 									'#feed-box-files'
 	url: 									'view/feed/feedBoxFiles.html'
 
 	initialize: () ->
