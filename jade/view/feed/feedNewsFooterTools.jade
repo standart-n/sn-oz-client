@@ -1,0 +1,13 @@
+
+[% if (our === true) { %]
+&nbsp;
+&nbsp;
+a(href = "#", data-action = "edit post", data-post = "[%= id %]") редактировать
+//- a.btn-link(href = "#", data-action = "edit post", data-post = "[%= id %]")
+//- 	i.icon-edit
+&nbsp;
+&nbsp;
+a(href = "#", data-action = "remove post", data-post = "[%= id %]") удалить
+//- a.btn-link(href = "#", data-action = "remove post", data-post = "[%= id %]")
+//- 	i.icon-remove
+[% } %]

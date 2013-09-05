@@ -5921,21 +5921,13 @@ module.exports = Backbone.Model.extend({
         return _this.checkOur();
       });
     }
-    this.checkMoment();
-    setInterval(function() {
-      return _this.checkMoment();
-    }, 3000);
-    this.checkFormatting();
-    return this.on('change:message', function() {
-      return _this.checkFormatting();
-    });
+    return this.checkFormatting();
   },
   checkFormatting: function() {
     if (window.markup != null) {
       return this.set('formatting', markup.render(this.get('message').text));
     }
   },
-  checkMoment: function() {},
   checkOur: function() {
     if (window.user.get('signin') === true) {
       if (this.get('author').id === window.user.get('id')) {
@@ -6508,7 +6500,7 @@ module.exports = Template.extend({
     });
     return setInterval(function() {
       return _this.news.updating();
-    }, 3000);
+    }, 60000);
   },
   render: function() {
     var _this = this;
@@ -6763,9 +6755,7 @@ module.exports = FeedSync.extend({
     $text.hide();
     $edit.show();
     $toolsEdit.show();
-    if ($area.val() === '') {
-      $area.val(text);
-    }
+    $area.val(text);
     $area.focus();
     return $footer.hide();
   },
@@ -6779,10 +6769,11 @@ module.exports = FeedSync.extend({
     $button = $post.find('.post-tools-edit').find('.btn-success');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
-        author = {
+        author = post.get('author');
+        _.extend(author, {
           id: window.user.get('id'),
           key: window.user.get('key')
-        };
+        });
         message = {
           text: $area.val()
         };
@@ -6986,6 +6977,14 @@ var Sync;
 Sync = require('Sync');
 
 module.exports = Sync.extend({
+  urls: {
+    post: {
+      header: 'view/feed/feedNewsHeader.html',
+      footer: {
+        date: 'view/feed/feedNewsFooterDate.html'
+      }
+    }
+  },
   startSync: function() {
     if (this.posts != null) {
       this.adding();
@@ -6995,24 +6994,34 @@ module.exports = Sync.extend({
   adding: function() {
     var _this = this;
     return this.posts.on('add', function(post) {
-      console.log(post.toJSON());
+      if (_this.isFirst(_this.posts, post)) {
+        _this.prepend(post);
+      } else {
+        _this.append(post);
+      }
       post.on('change:formatting', function() {
         var $post, $text;
         $post = _this.$el.find("[data-post-id=\"" + (post.get('id')) + "\"]");
         $text = $post.find('.post-text');
         return $text.html(post.get('formatting'));
       });
-      post.on('change:post_moment', function() {
-        var $moment, $post;
+      post.on('change:author', function() {
+        var $header, $post, header;
         $post = _this.$el.find("[data-post-id=\"" + (post.get('id')) + "\"]");
-        $moment = _this.$el.find('.post-footer-date');
-        return $moment.html(post.get('post_moment'));
+        $header = $post.find('.media-heading');
+        header = _this.ejs(post.toJSON(), _this.urls.post.header);
+        return $header.html(header);
       });
-      if (_this.isFirst(_this.posts, post)) {
-        return _this.prepend(post);
-      } else {
-        return _this.append(post);
-      }
+      post.on('change:message', function() {
+        return post.checkFormatting();
+      });
+      return setInterval(function() {
+        var $footerDate, $post, footerDate;
+        $post = _this.$el.find("[data-post-id=\"" + (post.get('id')) + "\"]");
+        $footerDate = $post.find('.post-footer-date');
+        footerDate = _this.ejs(post.toJSON(), _this.urls.post.footer.date);
+        return $footerDate.html(footerDate);
+      }, 60000);
     });
   },
   removing: function() {
@@ -7821,17 +7830,16 @@ Backbone = require('Backbone');
 module.exports = Backbone.View.extend({
   url: '',
   ext: '.html',
-  ejs: function(res) {
-    var _ref;
+  ejs: function(res, url) {
     if (res == null) {
       res = {};
     }
-    return (_ref = new EJS({
-      url: this.url,
+    return new EJS({
+      url: url ? url : this.url,
       ext: this.ext,
       type: '[',
       cache: false
-    }).render(res)) != null ? _ref : '';
+    }).render(res);
   }
 });
 

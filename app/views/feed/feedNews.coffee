@@ -65,7 +65,7 @@ module.exports = FeedSync.extend
 		$text.hide()
 		$edit.show()
 		$toolsEdit.show()
-		$area.val(text)						if $area.val() is ''
+		$area.val(text)
 		$area.focus()
 		$footer.hide()
 
@@ -81,12 +81,16 @@ module.exports = FeedSync.extend
 		if window.user?
 			if window.user.get('signin') is true
 
-				author = 
+				author =  					post.get('author')
+
+				_.extend author, {
 					id:						window.user.get('id')
 					key:					window.user.get('key')
+				}
 
 				message = 
 					text:					$area.val()
+
 
 				if message.text isnt ''
 
@@ -120,7 +124,7 @@ module.exports = FeedSync.extend
 		, 400
 
 		if post.get('success') is true
-			this.state = 					'ready'
+			this.state = 					'ready'			
 			this.blurPost(id)
 		
 		else

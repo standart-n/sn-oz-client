@@ -8,7 +8,12 @@ module.exports = Backbone.View.extend
 	url: 		''
 	ext: 		'.html'
 
-	ejs: (res = {}) ->
+	ejs: (res = {}, url) ->
 
-		new EJS(url: this.url, ext: this.ext, type: '[', cache: off).render(res) ? ''
+		new EJS
+			url: 		if url then url else this.url
+			ext: 		this.ext
+			type: 		'['
+			cache: 		off
+		.render(res)
 

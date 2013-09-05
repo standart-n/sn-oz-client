@@ -94,7 +94,7 @@ module.exports = Template.extend
 
 		setInterval () =>
 			this.news.updating()
-		, 3000
+		, 60000
 
 
 

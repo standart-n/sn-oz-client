@@ -36,35 +36,12 @@ module.exports = Backbone.Model.extend
 
 			window.user.on 'change:signin', () => this.checkOur()
 
-
-		# this.checkMoment()
-
-		# this.on 'change', () => 
-
-		this.checkMoment()
-
-		setInterval () =>
-			this.checkMoment()
-		, 3000
-
-
 		this.checkFormatting()
-
-		this.on 'change:message', () => this.checkFormatting()
-
-		
 
 
 	checkFormatting: () ->
 
 		this.set 'formatting', markup.render(this.get('message').text) 		if window.markup?
-
-
-	checkMoment: () ->
-
-		# console.log this.get('post_dt'), window.moment().format()
-
-		# this.set 'post_moment', window.moment(this.get('post_dt').toString()).fromNow() 		if window.moment?
 
 
 	checkOur: () ->
