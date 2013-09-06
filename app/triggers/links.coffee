@@ -17,8 +17,9 @@ module.exports = class Links
 				$(document).on 'click', 'a', (e) =>
 					this.switch()
 
-	switch: () ->
-		href = window.location.href.replace(/.*(?=#[^\s]+$)/, '')
+	switch: (href) ->
+		
+		href = window.location.href.replace(/.*(?=#[^\s]+$)/, '') if !href?
 
 		$(document).find('.nav-links')?.each () ->
 			$(this).find('li')?.each () ->

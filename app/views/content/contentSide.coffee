@@ -1,19 +1,16 @@
 
-# ContentSide
-
 require('jquery')
 
-Content = require('Content')
+Content = 									require('Content')
 
 module.exports = Content.extend
 
-	el: 	'#side'
-	file:	'side_main.html'
+	el: 									'#side'
+	file:									''
+	# file:									'side_main.html'
+	autorender: 							off
 
-	initialize: () ->
-		this.render()
-
-	switch: (part,page) ->
+	switch: (part, page) ->
 
 		if this.file != "side_#{part}.html"
 			this.file = "side_#{part}.html"

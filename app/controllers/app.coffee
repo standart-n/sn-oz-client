@@ -17,8 +17,11 @@ BootstrapButtons = 					require('BootstrapButtons')
 
 module.exports = Backbone.Router.extend
 
+	defUrl:							'main/text/main'
+
 	routes:
-		':part/text/:page':			'routeText'
+		''							: 'routeText'
+		':part/text/:page'			: 'routeText'
 
 	initialize: () ->
 
@@ -41,9 +44,19 @@ module.exports = Backbone.Router.extend
 
 
 	routeText: (part,page) ->
+		if !part? or !page?
+			part = 					'main'
+			page = 					'main'
+
+		href = 						"#{part}/text/#{page}"
+
 		this.contentSide.switch(part,page)
 		this.contentPrimary.switch(part,page)
-		this.links.switch() if this.links?
+
+		this.links.switch(href) if this.links?
+
+		if href is 'main/text/main' and window.news?
+			window.news.trigger 'feed'
 
 		this.trigger 'switch', part, page
 

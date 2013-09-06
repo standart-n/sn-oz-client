@@ -6341,15 +6341,25 @@ module.exports = Backbone.View.extend({
 
 }),
 "Content": (function (require, exports, module) { /* wrapped by builder */
-var Complete, Template;
+var Backbone, Complete, Template;
 
 Template = require('Template');
+
+Backbone = require('Backbone');
 
 Complete = require('Complete');
 
 module.exports = Template.extend({
   path: 'content',
   markup: true,
+  autorender: true,
+  initialize: function() {
+    if (this.autorender === true) {
+      this.render();
+    }
+    return this.customize();
+  },
+  customize: function() {},
   render: function() {
     if (this.file != null) {
       this.beforeRender();
@@ -6384,11 +6394,9 @@ Content = require('Content');
 
 module.exports = Content.extend({
   el: '#primary',
-  file: 'main.html',
-  page: 'main',
-  initialize: function() {
-    return this.render();
-  },
+  file: '',
+  page: '',
+  autorender: false,
   "switch": function(part, page) {
     this.page = page;
     this.file = "" + page + ".html";
@@ -6406,10 +6414,8 @@ Content = require('Content');
 
 module.exports = Content.extend({
   el: '#side',
-  file: 'side_main.html',
-  initialize: function() {
-    return this.render();
-  },
+  file: '',
+  autorender: false,
   "switch": function(part, page) {
     if (this.file !== ("side_" + part + ".html")) {
       this.file = "side_" + part + ".html";
@@ -6442,55 +6448,50 @@ module.exports = Template.extend({
   initialize: function() {
     var _this = this;
     _this = this;
-    this.render();
     this.aboutView = new AboutView();
-    if (window.app != null) {
-      window.app.on('switch', function() {
-        _this.setElement('#feed');
-        return _this.render();
-      });
-    }
-    if (window.user != null) {
+    if ((window.user != null) && (this.box != null)) {
       window.user.on('change:signin', function() {
         return _this.box.showFileInput();
       });
     }
     $(document).on('scrollDown', function() {
-      return _this.news.down();
+      if (_this.news != null) {
+        return _this.news.down();
+      }
     });
     $(document).on('click', '[data-action="edit post"]', function(e) {
       e.preventDefault();
-      if ($(this).data('post') != null) {
+      if (($(this).data('post') != null) && (_this.news != null)) {
         return _this.news.editPost($(this).data('post'));
       }
     });
     $(document).on('click', '[data-action="save post"]', function(e) {
       e.preventDefault();
-      if ($(this).data('post') != null) {
+      if (($(this).data('post') != null) && (_this.news != null)) {
         return _this.news.savePost($(this).data('post'));
       }
     });
     $(document).on('keyup', '.feed-post-edit', function(e) {
       if (e.keyCode === 13 && e.ctrlKey) {
-        if ($(this).data('post') != null) {
+        if (($(this).data('post') != null) && (_this.news != null)) {
           _this.news.savePost($(this).data('post'));
         }
       }
       if (e.keyCode === 27) {
-        if ($(this).data('post') != null) {
+        if (($(this).data('post') != null) && (_this.news != null)) {
           return _this.news.blurPost($(this).data('post'));
         }
       }
     });
     $(document).on('click', '[data-action="blur post"]', function(e) {
       e.preventDefault();
-      if ($(this).data('post') != null) {
+      if (($(this).data('post') != null) && (_this.news != null)) {
         return _this.news.blurPost($(this).data('post'));
       }
     });
     $(document).on('click', '[data-action="remove post"]', function(e) {
       e.preventDefault();
-      if ($(this).data('post') != null) {
+      if (($(this).data('post') != null) && (_this.news != null)) {
         return _this.news.removePost($(this).data('post'));
       }
     });
@@ -6501,11 +6502,19 @@ module.exports = Template.extend({
       }
     });
     return setInterval(function() {
-      return _this.news.updating();
+      if (_this.news != null) {
+        return _this.news.updating();
+      }
     }, 60000);
   },
-  render: function() {
+  render: function(el) {
     var _this = this;
+    if (el == null) {
+      el = '#feed';
+    }
+    if (el != null) {
+      this.setElement(el);
+    }
     this.template();
     if (this.box != null) {
       this.box.remove();
@@ -6516,10 +6525,14 @@ module.exports = Template.extend({
     this.box = new FeedBox();
     this.news = new FeedNews();
     this.box.$el.on('send', function() {
-      return _this.news.fetch();
+      if (_this.news != null) {
+        return _this.news.fetch();
+      }
     });
     return this.box.$el.on('not_signin', function() {
-      return _this.aboutView.show();
+      if (_this.aboutView != null) {
+        return _this.aboutView.show();
+      }
     });
   }
 });
@@ -7978,7 +7991,9 @@ Scroll = require('Scroll');
 BootstrapButtons = require('BootstrapButtons');
 
 module.exports = Backbone.Router.extend({
+  defUrl: 'main/text/main',
   routes: {
+    '': 'routeText',
     ':part/text/:page': 'routeText'
   },
   initialize: function() {
@@ -7996,10 +8011,19 @@ module.exports = Backbone.Router.extend({
     });
   },
   routeText: function(part, page) {
+    var href;
+    if ((part == null) || (page == null)) {
+      part = 'main';
+      page = 'main';
+    }
+    href = "" + part + "/text/" + page;
     this.contentSide["switch"](part, page);
     this.contentPrimary["switch"](part, page);
     if (this.links != null) {
-      this.links["switch"]();
+      this.links["switch"](href);
+    }
+    if (href === 'main/text/main' && (window.news != null)) {
+      window.news.trigger('feed');
     }
     return this.trigger('switch', part, page);
   }
@@ -8088,7 +8112,12 @@ Feed = require('Feed');
 
 module.exports = Backbone.Router.extend({
   initialize: function() {
-    return this.feed = new Feed();
+    var _this = this;
+    _.extend(this, Backbone.Event);
+    this.feed = new Feed();
+    return this.on('feed', function() {
+      return _this.feed.render();
+    });
   }
 });
 
@@ -8189,9 +8218,11 @@ module.exports = Links = (function() {
     });
   }
 
-  Links.prototype["switch"] = function() {
-    var href, _ref;
-    href = window.location.href.replace(/.*(?=#[^\s]+$)/, '');
+  Links.prototype["switch"] = function(href) {
+    var _ref;
+    if (href == null) {
+      href = window.location.href.replace(/.*(?=#[^\s]+$)/, '');
+    }
     return (_ref = $(document).find('.nav-links')) != null ? _ref.each(function() {
       var _ref1;
       return (_ref1 = $(this).find('li')) != null ? _ref1.each(function() {

@@ -18,29 +18,36 @@ module.exports = Template.extend
 
 		_this = this
 
-		this.render()
+		# this.$parent = 						'#primary'
+
+		# if this.$parent.find(this.el).lenght
+		# 	this.render()
+
+
+		# this.render()
 
 		this.aboutView = 					new AboutView()
 
-		if window.app?
-			window.app.on 'switch', () =>
-				this.setElement('#feed')
-				this.render()
+		# if window.app?
+		# 	window.app.on 'switch', () =>
+		# 		this.setElement('#feed')
+		# 		this.render()
 
-		if window.user?
+		if window.user? and this.box?
 			window.user.on 'change:signin', () =>
 				# this.news.fetch()
 				this.box.showFileInput()
 
 		$(document).on 'scrollDown', () ->	
-			_this.news.down()
+			if _this.news?
+				_this.news.down()
 
 
 		$(document).on 'click', '[data-action="edit post"]', (e) ->
 
 			e.preventDefault()
 
-			if $(this).data('post')?
+			if $(this).data('post')? and _this.news?
 				_this.news.editPost $(this).data('post')
 
 
@@ -48,7 +55,7 @@ module.exports = Template.extend
 
 			e.preventDefault()
 
-			if $(this).data('post')?
+			if $(this).data('post')? and _this.news?
 				_this.news.savePost $(this).data('post')
 
 
@@ -56,13 +63,13 @@ module.exports = Template.extend
 
 			if e.keyCode is 13 and e.ctrlKey
 
-				if $(this).data('post')?
+				if $(this).data('post')? and _this.news?
 					_this.news.savePost $(this).data('post')
 
 
 			if e.keyCode is 27
 
-				if $(this).data('post')?
+				if $(this).data('post')? and _this.news?
 					_this.news.blurPost $(this).data('post')
 
 
@@ -71,7 +78,7 @@ module.exports = Template.extend
 
 			e.preventDefault()
 
-			if $(this).data('post')?
+			if $(this).data('post')? and _this.news?
 				_this.news.blurPost $(this).data('post')
 
 
@@ -80,7 +87,7 @@ module.exports = Template.extend
 
 			e.preventDefault()
 
-			if $(this).data('post')?
+			if $(this).data('post')? and _this.news?
 				_this.news.removePost $(this).data('post')
 
 
@@ -93,12 +100,17 @@ module.exports = Template.extend
 
 
 		setInterval () =>
-			this.news.updating()
+			if this.news?
+				this.news.updating()
 		, 60000
 
 
 
-	render: () ->
+	render: (el = '#feed') ->
+
+		if el?
+			this.setElement(el)
+
 		this.template()
 		this.box.remove()					if this.box?
 		this.news.remove()					if this.news?
@@ -106,7 +118,9 @@ module.exports = Template.extend
 		this.news = 						new FeedNews()
 
 		this.box.$el.on 'send', () =>
-			this.news.fetch()
+			if this.news?
+				this.news.fetch()
 
 		this.box.$el.on 'not_signin', () =>
-			this.aboutView.show()
+			if this.aboutView?
+				this.aboutView.show()
