@@ -18,25 +18,16 @@ module.exports = Template.extend
 
 		_this = this
 
-		# this.$parent = 						'#primary'
-
-		# if this.$parent.find(this.el).lenght
-		# 	this.render()
-
-
-		# this.render()
 
 		this.aboutView = 					new AboutView()
 
-		# if window.app?
-		# 	window.app.on 'switch', () =>
-		# 		this.setElement('#feed')
-		# 		this.render()
-
-		if window.user? and this.box?
+		if window.user?
 			window.user.on 'change:signin', () =>
-				# this.news.fetch()
-				this.box.showFileInput()
+				if window.user.get('signin') is true
+					if this.news?
+						this.news.fetch()
+					if this.box?
+						this.box.showFileInput()
 
 		$(document).on 'scrollDown', () ->	
 			if _this.news?

@@ -16,7 +16,7 @@
     <div class="post-footer"><small class="muted"> 
         <div class="post-footer-date pull-left">[%= moment(post_dt).fromNow() %]</div>
         <div class="post-footer-tools pull-left">
-          [% if (our === true) { %]
+          [% if (our) { %]
           &nbsp;
           &nbsp;<a href="#" data-action="edit post" data-post="[%= id %]">редактировать</a>&nbsp;
           &nbsp;<a href="#" data-action="remove post" data-post="[%= id %]">удалить</a>[% } %]

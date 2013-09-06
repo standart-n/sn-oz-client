@@ -4,9 +4,6 @@ Feed = 										require('Feed')
 
 module.exports = Backbone.Router.extend
 
-	# routes:
-	# 	'':									'routeRender'
-	# 	'main/text/main':					'routeRender'
 
 
 	initialize: () ->
@@ -17,14 +14,4 @@ module.exports = Backbone.Router.extend
 
 		this.on 'feed', () =>
 			this.feed.render()
-
-	# routeRender: () ->
-
-	# 	alert 'render!'
-
-	# 	this.feed.render()
-
-
-
-
 

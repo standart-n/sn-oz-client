@@ -28,7 +28,8 @@ module.exports = Template.extend
 			show:					true
 
 		this.$modal.on 'hide', () ->
-			window.app.navigate('#')
+			if window.app?
+				window.app.navigate('#')
 
 		this.afterShow()
 

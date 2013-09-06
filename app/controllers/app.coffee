@@ -43,7 +43,7 @@ module.exports = Backbone.Router.extend
 		this.links = 				new Links auto: off
 
 
-	routeText: (part,page) ->
+	routeText: (part, page) ->
 		if !part? or !page?
 			part = 					'main'
 			page = 					'main'

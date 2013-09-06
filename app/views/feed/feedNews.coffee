@@ -26,8 +26,6 @@ module.exports = FeedSync.extend
 		this.startSync()
 
 	render: () ->
-		# if this.state is 'ready'
-		# 	this.template()
 
 
 	data: () ->
@@ -184,14 +182,10 @@ module.exports = FeedSync.extend
 		, 400
 
 		if post.get('success') is true
-			# this.state = 					'ready'
-			# this.fetch()
 			this.posts.remove(post)
 		
 		else
-			# alert post.get('notice')
 			this.error id, post.get('notice')
-			# this.blurPost(id)
 
 		post.unset('success')
 		post.unset('notice')
@@ -242,7 +236,7 @@ module.exports = FeedSync.extend
 	checking: () ->
 		this.state = 						'ready'
 
-		this.render()
+		# this.render()
 
 		# new Complete
 		# 	el: 		this.el
@@ -275,8 +269,6 @@ module.exports = FeedSync.extend
 						if this.update.get('update') is true
 							this.fetch()
 							this.update.set 'update', false
-						else
-							this.render()
 
 
 	fetch: () ->

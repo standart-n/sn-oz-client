@@ -29,12 +29,7 @@ module.exports = Backbone.Model.extend
 
 	initialize: () ->
 
-		if window.user?
-
-			this.checkOur()
-
-			window.user.on 'change:signin', () => this.checkOur()
-
+		this.checkOur()
 		
 		this.checkFormatting()
 
@@ -50,10 +45,9 @@ module.exports = Backbone.Model.extend
 
 		if window.user.get('signin') is true
 
-			if this.get('author').id is window.user.get('id')
+			if this.get('author').id.toString() is window.user.get('id').toString()
 
 				this.set 'our', true
-
 
 
 	reset: () ->

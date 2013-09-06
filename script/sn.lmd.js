@@ -5914,12 +5914,7 @@ module.exports = Backbone.Model.extend({
   },
   initialize: function() {
     var _this = this;
-    if (window.user != null) {
-      this.checkOur();
-      window.user.on('change:signin', function() {
-        return _this.checkOur();
-      });
-    }
+    this.checkOur();
     this.checkFormatting();
     return this.on('change:message', function() {
       return _this.checkFormatting();
@@ -5932,7 +5927,7 @@ module.exports = Backbone.Model.extend({
   },
   checkOur: function() {
     if (window.user.get('signin') === true) {
-      if (this.get('author').id === window.user.get('id')) {
+      if (this.get('author').id.toString() === window.user.get('id').toString()) {
         return this.set('our', true);
       }
     }
@@ -6449,9 +6444,16 @@ module.exports = Template.extend({
     var _this = this;
     _this = this;
     this.aboutView = new AboutView();
-    if ((window.user != null) && (this.box != null)) {
+    if (window.user != null) {
       window.user.on('change:signin', function() {
-        return _this.box.showFileInput();
+        if (window.user.get('signin') === true) {
+          if (_this.news != null) {
+            _this.news.fetch();
+          }
+          if (_this.box != null) {
+            return _this.box.showFileInput();
+          }
+        }
       });
     }
     $(document).on('scrollDown', function() {
@@ -6929,8 +6931,7 @@ module.exports = FeedSync.extend({
     }, 2000);
   },
   checking: function() {
-    this.state = 'ready';
-    return this.render();
+    return this.state = 'ready';
   },
   down: function() {
     this.limit = this.posts.length + this.step;
@@ -6953,8 +6954,6 @@ module.exports = FeedSync.extend({
             if (_this.update.get('update') === true) {
               _this.fetch();
               return _this.update.set('update', false);
-            } else {
-              return _this.render();
             }
           }
         });
@@ -6997,7 +6996,8 @@ module.exports = Sync.extend({
     post: {
       header: 'view/feed/feedNewsHeader.html',
       footer: {
-        date: 'view/feed/feedNewsFooterDate.html'
+        date: 'view/feed/feedNewsFooterDate.html',
+        tools: 'view/feed/feedNewsFooterTools.html'
       }
     }
   },
@@ -7027,6 +7027,13 @@ module.exports = Sync.extend({
         $header = $post.find('.media-heading');
         header = _this.ejs(post.toJSON(), _this.urls.post.header);
         return $header.html(header);
+      });
+      post.on('change:our', function() {
+        var $footerTools, $post, footerTools;
+        $post = _this.$el.find("[data-post-id=\"" + (post.get('id')) + "\"]");
+        $footerTools = $post.find('.post-footer-tools');
+        footerTools = _this.ejs(post.toJSON(), _this.urls.post.footer.tools);
+        return $footerTools.html(footerTools);
       });
       return setInterval(function() {
         var $footerDate, $post, footerDate;
@@ -7183,7 +7190,9 @@ module.exports = Template.extend({
       show: true
     });
     this.$modal.on('hide', function() {
-      return window.app.navigate('#');
+      if (window.app != null) {
+        return window.app.navigate('#');
+      }
     });
     return this.afterShow();
   },
@@ -7795,6 +7804,7 @@ Complete = require('Complete');
 module.exports = Template.extend({
   el: '#profile',
   url: 'view/profile/profile.html',
+  state: 'ready',
   initialize: function() {
     var _this = this;
     if (window.user != null) {
@@ -7813,11 +7823,18 @@ module.exports = Template.extend({
     }
   },
   show: function() {
-    if (window.user.get('signin') === true) {
-      this.$el.show();
-      return this.render();
-    } else {
-      return this.$el.html('').hide();
+    var _this = this;
+    if (this.state === 'ready') {
+      this.state = 'render';
+      setTimeout(function() {
+        return _this.state = 'ready';
+      }, 91);
+      if (window.user.get('signin') === true) {
+        this.$el.show();
+        return this.render();
+      } else {
+        return this.$el.empty().hide();
+      }
     }
   },
   render: function() {

@@ -98,8 +98,8 @@ module.exports = Template.extend
 
 		this.post.reset()
 
-	submit: (e) ->
 
+	submit: (e) ->
 
 		e.preventDefault()
 

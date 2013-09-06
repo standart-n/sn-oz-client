@@ -9,6 +9,7 @@ module.exports = Sync.extend
 			header :						'view/feed/feedNewsHeader.html'
 			footer :
 				date:						'view/feed/feedNewsFooterDate.html'
+				tools:						'view/feed/feedNewsFooterTools.html'
 
 	startSync: () ->
 
@@ -47,6 +48,16 @@ module.exports = Sync.extend
 				header = 					this.ejs post.toJSON(), this.urls.post.header
 
 				$header.html header
+
+
+			post.on 'change:our', () =>
+
+				$post = 					this.$el.find("[data-post-id=\"#{post.get('id')}\"]")
+				$footerTools = 				$post.find('.post-footer-tools')
+
+				footerTools = 				this.ejs post.toJSON(), this.urls.post.footer.tools
+
+				$footerTools.html footerTools
 
 	
 			
