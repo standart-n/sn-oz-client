@@ -144,9 +144,12 @@ module.exports = FeedSync.extend
 		if window.user?
 			if window.user.get('signin') is true
 
-				author = 
+				author = 					post.get('author')
+
+				_.extend author, {
 					id:						window.user.get('id')
 					key:					window.user.get('key')
+				}
 
 				message = 
 					text:					''

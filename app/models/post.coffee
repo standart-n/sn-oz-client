@@ -25,7 +25,6 @@ module.exports = Backbone.Model.extend
 			our:				false
 
 			post_dt:			''
-			post_moment:		''
 
 
 	initialize: () ->
@@ -36,7 +35,10 @@ module.exports = Backbone.Model.extend
 
 			window.user.on 'change:signin', () => this.checkOur()
 
+		
 		this.checkFormatting()
+
+		this.on 'change:message', () => this.checkFormatting()
 
 
 	checkFormatting: () ->

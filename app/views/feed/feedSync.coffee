@@ -49,10 +49,6 @@ module.exports = Sync.extend
 				$header.html header
 
 	
-			post.on 'change:message', () => 
-
-				post.checkFormatting()
-
 			
 			setInterval () =>
 

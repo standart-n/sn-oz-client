@@ -5909,8 +5909,7 @@ module.exports = Backbone.Model.extend({
         name: ''
       },
       our: false,
-      post_dt: '',
-      post_moment: ''
+      post_dt: ''
     };
   },
   initialize: function() {
@@ -5921,7 +5920,10 @@ module.exports = Backbone.Model.extend({
         return _this.checkOur();
       });
     }
-    return this.checkFormatting();
+    this.checkFormatting();
+    return this.on('change:message', function() {
+      return _this.checkFormatting();
+    });
   },
   checkFormatting: function() {
     if (window.markup != null) {
@@ -6827,10 +6829,11 @@ module.exports = FeedSync.extend({
     $button = $post.find('.post-tools-edit').find('.btn-success');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
-        author = {
+        author = post.get('author');
+        _.extend(author, {
           id: window.user.get('id'),
           key: window.user.get('key')
-        };
+        });
         message = {
           text: ''
         };
@@ -7011,9 +7014,6 @@ module.exports = Sync.extend({
         $header = $post.find('.media-heading');
         header = _this.ejs(post.toJSON(), _this.urls.post.header);
         return $header.html(header);
-      });
-      post.on('change:message', function() {
-        return post.checkFormatting();
       });
       return setInterval(function() {
         var $footerDate, $post, footerDate;
