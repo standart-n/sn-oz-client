@@ -7804,7 +7804,6 @@ Complete = require('Complete');
 module.exports = Template.extend({
   el: '#profile',
   url: 'view/profile/profile.html',
-  state: 'ready',
   initialize: function() {
     var _this = this;
     if (window.user != null) {
@@ -7823,18 +7822,13 @@ module.exports = Template.extend({
     }
   },
   show: function() {
-    var _this = this;
-    if (this.state === 'ready') {
-      this.state = 'render';
-      setTimeout(function() {
-        return _this.state = 'ready';
-      }, 91);
-      if (window.user.get('signin') === true) {
+    if (window.user.get('signin') === true) {
+      if (window.user.get('firstname') !== '' && window.user.get('lastname') !== '') {
         this.$el.show();
         return this.render();
-      } else {
-        return this.$el.empty().hide();
       }
+    } else {
+      return this.$el.empty().hide();
     }
   },
   render: function() {
@@ -8245,9 +8239,11 @@ module.exports = Links = (function() {
       return (_ref1 = $(this).find('li')) != null ? _ref1.each(function() {
         var _ref2, _ref3;
         if ((_ref2 = $(this).find('a')) != null ? (_ref3 = _ref2.attr('href')) != null ? _ref3.match(href) : void 0 : void 0) {
-          return $(this).addClass('active');
+          $(this).addClass('active');
+          return $(this).find('i').addClass('icon-white');
         } else {
-          return $(this).removeClass('active');
+          $(this).removeClass('active');
+          return $(this).find('i').removeClass('icon-white');
         }
       }) : void 0;
     }) : void 0;

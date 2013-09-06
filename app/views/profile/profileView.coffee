@@ -7,7 +7,6 @@ module.exports = Template.extend
 
 	el:										'#profile'
 	url:									'view/profile/profile.html'
-	state:									'ready'
 
 	initialize: () ->
 
@@ -27,19 +26,12 @@ module.exports = Template.extend
 
 	show: () ->
 
-		if this.state is 'ready'
-
-			this.state = 						'render'
-
-			setTimeout () =>
-				this.state = 					'ready'
-			, 91 								# 91 was born Alexey Nickolaev 
-
-			if window.user.get('signin') is true
+		if window.user.get('signin') is true
+			if window.user.get('firstname') isnt '' and window.user.get('lastname') isnt ''
 				this.$el.show()
 				this.render()
-			else
-				this.$el.empty().hide()
+		else
+			this.$el.empty().hide()
 
 	render: () ->
 		this.template()

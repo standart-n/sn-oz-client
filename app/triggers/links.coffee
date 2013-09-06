@@ -25,5 +25,7 @@ module.exports = class Links
 			$(this).find('li')?.each () ->
 				if $(this).find('a')?.attr('href')?.match(href)
 					$(this).addClass('active')
+					$(this).find('i').addClass('icon-white')
 				else
 					$(this).removeClass('active')
+					$(this).find('i').removeClass('icon-white')
