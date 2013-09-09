@@ -9,16 +9,22 @@
 			
 
 .feed-post-box
-	form.feed-post-form.form.form-horizontal			
+	form.feed-post-form.form
 		.row-fluid
-			textarea.feed-post-message.span12(wrap = "hard", rows = "3")
-			button.btn.btn-primary(type = "submit") Отправить
-			&nbsp;
-			a.btn.feed-post-file.hide(href = "#")
-				i.icon-file
-				Прикрепить файл
-				input.feed-post-upload(type = "file", name = "files[]")
+
+			.form-actions
+
+				textarea.feed-post-message.span12(wrap = "hard", rows = "3")
+
+				ul#feed-box-files
 
 
-ul#feed-box-files
+				button.btn.btn-primary(type = "submit") Отправить
+				&nbsp;
+				span.btn.feed-post-file.hide
+					i.icon-file
+					Прикрепить файл
+					input.feed-post-upload(type = "file", name = "files[]")
+
+
 

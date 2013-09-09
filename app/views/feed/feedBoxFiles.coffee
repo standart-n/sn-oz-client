@@ -1,14 +1,16 @@
 
-Template = 									require('Template')
+FeedBoxFilesSync = 							require('FeedBoxFilesSync')
 Files = 									require('Files')
 
-module.exports = Template.extend
+module.exports = FeedBoxFilesSync.extend
 
-	el: 									'#feed-box-files'
+	# el: 									'#feed-box-files'
 	url: 									'view/feed/feedBoxFiles.html'
 
 	initialize: () ->
 
 		this.files = 						new Files()
+
+		this.startSync()
 
 

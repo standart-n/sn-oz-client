@@ -17,9 +17,11 @@ module.exports = Template.extend
 
 	initialize: () ->
 
+		this.el = 							'#feed-box'
+
 		this.post = 						new Post()
 
-		this.fileList = 					new FeedBoxFiles()
+		this.boxFiles = 					new FeedBoxFiles()
 
 		this.render()
 
@@ -31,13 +33,14 @@ module.exports = Template.extend
 		this.$fileInput = 					this.$el.find('.feed-post-file')
 		this.$fileUpload = 					this.$el.find('.feed-post-upload')
 
-		this.fileUpload()
 		this.showFileInput()
 
-
+	
 	showFileInput: () ->
 		if window.user.get('signin') is true
 			this.$fileInput.show()
+			this.fileUpload()
+			this.boxFiles.setElement 		'#feed-box-files'
 		else 
 			this.$fileInput.hide()
 
@@ -54,7 +57,7 @@ module.exports = Template.extend
 
 
 	afterFileUpload: (data) ->
-		if data.result?
+		if data.result[0]?
 			if data.result[0].error?
 				switch data.result[0].error
 					when 'File is too big'
@@ -64,8 +67,7 @@ module.exports = Template.extend
 					else 
 						this.error(data.error.toString())
 			else 
-				console.log data.result
-				this.fileList.files.add
+				this.boxFiles.files.add
 					name:		data.result[0].name
 					original:	data.result[0].original
 					type:		data.result[0].type

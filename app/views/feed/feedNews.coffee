@@ -2,12 +2,11 @@
 require('moment')
 require('_')
 	
-FeedSync = 									require('FeedSync')
+FeedNewsSync = 								require('FeedNewsSync')
 Posts = 									require('Posts')
 Update = 									require('Update')
-# Template = 									require('Template')
 
-module.exports = FeedSync.extend
+module.exports = FeedNewsSync.extend
 
 	el: 									'#feed-news'
 	url: 									'view/feed/feedNews.html'
@@ -21,9 +20,9 @@ module.exports = FeedSync.extend
 		this.posts = 						new Posts()
 		this.update = 						new Update()
 
-		this.fetch()
-
 		this.startSync()
+
+		this.fetch()
 
 	render: () ->
 
@@ -267,15 +266,13 @@ module.exports = FeedSync.extend
 
 					success: () => 
 						if this.update.get('update') is true
-							this.fetch()
 							this.update.set 'update', false
+							this.fetch()
 
 
 	fetch: () ->
 
 		if this.state is 'ready'
-
-			console.log 'fetch'
 
 			this.posts.fetch
 				url: 						"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}"

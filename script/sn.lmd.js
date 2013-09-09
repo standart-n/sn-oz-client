@@ -5729,8 +5729,7 @@ module.exports = Backbone.Model.extend({
     };
   },
   initialize: function() {
-    this.set('sizeFormat', bytes(this.get('size')));
-    return alert(this.get('sizeFormat'));
+    return this.set('sizeFormat', bytes(this.get('size')));
   },
   reset: function() {
     return this.set(this.defaults());
@@ -6563,8 +6562,9 @@ module.exports = Template.extend({
     };
   },
   initialize: function() {
+    this.el = '#feed-box';
     this.post = new Post();
-    this.fileList = new FeedBoxFiles();
+    this.boxFiles = new FeedBoxFiles();
     this.render();
     this.$form = this.$el.find('form');
     this.$message = this.$el.find('textarea');
@@ -6573,12 +6573,13 @@ module.exports = Template.extend({
     this.$alertSuccess = this.$el.find('.alert-success');
     this.$fileInput = this.$el.find('.feed-post-file');
     this.$fileUpload = this.$el.find('.feed-post-upload');
-    this.fileUpload();
     return this.showFileInput();
   },
   showFileInput: function() {
     if (window.user.get('signin') === true) {
-      return this.$fileInput.show();
+      this.$fileInput.show();
+      this.fileUpload();
+      return this.boxFiles.setElement('#feed-box-files');
     } else {
       return this.$fileInput.hide();
     }
@@ -6597,7 +6598,7 @@ module.exports = Template.extend({
     });
   },
   afterFileUpload: function(data) {
-    if (data.result != null) {
+    if (data.result[0] != null) {
       if (data.result[0].error != null) {
         switch (data.result[0].error) {
           case 'File is too big':
@@ -6608,8 +6609,7 @@ module.exports = Template.extend({
             return this.error(data.error.toString());
         }
       } else {
-        console.log(data.result);
-        return this.fileList.files.add({
+        return this.boxFiles.files.add({
           name: data.result[0].name,
           original: data.result[0].original,
           type: data.result[0].type,
@@ -6702,35 +6702,61 @@ module.exports = Template.extend({
 
 }),
 "FeedBoxFiles": (function (require, exports, module) { /* wrapped by builder */
-var Files, Template;
+var FeedBoxFilesSync, Files;
 
-Template = require('Template');
+FeedBoxFilesSync = require('FeedBoxFilesSync');
 
 Files = require('Files');
 
-module.exports = Template.extend({
-  el: '#feed-box-files',
+module.exports = FeedBoxFilesSync.extend({
   url: 'view/feed/feedBoxFiles.html',
   initialize: function() {
-    return this.files = new Files();
+    this.files = new Files();
+    return this.startSync();
   }
 });
 
 }),
+"FeedBoxFilesSync": (function (require, exports, module) { /* wrapped by builder */
+var Sync;
+
+Sync = require('Sync');
+
+module.exports = Sync.extend({
+  startSync: function() {
+    if (this.files != null) {
+      this.adding();
+      return this.removing();
+    }
+  },
+  adding: function() {
+    var _this = this;
+    return this.files.on('add', function(file) {
+      if (_this.isFirst(_this.files, file)) {
+        return _this.prepend(file);
+      } else {
+        return _this.append(file);
+      }
+    });
+  },
+  removing: function() {}
+});
+
+}),
 "FeedNews": (function (require, exports, module) { /* wrapped by builder */
-var FeedSync, Posts, Update;
+var FeedNewsSync, Posts, Update;
 
 require('moment');
 
 require('_');
 
-FeedSync = require('FeedSync');
+FeedNewsSync = require('FeedNewsSync');
 
 Posts = require('Posts');
 
 Update = require('Update');
 
-module.exports = FeedSync.extend({
+module.exports = FeedNewsSync.extend({
   el: '#feed-news',
   url: 'view/feed/feedNews.html',
   initialize: function() {
@@ -6739,8 +6765,8 @@ module.exports = FeedSync.extend({
     this.state = 'ready';
     this.posts = new Posts();
     this.update = new Update();
-    this.fetch();
-    return this.startSync();
+    this.startSync();
+    return this.fetch();
   },
   render: function() {},
   data: function() {
@@ -6952,8 +6978,8 @@ module.exports = FeedSync.extend({
           },
           success: function() {
             if (_this.update.get('update') === true) {
-              _this.fetch();
-              return _this.update.set('update', false);
+              _this.update.set('update', false);
+              return _this.fetch();
             }
           }
         });
@@ -6963,7 +6989,6 @@ module.exports = FeedSync.extend({
   fetch: function() {
     var _this = this;
     if (this.state === 'ready') {
-      console.log('fetch');
       return this.posts.fetch({
         url: "" + (window.sn.get('server').host) + "/feed/post/" + (window.sn.get('region').name),
         timeout: 3000,
@@ -6986,7 +7011,7 @@ module.exports = FeedSync.extend({
 });
 
 }),
-"FeedSync": (function (require, exports, module) { /* wrapped by builder */
+"FeedNewsSync": (function (require, exports, module) { /* wrapped by builder */
 var Sync;
 
 Sync = require('Sync');

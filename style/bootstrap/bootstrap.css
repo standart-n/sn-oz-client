@@ -1839,8 +1839,8 @@ select:focus:required:invalid:focus {
 
 .form-actions {
   padding: 19px 20px 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 0;
+  margin-bottom: 10px;
   background-color: #f5f5f5;
   border-top: 1px solid #e5e5e5;
   *zoom: 1;
@@ -6890,13 +6890,11 @@ a.badge:hover {
   position: absolute;
   top: 0;
   right: 0;
+  left: 20px;
   margin: 0;
-  font-size: 23px;
   cursor: pointer;
   opacity: 0;
   filter: alpha(opacity=0);
-  transform: translate(-300px, 0) scale(4);
-  direction: ltr;
 }
 
 .pull-right {

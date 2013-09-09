@@ -21,7 +21,6 @@ module.exports = Backbone.Model.extend
 
 	initialize: () ->
 		this.set 'sizeFormat', bytes(this.get('size'))
-		alert this.get('sizeFormat')
 
 
 	reset: () ->
