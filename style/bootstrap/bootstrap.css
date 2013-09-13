@@ -6874,6 +6874,10 @@ a.badge:hover {
   margin-bottom: 0;
 }
 
+#feed .post-footer {
+  margin-top: 5px;
+}
+
 /*
  * jQuery File Upload UI Plugin CSS 8.8.1
  * https://github.com/blueimp/jQuery-File-Upload
