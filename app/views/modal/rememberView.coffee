@@ -94,7 +94,7 @@ module.exports = Modal.extend
 			region: 					window.sn.get('region')
 		,
 			url:						window.sn.get('server').host + '/remember'
-			timeout: 					3000
+			timeout: 					10000
 			dataType:					'jsonp'
 
 			beforeSend: () =>

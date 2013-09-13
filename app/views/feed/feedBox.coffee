@@ -50,14 +50,29 @@ module.exports = Template.extend
 		this.$fileUpload.fileupload
 			url: 		"#{window.sn.get('server').host}/upload/?id=#{window.user.get('id')}&key=#{window.user.get('key')}"
 			dataType: 	'json'
+			# done: (e, data) =>
+			# 	this.afterFileUpload(data)
 			done: (e, data) =>
 				this.afterFileUpload(data)
-			fail: () =>
+			fail: (e, data) =>
 				this.error('Произошла ошибка при загрузке файла')
+				# alert e
 
 
 	afterFileUpload: (data) ->
-		if data.result[0]?
+		# jalert(data)
+		# alert data
+		console.log data
+
+		jalert _.keys(data)
+		jalert data._response.result
+		# $('#feed').html JSON.stringify(data.toJSON())
+
+		# $('#body').html JSON.stringify(data)
+
+		# alert data.dataType
+
+		if data.result?[0]
 			if data.result[0].error?
 				switch data.result[0].error
 					when 'File is too big'
@@ -75,7 +90,7 @@ module.exports = Template.extend
 					url:		data.result[0].url
 
 		else
-			this.error('Ошибка при загрузке файла')
+			this.error('Ошибка при загрузке файла!')
 
 
 
@@ -109,10 +124,6 @@ module.exports = Template.extend
 
 			if window.user.get('signin') is true
 
-				author = 
-					id:									window.user.get('id')
-					key:								window.user.get('key')
-
 				message = 
 					text:								this.$message.val()
 
@@ -120,13 +131,15 @@ module.exports = Template.extend
 				if message.text isnt ''
 
 					this.post.save
-						author:							author
 						message:						message
 						region:							window.sn.get('region')
 					,
 						url: 							window.sn.get('server').host + '/feed/post/'
-						timeout: 						3000
+						timeout: 						10000
 						dataType: 						'jsonp'
+						# data:
+						# 	token:						window.user.get('token')
+
 
 						beforeSend: () =>
 							this.$button.button 		'loading'

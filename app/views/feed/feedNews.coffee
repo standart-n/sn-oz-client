@@ -78,26 +78,19 @@ module.exports = FeedNewsSync.extend
 		if window.user?
 			if window.user.get('signin') is true
 
-				author =  					post.get('author')
-
-				_.extend author, {
-					id:						window.user.get('id')
-					key:					window.user.get('key')
-				}
-
 				message = 
 					text:					$area.val()
-
 
 				if message.text isnt ''
 
 					post.save
-						author:					author
 						message:				message
 					,
-						url: 					"#{window.sn.get('server').host}/feed/post/edit"
-						timeout: 				3000
+						url: 					"#{window.sn.get('server').host}/feed/post"
+						timeout: 				10000
 						dataType: 				'jsonp'
+						# data:
+						# 	token:				window.user.get('token')
 
 						beforeSend: () =>
 							$button.button 		'loading'
@@ -132,7 +125,7 @@ module.exports = FeedNewsSync.extend
 
 
 	deletePost: (id) ->
-		this.state = 						'save'
+		this.state = 						'ready'
 		post = 								this.posts.get(id)
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
@@ -141,53 +134,50 @@ module.exports = FeedNewsSync.extend
 		if window.user?
 			if window.user.get('signin') is true
 
-				author = 					post.get('author')
+				# message = 
+				# 	text:					''
 
-				_.extend author, {
-					id:						window.user.get('id')
-					key:					window.user.get('key')
-				}
-
-				message = 
-					text:					''
-
-				post.save
-					author:					author
-				,
-					url: 					"#{window.sn.get('server').host}/feed/post/delete"
-					timeout: 				3000
+				# post.save
+				# 	null
+				# ,
+				post.destroy
+					url: 					"#{window.sn.get('server').host}/feed/post/#{id}"
+					timeout: 				10000
 					dataType: 				'jsonp'
+					# data:
+					# 	token:				window.user.get('token')
 
-					beforeSend: () =>
-						$button.button 		'loading'
+					# beforeSend: () =>
+					# 	$button.button 		'loading'
 
-					success: (s) => 
-						this.afterDeletePost(id)
+					# success: (s) => 
+					# 	this.afterDeletePost(id)
 
-					error: () =>
-						$button.button		'reset'
-						this.error 			id, '<b>Ошибка!</b> Сервер не отвечает!'
+					# error: () =>
+					# 	$button.button		'reset'
+					# 	this.error 			id, '<b>Ошибка!</b> Сервер не отвечает!'
 
 
 
 	afterDeletePost: (id) ->
 		post = 								this.posts.get(id)
 
-		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$button = 							$post.find('.post-tools-edit').find('.btn-success')
+		# $post = 							this.$el.find("[data-post-id=\"#{id}\"]")
+		# $button = 							$post.find('.post-tools-edit').find('.btn-success')
 
-		setTimeout () =>
-			$button.button					'reset'
-		, 400
+		# setTimeout () =>
+		# 	$button.button					'reset'
+		# , 400
 
-		if post.get('success') is true
-			this.posts.remove(post)
+		# if post.get('success') is true
+		# 	this.posts.remove(post)
 		
-		else
-			this.error id, post.get('notice')
+		# else
+		# 	this.error id, post.get('notice')
 
-		post.unset('success')
-		post.unset('notice')
+		# post.unset('success')
+		# post.unset('notice')
+
 
 	blurPost: (id) ->
 		this.state = 						'ready'
@@ -243,7 +233,7 @@ module.exports = FeedNewsSync.extend
 		# 	tooltips:	on
 
 	down: () ->
-		this.limit = 						this.posts.length + this.step
+		this.limit = 						if this.posts.length >= 10 then this.posts.length + this.step else this.posts.length
 		this.fetch()
 
 
@@ -258,7 +248,7 @@ module.exports = FeedNewsSync.extend
 				this.update.fetch
 
 					url: 					"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}/#{post.get('seria')}"
-					timeout: 	3000
+					timeout: 	10000
 					dataType: 	'jsonp'
 
 					data:
@@ -276,11 +266,12 @@ module.exports = FeedNewsSync.extend
 
 			this.posts.fetch
 				url: 						"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}"
-				timeout: 					3000
+				timeout: 					10000
 				dataType: 					'jsonp'
 
 				data:
 					limit:					this.limit
+
 
 				beforeSend: () ->
 					this.state = 			'loading'

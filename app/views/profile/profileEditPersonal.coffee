@@ -49,8 +49,10 @@ module.exports = Template.extend
 				lastname_new:				this.$lastname.val()
 			,
 				url: 						window.sn.get('server').host + '/edit/personal/'
-				timeout: 					3000
+				timeout: 					10000
 				dataType: 					'jsonp'
+				# data:
+				# 	token:					window.user.get('token')
 
 				beforeSend: () =>
 					this.$button.button 	'loading'

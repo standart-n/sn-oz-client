@@ -38,7 +38,9 @@ module.exports = Backbone.Model.extend
 
 	checkFormatting: () ->
 
-		this.set 'formatting', markup.render(this.get('message').text) 		if window.markup?
+		if this.get('message')?.text?
+
+			this.set 'formatting', markup.render(this.get('message').text) 		if window.markup?
 
 
 	checkOur: () ->

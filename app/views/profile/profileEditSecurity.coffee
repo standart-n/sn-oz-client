@@ -60,29 +60,36 @@ module.exports = Template.extend
 	submit: (e) ->
 		e.preventDefault()
 
-		if window.user?
+		if this.$password_new.val() isnt this.$password_repeat.val()
 
-			this.password.set 
-				id:							window.user.get('id')
-				key: 						window.user.get('key')
+			this.error('<b>Ошибка!</b> Пароли не совпадают!')
 
-			this.password.save
-				password_new:				this.$password_new.val()
-				password_repeat:			this.$password_repeat.val()
-			,
-				url: 						window.sn.get('server').host + '/edit/password/'
-				timeout: 					3000
-				dataType: 'jsonp'
+		else
 
-				beforeSend: () =>
-					this.$button.button 	'loading'
+			if window.user?
 
-				success: (s) => 
-					this.checking()
+				this.password.set 
+					id:							window.user.get('id')
 
-				error: () =>
-					this.$button.button		'reset'
-					this.error 				'<b>Ошибка!</b> Сервер не отвечает!'
+				this.password.save
+					password_new:				this.$password_new.val()
+				,
+					url: 						window.sn.get('server').host + '/edit/password/'
+					timeout: 					10000
+					dataType: 'jsonp'
+					# data:
+					# 	token:					window.user.get('token')
+
+
+					beforeSend: () =>
+						this.$button.button 	'loading'
+
+					success: (s) => 
+						this.checking()
+
+					error: () =>
+						this.$button.button		'reset'
+						this.error 				'<b>Ошибка!</b> Сервер не отвечает!'
 
 
 	error: (notice = '') ->

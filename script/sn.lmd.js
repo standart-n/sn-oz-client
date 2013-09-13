@@ -5920,8 +5920,11 @@ module.exports = Backbone.Model.extend({
     });
   },
   checkFormatting: function() {
-    if (window.markup != null) {
-      return this.set('formatting', markup.render(this.get('message').text));
+    var _ref;
+    if (((_ref = this.get('message')) != null ? _ref.text : void 0) != null) {
+      if (window.markup != null) {
+        return this.set('formatting', markup.render(this.get('message').text));
+      }
     }
   },
   checkOur: function() {
@@ -6592,13 +6595,17 @@ module.exports = Template.extend({
       done: function(e, data) {
         return _this.afterFileUpload(data);
       },
-      fail: function() {
+      fail: function(e, data) {
         return _this.error('Произошла ошибка при загрузке файла');
       }
     });
   },
   afterFileUpload: function(data) {
-    if (data.result[0] != null) {
+    var _ref;
+    console.log(data);
+    jalert(_.keys(data));
+    jalert(data._response.result);
+    if ((_ref = data.result) != null ? _ref[0] : void 0) {
       if (data.result[0].error != null) {
         switch (data.result[0].error) {
           case 'File is too big':
@@ -6618,7 +6625,7 @@ module.exports = Template.extend({
         });
       }
     } else {
-      return this.error('Ошибка при загрузке файла');
+      return this.error('Ошибка при загрузке файла!');
     }
   },
   render: function() {
@@ -6642,26 +6649,21 @@ module.exports = Template.extend({
     return this.post.reset();
   },
   submit: function(e) {
-    var author, message,
+    var message,
       _this = this;
     e.preventDefault();
     if (window.user != null) {
       if (window.user.get('signin') === true) {
-        author = {
-          id: window.user.get('id'),
-          key: window.user.get('key')
-        };
         message = {
           text: this.$message.val()
         };
         if (message.text !== '') {
           return this.post.save({
-            author: author,
             message: message,
             region: window.sn.get('region')
           }, {
             url: window.sn.get('server').host + '/feed/post/',
-            timeout: 3000,
+            timeout: 10000,
             dataType: 'jsonp',
             beforeSend: function() {
               return _this.$button.button('loading');
@@ -6803,7 +6805,7 @@ module.exports = FeedNewsSync.extend({
     return $footer.hide();
   },
   savePost: function(id) {
-    var $area, $button, $post, author, message, post,
+    var $area, $button, $post, message, post,
       _this = this;
     this.state = 'save';
     post = this.posts.get(id);
@@ -6812,21 +6814,15 @@ module.exports = FeedNewsSync.extend({
     $button = $post.find('.post-tools-edit').find('.btn-success');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
-        author = post.get('author');
-        _.extend(author, {
-          id: window.user.get('id'),
-          key: window.user.get('key')
-        });
         message = {
           text: $area.val()
         };
         if (message.text !== '') {
           return post.save({
-            author: author,
             message: message
           }, {
-            url: "" + (window.sn.get('server').host) + "/feed/post/edit",
-            timeout: 3000,
+            url: "" + (window.sn.get('server').host) + "/feed/post",
+            timeout: 10000,
             dataType: 'jsonp',
             beforeSend: function() {
               return $button.button('loading');
@@ -6862,58 +6858,24 @@ module.exports = FeedNewsSync.extend({
     return post.unset('notice');
   },
   deletePost: function(id) {
-    var $button, $post, author, message, post,
-      _this = this;
-    this.state = 'save';
+    var $button, $post, post;
+    this.state = 'ready';
     post = this.posts.get(id);
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $button = $post.find('.post-tools-edit').find('.btn-success');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
-        author = post.get('author');
-        _.extend(author, {
-          id: window.user.get('id'),
-          key: window.user.get('key')
-        });
-        message = {
-          text: ''
-        };
-        return post.save({
-          author: author
-        }, {
-          url: "" + (window.sn.get('server').host) + "/feed/post/delete",
-          timeout: 3000,
-          dataType: 'jsonp',
-          beforeSend: function() {
-            return $button.button('loading');
-          },
-          success: function(s) {
-            return _this.afterDeletePost(id);
-          },
-          error: function() {
-            $button.button('reset');
-            return _this.error(id, '<b>Ошибка!</b> Сервер не отвечает!');
-          }
+        return post.destroy({
+          url: "" + (window.sn.get('server').host) + "/feed/post/" + id,
+          timeout: 10000,
+          dataType: 'jsonp'
         });
       }
     }
   },
   afterDeletePost: function(id) {
-    var $button, $post, post,
-      _this = this;
-    post = this.posts.get(id);
-    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    $button = $post.find('.post-tools-edit').find('.btn-success');
-    setTimeout(function() {
-      return $button.button('reset');
-    }, 400);
-    if (post.get('success') === true) {
-      this.posts.remove(post);
-    } else {
-      this.error(id, post.get('notice'));
-    }
-    post.unset('success');
-    return post.unset('notice');
+    var post;
+    return post = this.posts.get(id);
   },
   blurPost: function(id) {
     var $alertError, $alertSuccess, $area, $edit, $footer, $post, $text, $toolsEdit, $toolsRemove, post, text;
@@ -6960,7 +6922,7 @@ module.exports = FeedNewsSync.extend({
     return this.state = 'ready';
   },
   down: function() {
-    this.limit = this.posts.length + this.step;
+    this.limit = this.posts.length >= 10 ? this.posts.length + this.step : this.posts.length;
     return this.fetch();
   },
   updating: function() {
@@ -6971,7 +6933,7 @@ module.exports = FeedNewsSync.extend({
       if (post.get('seria') !== '') {
         return this.update.fetch({
           url: "" + (window.sn.get('server').host) + "/feed/post/" + (window.sn.get('region').name) + "/" + (post.get('seria')),
-          timeout: 3000,
+          timeout: 10000,
           dataType: 'jsonp',
           data: {
             limit: this.limit
@@ -6991,7 +6953,7 @@ module.exports = FeedNewsSync.extend({
     if (this.state === 'ready') {
       return this.posts.fetch({
         url: "" + (window.sn.get('server').host) + "/feed/post/" + (window.sn.get('region').name),
-        timeout: 3000,
+        timeout: 10000,
         dataType: 'jsonp',
         data: {
           limit: this.limit
@@ -7330,7 +7292,7 @@ module.exports = Modal.extend({
       region: window.sn.get('region')
     }, {
       url: window.sn.get('server').host + '/registration',
-      timeout: 3000,
+      timeout: 10000,
       dataType: 'jsonp',
       beforeSend: function() {
         return _this.$button.button('loading');
@@ -7440,7 +7402,7 @@ module.exports = Modal.extend({
       region: window.sn.get('region')
     }, {
       url: window.sn.get('server').host + '/remember',
-      timeout: 3000,
+      timeout: 10000,
       dataType: 'jsonp',
       beforeSend: function() {
         return _this.$button.button('loading');
@@ -7516,7 +7478,7 @@ module.exports = Modal.extend({
     }, {
       url: window.sn.get('server').host + '/signin',
       dataType: 'jsonp',
-      timeout: 3000,
+      timeout: 10000,
       beforeSend: function() {
         return _this.$button.button('loading');
       },
@@ -7637,7 +7599,7 @@ module.exports = Template.extend({
         lastname_new: this.$lastname.val()
       }, {
         url: window.sn.get('server').host + '/edit/personal/',
-        timeout: 3000,
+        timeout: 10000,
         dataType: 'jsonp',
         beforeSend: function() {
           return _this.$button.button('loading');
@@ -7757,29 +7719,31 @@ module.exports = Template.extend({
   submit: function(e) {
     var _this = this;
     e.preventDefault();
-    if (window.user != null) {
-      this.password.set({
-        id: window.user.get('id'),
-        key: window.user.get('key')
-      });
-      return this.password.save({
-        password_new: this.$password_new.val(),
-        password_repeat: this.$password_repeat.val()
-      }, {
-        url: window.sn.get('server').host + '/edit/password/',
-        timeout: 3000,
-        dataType: 'jsonp',
-        beforeSend: function() {
-          return _this.$button.button('loading');
-        },
-        success: function(s) {
-          return _this.checking();
-        },
-        error: function() {
-          _this.$button.button('reset');
-          return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
-        }
-      });
+    if (this.$password_new.val() !== this.$password_repeat.val()) {
+      return this.error('<b>Ошибка!</b> Пароли не совпадают!');
+    } else {
+      if (window.user != null) {
+        this.password.set({
+          id: window.user.get('id')
+        });
+        return this.password.save({
+          password_new: this.$password_new.val()
+        }, {
+          url: window.sn.get('server').host + '/edit/password/',
+          timeout: 10000,
+          dataType: 'jsonp',
+          beforeSend: function() {
+            return _this.$button.button('loading');
+          },
+          success: function(s) {
+            return _this.checking();
+          },
+          error: function() {
+            _this.$button.button('reset');
+            return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
+          }
+        });
+      }
     }
   },
   error: function(notice) {
