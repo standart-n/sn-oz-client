@@ -6579,13 +6579,7 @@ module.exports = Template.extend({
     return this.showFileInput();
   },
   showFileInput: function() {
-    if (window.user.get('signin') === true) {
-      this.$fileInput.show();
-      this.fileUpload();
-      return this.boxFiles.setElement('#feed-box-files');
-    } else {
-      return this.$fileInput.hide();
-    }
+    return this.$fileInput.hide();
   },
   fileUpload: function() {
     var _this = this;
@@ -6602,9 +6596,6 @@ module.exports = Template.extend({
   },
   afterFileUpload: function(data) {
     var _ref;
-    console.log(data);
-    jalert(_.keys(data));
-    jalert(data._response.result);
     if ((_ref = data.result) != null ? _ref[0] : void 0) {
       if (data.result[0].error != null) {
         switch (data.result[0].error) {
@@ -6663,7 +6654,7 @@ module.exports = Template.extend({
             region: window.sn.get('region')
           }, {
             url: window.sn.get('server').host + '/feed/post/',
-            timeout: 10000,
+            timeout: 20000,
             dataType: 'jsonp',
             beforeSend: function() {
               return _this.$button.button('loading');
@@ -6822,7 +6813,7 @@ module.exports = FeedNewsSync.extend({
             message: message
           }, {
             url: "" + (window.sn.get('server').host) + "/feed/post",
-            timeout: 10000,
+            timeout: 20000,
             dataType: 'jsonp',
             beforeSend: function() {
               return $button.button('loading');
@@ -6867,7 +6858,7 @@ module.exports = FeedNewsSync.extend({
       if (window.user.get('signin') === true) {
         return post.destroy({
           url: "" + (window.sn.get('server').host) + "/feed/post/" + id,
-          timeout: 10000,
+          timeout: 20000,
           dataType: 'jsonp'
         });
       }
@@ -6953,7 +6944,7 @@ module.exports = FeedNewsSync.extend({
     if (this.state === 'ready') {
       return this.posts.fetch({
         url: "" + (window.sn.get('server').host) + "/feed/post/" + (window.sn.get('region').name),
-        timeout: 10000,
+        timeout: 20000,
         dataType: 'jsonp',
         data: {
           limit: this.limit
@@ -7292,7 +7283,7 @@ module.exports = Modal.extend({
       region: window.sn.get('region')
     }, {
       url: window.sn.get('server').host + '/registration',
-      timeout: 10000,
+      timeout: 20000,
       dataType: 'jsonp',
       beforeSend: function() {
         return _this.$button.button('loading');
@@ -7402,7 +7393,7 @@ module.exports = Modal.extend({
       region: window.sn.get('region')
     }, {
       url: window.sn.get('server').host + '/remember',
-      timeout: 10000,
+      timeout: 20000,
       dataType: 'jsonp',
       beforeSend: function() {
         return _this.$button.button('loading');
@@ -7478,7 +7469,7 @@ module.exports = Modal.extend({
     }, {
       url: window.sn.get('server').host + '/signin',
       dataType: 'jsonp',
-      timeout: 10000,
+      timeout: 20000,
       beforeSend: function() {
         return _this.$button.button('loading');
       },
@@ -7599,7 +7590,7 @@ module.exports = Template.extend({
         lastname_new: this.$lastname.val()
       }, {
         url: window.sn.get('server').host + '/edit/personal/',
-        timeout: 10000,
+        timeout: 20000,
         dataType: 'jsonp',
         beforeSend: function() {
           return _this.$button.button('loading');
@@ -7730,7 +7721,7 @@ module.exports = Template.extend({
           password_new: this.$password_new.val()
         }, {
           url: window.sn.get('server').host + '/edit/password/',
-          timeout: 10000,
+          timeout: 20000,
           dataType: 'jsonp',
           beforeSend: function() {
             return _this.$button.button('loading');

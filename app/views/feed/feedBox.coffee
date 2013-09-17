@@ -37,12 +37,13 @@ module.exports = Template.extend
 
 	
 	showFileInput: () ->
-		if window.user.get('signin') is true
-			this.$fileInput.show()
-			this.fileUpload()
-			this.boxFiles.setElement 		'#feed-box-files'
-		else 
-			this.$fileInput.hide()
+		# if window.user.get('signin') is true
+		# 	this.$fileInput.show()
+		# 	this.fileUpload()
+		# 	this.boxFiles.setElement 		'#feed-box-files'
+		# else 
+		# 	this.$fileInput.hide()
+		this.$fileInput.hide()
 
 
 	fileUpload: () ->
@@ -62,10 +63,8 @@ module.exports = Template.extend
 	afterFileUpload: (data) ->
 		# jalert(data)
 		# alert data
-		console.log data
+		# console.log data
 
-		jalert _.keys(data)
-		jalert data._response.result
 		# $('#feed').html JSON.stringify(data.toJSON())
 
 		# $('#body').html JSON.stringify(data)
@@ -135,7 +134,7 @@ module.exports = Template.extend
 						region:							window.sn.get('region')
 					,
 						url: 							window.sn.get('server').host + '/feed/post/'
-						timeout: 						10000
+						timeout: 						20000
 						dataType: 						'jsonp'
 						# data:
 						# 	token:						window.user.get('token')

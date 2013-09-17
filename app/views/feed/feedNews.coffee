@@ -87,7 +87,7 @@ module.exports = FeedNewsSync.extend
 						message:				message
 					,
 						url: 					"#{window.sn.get('server').host}/feed/post"
-						timeout: 				10000
+						timeout: 				20000
 						dataType: 				'jsonp'
 						# data:
 						# 	token:				window.user.get('token')
@@ -142,7 +142,7 @@ module.exports = FeedNewsSync.extend
 				# ,
 				post.destroy
 					url: 					"#{window.sn.get('server').host}/feed/post/#{id}"
-					timeout: 				10000
+					timeout: 				20000
 					dataType: 				'jsonp'
 					# data:
 					# 	token:				window.user.get('token')
@@ -266,7 +266,7 @@ module.exports = FeedNewsSync.extend
 
 			this.posts.fetch
 				url: 						"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}"
-				timeout: 					10000
+				timeout: 					20000
 				dataType: 					'jsonp'
 
 				data:
