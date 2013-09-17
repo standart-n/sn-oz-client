@@ -75,7 +75,7 @@ module.exports = Template.extend
 					password_new:				this.$password_new.val()
 				,
 					url: 						window.sn.get('server').host + '/edit/password/'
-					timeout: 					20000
+					timeout: 					10000
 					dataType: 'jsonp'
 					# data:
 					# 	token:					window.user.get('token')

@@ -81,29 +81,42 @@ module.exports = FeedNewsSync.extend
 				message = 
 					text:					$area.val()
 
+				post.set
+					message:				message
+				,
+					silent:					true
+
+				
 				if message.text isnt ''
 
-					post.save
-						message:				message
-					,
-						url: 					"#{window.sn.get('server').host}/feed/post"
-						timeout: 				20000
-						dataType: 				'jsonp'
-						# data:
-						# 	token:				window.user.get('token')
+					req = 								_.pick(post.toJSON(),'id','author', 'message','region')
+
+					$.ajax
+						url: 							window.sn.get('server').host + '/feed/post/'
+						timeout: 						10000
+						type:							'PUT'
+						dataType:						'iframe'
+						formData: [
+							{
+								name:					'model'
+								value:					JSON.stringify(req)
+							}
+						]
 
 						beforeSend: () =>
-							$button.button 		'loading'
+							$button.button 				'loading'
 
-						success: (s) => 
-							this.afterSavePost(id)
+						complete: (s) =>
+							this.afterSavePost(id, s)
 
 						error: () =>
-							$button.button		'reset'
-							this.error 			id, '<b>Ошибка!</b> Сервер не отвечает!'
+							$button.button				'reset'
+							this.error 					id, '<b>Ошибка!</b> Сервер не отвечает!'
 
 
-	afterSavePost: (id) ->
+
+
+	afterSavePost: (id, s) ->
 		post = 								this.posts.get(id)
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
@@ -113,12 +126,12 @@ module.exports = FeedNewsSync.extend
 			$button.button					'reset'
 		, 400
 
-		if post.get('success') is true
+		if s.statusText? and s.statusText is 'success'
 			this.state = 					'ready'			
 			this.blurPost(id)
-		
+			this.fetch()
 		else
-			this.error id, post.get('notice')
+			this.error id
 
 		post.unset('success')
 		post.unset('notice')
@@ -134,49 +147,16 @@ module.exports = FeedNewsSync.extend
 		if window.user?
 			if window.user.get('signin') is true
 
-				# message = 
-				# 	text:					''
-
-				# post.save
-				# 	null
-				# ,
 				post.destroy
 					url: 					"#{window.sn.get('server').host}/feed/post/#{id}"
 					timeout: 				20000
 					dataType: 				'jsonp'
-					# data:
-					# 	token:				window.user.get('token')
-
-					# beforeSend: () =>
-					# 	$button.button 		'loading'
-
-					# success: (s) => 
-					# 	this.afterDeletePost(id)
-
-					# error: () =>
-					# 	$button.button		'reset'
-					# 	this.error 			id, '<b>Ошибка!</b> Сервер не отвечает!'
 
 
 
 	afterDeletePost: (id) ->
 		post = 								this.posts.get(id)
 
-		# $post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		# $button = 							$post.find('.post-tools-edit').find('.btn-success')
-
-		# setTimeout () =>
-		# 	$button.button					'reset'
-		# , 400
-
-		# if post.get('success') is true
-		# 	this.posts.remove(post)
-		
-		# else
-		# 	this.error id, post.get('notice')
-
-		# post.unset('success')
-		# post.unset('notice')
 
 
 	blurPost: (id) ->
@@ -204,7 +184,7 @@ module.exports = FeedNewsSync.extend
 		$alertError.hide()
 		$alertSuccess.hide()
 
-	error: (id, notice = '') ->
+	error: (id, notice = 'Произошла ошибка!') ->
 		mark = moment().unix()
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")

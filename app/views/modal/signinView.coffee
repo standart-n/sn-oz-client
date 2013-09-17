@@ -61,7 +61,7 @@ module.exports = Modal.extend
 		,
 			url:						window.sn.get('server').host + '/signin'
 			dataType:					'jsonp'
-			timeout:					20000
+			timeout:					10000
 
 			beforeSend: () =>
 				this.$button.button 	'loading'

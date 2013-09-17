@@ -99,17 +99,17 @@ module.exports = Template.extend
 			icons:			on
 
 
-	checking: () ->
+	checking: (s) ->
 
 		setTimeout () =>
 			this.$button.button					'reset'
 		, 400
 
-		if !this.post.get('success')
-			this.error()
-		else
+		if s.statusText? and s.statusText is 'success'
 			this.$el.trigger					'send'
 			this.$message.val					''
+		else
+			this.error()
 
 		this.post.reset()
 
@@ -125,29 +125,41 @@ module.exports = Template.extend
 				message = 
 					text:								this.$message.val()
 
+				this.post.set
+					message:							message
+					region:								window.sn.get('region')
+
 
 				if message.text isnt ''
 
-					this.post.save
-						message:						message
-						region:							window.sn.get('region')
-					,
-						url: 							window.sn.get('server').host + '/feed/post/'
-						timeout: 						20000
-						dataType: 						'jsonp'
-						# data:
-						# 	token:						window.user.get('token')
+					req = 								_.pick(this.post.toJSON(),'message','region')
 
+					$.ajax
+						url: 							window.sn.get('server').host + '/feed/post/'
+						timeout: 						10000
+						type:							'POST'
+						dataType:						'iframe'
+						formData: [
+							{
+								name:					'model'
+								value:					JSON.stringify(req)
+							}
+						]
 
 						beforeSend: () =>
 							this.$button.button 		'loading'
 
-						success: (s) => 
-							this.checking()
+						complete: (s) =>
+							this.checking s
 
 						error: () =>
 							this.$button.button			'reset'
 							this.error 					'<b>Ошибка!</b> Сервер не отвечает!'
+
+				else
+
+					this.error 						'<b>Ошибка!</b> Сообщение не должно быть пустым!'
+
 
 			else
 
@@ -163,7 +175,7 @@ module.exports = Template.extend
 		this.$alertError.hide()
 
 
-	error: (notice = '') ->
+	error: (notice = 'Произошла ошибка!') ->
 
 		this.$alertError.show().html(notice)
 
