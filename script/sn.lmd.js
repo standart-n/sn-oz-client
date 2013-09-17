@@ -6573,7 +6573,6 @@ module.exports = Template.extend({
     this.$message = this.$el.find('textarea');
     this.$button = this.$el.find('button');
     this.$alertError = this.$el.find('.alert-error');
-    this.$alertSuccess = this.$el.find('.alert-success');
     this.$fileInput = this.$el.find('.feed-post-file');
     this.$fileUpload = this.$el.find('.feed-post-upload');
     return this.showFileInput();
