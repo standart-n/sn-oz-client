@@ -95,7 +95,7 @@ module.exports = FeedNewsSync.extend
 						url: 							window.sn.get('server').host + '/feed/post/'
 						timeout: 						10000
 						type:							'PUT'
-						dataType:						'iframe'
+						dataType:						'iframe json'
 						formData: [
 							{
 								name:					'model'
@@ -126,7 +126,7 @@ module.exports = FeedNewsSync.extend
 			$button.button					'reset'
 		, 400
 
-		if s.statusText? and s.statusText is 'success'
+		if s?.statusText? and s.statusText is 'success'
 			this.state = 					'ready'			
 			this.blurPost(id)
 			this.fetch()

@@ -49,11 +49,13 @@
 		"<%= file[0].toUpperCase() %><%= file.slice(1) %>": "script/{models,views,controllers,triggers}/**/*.js" 
 	},
 	"main": 						"app",
+	"cache":						false,
+	"ie":							true,
 	"shortcuts": 					true,
-	"log": 							true,
 	"pack":		 					false,
 	"lazy":							false,
 	"optimize":		 				false,
+	"log": 							true,
 	"warn": 						true
 
 }

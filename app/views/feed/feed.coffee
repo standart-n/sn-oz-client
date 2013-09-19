@@ -3,6 +3,9 @@ require('jQueryWidget')
 require('IframeTransport')
 require('FileUpload')
 
+# require('io')
+
+# io = 										require('socket.io')
 Template = 									require('Template')
 FeedBox = 									require('FeedBox')
 FeedNews = 									require('FeedNews')
@@ -20,6 +23,17 @@ module.exports = Template.extend
 
 
 		this.aboutView = 					new AboutView()
+
+		socket = 							window.io.connect window.sn.get('server').host + '/'
+
+		# jalert _.keys window.io.sockets['http://dev.st-n.ru:80']
+
+		socket.emit 'why', store: 'get out'
+
+		socket.on 'news', (data) ->
+			jalert data
+
+
 
 		if window.user?
 			window.user.on 'change:signin', () =>

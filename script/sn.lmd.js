@@ -6443,9 +6443,17 @@ module.exports = Template.extend({
   el: '#feed',
   url: 'view/feed/feed.html',
   initialize: function() {
-    var _this = this;
+    var socket,
+      _this = this;
     _this = this;
     this.aboutView = new AboutView();
+    socket = window.io.connect(window.sn.get('server').host + '/');
+    socket.emit('why', {
+      store: 'get out'
+    });
+    socket.on('news', function(data) {
+      return jalert(data);
+    });
     if (window.user != null) {
       window.user.on('change:signin', function() {
         if (window.user.get('signin') === true) {
@@ -6829,7 +6837,7 @@ module.exports = FeedNewsSync.extend({
             url: window.sn.get('server').host + '/feed/post/',
             timeout: 10000,
             type: 'PUT',
-            dataType: 'iframe',
+            dataType: 'iframe json',
             formData: [
               {
                 name: 'model',
@@ -6860,7 +6868,7 @@ module.exports = FeedNewsSync.extend({
     setTimeout(function() {
       return $button.button('reset');
     }, 400);
-    if ((s.statusText != null) && s.statusText === 'success') {
+    if (((s != null ? s.statusText : void 0) != null) && s.statusText === 'success') {
       this.state = 'ready';
       this.blurPost(id);
       this.fetch();
