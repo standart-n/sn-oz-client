@@ -22,6 +22,7 @@ bootstrap:
 
 test:
 	@./node_modules/.bin/grunt test
+	@node ./server.js
 	
 
 finish:

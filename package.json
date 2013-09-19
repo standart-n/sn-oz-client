@@ -13,7 +13,9 @@
     "grunt-contrib-jade": "~0.7.0",
     "grunt-recess": "~0.3.3",
     "grunt-lmd": "~0.1.12",
-    "bower": "~1.2.5"
+    "bower": "~1.2.5",
+    "colors": "~0.6.2",
+    "express": "~3.4.0"
   },
   "scripts": {
     "build": "./node_modules/.bin/grunt",

@@ -70,16 +70,23 @@ module.exports = (grunt) ->
 						ext:			'.js'
 					}
 				]
+			
+			server:
+				options:
+					bare: on
+				src: 	'server/server.coffee'
+				dest: 	'./server.js'
+
 			test:
 				options:
 					bare: on
-				src: 'test/*'
-				dest: 'script/test.js'
+				src: 	'test/*'
+				dest: 	'script/test.js'
 
 		concat:
 			bootstrap:
-				src: 'bootstrap/*.js'
-				dest: 'script/bootstrap.js'
+				src: 	'bootstrap/*.js'
+				dest: 	'script/bootstrap.js'
 
 
 		uglify:
@@ -112,5 +119,5 @@ module.exports = (grunt) ->
 	
 	grunt.registerTask 'default', ['recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout', 'lmd']
 	grunt.registerTask 'all', ['bootstrap','default']
-	grunt.registerTask 'test', ['jade:test', 'coffee:test']
+	grunt.registerTask 'test', ['jade:test', 'coffee:server', 'coffee:test']
 	grunt.registerTask 'bootstrap', ['concat:bootstrap']
