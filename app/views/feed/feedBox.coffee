@@ -106,7 +106,7 @@ module.exports = Template.extend
 		, 400
 
 		if s.statusText? and s.statusText is 'success'
-			this.$el.trigger					'send'
+			# this.$el.trigger					'send'
 			this.$message.val					''
 		else
 			this.error()

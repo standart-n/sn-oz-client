@@ -12,6 +12,10 @@
 			"path": 				"bower_components/jquery/jquery.min.js",
 			"exports": 				"jQuery"
 		},
+		"SockJS": {
+			"path":					"bower_components/sockjs-client/sockjs.min.js",
+			"exports":				"SockJS"
+		},
 		"jquery": 					"@$",
 		"json2": 					"bower_components/json2/json2.js",
 		"ejs": 						"lib/ejs/ejs.min.js",

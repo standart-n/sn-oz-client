@@ -15,6 +15,7 @@ Profile = 								require('Profile')
 News = 									require('News')
 Settings = 								require('Settings')
 Markup = 								require('Markup')
+Sockets = 								require('Sockets')
 
 $ () ->
 
@@ -54,9 +55,12 @@ $ () ->
 
 	window.user = 						new User()
 
+	window.sockets = 					new Sockets()
+
 	window.app = 						new App()
 	window.authorization = 				new Authorization()
 	window.profile = 					new Profile()
 	window.news = 						new News()
+
 
 	Backbone.history.start()

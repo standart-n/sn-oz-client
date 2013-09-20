@@ -43,5 +43,5 @@ app.get('/', function(req, res) {
 });
 
 app.listen(port, function() {
-  return console.log("server work at ".grey + "http://localhost: ".grey + port.toString().blue);
+  return console.log("server work at ".grey + ("http://localhost:" + (port.toString())).blue);
 });

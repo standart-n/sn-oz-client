@@ -28,7 +28,6 @@ app.configure ->
 
 	app.use express.static __dirname + '/'
 
-	# app.use express.directory __dirname + '/'
 
 
 app.get '/', (req, res) ->
@@ -41,8 +40,6 @@ app.get '/', (req, res) ->
 		res.send data
 
 
-# server = http.createServer(app)
-
 app.listen port, () ->
-	console.log "server work at ".grey + "http://localhost: ".grey + port.toString().blue
+	console.log "server work at ".grey + "http://localhost:#{port.toString()}".blue
 
