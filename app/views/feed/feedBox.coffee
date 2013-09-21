@@ -19,6 +19,8 @@ module.exports = Template.extend
 
 		this.el = 							'#feed-box'
 
+		this.state = 						'ready'
+
 		this.post = 						new Post()
 
 		this.boxFiles = 					new FeedBoxFiles()
@@ -99,71 +101,111 @@ module.exports = Template.extend
 			icons:			on
 
 
-	checking: (s) ->
+	waitSocketResponse: () ->
 
-		setTimeout () =>
-			this.$button.button					'reset'
-		, 400
+		if window.sockets?
+			window.sockets.once 'feed.post', (data) =>
+				if this.state is 'posting'
+					if data.success? and data.success is true
 
-		if s.statusText? and s.statusText is 'success'
-			# this.$el.trigger					'send'
-			this.$message.val					''
-		else
-			this.error()
+						this.state = 			'ready'
+						this.$button.button		'reset'
+						this.$message.val 	 	''
+						this.$el.trigger 		'send'
 
-		this.post.reset()
+					else 
+						if data.notice?
+							this.error(data.notice)
+						else
+							this.error()
+
+
 
 
 	submit: (e) ->
+
+		isUserCanSendMessage = true
 
 		e.preventDefault()
 
 		if window.user?
 
-			if window.user.get('signin') is true
-
-				message = 
-					text:								this.$message.val()
-
-				this.post.set
-					message:							message
-					region:								window.sn.get('region')
-
-
-				if message.text isnt ''
-
-					req = 								_.pick(this.post.toJSON(),'message','region')
-
-					$.ajax
-						url: 							window.sn.get('server').host + '/feed/post/'
-						timeout: 						10000
-						type:							'POST'
-						dataType:						'iframe'
-						formData: [
-							{
-								name:					'model'
-								value:					JSON.stringify(req)
-							}
-						]
-
-						beforeSend: () =>
-							this.$button.button 		'loading'
-
-						complete: (s) =>
-							this.checking s
-
-						error: () =>
-							this.$button.button			'reset'
-							this.error 					'<b>Ошибка!</b> Сервер не отвечает!'
-
-				else
-
-					this.error 						'<b>Ошибка!</b> Сообщение не должно быть пустым!'
-
-
-			else
-
+			if window.user.get('signin') isnt true
 				this.$el.trigger 'not_signin'
+				isUserCanSendMessage = false
+
+
+			message = 
+				text:								this.$message.val()
+
+			this.post.set
+				message:							message
+				region:								window.sn.get('region')
+
+
+
+			if message.text.length < 3
+				this.error('<b>Ошибка!</b> Сообщение не должно быть пустым!')
+				isUserCanSendMessage = false
+
+			if isUserCanSendMessage is true
+
+				req = 								_.pick(this.post.toJSON(),'message','region')
+
+				this.state = 						'posting'
+
+				this.waitSocketResponse()
+
+				$.ajax
+					url: 							window.sn.get('server').host + '/feed/post/'
+					timeout: 						10000
+					type:							'POST'
+					dataType:						'iframe'
+					formData: [
+						{
+							name:					'model'
+							value:					JSON.stringify(req)
+						},
+						{
+							name:					'token'
+							value:					if window.user?.get('token') then window.user.get('token') else ''
+						}
+					]
+
+					beforeSend: () =>
+						this.$button.button 		'loading'
+
+					complete: (s) =>
+
+						if s.statusText? and s.statusText is 'success'
+
+							if window.isSocketReady
+
+								setTimeout () =>
+									if this.state isnt 'ready'
+										this.$button.button		'reset'
+										this.error 				'<b>Ошибка!</b> Превышен лимит ожидания!'
+										this.$el.trigger 		'send'
+								, 3000
+
+							else 
+									
+								this.$button.button		'reset'
+								this.$el.trigger 		'send'
+								this.$message.val 		''
+
+
+							this.post.reset()
+
+						else
+							this.error()
+
+						# this.checking s
+
+					error: () =>
+						this.$button.button			'reset'
+						this.error 					'<b>Ошибка!</b> Сервер не отвечает!'
+
 
 
 	keyup: (e) ->

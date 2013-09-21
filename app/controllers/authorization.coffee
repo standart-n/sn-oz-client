@@ -52,8 +52,8 @@ module.exports = Backbone.Router.extend
 	fetch: (id, key) ->
 		if id? and key?
 			window.user.fetch
-				url: window.sn.get('server').host + '/signin/' + id + '/' + key
-				dataType: 'jsonp'
+				url: 			window.sn.get('server').host + '/signin/' + id + '/' + key
+				dataType: 		'jsonp'
 
 
 	eventSignin: (model) ->

@@ -19,6 +19,8 @@ Sockets = 								require('Sockets')
 
 $ () ->
 
+	window.isSocketReady = false
+
 	if !window.console?
 		window.console = 
 			info: () ->
@@ -28,6 +30,7 @@ $ () ->
 
 	window.jalert = (s) ->
 		alert JSON.stringify(s)
+
 
 	$.fn.isNone = () -> 
 		$(this).css('display') is 'none'
@@ -55,11 +58,12 @@ $ () ->
 
 	window.user = 						new User()
 
-	window.sockets = 					new Sockets()
-
 	window.app = 						new App()
 	window.authorization = 				new Authorization()
 	window.profile = 					new Profile()
+
+	window.sockets = 					new Sockets()
+
 	window.news = 						new News()
 
 

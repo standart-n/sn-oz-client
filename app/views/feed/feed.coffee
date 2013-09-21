@@ -94,10 +94,13 @@ module.exports = Template.extend
 			window.sockets.on 'feed.update', () =>
 				this.news.fetch() if this.news?
 
-		# setInterval () =>
-		# 	if this.news?
-		# 		this.news.updating()
-		# , 60000
+
+		setInterval () =>
+
+			if this.news? and !window.isSocketReady
+				this.news.updating()
+
+		, 60000
 
 
 	render: (el = '#feed') ->

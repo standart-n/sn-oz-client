@@ -340,6 +340,7 @@ Markup = require('Markup');
 Sockets = require('Sockets');
 
 $(function() {
+  window.isSocketReady = false;
   if (window.console == null) {
     window.console = {
       info: function() {},
@@ -377,10 +378,10 @@ $(function() {
     }
   });
   window.user = new User();
-  window.sockets = new Sockets();
   window.app = new App();
   window.authorization = new Authorization();
   window.profile = new Profile();
+  window.sockets = new Sockets();
   window.news = new News();
   return Backbone.history.start();
 });
@@ -6542,12 +6543,17 @@ module.exports = Template.extend({
       }
     });
     if (window.sockets != null) {
-      return window.sockets.on('feed.update', function() {
+      window.sockets.on('feed.update', function() {
         if (_this.news != null) {
           return _this.news.fetch();
         }
       });
     }
+    return setInterval(function() {
+      if ((_this.news != null) && !window.isSocketReady) {
+        return _this.news.updating();
+      }
+    }, 60000);
   },
   render: function(el) {
     var _this = this;
@@ -6604,6 +6610,7 @@ module.exports = Template.extend({
   },
   initialize: function() {
     this.el = '#feed-box';
+    this.state = 'ready';
     this.post = new Post();
     this.boxFiles = new FeedBoxFiles();
     this.render();
@@ -6663,60 +6670,94 @@ module.exports = Template.extend({
       icons: true
     });
   },
-  checking: function(s) {
+  waitSocketResponse: function() {
     var _this = this;
-    setTimeout(function() {
-      return _this.$button.button('reset');
-    }, 400);
-    if ((s.statusText != null) && s.statusText === 'success') {
-      this.$message.val('');
-    } else {
-      this.error();
+    if (window.sockets != null) {
+      return window.sockets.once('feed.post', function(data) {
+        if (_this.state === 'posting') {
+          if ((data.success != null) && data.success === true) {
+            _this.state = 'ready';
+            _this.$button.button('reset');
+            _this.$message.val('');
+            return _this.$el.trigger('send');
+          } else {
+            if (data.notice != null) {
+              return _this.error(data.notice);
+            } else {
+              return _this.error();
+            }
+          }
+        }
+      });
     }
-    return this.post.reset();
   },
   submit: function(e) {
-    var message, req,
+    var isUserCanSendMessage, message, req, _ref,
       _this = this;
+    isUserCanSendMessage = true;
     e.preventDefault();
     if (window.user != null) {
-      if (window.user.get('signin') === true) {
-        message = {
-          text: this.$message.val()
-        };
-        this.post.set({
-          message: message,
-          region: window.sn.get('region')
-        });
-        if (message.text !== '') {
-          req = _.pick(this.post.toJSON(), 'message', 'region');
-          return $.ajax({
-            url: window.sn.get('server').host + '/feed/post/',
-            timeout: 10000,
-            type: 'POST',
-            dataType: 'iframe',
-            formData: [
-              {
-                name: 'model',
-                value: JSON.stringify(req)
-              }
-            ],
-            beforeSend: function() {
-              return _this.$button.button('loading');
-            },
-            complete: function(s) {
-              return _this.checking(s);
-            },
-            error: function() {
-              _this.$button.button('reset');
-              return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
+      if (window.user.get('signin') !== true) {
+        this.$el.trigger('not_signin');
+        isUserCanSendMessage = false;
+      }
+      message = {
+        text: this.$message.val()
+      };
+      this.post.set({
+        message: message,
+        region: window.sn.get('region')
+      });
+      if (message.text.length < 3) {
+        this.error('<b>Ошибка!</b> Сообщение не должно быть пустым!');
+        isUserCanSendMessage = false;
+      }
+      if (isUserCanSendMessage === true) {
+        req = _.pick(this.post.toJSON(), 'message', 'region');
+        this.state = 'posting';
+        this.waitSocketResponse();
+        return $.ajax({
+          url: window.sn.get('server').host + '/feed/post/',
+          timeout: 10000,
+          type: 'POST',
+          dataType: 'iframe',
+          formData: [
+            {
+              name: 'model',
+              value: JSON.stringify(req)
+            }, {
+              name: 'token',
+              value: ((_ref = window.user) != null ? _ref.get('token') : void 0) ? window.user.get('token') : ''
             }
-          });
-        } else {
-          return this.error('<b>Ошибка!</b> Сообщение не должно быть пустым!');
-        }
-      } else {
-        return this.$el.trigger('not_signin');
+          ],
+          beforeSend: function() {
+            return _this.$button.button('loading');
+          },
+          complete: function(s) {
+            if ((s.statusText != null) && s.statusText === 'success') {
+              if (window.isSocketReady) {
+                setTimeout(function() {
+                  if (_this.state !== 'ready') {
+                    _this.$button.button('reset');
+                    _this.error('<b>Ошибка!</b> Превышен лимит ожидания!');
+                    return _this.$el.trigger('send');
+                  }
+                }, 3000);
+              } else {
+                _this.$button.button('reset');
+                _this.$el.trigger('send');
+                _this.$message.val('');
+              }
+              return _this.post.reset();
+            } else {
+              return _this.error();
+            }
+          },
+          error: function() {
+            _this.$button.button('reset');
+            return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
+          }
+        });
       }
     }
   },
@@ -6908,18 +6949,22 @@ module.exports = FeedNewsSync.extend({
     return post.unset('notice');
   },
   deletePost: function(id) {
-    var $button, $post, post;
+    var $button, $post, post,
+      _this = this;
     this.state = 'ready';
     post = this.posts.get(id);
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $button = $post.find('.post-tools-edit').find('.btn-success');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
-        return post.destroy({
+        post.destroy({
           url: "" + (window.sn.get('server').host) + "/feed/post/" + id,
           timeout: 20000,
           dataType: 'jsonp'
         });
+        return setTimeout(function() {
+          return _this.fetch();
+        }, 100);
       }
     }
   },
@@ -6972,7 +7017,7 @@ module.exports = FeedNewsSync.extend({
     return this.state = 'ready';
   },
   down: function() {
-    this.limit = this.posts.length >= 10 ? this.posts.length + this.step : this.posts.length;
+    this.limit = this.posts.length >= 10 ? this.posts.length + this.step : 10;
     return this.fetch();
   },
   updating: function() {
@@ -8224,6 +8269,7 @@ module.exports = Sockets = (function() {
     var _this = this;
     this.socket = new SockJS(window.sn.get('server').host + '/sockets');
     this.socket.onopen = function() {
+      window.isSocketReady = true;
       return _this.authOnServer();
     };
     this.socket.onmessage = function(s) {
@@ -8236,19 +8282,19 @@ module.exports = Sockets = (function() {
       }
     };
     return this.socket.onclose = function() {
-      return setTimeout(function() {
-        return _this.initSocket();
-      }, 10000);
+      return window.isSocketReady = false;
     };
   };
 
   Sockets.prototype.authOnServer = function() {
-    return this.socket.send(JSON.stringify({
-      message: 'connect',
-      user_id: window.user != null ? window.user.get('id') : null,
-      token: window.user != null ? window.user.get('token') : null,
-      region: window.sn != null ? window.sn.get('region') : null
-    }));
+    if (isSocketReady) {
+      return this.socket.send(JSON.stringify({
+        message: 'connect',
+        user_id: window.user != null ? window.user.get('id') : null,
+        token: window.user != null ? window.user.get('token') : null,
+        region: window.sn != null ? window.sn.get('region') : null
+      }));
+    }
   };
 
   return Sockets;

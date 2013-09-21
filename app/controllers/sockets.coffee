@@ -14,13 +14,14 @@ module.exports = class Sockets
 		if window.user?
 			window.user.on 'change:signin', () =>
 				this.authOnServer()
-
+	
 
 	initSocket: () ->
 
 		this.socket = 						new SockJS(window.sn.get('server').host + '/sockets')
 
 		this.socket.onopen = () =>
+			window.isSocketReady = true
 			this.authOnServer()
 			
 
@@ -32,17 +33,20 @@ module.exports = class Sockets
 
 		
 		this.socket.onclose = () =>
-			setTimeout () =>
-				this.initSocket()
-			, 10000
+			window.isSocketReady = false
+			# setTimeout () =>
+			# 	this.initSocket()
+			# , 10000
+
 
 
 	authOnServer: () ->
-		this.socket.send JSON.stringify
-			message:					'connect'
-			user_id:					if window.user? 	then window.user.get('id') 		else null
-			token:						if window.user? 	then window.user.get('token') 	else null
-			region:						if window.sn? 		then window.sn.get('region') 	else null
+		if isSocketReady
+			this.socket.send JSON.stringify
+				message:					'connect'
+				user_id:					if window.user? 	then window.user.get('id') 		else null
+				token:						if window.user? 	then window.user.get('token') 	else null
+				region:						if window.sn? 		then window.sn.get('region') 	else null
 
 
 

@@ -152,6 +152,10 @@ module.exports = FeedNewsSync.extend
 					timeout: 				20000
 					dataType: 				'jsonp'
 
+				setTimeout () =>
+					this.fetch()
+				, 100
+
 
 
 	afterDeletePost: (id) ->
@@ -213,7 +217,7 @@ module.exports = FeedNewsSync.extend
 		# 	tooltips:	on
 
 	down: () ->
-		this.limit = 						if this.posts.length >= 10 then this.posts.length + this.step else this.posts.length
+		this.limit = if this.posts.length >= 10 then this.posts.length + this.step else 10
 		this.fetch()
 
 
@@ -227,7 +231,7 @@ module.exports = FeedNewsSync.extend
 
 				this.update.fetch
 
-					url: 					"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}/#{post.get('seria')}"
+					url: 		"#{window.sn.get('server').host}/feed/post/#{window.sn.get('region').name}/#{post.get('seria')}"
 					timeout: 	10000
 					dataType: 	'jsonp'
 
