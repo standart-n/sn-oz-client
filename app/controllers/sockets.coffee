@@ -18,7 +18,13 @@ module.exports = class Sockets
 
 	initSocket: () ->
 
-		this.socket = 						new SockJS(window.sn.get('server').host + '/sockets')
+		this.socket = new SockJS(window.sn.get('server').host + '/sockets')
+
+		# this.socket = new SockJS window.sn.get('server').host + '/sockets', null,
+		# 	debug: on
+		# 	protocols_whitelist: [
+		# 		'jsonp-polling'
+		# 	]
 
 		this.socket.onopen = () =>
 			window.isSocketReady = true

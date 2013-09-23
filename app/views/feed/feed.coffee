@@ -1,7 +1,9 @@
 
-require('jQueryWidget')
-require('IframeTransport')
-require('FileUpload')
+# require('IframeTransport')
+# require('jQueryWidget')
+# require('FileUpload')
+
+require('iframeTransport')
 
 Template = 									require('Template')
 FeedBox = 									require('FeedBox')

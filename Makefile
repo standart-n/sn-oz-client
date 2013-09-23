@@ -7,7 +7,6 @@ install:
 	@mkdir -p ./view/
 	@npm install
 	@cp ./install/conf/* ./conf/
-	@./node_modules/.bin/bower install --force --allow-root --production
 	@./node_modules/.bin/grunt all
 
 

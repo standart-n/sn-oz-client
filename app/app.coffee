@@ -1,9 +1,10 @@
 
 # Старт приложения
 
+window.JSON = 							require('json2')
+
 require('jquery')
 require('bootstrap')
-require('json2')
 require('moment')
 require('moment-ru')
 

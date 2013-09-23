@@ -49,16 +49,16 @@ module.exports = Template.extend
 
 	fileUpload: () ->
 
-		this.$fileUpload.fileupload
-			url: 		"#{window.sn.get('server').host}/upload/?id=#{window.user.get('id')}&key=#{window.user.get('key')}"
-			dataType: 	'json'
-			# done: (e, data) =>
-			# 	this.afterFileUpload(data)
-			done: (e, data) =>
-				this.afterFileUpload(data)
-			fail: (e, data) =>
-				this.error('Произошла ошибка при загрузке файла')
-				# alert e
+		# this.$fileUpload.fileupload
+		# 	url: 		"#{window.sn.get('server').host}/upload/?id=#{window.user.get('id')}&key=#{window.user.get('key')}"
+		# 	dataType: 	'json'
+		# 	# done: (e, data) =>
+		# 	# 	this.afterFileUpload(data)
+		# 	done: (e, data) =>
+		# 		this.afterFileUpload(data)
+		# 	fail: (e, data) =>
+		# 		this.error('Произошла ошибка при загрузке файла')
+		# 		# alert e
 
 
 	afterFileUpload: (data) ->
@@ -151,6 +151,8 @@ module.exports = Template.extend
 			if isUserCanSendMessage is true
 
 				req = 								_.pick(this.post.toJSON(),'message','region')
+
+				jalert req
 
 				this.state = 						'posting'
 

@@ -167,12 +167,12 @@ module.exports = FeedNewsSync.extend
 		this.state = 						'ready'
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
+		$area = 							$post.find('textarea')
 		$text = 							$post.find('.post-text')
 		$edit = 							$post.find('.post-edit')
 		$footer = 							$post.find('.post-footer')
 		$toolsEdit = 						$post.find('.post-tools-edit')
 		$toolsRemove = 						$post.find('.post-tools-remove')
-		$area = 							$post.find('textarea')
 		$alertError = 						$post.find('.alert-error')
 		$alertSuccess = 					$post.find('.alert-success')
 
@@ -209,12 +209,6 @@ module.exports = FeedNewsSync.extend
 	checking: () ->
 		this.state = 						'ready'
 
-		# this.render()
-
-		# new Complete
-		# 	el: 		this.el
-		# 	icons:		on
-		# 	tooltips:	on
 
 	down: () ->
 		this.limit = if this.posts.length >= 10 then this.posts.length + this.step else 10

@@ -85,8 +85,8 @@ module.exports = (grunt) ->
 
 		concat:
 			bootstrap:
-				src: 	'bootstrap/*.js'
-				dest: 	'script/bootstrap.js'
+				src: 	'bootstrap/bootstrap-*.js'
+				dest: 	'bootstrap/bootstrap.js'
 
 
 		uglify:
@@ -103,8 +103,11 @@ module.exports = (grunt) ->
 					'script/test.min.js': '<%= coffee.test.dest %>'
 
 			bootstrap:
+				options:
+					compress: true					
+					report: 'min'
 				files: 
-					'script/bootstrap.min.js': '<%= concat.bootstrap.dest %>'
+					'lib/bootstrap/bootstrap.min.js': '<%= concat.bootstrap.dest %>'
 
 		lmd:
 			build_name: 'sn'
@@ -120,4 +123,4 @@ module.exports = (grunt) ->
 	grunt.registerTask 'default', ['recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout', 'lmd']
 	grunt.registerTask 'all', ['bootstrap','default']
 	grunt.registerTask 'test', ['jade:test', 'coffee:server', 'coffee:test']
-	grunt.registerTask 'bootstrap', ['concat:bootstrap']
+	grunt.registerTask 'bootstrap', ['concat:bootstrap', 'uglify:bootstrap']

@@ -4,47 +4,38 @@
 	"output": "script/sn.lmd.js",
 	"modules": {
 		"_": {
-			"path": 				"bower_components/underscore/underscore-min.js",
+			"path": 				"lib/underscore/underscore.min.js",
 			"exports": 				"_"
 		},
 		"underscore": 				"@_",
 		"$": {
-			"path": 				"bower_components/jquery/jquery.min.js",
+			"path": 				"lib/jquery/jquery.min.js",
 			"exports": 				"jQuery"
 		},
-		"SockJS": {
-			"path":					"bower_components/sockjs-client/sockjs.min.js",
-			"exports":				"SockJS"
-		},
 		"jquery": 					"@$",
-		"json2": 					"bower_components/json2/json2.js",
+		"json2": {
+			"path": 				"lib/json2/json2.min.js",
+			"exports": 				"JSON"
+		},
 		"ejs": 						"lib/ejs/ejs.min.js",
-		"moment": 					"bower_components/moment/min/moment.min.js",
-		"moment-ru": 				"bower_components/moment/min/lang/ru.js",
-		"bootstrap": 				"script/bootstrap.js",
+		"moment": 					"lib/moment/moment.min.js",
+		"moment-ru": 				"lib/moment/lang/ru.js",
+		"bootstrap": 				"lib/bootstrap/bootstrap.min.js",
 		"Backbone": {
-			"path": 				"bower_components/backbone/backbone-min.js",
+			"path": 				"lib/backbone/backbone.min.js",
 			"require": {
 				"underscore": 		"_",
 				"jQuery": 			"$"
 			},
 			"exports": "Backbone"
 		},
-		"IframeTransport":			"bower_components/jquery-file-upload/js/jquery.iframe-transport.js",
-		"jQueryWidget": {
-			"path":					"bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js",
-			"require": {
-				"jQuery":			"$"
-			}
-		},		
-		"FileUpload": {
-			"path":					"bower_components/jquery-file-upload/js/jquery.fileupload.js",
-			"require": {
-				"jQuery":			"$"
-			}
+		"SockJS": {
+			"path":					"lib/sockjs/sockjs.min.js",
+			"exports":				"SockJS"
 		},
+		"iframeTransport":			"lib/iframe-transport/iframe-transport.min.js",
 		"cookie": {
-			"path":					"bower_components/jquery.cookie/jquery.cookie.js",
+			"path":					"lib/cookie/cookie.min.js",
 			"require": {
 				"jQuery": 			"$"        		
 			}
