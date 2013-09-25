@@ -12,6 +12,9 @@ module.exports = Backbone.Model.extend
 			email:				''
 			company:			''
 
+			sessid:				''
+			token:				''
+
 			region:
 				caption:		''
 				name:			''

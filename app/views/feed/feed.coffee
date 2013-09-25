@@ -10,12 +10,10 @@ FeedBox = 									require('FeedBox')
 FeedNews = 									require('FeedNews')
 AboutView = 								require('AboutView')
 
-
 module.exports = Template.extend
 
 	el: 									'#feed'
 	url: 									'view/feed/feed.html'
-
 
 	initialize: () ->
 

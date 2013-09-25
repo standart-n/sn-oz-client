@@ -44,27 +44,35 @@ module.exports = Template.extend
 
 		if window.user? and window.sn?
 
-			window.user.save
+			window.user.set
 				firstname_new:				this.$firstname.val()
 				lastname_new:				this.$lastname.val()
-			,
+
+			req = JSON.stringify _.pick(window.user.toJSON(),'id','firstname_new', 'lastname_new')
+
+			window.user.save null,
 				url: 						window.sn.get('server').host + '/edit/personal/'
 				timeout: 					10000
 				dataType: 					'jsonp'
-				# data:
-				# 	token:					window.user.get('token')
+				data:
+					model:					req
+					sessid:					window.user.get('sessid')
+					token:					window.user.get('token')
+					_method:				'PUT'
 
 				beforeSend: () =>
 					this.$button.button 	'loading'
 
 				success: (s) => 
-					this.checking()
+					this.checking(s)
 
 				error: () =>
 					this.$button.button		'reset'
 					this.error 				'<b>Ошибка!</b> Сервер не отвечает!'
 
 	checking: () ->
+
+		# jalert s
 
 		setTimeout () =>
 			this.$button.button				'reset'
@@ -83,7 +91,8 @@ module.exports = Template.extend
 			window.user.unset 'firstname_new'
 			window.user.unset 'lastname_new'
 
-	error: (notice = '') ->
+	
+	error: (notice = 'Произошла ошибка!') ->
 
 		mark = moment().unix()
 

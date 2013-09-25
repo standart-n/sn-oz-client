@@ -70,16 +70,19 @@ module.exports = Template.extend
 
 				this.password.set 
 					id:							window.user.get('id')
-
-				this.password.save
 					password_new:				this.$password_new.val()
-				,
+
+				req = JSON.stringify this.password
+
+				this.password.save null,
 					url: 						window.sn.get('server').host + '/edit/password/'
 					timeout: 					10000
 					dataType: 'jsonp'
-					# data:
-					# 	token:					window.user.get('token')
-
+					data:
+						model:					req
+						sessid:					window.user.get('sessid')
+						token:					window.user.get('token')
+						_method:				'PUT'
 
 					beforeSend: () =>
 						this.$button.button 	'loading'

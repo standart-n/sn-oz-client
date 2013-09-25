@@ -56,6 +56,7 @@ module.exports = Backbone.Router.extend
 				dataType: 		'jsonp'
 
 
+
 	eventSignin: (model) ->
 
 		if model.get('success') is true
@@ -63,6 +64,8 @@ module.exports = Backbone.Router.extend
 
 
 	checkCookie: () ->
+		console.log 'user_id', $.cookie('user_id', domain: window.sn.get('server').host).toString()
+
 		if $.cookie('id')? and $.cookie('key')?
 			this.fetch($.cookie('id'), $.cookie('key'))
 

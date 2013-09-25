@@ -67,6 +67,7 @@ module.exports = FeedNewsSync.extend
 		$footer.hide()
 
 
+
 	savePost: (id) ->
 		this.state = 						'save'
 		post = 								this.posts.get(id)
@@ -91,15 +92,25 @@ module.exports = FeedNewsSync.extend
 
 					req = 								_.pick(post.toJSON(),'id','author', 'message','region')
 
+					this.waitSocketResponse(id)
+
 					$.ajax
 						url: 							window.sn.get('server').host + '/feed/post/'
 						timeout: 						10000
 						type:							'PUT'
-						dataType:						'iframe json'
+						dataType:						'iframe'
 						formData: [
 							{
 								name:					'model'
 								value:					JSON.stringify(req)
+							},
+							{
+								name:					'token'
+								value:					if window.user?.get('token') then window.user.get('token') else ''
+							},
+							{
+								name:					'sessid'
+								value:					if window.user?.get('sessid') then window.user.get('sessid') else ''
 							}
 						]
 
@@ -107,34 +118,63 @@ module.exports = FeedNewsSync.extend
 							$button.button 				'loading'
 
 						complete: (s) =>
-							this.afterSavePost(id, s)
+
+							post = 						this.posts.get(id)
+
+							$post = 					this.$el.find("[data-post-id=\"#{id}\"]")
+							$button = 					$post.find('.post-tools-edit').find('.btn-success')
+
+							setTimeout () =>
+								$button.button('reset')
+							, 400							
+
+							if s.statusText? and s.statusText is 'success'
+
+								if window.isSocketReady
+
+									setTimeout () =>
+										if this.state isnt 'ready'
+											this.error(id, '<b>Ошибка!</b> Превышен лимит ожидания!')
+									, 3000
+
+								else
+
+									this.state = 		'ready'			
+									this.blurPost(id)
+									this.fetch()
+
+							else
+								this.error(id)
+
+
 
 						error: () =>
 							$button.button				'reset'
 							this.error 					id, '<b>Ошибка!</b> Сервер не отвечает!'
 
 
+	waitSocketResponse: (id) ->
 
-
-	afterSavePost: (id, s) ->
 		post = 								this.posts.get(id)
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
 		$button = 							$post.find('.post-tools-edit').find('.btn-success')
 
-		setTimeout () =>
-			$button.button					'reset'
-		, 400
+		if window.sockets?
+			window.sockets.once 'feed.edit', (data) =>
+				if this.state isnt 'ready'
+					if data.success? and data.success is true
 
-		if s?.statusText? and s.statusText is 'success'
-			this.state = 					'ready'			
-			this.blurPost(id)
-			this.fetch()
-		else
-			this.error id
+						this.state = 			'ready'
+						this.blurPost(id)
+						this.fetch()
 
-		post.unset('success')
-		post.unset('notice')
+					else 
+						if data.notice?
+							this.error(id, data.notice)
+						else
+							this.error(id)
+
 
 
 	deletePost: (id) ->
@@ -147,19 +187,29 @@ module.exports = FeedNewsSync.extend
 		if window.user?
 			if window.user.get('signin') is true
 
-				post.destroy
-					url: 					"#{window.sn.get('server').host}/feed/post/#{id}"
-					timeout: 				20000
-					dataType: 				'jsonp'
+				$.ajax
+					url: 							"#{window.sn.get('server').host}/feed/post/#{id}"
+					timeout: 						10000
+					type:							'DELETE'
+					dataType:						'iframe'
+					formData: [
+						{
+							name:					'token'
+							value:					if window.user?.get('token') then window.user.get('token') else ''
+						},
+						{
+							name:					'sessid'
+							value:					if window.user?.get('sessid') then window.user.get('sessid') else ''
+						}
+					]
 
-				setTimeout () =>
-					this.fetch()
-				, 100
+					complete: (s) =>
 
+						if s.statusText? and s.statusText is 'success'
 
-
-	afterDeletePost: (id) ->
-		post = 								this.posts.get(id)
+							setTimeout () =>
+								this.fetch()
+							, 100
 
 
 

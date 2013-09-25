@@ -1114,6 +1114,8 @@ module.exports = Backbone.Model.extend({
       lastname: '',
       email: '',
       company: '',
+      sessid: '',
+      token: '',
       region: {
         caption: '',
         name: ''
@@ -1548,7 +1550,7 @@ module.exports = Template.extend({
     }
   },
   submit: function(e) {
-    var isUserCanSendMessage, message, req, _ref,
+    var isUserCanSendMessage, message, req, _ref, _ref1,
       _this = this;
     isUserCanSendMessage = true;
     e.preventDefault();
@@ -1570,7 +1572,6 @@ module.exports = Template.extend({
       }
       if (isUserCanSendMessage === true) {
         req = _.pick(this.post.toJSON(), 'message', 'region');
-        jalert(req);
         this.state = 'posting';
         this.waitSocketResponse();
         return $.ajax({
@@ -1585,30 +1586,33 @@ module.exports = Template.extend({
             }, {
               name: 'token',
               value: ((_ref = window.user) != null ? _ref.get('token') : void 0) ? window.user.get('token') : ''
+            }, {
+              name: 'sessid',
+              value: ((_ref1 = window.user) != null ? _ref1.get('sessid') : void 0) ? window.user.get('sessid') : ''
             }
           ],
           beforeSend: function() {
             return _this.$button.button('loading');
           },
           complete: function(s) {
+            setTimeout(function() {
+              return _this.$button.button('reset');
+            }, 400);
             if ((s.statusText != null) && s.statusText === 'success') {
               if (window.isSocketReady) {
                 setTimeout(function() {
                   if (_this.state !== 'ready') {
-                    _this.$button.button('reset');
-                    _this.error('<b>Ошибка!</b> Превышен лимит ожидания!');
-                    return _this.$el.trigger('send');
+                    return _this.error('<b>Ошибка!</b> Превышен лимит ожидания!');
                   }
                 }, 3000);
               } else {
-                _this.$button.button('reset');
                 _this.$el.trigger('send');
                 _this.$message.val('');
               }
-              return _this.post.reset();
             } else {
-              return _this.error();
+              _this.error();
             }
+            return _this.post.reset();
           },
           error: function() {
             _this.$button.button('reset');
@@ -1741,7 +1745,7 @@ module.exports = FeedNewsSync.extend({
     return $footer.hide();
   },
   savePost: function(id) {
-    var $area, $button, $post, message, post, req,
+    var $area, $button, $post, message, post, req, _ref, _ref1,
       _this = this;
     this.state = 'save';
     post = this.posts.get(id);
@@ -1760,22 +1764,49 @@ module.exports = FeedNewsSync.extend({
         });
         if (message.text !== '') {
           req = _.pick(post.toJSON(), 'id', 'author', 'message', 'region');
+          this.waitSocketResponse(id);
           return $.ajax({
             url: window.sn.get('server').host + '/feed/post/',
             timeout: 10000,
             type: 'PUT',
-            dataType: 'iframe json',
+            dataType: 'iframe',
             formData: [
               {
                 name: 'model',
                 value: JSON.stringify(req)
+              }, {
+                name: 'token',
+                value: ((_ref = window.user) != null ? _ref.get('token') : void 0) ? window.user.get('token') : ''
+              }, {
+                name: 'sessid',
+                value: ((_ref1 = window.user) != null ? _ref1.get('sessid') : void 0) ? window.user.get('sessid') : ''
               }
             ],
             beforeSend: function() {
               return $button.button('loading');
             },
             complete: function(s) {
-              return _this.afterSavePost(id, s);
+              post = _this.posts.get(id);
+              $post = _this.$el.find("[data-post-id=\"" + id + "\"]");
+              $button = $post.find('.post-tools-edit').find('.btn-success');
+              setTimeout(function() {
+                return $button.button('reset');
+              }, 400);
+              if ((s.statusText != null) && s.statusText === 'success') {
+                if (window.isSocketReady) {
+                  return setTimeout(function() {
+                    if (_this.state !== 'ready') {
+                      return _this.error(id, '<b>Ошибка!</b> Превышен лимит ожидания!');
+                    }
+                  }, 3000);
+                } else {
+                  _this.state = 'ready';
+                  _this.blurPost(id);
+                  return _this.fetch();
+                }
+              } else {
+                return _this.error(id);
+              }
             },
             error: function() {
               $button.button('reset');
@@ -1786,27 +1817,32 @@ module.exports = FeedNewsSync.extend({
       }
     }
   },
-  afterSavePost: function(id, s) {
+  waitSocketResponse: function(id) {
     var $button, $post, post,
       _this = this;
     post = this.posts.get(id);
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $button = $post.find('.post-tools-edit').find('.btn-success');
-    setTimeout(function() {
-      return $button.button('reset');
-    }, 400);
-    if (((s != null ? s.statusText : void 0) != null) && s.statusText === 'success') {
-      this.state = 'ready';
-      this.blurPost(id);
-      this.fetch();
-    } else {
-      this.error(id);
+    if (window.sockets != null) {
+      return window.sockets.once('feed.edit', function(data) {
+        if (_this.state !== 'ready') {
+          if ((data.success != null) && data.success === true) {
+            _this.state = 'ready';
+            _this.blurPost(id);
+            return _this.fetch();
+          } else {
+            if (data.notice != null) {
+              return _this.error(id, data.notice);
+            } else {
+              return _this.error(id);
+            }
+          }
+        }
+      });
     }
-    post.unset('success');
-    return post.unset('notice');
   },
   deletePost: function(id) {
-    var $button, $post, post,
+    var $button, $post, post, _ref, _ref1,
       _this = this;
     this.state = 'ready';
     post = this.posts.get(id);
@@ -1814,20 +1850,30 @@ module.exports = FeedNewsSync.extend({
     $button = $post.find('.post-tools-edit').find('.btn-success');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
-        post.destroy({
+        return $.ajax({
           url: "" + (window.sn.get('server').host) + "/feed/post/" + id,
-          timeout: 20000,
-          dataType: 'jsonp'
+          timeout: 10000,
+          type: 'DELETE',
+          dataType: 'iframe',
+          formData: [
+            {
+              name: 'token',
+              value: ((_ref = window.user) != null ? _ref.get('token') : void 0) ? window.user.get('token') : ''
+            }, {
+              name: 'sessid',
+              value: ((_ref1 = window.user) != null ? _ref1.get('sessid') : void 0) ? window.user.get('sessid') : ''
+            }
+          ],
+          complete: function(s) {
+            if ((s.statusText != null) && s.statusText === 'success') {
+              return setTimeout(function() {
+                return _this.fetch();
+              }, 100);
+            }
+          }
         });
-        return setTimeout(function() {
-          return _this.fetch();
-        }, 100);
       }
     }
-  },
-  afterDeletePost: function(id) {
-    var post;
-    return post = this.posts.get(id);
   },
   blurPost: function(id) {
     var $alertError, $alertSuccess, $area, $edit, $footer, $post, $text, $toolsEdit, $toolsRemove, post, text;
@@ -2543,21 +2589,30 @@ module.exports = Template.extend({
     }
   },
   submit: function(e) {
-    var _this = this;
+    var req,
+      _this = this;
     e.preventDefault();
     if ((window.user != null) && (window.sn != null)) {
-      return window.user.save({
+      window.user.set({
         firstname_new: this.$firstname.val(),
         lastname_new: this.$lastname.val()
-      }, {
+      });
+      req = JSON.stringify(_.pick(window.user.toJSON(), 'id', 'firstname_new', 'lastname_new'));
+      return window.user.save(null, {
         url: window.sn.get('server').host + '/edit/personal/',
         timeout: 10000,
         dataType: 'jsonp',
+        data: {
+          model: req,
+          sessid: window.user.get('sessid'),
+          token: window.user.get('token'),
+          _method: 'PUT'
+        },
         beforeSend: function() {
           return _this.$button.button('loading');
         },
         success: function(s) {
-          return _this.checking();
+          return _this.checking(s);
         },
         error: function() {
           _this.$button.button('reset');
@@ -2586,7 +2641,7 @@ module.exports = Template.extend({
     var mark,
       _this = this;
     if (notice == null) {
-      notice = '';
+      notice = 'Произошла ошибка!';
     }
     mark = moment().unix();
     this.$error.show().html(notice);
@@ -2669,21 +2724,28 @@ module.exports = Template.extend({
     }
   },
   submit: function(e) {
-    var _this = this;
+    var req,
+      _this = this;
     e.preventDefault();
     if (this.$password_new.val() !== this.$password_repeat.val()) {
       return this.error('<b>Ошибка!</b> Пароли не совпадают!');
     } else {
       if (window.user != null) {
         this.password.set({
-          id: window.user.get('id')
-        });
-        return this.password.save({
+          id: window.user.get('id'),
           password_new: this.$password_new.val()
-        }, {
+        });
+        req = JSON.stringify(this.password);
+        return this.password.save(null, {
           url: window.sn.get('server').host + '/edit/password/',
           timeout: 10000,
           dataType: 'jsonp',
+          data: {
+            model: req,
+            sessid: window.user.get('sessid'),
+            token: window.user.get('token'),
+            _method: 'PUT'
+          },
           beforeSend: function() {
             return _this.$button.button('loading');
           },
@@ -3048,6 +3110,9 @@ module.exports = Backbone.Router.extend({
     }
   },
   checkCookie: function() {
+    console.log('user_id', $.cookie('user_id', {
+      domain: window.sn.get('server').host
+    }).toString());
     if (($.cookie('id') != null) && ($.cookie('key') != null)) {
       return this.fetch($.cookie('id'), $.cookie('key'));
     }
@@ -3149,6 +3214,7 @@ module.exports = Sockets = (function() {
         message: 'connect',
         user_id: window.user != null ? window.user.get('id') : null,
         token: window.user != null ? window.user.get('token') : null,
+        sessid: window.user != null ? window.user.get('sessid') : null,
         region: window.sn != null ? window.sn.get('region') : null
       }));
     }

@@ -49,10 +49,11 @@ module.exports = class Sockets
 	authOnServer: () ->
 		if isSocketReady
 			this.socket.send JSON.stringify
-				message:					'connect'
-				user_id:					if window.user? 	then window.user.get('id') 		else null
-				token:						if window.user? 	then window.user.get('token') 	else null
-				region:						if window.sn? 		then window.sn.get('region') 	else null
+				message:		'connect'
+				user_id:		if window.user? 	then window.user.get('id') 		else null
+				token:			if window.user? 	then window.user.get('token') 	else null
+				sessid:			if window.user? 	then window.user.get('sessid') 	else null
+				region:			if window.sn? 		then window.sn.get('region') 	else null
 
 
 

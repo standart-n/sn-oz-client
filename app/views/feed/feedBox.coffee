@@ -152,16 +152,15 @@ module.exports = Template.extend
 
 				req = 								_.pick(this.post.toJSON(),'message','region')
 
-				jalert req
-
 				this.state = 						'posting'
 
 				this.waitSocketResponse()
 
 				$.ajax
 					url: 							window.sn.get('server').host + '/feed/post/'
-					timeout: 						10000
+					timeout: 						10000					
 					type:							'POST'
+
 					dataType:						'iframe'
 					formData: [
 						{
@@ -171,6 +170,10 @@ module.exports = Template.extend
 						{
 							name:					'token'
 							value:					if window.user?.get('token') then window.user.get('token') else ''
+						},
+						{
+							name:					'sessid'
+							value:					if window.user?.get('sessid') then window.user.get('sessid') else ''
 						}
 					]
 
@@ -179,29 +182,29 @@ module.exports = Template.extend
 
 					complete: (s) =>
 
+						setTimeout () =>
+							this.$button.button('reset')
+						, 400
+
 						if s.statusText? and s.statusText is 'success'
 
 							if window.isSocketReady
 
 								setTimeout () =>
 									if this.state isnt 'ready'
-										this.$button.button		'reset'
 										this.error 				'<b>Ошибка!</b> Превышен лимит ожидания!'
-										this.$el.trigger 		'send'
 								, 3000
 
 							else 
 									
-								this.$button.button		'reset'
 								this.$el.trigger 		'send'
 								this.$message.val 		''
-
-
-							this.post.reset()
 
 						else
 							this.error()
 
+
+						this.post.reset()
 						# this.checking s
 
 					error: () =>
