@@ -197,8 +197,9 @@ module.exports = Template.extend
 
 							else 
 									
-								this.$el.trigger 		'send'
-								this.$message.val 		''
+								this.error('<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!')
+								# this.$el.trigger 		'send'
+								# this.$message.val 		''
 
 						else
 							this.error()

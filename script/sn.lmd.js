@@ -1606,8 +1606,7 @@ module.exports = Template.extend({
                   }
                 }, 3000);
               } else {
-                _this.$el.trigger('send');
-                _this.$message.val('');
+                _this.error('<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!');
               }
             } else {
               _this.error();
@@ -1800,9 +1799,7 @@ module.exports = FeedNewsSync.extend({
                     }
                   }, 3000);
                 } else {
-                  _this.state = 'ready';
-                  _this.blurPost(id);
-                  return _this.fetch();
+                  return _this.error(id, '<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!');
                 }
               } else {
                 return _this.error(id);

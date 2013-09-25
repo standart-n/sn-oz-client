@@ -139,9 +139,10 @@ module.exports = FeedNewsSync.extend
 
 								else
 
-									this.state = 		'ready'			
-									this.blurPost(id)
-									this.fetch()
+									this.error(id, '<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!')
+									# this.state = 		'ready'			
+									# this.blurPost(id)
+									# this.fetch()
 
 							else
 								this.error(id)
