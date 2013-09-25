@@ -1831,12 +1831,9 @@ module.exports = FeedNewsSync.extend({
     }
   },
   deletePost: function(id) {
-    var $button, $post, post, _ref, _ref1,
-      _this = this;
+    var _ref, _ref1;
     this.state = 'ready';
-    post = this.posts.get(id);
-    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    $button = $post.find('.post-tools-edit').find('.btn-success');
+    this.blurPost(id);
     if (window.user != null) {
       if (window.user.get('signin') === true) {
         return $.ajax({
@@ -1852,14 +1849,7 @@ module.exports = FeedNewsSync.extend({
               name: 'sessid',
               value: ((_ref1 = window.user) != null ? _ref1.get('sessid') : void 0) ? window.user.get('sessid') : ''
             }
-          ],
-          complete: function(s) {
-            if ((s.statusText != null) && s.statusText === 'success') {
-              return setTimeout(function() {
-                return _this.fetch();
-              }, 100);
-            }
-          }
+          ]
         });
       }
     }

@@ -166,7 +166,7 @@ module.exports = FeedNewsSync.extend
 				if this.state isnt 'ready'
 					if data.success? and data.success is true
 
-						this.state = 			'ready'
+						this.state = 		'ready'
 						this.blurPost(id)
 						this.fetch()
 
@@ -179,11 +179,8 @@ module.exports = FeedNewsSync.extend
 
 
 	deletePost: (id) ->
-		this.state = 						'ready'
-		post = 								this.posts.get(id)
-
-		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$button = 							$post.find('.post-tools-edit').find('.btn-success')
+		this.state = 'ready'
+		this.blurPost(id)
 
 		if window.user?
 			if window.user.get('signin') is true
@@ -203,14 +200,6 @@ module.exports = FeedNewsSync.extend
 							value:					if window.user?.get('sessid') then window.user.get('sessid') else ''
 						}
 					]
-
-					complete: (s) =>
-
-						if s.statusText? and s.statusText is 'success'
-
-							setTimeout () =>
-								this.fetch()
-							, 100
 
 
 
