@@ -1600,11 +1600,7 @@ module.exports = Template.extend({
             }, 400);
             if ((s.statusText != null) && s.statusText === 'success') {
               if (window.isSocketReady) {
-                setTimeout(function() {
-                  if (_this.state !== 'ready') {
-                    return _this.error('<b>Ошибка!</b> Превышен лимит ожидания!');
-                  }
-                }, 3000);
+
               } else {
                 _this.error('<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!');
               }
@@ -1793,11 +1789,7 @@ module.exports = FeedNewsSync.extend({
               }, 400);
               if ((s.statusText != null) && s.statusText === 'success') {
                 if (window.isSocketReady) {
-                  return setTimeout(function() {
-                    if (_this.state !== 'ready') {
-                      return _this.error(id, '<b>Ошибка!</b> Превышен лимит ожидания!');
-                    }
-                  }, 3000);
+
                 } else {
                   return _this.error(id, '<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!');
                 }

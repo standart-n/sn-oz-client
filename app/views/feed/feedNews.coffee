@@ -132,10 +132,10 @@ module.exports = FeedNewsSync.extend
 
 								if window.isSocketReady
 
-									setTimeout () =>
-										if this.state isnt 'ready'
-											this.error(id, '<b>Ошибка!</b> Превышен лимит ожидания!')
-									, 3000
+									# setTimeout () =>
+									# 	if this.state isnt 'ready'
+									# 		this.error(id, '<b>Ошибка!</b> Превышен лимит ожидания!')
+									# , 3000
 
 								else
 
