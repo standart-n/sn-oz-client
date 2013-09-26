@@ -114,7 +114,7 @@ module.exports = Template.extend
 		this.box = 							new FeedBox()
 		this.news = 						new FeedNews()
 
-		this.box.$el.on 'send', () =>			
+		this.box.$el.on 'send', () =>
 			if this.news?
 				this.news.fetch()
 

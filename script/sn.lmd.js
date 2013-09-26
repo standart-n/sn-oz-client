@@ -1480,7 +1480,6 @@ module.exports = Template.extend({
   },
   initialize: function() {
     this.el = '#feed-box';
-    this.state = 'ready';
     this.post = new Post();
     this.boxFiles = new FeedBoxFiles();
     this.render();
@@ -1528,29 +1527,8 @@ module.exports = Template.extend({
       icons: true
     });
   },
-  waitSocketResponse: function() {
-    var _this = this;
-    if (window.sockets != null) {
-      return window.sockets.once('feed.post', function(data) {
-        if (_this.state === 'posting') {
-          if ((data.success != null) && data.success === true) {
-            _this.state = 'ready';
-            _this.$button.button('reset');
-            _this.$message.val('');
-            return _this.$el.trigger('send');
-          } else {
-            if (data.notice != null) {
-              return _this.error(data.notice);
-            } else {
-              return _this.error();
-            }
-          }
-        }
-      });
-    }
-  },
   submit: function(e) {
-    var isUserCanSendMessage, message, req, _ref, _ref1,
+    var aid, isUserCanSendMessage, message, req,
       _this = this;
     isUserCanSendMessage = true;
     e.preventDefault();
@@ -1566,14 +1544,13 @@ module.exports = Template.extend({
         message: message,
         region: window.sn.get('region')
       });
-      if (message.text.length < 3) {
+      if (message.text.length < 3 && isUserCanSendMessage === true) {
         this.error('<b>Ошибка!</b> Сообщение не должно быть пустым!');
         isUserCanSendMessage = false;
       }
       if (isUserCanSendMessage === true) {
         req = _.pick(this.post.toJSON(), 'message', 'region');
-        this.state = 'posting';
-        this.waitSocketResponse();
+        aid = Math.floor(Math.random() * Math.pow(10, 10));
         return $.ajax({
           url: window.sn.get('server').host + '/feed/post/',
           timeout: 10000,
@@ -1585,10 +1562,13 @@ module.exports = Template.extend({
               value: JSON.stringify(req)
             }, {
               name: 'token',
-              value: ((_ref = window.user) != null ? _ref.get('token') : void 0) ? window.user.get('token') : ''
+              value: window.user.get('token')
             }, {
               name: 'sessid',
-              value: ((_ref1 = window.user) != null ? _ref1.get('sessid') : void 0) ? window.user.get('sessid') : ''
+              value: window.user.get('sessid')
+            }, {
+              name: 'aid',
+              value: aid
             }
           ],
           beforeSend: function() {
@@ -1598,16 +1578,33 @@ module.exports = Template.extend({
             setTimeout(function() {
               return _this.$button.button('reset');
             }, 400);
+            _this.post.reset();
             if ((s.statusText != null) && s.statusText === 'success') {
-              if (window.isSocketReady) {
-
-              } else {
-                _this.error('<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!');
-              }
+              return $.ajax({
+                url: window.sn.get('server').host + '/action/' + aid,
+                timeout: 10000,
+                dataType: 'jsonp',
+                success: function(data) {
+                  if ((data.success != null) && data.success === true) {
+                    _this.$message.val('');
+                    if (!window.isSocketReady) {
+                      return _this.$el.trigger('send');
+                    }
+                  } else {
+                    if (data.notice != null) {
+                      return _this.error(data.notice);
+                    } else {
+                      return _this.error();
+                    }
+                  }
+                },
+                error: function() {
+                  return _this.error('<b>Ошибка!</b> Сервер не отвечает!');
+                }
+              });
             } else {
-              _this.error();
+              return _this.error();
             }
-            return _this.post.reset();
           },
           error: function() {
             _this.$button.button('reset');
@@ -1740,7 +1737,7 @@ module.exports = FeedNewsSync.extend({
     return $footer.hide();
   },
   savePost: function(id) {
-    var $area, $button, $post, message, post, req, _ref, _ref1,
+    var $area, $button, $post, aid, message, post, req,
       _this = this;
     this.state = 'save';
     post = this.posts.get(id);
@@ -1757,9 +1754,10 @@ module.exports = FeedNewsSync.extend({
         }, {
           silent: true
         });
+        aid = Math.floor(Math.random() * Math.pow(10, 10));
         if (message.text !== '') {
           req = _.pick(post.toJSON(), 'id', 'author', 'message', 'region');
-          this.waitSocketResponse(id);
+          this.state = 'ready';
           return $.ajax({
             url: window.sn.get('server').host + '/feed/post/',
             timeout: 10000,
@@ -1771,10 +1769,13 @@ module.exports = FeedNewsSync.extend({
                 value: JSON.stringify(req)
               }, {
                 name: 'token',
-                value: ((_ref = window.user) != null ? _ref.get('token') : void 0) ? window.user.get('token') : ''
+                value: window.user.get('token')
               }, {
                 name: 'sessid',
-                value: ((_ref1 = window.user) != null ? _ref1.get('sessid') : void 0) ? window.user.get('sessid') : ''
+                value: window.user.get('sessid')
+              }, {
+                name: 'aid',
+                value: aid
               }
             ],
             beforeSend: function() {
@@ -1788,11 +1789,28 @@ module.exports = FeedNewsSync.extend({
                 return $button.button('reset');
               }, 400);
               if ((s.statusText != null) && s.statusText === 'success') {
-                if (window.isSocketReady) {
-
-                } else {
-                  return _this.error(id, '<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!');
-                }
+                return $.ajax({
+                  url: window.sn.get('server').host + '/action/' + aid,
+                  timeout: 10000,
+                  dataType: 'jsonp',
+                  success: function(data) {
+                    if ((data.success != null) && data.success === true) {
+                      _this.blurPost(id);
+                      if (!window.isSocketReady) {
+                        return _this.fetch();
+                      }
+                    } else {
+                      if (data.notice != null) {
+                        return _this.error(id, data.notice);
+                      } else {
+                        return _this.error(id);
+                      }
+                    }
+                  },
+                  error: function() {
+                    return _this.error(id, '<b>Ошибка!</b> Сервер не отвечает!');
+                  }
+                });
               } else {
                 return _this.error(id);
               }
@@ -1806,32 +1824,8 @@ module.exports = FeedNewsSync.extend({
       }
     }
   },
-  waitSocketResponse: function(id) {
-    var $button, $post, post,
-      _this = this;
-    post = this.posts.get(id);
-    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    $button = $post.find('.post-tools-edit').find('.btn-success');
-    if (window.sockets != null) {
-      return window.sockets.once('feed.edit', function(data) {
-        if (_this.state !== 'ready') {
-          if ((data.success != null) && data.success === true) {
-            _this.state = 'ready';
-            _this.blurPost(id);
-            return _this.fetch();
-          } else {
-            if (data.notice != null) {
-              return _this.error(id, data.notice);
-            } else {
-              return _this.error(id);
-            }
-          }
-        }
-      });
-    }
-  },
   deletePost: function(id) {
-    var _ref, _ref1;
+    var _this = this;
     this.state = 'ready';
     this.blurPost(id);
     if (window.user != null) {
@@ -1844,12 +1838,19 @@ module.exports = FeedNewsSync.extend({
           formData: [
             {
               name: 'token',
-              value: ((_ref = window.user) != null ? _ref.get('token') : void 0) ? window.user.get('token') : ''
+              value: window.user.get('token')
             }, {
               name: 'sessid',
-              value: ((_ref1 = window.user) != null ? _ref1.get('sessid') : void 0) ? window.user.get('sessid') : ''
+              value: window.user.get('sessid')
             }
-          ]
+          ],
+          complete: function(s) {
+            if ((s.statusText != null) && s.statusText === 'success') {
+              if (!window.isSocketReady) {
+                return _this.fetch();
+              }
+            }
+          }
         });
       }
     }

@@ -87,12 +87,14 @@ module.exports = FeedNewsSync.extend
 				,
 					silent:					true
 
+				aid = Math.floor(Math.random() * Math.pow(10,10))
 				
 				if message.text isnt ''
 
 					req = 								_.pick(post.toJSON(),'id','author', 'message','region')
 
-					this.waitSocketResponse(id)
+
+					this.state = 						'ready'
 
 					$.ajax
 						url: 							window.sn.get('server').host + '/feed/post/'
@@ -106,11 +108,15 @@ module.exports = FeedNewsSync.extend
 							},
 							{
 								name:					'token'
-								value:					if window.user?.get('token') then window.user.get('token') else ''
+								value:					window.user.get('token')
 							},
 							{
 								name:					'sessid'
-								value:					if window.user?.get('sessid') then window.user.get('sessid') else ''
+								value:					window.user.get('sessid')
+							}
+							{
+								name:					'aid'
+								value:					aid
 							}
 						]
 
@@ -129,20 +135,29 @@ module.exports = FeedNewsSync.extend
 							, 400							
 
 							if s.statusText? and s.statusText is 'success'
+								
 
-								if window.isSocketReady
+								$.ajax
+									url:				window.sn.get('server').host + '/action/' + aid
+									timeout: 			10000
+									dataType:			'jsonp'
+									
+									success: (data) =>
+										
+										if data.success? and data.success is true
 
-									# setTimeout () =>
-									# 	if this.state isnt 'ready'
-									# 		this.error(id, '<b>Ошибка!</b> Превышен лимит ожидания!')
-									# , 3000
+											this.blurPost(id)
+											this.fetch() if !window.isSocketReady
 
-								else
+										else 
+											if data.notice?
+												this.error(id, data.notice)
+											else
+												this.error(id)
 
-									this.error(id, '<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!')
-									# this.state = 		'ready'			
-									# this.blurPost(id)
-									# this.fetch()
+									error: () =>
+										this.error 		id, '<b>Ошибка!</b> Сервер не отвечает!'
+
 
 							else
 								this.error(id)
@@ -152,29 +167,6 @@ module.exports = FeedNewsSync.extend
 						error: () =>
 							$button.button				'reset'
 							this.error 					id, '<b>Ошибка!</b> Сервер не отвечает!'
-
-
-	waitSocketResponse: (id) ->
-
-		post = 								this.posts.get(id)
-
-		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$button = 							$post.find('.post-tools-edit').find('.btn-success')
-
-		if window.sockets?
-			window.sockets.once 'feed.edit', (data) =>
-				if this.state isnt 'ready'
-					if data.success? and data.success is true
-
-						this.state = 		'ready'
-						this.blurPost(id)
-						this.fetch()
-
-					else 
-						if data.notice?
-							this.error(id, data.notice)
-						else
-							this.error(id)
 
 
 
@@ -193,13 +185,19 @@ module.exports = FeedNewsSync.extend
 					formData: [
 						{
 							name:					'token'
-							value:					if window.user?.get('token') then window.user.get('token') else ''
+							value:					window.user.get('token')
 						},
 						{
 							name:					'sessid'
-							value:					if window.user?.get('sessid') then window.user.get('sessid') else ''
+							value:					window.user.get('sessid')
 						}
 					]
+
+					complete: (s) =>
+
+						if s.statusText? and s.statusText is 'success'
+							if !window.isSocketReady
+								this.fetch()
 
 
 

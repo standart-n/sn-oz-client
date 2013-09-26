@@ -19,8 +19,6 @@ module.exports = Template.extend
 
 		this.el = 							'#feed-box'
 
-		this.state = 						'ready'
-
 		this.post = 						new Post()
 
 		this.boxFiles = 					new FeedBoxFiles()
@@ -101,26 +99,6 @@ module.exports = Template.extend
 			icons:			on
 
 
-	waitSocketResponse: () ->
-
-		if window.sockets?
-			window.sockets.once 'feed.post', (data) =>
-				if this.state is 'posting'
-					if data.success? and data.success is true
-
-						this.state = 			'ready'
-						this.$button.button		'reset'
-						this.$message.val 	 	''
-						this.$el.trigger 		'send'
-
-					else 
-						if data.notice?
-							this.error(data.notice)
-						else
-							this.error()
-
-
-
 
 	submit: (e) ->
 
@@ -144,7 +122,7 @@ module.exports = Template.extend
 
 
 
-			if message.text.length < 3
+			if message.text.length < 3 and isUserCanSendMessage is true
 				this.error('<b>Ошибка!</b> Сообщение не должно быть пустым!')
 				isUserCanSendMessage = false
 
@@ -152,13 +130,11 @@ module.exports = Template.extend
 
 				req = 								_.pick(this.post.toJSON(),'message','region')
 
-				this.state = 						'posting'
-
-				this.waitSocketResponse()
+				aid = 								Math.floor(Math.random() * Math.pow(10,10))
 
 				$.ajax
 					url: 							window.sn.get('server').host + '/feed/post/'
-					timeout: 						10000					
+					timeout: 						10000
 					type:							'POST'
 
 					dataType:						'iframe'
@@ -169,11 +145,15 @@ module.exports = Template.extend
 						},
 						{
 							name:					'token'
-							value:					if window.user?.get('token') then window.user.get('token') else ''
+							value:					window.user.get('token')
 						},
 						{
 							name:					'sessid'
-							value:					if window.user?.get('sessid') then window.user.get('sessid') else ''
+							value:					window.user.get('sessid')
+						},
+						{
+							name:					'aid'
+							value:					aid
 						}
 					]
 
@@ -186,27 +166,35 @@ module.exports = Template.extend
 							this.$button.button('reset')
 						, 400
 
+						this.post.reset()						
+
 						if s.statusText? and s.statusText is 'success'
 
-							if window.isSocketReady
-
-								# setTimeout () =>
-								# 	if this.state isnt 'ready'
-								# 		this.error 				'<b>Ошибка!</b> Превышен лимит ожидания!'
-								# , 3000
-
-							else 
+							$.ajax
+								url:				window.sn.get('server').host + '/action/' + aid
+								timeout: 			10000
+								dataType:			'jsonp'
+								
+								success: (data) =>
 									
-								this.error('<b>Ошибка!</b> Пожалуйста, перезагрузите страницу!')
-								# this.$el.trigger 		'send'
-								# this.$message.val 		''
+									if data.success? and data.success is true
+										this.$message.val 	 	''
+										if !window.isSocketReady
+											this.$el.trigger	'send'
+
+									else 
+										if data.notice?
+											this.error(data.notice)
+										else
+											this.error()
+
+								error: () =>
+									this.error 		'<b>Ошибка!</b> Сервер не отвечает!'
+
 
 						else
 							this.error()
 
-
-						this.post.reset()
-						# this.checking s
 
 					error: () =>
 						this.$button.button			'reset'
