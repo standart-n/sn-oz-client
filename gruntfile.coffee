@@ -12,12 +12,6 @@ module.exports = (grunt) ->
 					pretty: on
 				src: './jade/index.jade'
 				dest: './index.html'
-
-			test:
-				options:
-					pretty: on
-				src: './jade/test.jade'
-				dest: './test.html'
 			
 			view:
 				options:
@@ -122,5 +116,5 @@ module.exports = (grunt) ->
 	
 	grunt.registerTask 'default', ['recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout', 'lmd']
 	grunt.registerTask 'all', ['bootstrap','default']
-	grunt.registerTask 'test', ['jade:test', 'coffee:server', 'coffee:test']
+	grunt.registerTask 'test', ['coffee:server', 'coffee:test']
 	grunt.registerTask 'bootstrap', ['concat:bootstrap', 'uglify:bootstrap']

@@ -1,9 +1,7 @@
 
-# require('IframeTransport')
-# require('jQueryWidget')
-# require('FileUpload')
-
+require('widget')
 require('iframeTransport')
+require('fileUpload')
 
 Template = 									require('Template')
 FeedBox = 									require('FeedBox')
@@ -27,7 +25,7 @@ module.exports = Template.extend
 					if this.news?
 						this.news.fetch()
 					if this.box?
-						this.box.showFileInput()
+						this.box.showFileUpload()
 
 		$(document).on 'scrollDown', () ->	
 			if _this.news?

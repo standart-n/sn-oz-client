@@ -3,10 +3,6 @@ Sync = 										require('Sync')
 
 module.exports = Sync.extend
 
-	# urls:
-	# 	box:
-	# 		files :							'view/feed/feedBoxFiles.html'
-
 
 	startSync: () ->
 

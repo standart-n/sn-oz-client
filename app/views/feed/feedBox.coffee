@@ -29,75 +29,85 @@ module.exports = Template.extend
 		this.$message = 					this.$el.find('textarea')
 		this.$button = 						this.$el.find('button')
 		this.$alertError = 					this.$el.find('.alert-error')
-		this.$fileInput = 					this.$el.find('.feed-post-file')
 		this.$fileUpload = 					this.$el.find('.feed-post-upload')
+		this.$fileInput = 					this.$el.find('.feed-post-file')
 
-		this.showFileInput()
+		this.showFileUpload()
 
 	
-	showFileInput: () ->
-		# if window.user.get('signin') is true
-		# 	this.$fileInput.show()
-		# 	this.fileUpload()
-		# 	this.boxFiles.setElement 		'#feed-box-files'
-		# else 
-		# 	this.$fileInput.hide()
-		this.$fileInput.hide()
-
-
-	fileUpload: () ->
-
-		# this.$fileUpload.fileupload
-		# 	url: 		"#{window.sn.get('server').host}/upload/?id=#{window.user.get('id')}&key=#{window.user.get('key')}"
-		# 	dataType: 	'json'
-		# 	# done: (e, data) =>
-		# 	# 	this.afterFileUpload(data)
-		# 	done: (e, data) =>
-		# 		this.afterFileUpload(data)
-		# 	fail: (e, data) =>
-		# 		this.error('Произошла ошибка при загрузке файла')
-		# 		# alert e
-
-
-	afterFileUpload: (data) ->
-		# jalert(data)
-		# alert data
-		# console.log data
-
-		# $('#feed').html JSON.stringify(data.toJSON())
-
-		# $('#body').html JSON.stringify(data)
-
-		# alert data.dataType
-
-		if data.result?[0]
-			if data.result[0].error?
-				switch data.result[0].error
-					when 'File is too big'
-						this.error('Размер файла не должен превышать <b>10mb</b>')
-					when 'User not found'
-						this.error('Вы не авторизованы')
-					else 
-						this.error(data.error.toString())
-			else 
-				this.boxFiles.files.add
-					name:		data.result[0].name
-					original:	data.result[0].original
-					type:		data.result[0].type
-					size:		data.result[0].size
-					url:		data.result[0].url
-
-		else
-			this.error('Ошибка при загрузке файла!')
-
-
-
 	render: () ->
 		this.template()
 		new Complete
 			el: 			this.el
 			icons:			on
 
+
+	showFileUpload: () ->
+		if window.user.get('signin') is true
+			this.$fileUpload.show()
+			this.boxFiles.setElement 		'#feed-box-files'
+		else
+			this.$fileUpload.hide()		
+
+
+	changeFileToUpload: () ->
+		aid = 								window.aid()
+
+		alert 'go!'
+
+		$.ajax
+			url: 							"#{window.sn.get('server').host}/feed/post/upload
+											?id=#{window.user.get('id')}
+											&key=#{window.user.get('key')}
+											&aid=#{aid}"
+			timeout: 						10000
+			type:							'POST'
+			dataType:						'iframe'
+			fileInput:						this.$fileInput
+			success: () =>
+
+				this.getResultFromServer aid, (data) =>
+
+					jalert data
+
+					if data.file?
+						if data.file.error?
+							switch data.file.error
+								when 'File is too big'
+									this.error('Размер файла не должен превышать <b>10mb</b>')
+								when 'User not found'
+									this.error('Вы не авторизованы')
+								else 
+									this.error(data.file.error.toString())
+						else 
+							# jalert data
+							this.boxFiles.files.add
+								name:			data.file.name
+								original:		data.file.original
+								type:			data.file.type
+								size:			data.file.size
+								sizeFormat:		data.file.sizeFormat
+								url:			data.file.url
+
+					else
+						this.error('Ошибка при загрузке файла!')
+
+			error: () =>
+				this.error()
+
+
+	showUploadDialog: (e) ->
+
+		e.preventDefault()
+		this.$fileInput.focus().click()
+
+		this.$fileInput.blur () ->
+			alert 'got'
+
+		# this.$fileInput.trigger 'click'
+
+		# this.$fileInput.on 'propertychange', () ->
+		# 	alert 'change'
 
 
 	submit: (e) ->
@@ -121,7 +131,6 @@ module.exports = Template.extend
 				region:								window.sn.get('region')
 
 
-
 			if message.text.length < 3 and isUserCanSendMessage is true
 				this.error('<b>Ошибка!</b> Сообщение не должно быть пустым!')
 				isUserCanSendMessage = false
@@ -130,7 +139,9 @@ module.exports = Template.extend
 
 				req = 								_.pick(this.post.toJSON(),'message','region')
 
-				aid = 								Math.floor(Math.random() * Math.pow(10,10))
+				aid = 								window.aid()
+
+				this.post.reset()
 
 				$.ajax
 					url: 							window.sn.get('server').host + '/feed/post/'
@@ -158,47 +169,44 @@ module.exports = Template.extend
 					]
 
 					beforeSend: () =>
-						this.$button.button 		'loading'
-
-					complete: (s) =>
-
+						this.$button.button('loading')
 						setTimeout () =>
 							this.$button.button('reset')
 						, 400
 
-						this.post.reset()						
+					success: (s) =>
 
-						if s.statusText? and s.statusText is 'success'
+						this.getResultFromServer aid, (data) =>
 
-							$.ajax
-								url:				window.sn.get('server').host + '/action/' + aid
-								timeout: 			10000
-								dataType:			'jsonp'
-								
-								success: (data) =>
-									
-									if data.success? and data.success is true
-										this.$message.val 	 	''
-										if !window.isSocketReady
-											this.$el.trigger	'send'
+							if data.success is true
+								this.$message.val('')
+								if !window.isSocketReady
+									this.$el.trigger('send')
 
-									else 
-										if data.notice?
-											this.error(data.notice)
-										else
-											this.error()
-
-								error: () =>
-									this.error 		'<b>Ошибка!</b> Сервер не отвечает!'
-
-
-						else
-							this.error()
-
+							else 
+								if data.notice?
+									this.error(data.notice)
+								else
+									this.error()
 
 					error: () =>
-						this.$button.button			'reset'
-						this.error 					'<b>Ошибка!</b> Сервер не отвечает!'
+						this.error()
+
+
+
+
+	getResultFromServer: (aid, callback) ->
+
+		$.ajax
+			url:				window.sn.get('server').host + '/action/' + aid
+			timeout: 			10000
+			dataType:			'jsonp'
+			
+			success: (data) =>
+				callback(data) if callback				
+
+			error: () =>
+				this.error()
 
 
 

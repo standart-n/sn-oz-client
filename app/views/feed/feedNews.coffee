@@ -87,7 +87,7 @@ module.exports = FeedNewsSync.extend
 				,
 					silent:					true
 
-				aid = Math.floor(Math.random() * Math.pow(10,10))
+				aid = window.aid()
 				
 				if message.text isnt ''
 
@@ -95,6 +95,11 @@ module.exports = FeedNewsSync.extend
 
 
 					this.state = 						'ready'
+
+					post = 								this.posts.get(id)
+
+					$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
+					$button = 							$post.find('.post-tools-edit').find('.btn-success')		
 
 					$.ajax
 						url: 							window.sn.get('server').host + '/feed/post/'
@@ -120,53 +125,29 @@ module.exports = FeedNewsSync.extend
 							}
 						]
 
-						beforeSend: () =>
-							$button.button 				'loading'
-
-						complete: (s) =>
-
-							post = 						this.posts.get(id)
-
-							$post = 					this.$el.find("[data-post-id=\"#{id}\"]")
-							$button = 					$post.find('.post-tools-edit').find('.btn-success')
-
-							setTimeout () =>
+						beforeSend: () ->
+							$button.button ('loading')
+							setTimeout () ->
 								$button.button('reset')
 							, 400							
 
-							if s.statusText? and s.statusText is 'success'
+						success: () =>
+
+							this.getResultFromServer aid, id, (data) =>
 								
+								if data.success is true
 
-								$.ajax
-									url:				window.sn.get('server').host + '/action/' + aid
-									timeout: 			10000
-									dataType:			'jsonp'
-									
-									success: (data) =>
-										
-										if data.success? and data.success is true
+									this.blurPost(id)
+									this.fetch() if !window.isSocketReady
 
-											this.blurPost(id)
-											this.fetch() if !window.isSocketReady
-
-										else 
-											if data.notice?
-												this.error(id, data.notice)
-											else
-												this.error(id)
-
-									error: () =>
-										this.error 		id, '<b>Ошибка!</b> Сервер не отвечает!'
-
-
-							else
-								this.error(id)
-
-
+								else 
+									if data.notice?
+										this.error(id, data.notice)
+									else
+										this.error(id)
 
 						error: () =>
-							$button.button				'reset'
-							this.error 					id, '<b>Ошибка!</b> Сервер не отвечает!'
+							this.error(id)
 
 
 
@@ -193,11 +174,24 @@ module.exports = FeedNewsSync.extend
 						}
 					]
 
-					complete: (s) =>
+					success: () =>
 
-						if s.statusText? and s.statusText is 'success'
-							if !window.isSocketReady
-								this.fetch()
+						if !window.isSocketReady
+							this.fetch()
+
+
+	getResultFromServer: (aid, id, callback) ->
+
+		$.ajax
+			url:				window.sn.get('server').host + '/action/' + aid
+			timeout: 			10000
+			dataType:			'jsonp'
+			
+			success: (data) =>
+				callback(data) if callback				
+
+			error: () =>
+				this.error(id)
 
 
 

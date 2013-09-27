@@ -20,8 +20,6 @@ Sockets = 								require('Sockets')
 
 $ () ->
 
-	window.isSocketReady = false
-
 	if !window.console?
 		window.console = 
 			info: () ->
@@ -29,9 +27,13 @@ $ () ->
 			error: () ->
 			warn: () ->
 
+	window.isSocketReady = false
+
 	window.jalert = (s) ->
 		alert JSON.stringify(s)
 
+	window.aid = () ->
+		Math.floor(Math.random() * Math.pow(10,10))
 
 	$.fn.isNone = () -> 
 		$(this).css('display') is 'none'

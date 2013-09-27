@@ -33,9 +33,11 @@
 			"path":					"lib/sockjs/sockjs.min.js",
 			"exports":				"SockJS"
 		},
-		"iframeTransport":			"lib/iframe-transport/iframe-transport.min.js",
+		"iframeTransport":			"lib/jquery-iframe-transport/jquery.iframe-transport.min.js",
+		"fileUpload":				"lib/jquery-file-upload/jquery.file-upload.min.js",
+		"widget":					"lib/jquery-ui-widget/jquery.ui.widget.min.js",
 		"cookie": {
-			"path":					"lib/cookie/cookie.min.js",
+			"path":					"lib/jquery-cookie/jquery.cookie.min.js",
 			"require": {
 				"jQuery": 			"$"        		
 			}

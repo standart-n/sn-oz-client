@@ -4,7 +4,7 @@ Files = 									require('Files')
 
 module.exports = FeedBoxFilesSync.extend
 
-	# el: 									'#feed-box-files'
+	el: 									'#feed-box-files'
 	url: 									'view/feed/feedBoxFiles.html'
 
 	initialize: () ->

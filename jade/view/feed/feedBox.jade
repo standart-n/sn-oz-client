@@ -19,12 +19,13 @@
 				ul#feed-box-files
 
 
-				button.btn.btn-primary(type = "submit") Отправить
+				button.btn.btn-primary(type = "submit", tabindex = "-1") Отправить
 				&nbsp;
-				span.btn.feed-post-file.hide
+				&nbsp;
+				a.btn.feed-post-upload(href = "#")
 					i.icon-file
-					Прикрепить файл
-					input.feed-post-upload(type = "file", name = "files[]")
+					Прикрепить файл				
+				input.hide.feed-post-file(type = "file", name = "files[]", tabindex = "-1")
 
 
 
