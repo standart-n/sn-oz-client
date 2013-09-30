@@ -6889,12 +6889,12 @@ a.badge:hover {
  * http://www.opensource.org/licenses/MIT
  */
 
-.feed-post-file {
+.feed-post-upload {
   position: relative;
   overflow: hidden;
 }
 
-.feed-post-file input {
+.feed-post-input {
   position: absolute;
   top: 0;
   right: 0;

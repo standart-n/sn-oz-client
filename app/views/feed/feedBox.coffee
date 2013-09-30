@@ -30,7 +30,7 @@ module.exports = Template.extend
 		this.$button = 						this.$el.find('button')
 		this.$alertError = 					this.$el.find('.alert-error')
 		this.$fileUpload = 					this.$el.find('.feed-post-upload')
-		this.$fileInput = 					this.$el.find('.feed-post-file')
+		this.$fileInput = 					this.$el.find('.feed-post-input')
 
 		this.showFileUpload()
 
@@ -44,27 +44,24 @@ module.exports = Template.extend
 
 	showFileUpload: () ->
 		if window.user.get('signin') is true
-			this.$fileUpload.show()
 			this.boxFiles.setElement 		'#feed-box-files'
+			this.$fileUpload.show()
+			this.fileUpload()
 		else
 			this.$fileUpload.hide()		
 
 
-	changeFileToUpload: () ->
+	fileUpload: () ->
 		aid = 								window.aid()
 
-		alert 'go!'
-
-		$.ajax
+		this.$fileInput.fileupload
 			url: 							"#{window.sn.get('server').host}/feed/post/upload
 											?id=#{window.user.get('id')}
 											&key=#{window.user.get('key')}
 											&aid=#{aid}"
 			timeout: 						10000
-			type:							'POST'
-			dataType:						'iframe'
-			fileInput:						this.$fileInput
-			success: () =>
+			dataType:						'json'
+			done: () =>
 
 				this.getResultFromServer aid, (data) =>
 
@@ -95,19 +92,6 @@ module.exports = Template.extend
 			error: () =>
 				this.error()
 
-
-	showUploadDialog: (e) ->
-
-		e.preventDefault()
-		this.$fileInput.focus().click()
-
-		this.$fileInput.blur () ->
-			alert 'got'
-
-		# this.$fileInput.trigger 'click'
-
-		# this.$fileInput.on 'propertychange', () ->
-		# 	alert 'change'
 
 
 	submit: (e) ->

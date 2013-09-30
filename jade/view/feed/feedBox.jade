@@ -16,16 +16,14 @@
 
 				textarea.feed-post-message.span12(wrap = "hard", rows = "5")
 
-				ul#feed-box-files
-
-
 				button.btn.btn-primary(type = "submit", tabindex = "-1") Отправить
 				&nbsp;
-				&nbsp;
-				a.btn.feed-post-upload(href = "#")
+				span.btn.feed-post-upload
 					i.icon-file
-					Прикрепить файл				
-				input.hide.feed-post-file(type = "file", name = "files[]", tabindex = "-1")
+					span Прикрепить файл	
+					input.feed-post-input(type = "file", name = "files[]", tabindex = "-1")
 
+				p
+					ul#feed-box-files
 
 

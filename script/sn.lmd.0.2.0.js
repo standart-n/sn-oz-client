@@ -1335,7 +1335,7 @@ module.exports = Template.extend({
     this.$button = this.$el.find('button');
     this.$alertError = this.$el.find('.alert-error');
     this.$fileUpload = this.$el.find('.feed-post-upload');
-    this.$fileInput = this.$el.find('.feed-post-file');
+    this.$fileInput = this.$el.find('.feed-post-input');
     return this.showFileUpload();
   },
   render: function() {
@@ -1347,24 +1347,22 @@ module.exports = Template.extend({
   },
   showFileUpload: function() {
     if (window.user.get('signin') === true) {
+      this.boxFiles.setElement('#feed-box-files');
       this.$fileUpload.show();
-      return this.boxFiles.setElement('#feed-box-files');
+      return this.fileUpload();
     } else {
       return this.$fileUpload.hide();
     }
   },
-  changeFileToUpload: function() {
+  fileUpload: function() {
     var aid,
       _this = this;
     aid = window.aid();
-    alert('go!');
-    return $.ajax({
+    return this.$fileInput.fileupload({
       url: "" + (window.sn.get('server').host) + "/feed/post/upload											?id=" + (window.user.get('id')) + "											&key=" + (window.user.get('key')) + "											&aid=" + aid,
       timeout: 10000,
-      type: 'POST',
-      dataType: 'iframe',
-      fileInput: this.$fileInput,
-      success: function() {
+      dataType: 'json',
+      done: function() {
         return _this.getResultFromServer(aid, function(data) {
           jalert(data);
           if (data.file != null) {
@@ -1395,13 +1393,6 @@ module.exports = Template.extend({
       error: function() {
         return _this.error();
       }
-    });
-  },
-  showUploadDialog: function(e) {
-    e.preventDefault();
-    this.$fileInput.focus().click();
-    return this.$fileInput.blur(function() {
-      return alert('got');
     });
   },
   submit: function(e) {
