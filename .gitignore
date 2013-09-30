@@ -1,8 +1,7 @@
 
 # Script
 script/*
-!script/sn.lmd.js
-!script/test.js
+!script/sn.lmd.*.js
 
 # Conf
 conf/main.json
