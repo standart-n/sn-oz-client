@@ -10,6 +10,8 @@ module.exports = (grunt) ->
 			index:
 				options:
 					pretty: on
+					data:
+						version:		"<%= pkg.version %>"
 				src: './jade/index.jade'
 				dest: './index.html'
 			
@@ -98,23 +100,32 @@ module.exports = (grunt) ->
 
 			bootstrap:
 				options:
-					compress: true					
-					report: 'min'
+					compress: 	true					
+					report: 	'min'
 				files: 
 					'lib/bootstrap/bootstrap.min.js': '<%= concat.bootstrap.dest %>'
 
+		clean:
+			build: [
+				'script/'
+			]
+
 		lmd:
-			build_name: 'sn'
+			sn:
+				options:
+					output:		'script/sn.lmd.<%= pkg.version %>.js'
+				build: 			'sn'
 
 
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-contrib-concat'
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
+	grunt.loadNpmTasks 'grunt-contrib-clean'
 	grunt.loadNpmTasks 'grunt-contrib-jade'
 	grunt.loadNpmTasks 'grunt-recess'
 	grunt.loadNpmTasks 'grunt-lmd'
 	
-	grunt.registerTask 'default', ['recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout', 'lmd']
+	grunt.registerTask 'default', ['clean:build', 'recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout', 'lmd:sn']
 	grunt.registerTask 'all', ['bootstrap','default']
 	grunt.registerTask 'test', ['coffee:server', 'coffee:test']
 	grunt.registerTask 'bootstrap', ['concat:bootstrap', 'uglify:bootstrap']

@@ -1,7 +1,7 @@
 {
-	"name": "sn build",
-	"root": "../",
-	"output": "script/sn.lmd.js",
+	"name": 						"sn build",
+	"root": 						"../",
+	"output": 						"script/sn.lmd.js",
 	"modules": {
 		"_": {
 			"path": 				"lib/underscore/underscore.min.js",
