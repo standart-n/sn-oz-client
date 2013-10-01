@@ -6,7 +6,7 @@ install:
 	@mkdir -p ./style/
 	@mkdir -p ./view/
 	@npm install
-	@cp ./install/conf/* ./conf/
+	@cp -R ./install/* ./
 	@./node_modules/.bin/grunt all
 
 
