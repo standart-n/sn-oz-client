@@ -463,17 +463,53 @@ var jQuery = require("$");
 
 !function($,document,undefined){function raw(s){return s}function decoded(s){return unRfc2068(decodeURIComponent(s.replace(pluses," ")))}function unRfc2068(value){return 0===value.indexOf('"')&&(value=value.slice(1,-1).replace(/\\"/g,'"').replace(/\\\\/g,"\\")),value}function fromJSON(value){return config.json?JSON.parse(value):value}var pluses=/\+/g,config=$.cookie=function(key,value,options){if(value!==undefined){if(options=$.extend({},config.defaults,options),null===value&&(options.expires=-1),"number"==typeof options.expires){var days=options.expires,t=options.expires=new Date;t.setDate(t.getDate()+days)}return value=config.json?JSON.stringify(value):String(value),document.cookie=[encodeURIComponent(key),"=",config.raw?value:encodeURIComponent(value),options.expires?"; expires="+options.expires.toUTCString():"",options.path?"; path="+options.path:"",options.domain?"; domain="+options.domain:"",options.secure?"; secure":""].join("")}for(var decode=config.raw?raw:decoded,cookies=document.cookie.split("; "),result=key?null:{},i=0,l=cookies.length;l>i;i++){var parts=cookies[i].split("="),name=decode(parts.shift()),cookie=decode(parts.join("="));if(key&&key===name){result=fromJSON(cookie);break}key||(result[name]=fromJSON(cookie))}return result};config.defaults={},$.removeCookie=function(key,options){return null!==$.cookie(key)?($.cookie(key,null,options),!0):!1}}(jQuery,document);
 }),
+"Bytes": (function (require, exports, module) { /* wrapped by builder */
+module.exports = function(size) {
+  var convert, map, n, parts, type;
+  convert = function(b) {
+    var gb, kb, mb;
+    gb = 1 << 30;
+    mb = 1 << 20;
+    kb = 1 << 10;
+    if (b >= gb) {
+      return (Math.round(b / gb * 100) / 100) + 'gb';
+    }
+    if (b >= mb) {
+      return (Math.round(b / mb * 100) / 100) + 'mb';
+    }
+    if (b >= kb) {
+      return (Math.round(b / kb * 100) / 100) + 'kb';
+    }
+    return b + 'b';
+  };
+  if (typeof size === 'number') {
+    return convert(size);
+  }
+  parts = size.match(/^(\d+(?:\.\d+)?) *(kb|mb|gb)$/);
+  n = parseFloat(parts[1]);
+  type = parts[2];
+  map = {
+    kb: 1 << 10,
+    mb: 1 << 20,
+    gb: 1 << 30
+  };
+  return map[type] * n;
+};
+
+}),
 "File": (function (require, exports, module) { /* wrapped by builder */
-var Backbone;
+var Backbone, bytes;
 
 Backbone = require('Backbone');
+
+bytes = require('Bytes');
 
 module.exports = Backbone.Model.extend({
   defaults: function() {
     var result;
     return result = {
       name: '',
-      original: '',
+      originalName: '',
       type: '',
       size: 0,
       sizeFormat: '',
@@ -482,7 +518,9 @@ module.exports = Backbone.Model.extend({
       post_dt: new Date()
     };
   },
-  initialize: function() {},
+  initialize: function() {
+    return this.set('sizeFormat', bytes(this.get('size')));
+  },
   reset: function() {
     return this.set(this.defaults());
   }
@@ -636,9 +674,11 @@ module.exports = Backbone.Model.extend({
 
 }),
 "Post": (function (require, exports, module) { /* wrapped by builder */
-var Backbone;
+var Backbone, Files;
 
 Backbone = require('Backbone');
+
+Files = require('Files');
 
 module.exports = Backbone.Model.extend({
   defaults: function() {
@@ -654,6 +694,9 @@ module.exports = Backbone.Model.extend({
       message: {
         text: ''
       },
+      attachments: {
+        files: []
+      },
       formatting: '',
       region: {
         caption: '',
@@ -667,8 +710,17 @@ module.exports = Backbone.Model.extend({
     var _this = this;
     this.checkOur();
     this.checkFormatting();
+    this.checkFiles();
     return this.on('change:message', function() {
       return _this.checkFormatting();
+    });
+  },
+  checkFiles: function() {
+    var attachments;
+    attachments = this.get('attachments');
+    attachments.files = new Files(attachments.files).toJSON();
+    return this.set({
+      attachments: attachments
     });
   },
   checkFormatting: function() {
@@ -1217,45 +1269,52 @@ module.exports = Template.extend({
         return _this.news.down();
       }
     });
+    $(document).on('click', '[data-action="delete file"]', function(e) {
+      var _ref, _ref1;
+      e.preventDefault();
+      if ($(this).data('file') && (((_ref = _this.box) != null ? (_ref1 = _ref.boxFiles) != null ? _ref1.files : void 0 : void 0) != null)) {
+        return _this.box.boxFiles.files.remove($(this).data('file'));
+      }
+    });
     $(document).on('click', '[data-action="edit post"]', function(e) {
       e.preventDefault();
-      if (($(this).data('post') != null) && (_this.news != null)) {
+      if ($(this).data('post') && (_this.news != null)) {
         return _this.news.editPost($(this).data('post'));
       }
     });
     $(document).on('click', '[data-action="save post"]', function(e) {
       e.preventDefault();
-      if (($(this).data('post') != null) && (_this.news != null)) {
+      if ($(this).data('post') && (_this.news != null)) {
         return _this.news.savePost($(this).data('post'));
       }
     });
     $(document).on('keyup', '.feed-post-edit', function(e) {
       if (e.keyCode === 13 && e.ctrlKey) {
-        if (($(this).data('post') != null) && (_this.news != null)) {
+        if ($(this).data('post') && (_this.news != null)) {
           _this.news.savePost($(this).data('post'));
         }
       }
       if (e.keyCode === 27) {
-        if (($(this).data('post') != null) && (_this.news != null)) {
+        if ($(this).data('post') && (_this.news != null)) {
           return _this.news.blurPost($(this).data('post'));
         }
       }
     });
     $(document).on('click', '[data-action="blur post"]', function(e) {
       e.preventDefault();
-      if (($(this).data('post') != null) && (_this.news != null)) {
+      if ($(this).data('post') && (_this.news != null)) {
         return _this.news.blurPost($(this).data('post'));
       }
     });
     $(document).on('click', '[data-action="remove post"]', function(e) {
       e.preventDefault();
-      if (($(this).data('post') != null) && (_this.news != null)) {
+      if ($(this).data('post') && (_this.news != null)) {
         return _this.news.removePost($(this).data('post'));
       }
     });
     $(document).on('click', '[data-action="delete post"]', function(e) {
       e.preventDefault();
-      if ($(this).data('post') != null) {
+      if ($(this).data('post')) {
         return _this.news.deletePost($(this).data('post'));
       }
     });
@@ -1364,7 +1423,6 @@ module.exports = Template.extend({
       dataType: 'json',
       done: function() {
         return _this.getResultFromServer(aid, function(data) {
-          jalert(data);
           if (data.file != null) {
             if (data.file.error != null) {
               switch (data.file.error) {
@@ -1377,11 +1435,11 @@ module.exports = Template.extend({
               }
             } else {
               return _this.boxFiles.files.add({
+                id: data.file.id,
                 name: data.file.name,
-                original: data.file.original,
+                originalName: data.file.originalName,
                 type: data.file.type,
                 size: data.file.size,
-                sizeFormat: data.file.sizeFormat,
                 url: data.file.url
               });
             }
@@ -1396,7 +1454,7 @@ module.exports = Template.extend({
     });
   },
   submit: function(e) {
-    var aid, isUserCanSendMessage, message, req,
+    var aid, attachments, isUserCanSendMessage, message, req, _ref,
       _this = this;
     isUserCanSendMessage = true;
     e.preventDefault();
@@ -1408,8 +1466,12 @@ module.exports = Template.extend({
       message = {
         text: this.$message.val()
       };
+      attachments = {
+        files: ((_ref = this.boxFiles) != null ? _ref.files : void 0) != null ? this.boxFiles.files.toJSON() : []
+      };
       this.post.set({
         message: message,
+        attachments: attachments,
         region: window.sn.get('region')
       });
       if (message.text.length < 3 && isUserCanSendMessage === true) {
@@ -1417,7 +1479,7 @@ module.exports = Template.extend({
         isUserCanSendMessage = false;
       }
       if (isUserCanSendMessage === true) {
-        req = _.pick(this.post.toJSON(), 'message', 'region');
+        req = _.pick(this.post.toJSON(), 'message', 'region', 'attachments');
         aid = window.aid();
         this.post.reset();
         return $.ajax({
@@ -1450,6 +1512,7 @@ module.exports = Template.extend({
             return _this.getResultFromServer(aid, function(data) {
               if (data.success === true) {
                 _this.$message.val('');
+                _this.boxFiles.files.reset();
                 if (!window.isSocketReady) {
                   return _this.$el.trigger('send');
                 }
@@ -1532,7 +1595,8 @@ module.exports = Sync.extend({
   startSync: function() {
     if (this.files != null) {
       this.adding();
-      return this.removing();
+      this.removing();
+      return this.reseting();
     }
   },
   adding: function() {
@@ -1545,7 +1609,20 @@ module.exports = Sync.extend({
       }
     });
   },
-  removing: function() {}
+  removing: function() {
+    var _this = this;
+    return this.files.on('remove', function(file) {
+      var $file;
+      $file = _this.$el.find("[data-file-id=\"" + (file.get('id')) + "\"]");
+      return $file.remove();
+    });
+  },
+  reseting: function() {
+    var _this = this;
+    return this.files.on('reset', function() {
+      return _this.$el.empty();
+    });
+  }
 });
 
 }),
@@ -1825,9 +1902,11 @@ module.exports = FeedNewsSync.extend({
 
 }),
 "FeedNewsSync": (function (require, exports, module) { /* wrapped by builder */
-var Sync;
+var Complete, Sync;
 
 Sync = require('Sync');
+
+Complete = require('Complete');
 
 module.exports = Sync.extend({
   urls: {
@@ -1872,6 +1951,11 @@ module.exports = Sync.extend({
         $footerTools = $post.find('.post-footer-tools');
         footerTools = _this.ejs(post.toJSON(), _this.urls.post.footer.tools);
         return $footerTools.html(footerTools);
+      });
+      new Complete({
+        el: _this.el,
+        icons: true,
+        tooltips: false
       });
       return setInterval(function() {
         var $footerDate, $post, footerDate;

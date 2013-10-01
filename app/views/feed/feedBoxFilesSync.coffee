@@ -9,8 +9,9 @@ module.exports = Sync.extend
 		if this.files?
 
 			this.adding()
+			this.removing()			
+			this.reseting()
 
-			this.removing()
 
 
 	adding: () ->
@@ -26,9 +27,22 @@ module.exports = Sync.extend
 
 	removing: () ->
 
-		# this.files.on 'remove', (file) =>
+		this.files.on 'remove', (file) =>
 
-		# 	$file = 	this.$el.find("[data-file-id=\"#{file.get('id')}\"]")
+			$file = this.$el.find("[data-file-id=\"#{file.get('id')}\"]")
 
-		# 	$file.remove()
+			$file.remove()
+
+
+
+	reseting: () ->
+
+		this.files.on 'reset', () =>
+
+			this.$el.empty()
+
+
+
+
+
 

@@ -1,5 +1,6 @@
 
 Backbone = 							require('Backbone')
+Files = 							require('Files')
 
 module.exports = Backbone.Model.extend
 
@@ -15,6 +16,9 @@ module.exports = Backbone.Model.extend
 
 			message:
 				text:			''
+
+			attachments:
+				files:			[]
 
 			formatting:			''
 
@@ -33,7 +37,20 @@ module.exports = Backbone.Model.extend
 		
 		this.checkFormatting()
 
+		this.checkFiles()
+
 		this.on 'change:message', () => this.checkFormatting()
+
+
+	checkFiles: () ->
+
+		attachments = this.get('attachments')
+
+		attachments.files = new Files(attachments.files).toJSON()
+
+		this.set
+			attachments: attachments
+
 
 
 	checkFormatting: () ->

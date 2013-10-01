@@ -1,14 +1,19 @@
 
-li
+li(data-file-id = "[%= id %]")
+
 	a(href = "[%= url %]", target = "_blank")
 		[%= name %]
+
 	&nbsp;
 	&nbsp;
+
 	small.muted [%= sizeFormat %]
+
 	&nbsp;
 	&nbsp;
+
 	small
-		a(href = "#") удалить
+		a(href = "#", data-file = "[%= id %]", data-action = "delete file") удалить
 
 
 

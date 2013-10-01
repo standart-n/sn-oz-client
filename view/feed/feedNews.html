@@ -11,6 +11,19 @@
     <div class="post-edit hide">
       <textarea wrap="hard" rows="4" data-post="[%= id %]" class="feed-post-edit span12"></textarea>
     </div>
+    <div class="post-files">
+      [% if (typeof attachments !== 'undefined' && attachments !== null) { %]
+      [% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
+      [% if (attachments.files.length !== null && attachments.files.length > 0) { %]
+      <p>[% for (i = 0; i < attachments.files.length; i++) { %]
+        <div class="attachments-file"><i class="icon-file"></i>&nbsp;<a href="[%= attachments.files[i].url %]" target="_blank">[%= attachments.files[i].name %]</a>&nbsp;
+          &nbsp;<small class="muted">[%= attachments.files[i].sizeFormat %]</small>&nbsp;
+          &nbsp;<small><a href="[%= attachments.files[i].url %]" target="_blank">Скачать</a></small>
+        </div>[% } %]
+      </p>[% } %]
+      [% } %]
+      [% } %]
+    </div>
     <div class="post-tools-edit hide"><a href="#" data-action="save post" data-post="[%= id %]" class="btn btn-success btn-small">Сохранить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
     <div class="post-tools-remove hide"><a href="#" data-action="delete post" data-post="[%= id %]" class="btn btn-danger btn-small">Удалить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
     <div class="post-footer"><small class="muted"> 

@@ -65,8 +65,6 @@ module.exports = Template.extend
 
 				this.getResultFromServer aid, (data) =>
 
-					jalert data
-
 					if data.file?
 						if data.file.error?
 							switch data.file.error
@@ -77,13 +75,12 @@ module.exports = Template.extend
 								else 
 									this.error(data.file.error.toString())
 						else 
-							# jalert data
 							this.boxFiles.files.add
+								id:				data.file.id
 								name:			data.file.name
-								original:		data.file.original
+								originalName:	data.file.originalName
 								type:			data.file.type
 								size:			data.file.size
-								sizeFormat:		data.file.sizeFormat
 								url:			data.file.url
 
 					else
@@ -110,8 +107,12 @@ module.exports = Template.extend
 			message = 
 				text:								this.$message.val()
 
+			attachments = 
+				files:								if this.boxFiles?.files? then this.boxFiles.files.toJSON() else []
+
 			this.post.set
 				message:							message
+				attachments:						attachments
 				region:								window.sn.get('region')
 
 
@@ -121,7 +122,7 @@ module.exports = Template.extend
 
 			if isUserCanSendMessage is true
 
-				req = 								_.pick(this.post.toJSON(),'message','region')
+				req = 								_.pick(this.post.toJSON(), 'message', 'region', 'attachments')
 
 				aid = 								window.aid()
 
@@ -164,6 +165,7 @@ module.exports = Template.extend
 
 							if data.success is true
 								this.$message.val('')
+								this.boxFiles.files.reset()
 								if !window.isSocketReady
 									this.$el.trigger('send')
 

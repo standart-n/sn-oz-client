@@ -19,6 +19,7 @@ module.exports = Template.extend
 
 		this.aboutView = 					new AboutView()
 
+
 		if window.user?
 			window.user.on 'change:signin', () =>
 				if window.user.get('signin') is true
@@ -27,16 +28,25 @@ module.exports = Template.extend
 					if this.box?
 						this.box.showFileUpload()
 
+
 		$(document).on 'scrollDown', () ->	
 			if _this.news?
 				_this.news.down()
+
+
+		$(document).on 'click', '[data-action="delete file"]', (e) ->
+
+			e.preventDefault()
+
+			if $(this).data('file') and _this.box?.boxFiles?.files?
+				_this.box.boxFiles.files.remove $(this).data('file')
 
 
 		$(document).on 'click', '[data-action="edit post"]', (e) ->
 
 			e.preventDefault()
 
-			if $(this).data('post')? and _this.news?
+			if $(this).data('post') and _this.news?
 				_this.news.editPost $(this).data('post')
 
 
@@ -44,7 +54,7 @@ module.exports = Template.extend
 
 			e.preventDefault()
 
-			if $(this).data('post')? and _this.news?
+			if $(this).data('post') and _this.news?
 				_this.news.savePost $(this).data('post')
 
 
@@ -52,13 +62,13 @@ module.exports = Template.extend
 
 			if e.keyCode is 13 and e.ctrlKey
 
-				if $(this).data('post')? and _this.news?
+				if $(this).data('post') and _this.news?
 					_this.news.savePost $(this).data('post')
 
 
 			if e.keyCode is 27
 
-				if $(this).data('post')? and _this.news?
+				if $(this).data('post') and _this.news?
 					_this.news.blurPost $(this).data('post')
 
 
@@ -67,7 +77,7 @@ module.exports = Template.extend
 
 			e.preventDefault()
 
-			if $(this).data('post')? and _this.news?
+			if $(this).data('post') and _this.news?
 				_this.news.blurPost $(this).data('post')
 
 
@@ -76,7 +86,7 @@ module.exports = Template.extend
 
 			e.preventDefault()
 
-			if $(this).data('post')? and _this.news?
+			if $(this).data('post') and _this.news?
 				_this.news.removePost $(this).data('post')
 
 
@@ -84,7 +94,7 @@ module.exports = Template.extend
 
 			e.preventDefault()
 
-			if $(this).data('post')?
+			if $(this).data('post')
 				_this.news.deletePost $(this).data('post')
 
 

@@ -1,0 +1,43 @@
+
+[% if (typeof attachments !== 'undefined' && attachments !== null) { %]
+
+[% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
+
+[% if (attachments.files.length !== null && attachments.files.length > 0) { %]
+
+p
+
+	[% for (i = 0; i < attachments.files.length; i++) { %]
+
+	.attachments-file
+
+		i.icon-file
+		
+		&nbsp;
+		
+		a(href = "[%= attachments.files[i].url %]", target = "_blank")
+		
+			[%= attachments.files[i].name %]
+
+		&nbsp;
+		&nbsp;
+
+		small.muted
+
+			[%= attachments.files[i].sizeFormat %]
+
+		&nbsp;
+		&nbsp;
+
+		small
+		
+			a(href = "[%= attachments.files[i].url %]", target = "_blank") Скачать
+
+	[% } %]
+
+
+[% } %]
+
+[% } %]
+
+[% } %]

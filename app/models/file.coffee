@@ -1,5 +1,6 @@
 
 Backbone = 							require('Backbone')
+bytes = 							require('Bytes')
 
 module.exports = Backbone.Model.extend
 
@@ -7,7 +8,7 @@ module.exports = Backbone.Model.extend
 
 		result = 
 			name:						''
-			original:					''
+			originalName:				''
 			type:						''
 			size:						0
 			sizeFormat:					''
@@ -19,7 +20,7 @@ module.exports = Backbone.Model.extend
 
 
 	initialize: () ->
-
+			this.set 'sizeFormat', bytes(this.get('size'))
 
 	reset: () ->
 		this.set this.defaults()

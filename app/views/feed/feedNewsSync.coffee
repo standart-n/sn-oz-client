@@ -1,6 +1,6 @@
 
-
 Sync = 										require('Sync')
+Complete = 									require('Complete')
 
 module.exports = Sync.extend
 
@@ -58,6 +58,11 @@ module.exports = Sync.extend
 
 				$footerTools.html footerTools
 
+
+			new Complete
+				el: 		this.el
+				icons:		on
+				tooltips:	off
 	
 			
 			setInterval () =>
