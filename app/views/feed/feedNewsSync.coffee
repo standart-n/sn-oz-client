@@ -31,18 +31,20 @@ module.exports = Sync.extend
 				this.append(post)
 
 
-			post.on 'change:formatting', () =>
+			$post = 						this.$el.find("[data-post-id=\"#{post.get('id')}\"]")
+			$header = 						$post.find('.media-heading')
+			$text = 						$post.find('.post-text')
+			$photos = 						$post.find('.post-photos')
+			$footerTools = 					$post.find('.post-footer-tools')
+			$footerDate = 					$post.find('.post-footer-date')
 
-				$post = 					this.$el.find("[data-post-id=\"#{post.get('id')}\"]")
-				$text = 					$post.find('.post-text')
+
+			post.on 'change:formatting', () =>
 
 				$text.html post.get 'formatting'
 
 
 			post.on 'change:author', () =>
-
-				$post = 					this.$el.find("[data-post-id=\"#{post.get('id')}\"]")
-				$header = 					$post.find('.media-heading')
 
 				header = 					this.ejs post.toJSON(), this.urls.post.header
 
@@ -51,24 +53,24 @@ module.exports = Sync.extend
 
 			post.on 'change:our', () =>
 
-				$post = 					this.$el.find("[data-post-id=\"#{post.get('id')}\"]")
-				$footerTools = 				$post.find('.post-footer-tools')
-
 				footerTools = 				this.ejs post.toJSON(), this.urls.post.footer.tools
 
 				$footerTools.html footerTools
 
 
+			setTimeout () =>
+				$photos.isotope
+					layoutMode:					'masonry'
+			, 10
+
+
 			new Complete
-				el: 		this.el
+				el: 		$post
 				icons:		on
 				tooltips:	off
 	
 			
 			setInterval () =>
-
-				$post = 					this.$el.find("[data-post-id=\"#{post.get('id')}\"]")
-				$footerDate = 				$post.find('.post-footer-date')
 
 				footerDate = 				this.ejs post.toJSON(), this.urls.post.footer.date
 

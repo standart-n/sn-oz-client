@@ -6344,6 +6344,10 @@ a.thumbnail:hover {
   color: #555555;
 }
 
+.item {
+  margin: 2px;
+}
+
 .media,
 .media-body {
   overflow: hidden;
@@ -6931,6 +6935,10 @@ a.badge:hover {
 
 .pull-left {
   float: left;
+}
+
+.clear-both {
+  clear: both;
 }
 
 .hide {

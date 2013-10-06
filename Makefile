@@ -19,8 +19,8 @@ bootstrap:
 
 
 
-test:
-	@./node_modules/.bin/grunt test
+server:
+	@./node_modules/.bin/grunt server
 	@node ./server.js
 	
 
@@ -28,4 +28,4 @@ finish:
 	@echo "\nSuccessfully built at ${DATE}."
 
 
-.PHONY: install test bootstrap
+.PHONY: install server bootstrap

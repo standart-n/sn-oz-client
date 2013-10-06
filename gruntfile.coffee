@@ -127,5 +127,5 @@ module.exports = (grunt) ->
 	
 	grunt.registerTask 'default', ['clean:build', 'recess:css', 'coffee:sn', 'jade:index', 'jade:view', 'jade:layout', 'lmd:sn']
 	grunt.registerTask 'all', ['bootstrap','default']
-	grunt.registerTask 'test', ['coffee:server', 'coffee:test']
+	grunt.registerTask 'server', ['coffee:server']
 	grunt.registerTask 'bootstrap', ['concat:bootstrap', 'uglify:bootstrap']

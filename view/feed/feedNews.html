@@ -11,7 +11,19 @@
     <div class="post-edit hide">
       <textarea wrap="hard" rows="4" data-post="[%= id %]" class="feed-post-edit span12"></textarea>
     </div>
-    <div class="post-files">
+    <div class="post-photos clear-both">
+      <div class="item pull-left"><img src="http://placehold.it/200x150"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x250"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x250"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x350"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x150"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x150"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x250"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x250"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x350"/></div>
+      <div class="item pull-left"><img src="http://placehold.it/200x150"/></div>
+    </div>
+    <div class="post-files clear-both">
       [% if (typeof attachments !== 'undefined' && attachments !== null) { %]
       [% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
       [% if (attachments.files.length !== null && attachments.files.length > 0) { %]
@@ -24,9 +36,9 @@
       [% } %]
       [% } %]
     </div>
-    <div class="post-tools-edit hide"><a href="#" data-action="save post" data-post="[%= id %]" class="btn btn-success btn-small">Сохранить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
-    <div class="post-tools-remove hide"><a href="#" data-action="delete post" data-post="[%= id %]" class="btn btn-danger btn-small">Удалить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
-    <div class="post-footer"><small class="muted"> 
+    <div class="post-tools-edit hide clear-both"><a href="#" data-action="save post" data-post="[%= id %]" class="btn btn-success btn-small">Сохранить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
+    <div class="post-tools-remove hide clear-both"><a href="#" data-action="delete post" data-post="[%= id %]" class="btn btn-danger btn-small">Удалить</a>&nbsp;<a href="#" data-action="blur post" data-post="[%= id %]" class="btn btn-small">Отмена</a></div>
+    <div class="post-footer clear-both"><small class="muted"> 
         <div class="post-footer-date pull-left">[%= moment(post_dt).fromNow() %]</div>
         <div class="post-footer-tools pull-left">
           [% if (our) { %]

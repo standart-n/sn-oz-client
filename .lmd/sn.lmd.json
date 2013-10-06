@@ -20,6 +20,7 @@
 		"ejs": 						"lib/ejs/ejs.min.js",
 		"moment": 					"lib/moment/moment.min.js",
 		"moment-ru": 				"lib/moment/lang/ru.js",
+		"isotope": 					"lib/jquery-isotope/jquery.isotope.min.js",
 		"bootstrap": 				"lib/bootstrap/bootstrap.min.js",
 		"Backbone": {
 			"path": 				"lib/backbone/backbone.min.js",

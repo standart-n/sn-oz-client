@@ -17,20 +17,43 @@ li.media(data-post-id = "[%= id %]")
 		.post-edit.hide
 			textarea.feed-post-edit.span12(wrap = "hard", rows = "4", data-post = "[%= id %]")
 
-		.post-files
+		.post-photos.clear-both
+			.item.pull-left
+				img(src = "http://placehold.it/200x150")
+			.item.pull-left
+				img(src = "http://placehold.it/200x250")
+			.item.pull-left
+				img(src = "http://placehold.it/200x250")
+			.item.pull-left
+				img(src = "http://placehold.it/200x350")
+			.item.pull-left
+				img(src = "http://placehold.it/200x150")
+			.item.pull-left
+				img(src = "http://placehold.it/200x150")
+			.item.pull-left
+				img(src = "http://placehold.it/200x250")
+			.item.pull-left
+				img(src = "http://placehold.it/200x250")
+			.item.pull-left
+				img(src = "http://placehold.it/200x350")
+			.item.pull-left
+				img(src = "http://placehold.it/200x150")
+
+
+		.post-files.clear-both
 			include feedNewsFiles
 
-		.post-tools-edit.hide
+		.post-tools-edit.hide.clear-both
 			a.btn.btn-success.btn-small(href = "#", data-action = "save post", data-post = "[%= id %]") Сохранить
 			&nbsp;
 			a.btn.btn-small(href = "#", data-action = "blur post", data-post = "[%= id %]") Отмена
 
-		.post-tools-remove.hide
+		.post-tools-remove.hide.clear-both
 			a.btn.btn-danger.btn-small(href = "#", data-action = "delete post", data-post = "[%= id %]") Удалить
 			&nbsp;
 			a.btn.btn-small(href = "#", data-action = "blur post", data-post = "[%= id %]") Отмена
 
-		.post-footer
+		.post-footer.clear-both
 			small.muted 
 				.post-footer-date.pull-left
 					include feedNewsFooterDate
