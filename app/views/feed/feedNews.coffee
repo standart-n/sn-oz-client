@@ -36,12 +36,16 @@ module.exports = FeedNewsSync.extend
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
 		$text = 							$post.find('.post-text')
+		$files = 							$post.find('.post-files')
+		$photos = 							$post.find('.post-photos')
 		$footer = 							$post.find('.post-footer')
 		$toolsRemove = 						$post.find('.post-tools-remove')
 
 		post = 								this.posts.get(id)
 
 		$text.hide()
+		$files.hide()
+		$photos.hide()
 		$toolsRemove.show()
 		$footer.hide()
 
@@ -202,6 +206,8 @@ module.exports = FeedNewsSync.extend
 		$area = 							$post.find('textarea')
 		$text = 							$post.find('.post-text')
 		$edit = 							$post.find('.post-edit')
+		$files = 							$post.find('.post-files')
+		$photos = 							$post.find('.post-photos')
 		$footer = 							$post.find('.post-footer')
 		$toolsEdit = 						$post.find('.post-tools-edit')
 		$toolsRemove = 						$post.find('.post-tools-remove')
@@ -212,6 +218,8 @@ module.exports = FeedNewsSync.extend
 		text = 								post.get('message').text
 
 		$text.show()
+		$files.show()
+		$photos.show()
 		$edit.hide()
 		$toolsEdit.hide()
 		$toolsRemove.hide()

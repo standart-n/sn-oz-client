@@ -2,11 +2,14 @@
 [% if (typeof attachments !== 'undefined' && attachments !== null) { %]
 [% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
 [% if (attachments.files.length !== null && attachments.files.length > 0) { %]
-<p>[% for (i = 0; i < attachments.files.length; i++) { %]
+<p>
+  [% for (i = 0; i < attachments.files.length; i++) { %]
+  [% if (!attachments.files[i].type.match(/^image/)) { %]
   <div class="attachments-file"><i class="icon-file"></i>&nbsp;<a href="[%= attachments.files[i].url %]" target="_blank">[%= attachments.files[i].name %]</a>&nbsp;
     &nbsp;<small class="muted">[%= attachments.files[i].sizeFormat %]</small>&nbsp;
     &nbsp;<small><a href="[%= attachments.files[i].url %]" target="_blank">Скачать</a></small>
   </div>[% } %]
+  [% } %]
 </p>[% } %]
 [% } %]
 [% } %]

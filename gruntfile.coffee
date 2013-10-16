@@ -46,12 +46,12 @@ module.exports = (grunt) ->
 				options:
 					compile: on
 				files:
-					'style/bootstrap/bootstrap.css': './less/bootstrap/bootstrap.less'
+					'style/bootstrap/theme.<%= pkg.version %>.css': './less/bootstrap/bootstrap.less'
 			min:
 				options:
 					compress: on
 				files:
-					'style/bootstrap/bootstrap.min.css': './less/bootstrap/bootstrap.less'
+					'style/bootstrap/theme.<%= pkg.version %>.min.css': './less/bootstrap/bootstrap.less'
 
 		coffee:			
 			sn:

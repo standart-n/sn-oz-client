@@ -46,22 +46,22 @@ module.exports = Sync.extend
 
 			post.on 'change:author', () =>
 
-				header = 					this.ejs post.toJSON(), this.urls.post.header
+				header = this.ejs post.toJSON(), this.urls.post.header
 
 				$header.html header
 
 
 			post.on 'change:our', () =>
 
-				footerTools = 				this.ejs post.toJSON(), this.urls.post.footer.tools
+				footerTools = this.ejs post.toJSON(), this.urls.post.footer.tools
 
 				$footerTools.html footerTools
 
 
-			setTimeout () =>
-				$photos.isotope
-					layoutMode:					'masonry'
-			, 10
+			# setTimeout () =>
+			# 	$photos.isotope
+			# 		layoutMode:					'masonry'
+			# , 10
 
 
 			new Complete
@@ -72,7 +72,7 @@ module.exports = Sync.extend
 			
 			setInterval () =>
 
-				footerDate = 				this.ejs post.toJSON(), this.urls.post.footer.date
+				footerDate = this.ejs post.toJSON(), this.urls.post.footer.date
 
 				$footerDate.html footerDate
 
@@ -85,7 +85,7 @@ module.exports = Sync.extend
 
 		this.posts.on 'remove', (post) =>
 
-			$post = 	this.$el.find("[data-post-id=\"#{post.get('id')}\"]")
+			$post = this.$el.find("[data-post-id=\"#{post.get('id')}\"]")
 
 			$post.remove()
 

@@ -1,5 +1,4 @@
 
-require('isotope')
 require('widget')
 require('iframeTransport')
 require('fileUpload')

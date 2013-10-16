@@ -6310,7 +6310,10 @@ input[type="submit"].btn.btn-mini {
 
 .thumbnail {
   display: block;
+  float: left;
   padding: 4px;
+  margin-right: 4px;
+  margin-bottom: 5px;
   line-height: 20px;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -6876,6 +6879,10 @@ a.badge:hover {
 
 #feed .tabbable .nav-tabs {
   margin-bottom: 0;
+}
+
+#feed .post-text {
+  margin-bottom: 10px;
 }
 
 #feed .post-footer {

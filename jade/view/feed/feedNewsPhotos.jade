@@ -1,0 +1,27 @@
+
+[% if (typeof attachments !== 'undefined' && attachments !== null) { %]
+
+[% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
+
+[% if (attachments.files.length !== null && attachments.files.length > 0) { %]
+
+
+[% for (i = 0; i < attachments.files.length; i++) { %]
+
+[% if (attachments.files[i].type.match(/^image/)) { %]
+		
+a.thumbnail(href = "[%= attachments.files[i].url %]", target = "_blank")
+
+	img(src = "[%= attachments.files[i].preview %]", style = "width: 200px; height: 200px;")
+
+
+[% } %]
+
+[% } %]
+
+
+[% } %]
+
+[% } %]
+
+[% } %]

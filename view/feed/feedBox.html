@@ -1,17 +1,21 @@
 
-<div class="alert alert-success hide">Сообщение успешно отправлено!</div>
-<div class="alert alert-error hide"><strong>Ошибка!</strong>&nbsp;
-  Возможно, вы неверно ввели данные.
-</div>
 <div class="feed-post-box">
   <form class="feed-post-form form">
     <div class="row-fluid">
       <div class="form-actions">
+        <div class="alert alert-success hide">Сообщение успешно отправлено!</div>
+        <div class="alert alert-error hide"><strong>Ошибка!</strong>&nbsp;
+          Возможно, вы неверно ввели данные.
+        </div>
+        <div class="feed-post-uploading hide alert alert-info">Подождите, идет загрузка файла...</div>
         <textarea wrap="hard" rows="5" class="feed-post-message span12"></textarea>
-        <button type="submit" tabindex="-1" class="btn btn-primary">Отправить</button>&nbsp;<span class="btn feed-post-upload"><i class="icon-file"></i><span>Прикрепить файл	</span>
-          <input type="file" name="files[]" tabindex="-1" class="feed-post-input"/></span>
+        <div class="feed-post-toolbar">
+          <button type="submit" tabindex="-1" class="btn btn-primary feed-post-send">Отправить</button>&nbsp;<span class="btn feed-post-upload"><span>Добавить файл или фото</span>
+            <input type="file" name="files[]" tabindex="-1" class="feed-post-input"/></span>
+        </div>
         <p>
-          <ul id="feed-box-files"></ul>
+          <div id="feed-box-photos" class="clear-both"></div>
+          <ul id="feed-box-files" class="clear-both"></ul>
         </p>
       </div>
     </div>

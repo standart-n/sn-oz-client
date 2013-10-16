@@ -12,26 +12,27 @@
       <textarea wrap="hard" rows="4" data-post="[%= id %]" class="feed-post-edit span12"></textarea>
     </div>
     <div class="post-photos clear-both">
-      <div class="item pull-left"><img src="http://placehold.it/200x150"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x250"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x250"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x350"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x150"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x150"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x250"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x250"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x350"/></div>
-      <div class="item pull-left"><img src="http://placehold.it/200x150"/></div>
-    </div>
+      [% if (typeof attachments !== 'undefined' && attachments !== null) { %]
+      [% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
+      [% if (attachments.files.length !== null && attachments.files.length > 0) { %]
+      [% for (i = 0; i < attachments.files.length; i++) { %]
+      [% if (attachments.files[i].type.match(/^image/)) { %]<a href="[%= attachments.files[i].url %]" target="_blank" class="thumbnail"><img src="[%= attachments.files[i].preview %]" style="width: 200px; height: 200px;"/></a>[% } %]
+      [% } %]
+      [% } %]
+      [% } %]
+      [% } %]</div>
     <div class="post-files clear-both">
       [% if (typeof attachments !== 'undefined' && attachments !== null) { %]
       [% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
       [% if (attachments.files.length !== null && attachments.files.length > 0) { %]
-      <p>[% for (i = 0; i < attachments.files.length; i++) { %]
+      <p>
+        [% for (i = 0; i < attachments.files.length; i++) { %]
+        [% if (!attachments.files[i].type.match(/^image/)) { %]
         <div class="attachments-file"><i class="icon-file"></i>&nbsp;<a href="[%= attachments.files[i].url %]" target="_blank">[%= attachments.files[i].name %]</a>&nbsp;
           &nbsp;<small class="muted">[%= attachments.files[i].sizeFormat %]</small>&nbsp;
           &nbsp;<small><a href="[%= attachments.files[i].url %]" target="_blank">Скачать</a></small>
         </div>[% } %]
+        [% } %]
       </p>[% } %]
       [% } %]
       [% } %]

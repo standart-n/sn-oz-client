@@ -15,6 +15,15 @@ module.exports = Backbone.Model.extend
 			url:						''
 			group:						'files'
 
+			thumbnail:					null
+			preview:					null
+
+			resolution:
+				width:					0
+				height:					0
+
+			type: 						'file'
+
 			post_dt:					new Date()
 
 

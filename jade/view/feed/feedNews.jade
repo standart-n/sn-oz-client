@@ -18,27 +18,7 @@ li.media(data-post-id = "[%= id %]")
 			textarea.feed-post-edit.span12(wrap = "hard", rows = "4", data-post = "[%= id %]")
 
 		.post-photos.clear-both
-			.item.pull-left
-				img(src = "http://placehold.it/200x150")
-			.item.pull-left
-				img(src = "http://placehold.it/200x250")
-			.item.pull-left
-				img(src = "http://placehold.it/200x250")
-			.item.pull-left
-				img(src = "http://placehold.it/200x350")
-			.item.pull-left
-				img(src = "http://placehold.it/200x150")
-			.item.pull-left
-				img(src = "http://placehold.it/200x150")
-			.item.pull-left
-				img(src = "http://placehold.it/200x250")
-			.item.pull-left
-				img(src = "http://placehold.it/200x250")
-			.item.pull-left
-				img(src = "http://placehold.it/200x350")
-			.item.pull-left
-				img(src = "http://placehold.it/200x150")
-
+			include feedNewsPhotos
 
 		.post-files.clear-both
 			include feedNewsFiles

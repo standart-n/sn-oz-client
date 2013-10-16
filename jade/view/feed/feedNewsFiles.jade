@@ -9,6 +9,8 @@ p
 
 	[% for (i = 0; i < attachments.files.length; i++) { %]
 
+	[% if (!attachments.files[i].type.match(/^image/)) { %]
+
 	.attachments-file
 
 		i.icon-file
@@ -33,6 +35,8 @@ p
 		
 			a(href = "[%= attachments.files[i].url %]", target = "_blank") Скачать
 
+	[% } %]
+	
 	[% } %]
 
 

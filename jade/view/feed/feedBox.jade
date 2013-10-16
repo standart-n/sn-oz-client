@@ -1,29 +1,34 @@
 
-.alert.alert-success.hide
-	Сообщение успешно отправлено!
-
-.alert.alert-error.hide
-	strong Ошибка!
-	&nbsp;
-	Возможно, вы неверно ввели данные.
-			
-
 .feed-post-box
 	form.feed-post-form.form
 		.row-fluid
 
 			.form-actions
 
+				.alert.alert-success.hide
+					Сообщение успешно отправлено!
+
+				.alert.alert-error.hide
+					strong Ошибка!
+					&nbsp;
+					Возможно, вы неверно ввели данные.
+
+				.feed-post-uploading.hide.alert.alert-info Подождите, идет загрузка файла...
+
 				textarea.feed-post-message.span12(wrap = "hard", rows = "5")
 
-				button.btn.btn-primary(type = "submit", tabindex = "-1") Отправить
-				&nbsp;
-				span.btn.feed-post-upload
-					i.icon-file
-					span Прикрепить файл	
-					input.feed-post-input(type = "file", name = "files[]", tabindex = "-1")
+				.feed-post-toolbar
+
+					button.btn.btn-primary.feed-post-send(type = "submit", tabindex = "-1") Отправить
+					&nbsp;
+					span.btn.feed-post-upload
+						//- i.icon-file
+						span Добавить файл или фото
+						input.feed-post-input(type = "file", name = "files[]", tabindex = "-1")
 
 				p
-					ul#feed-box-files
+					#feed-box-photos.clear-both
+					
+					ul#feed-box-files.clear-both
 
 

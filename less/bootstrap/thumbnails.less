@@ -26,12 +26,18 @@
 // The actual thumbnail (can be `a` or `div`)
 .thumbnail {
   display: block;
+  float: left;
   padding: 4px;
   line-height: @baseLineHeight;
   border: 1px solid #ddd;
   .border-radius(@baseBorderRadius);
   .box-shadow(0 1px 3px rgba(0,0,0,.055));
   .transition(all .2s ease-in-out);
+
+  margin-bottom: @baseLineHeight / 4;
+  margin-right: @gridGutterWidth * 2;
+  // margin-top: @baseLineHeight/2;
+
 }
 // Add a hover state for linked versions only
 a.thumbnail:hover {

@@ -5,6 +5,7 @@ Template = 									require('Template')
 Post = 										require('Post')
 Complete = 									require('Complete')
 FeedBoxFiles = 								require('FeedBoxFiles')
+FeedBoxPhotos = 							require('FeedBoxPhotos')
 
 module.exports = Template.extend
 
@@ -22,6 +23,7 @@ module.exports = Template.extend
 		this.post = 						new Post()
 
 		this.boxFiles = 					new FeedBoxFiles()
+		this.boxPhotos = 					new FeedBoxPhotos()
 
 		this.render()
 
@@ -31,20 +33,24 @@ module.exports = Template.extend
 		this.$alertError = 					this.$el.find('.alert-error')
 		this.$fileUpload = 					this.$el.find('.feed-post-upload')
 		this.$fileInput = 					this.$el.find('.feed-post-input')
+		this.$tool = 						this.$el.find('.feed-post-toolbar')
+		this.$uploading = 					this.$el.find('.feed-post-uploading')
 
 		this.showFileUpload()
 
 	
 	render: () ->
 		this.template()
-		new Complete
-			el: 			this.el
-			icons:			on
+
+		# new Complete
+		# 	el: 			this.el
+		# 	icons:			on
 
 
 	showFileUpload: () ->
 		if window.user.get('signin') is true
 			this.boxFiles.setElement 		'#feed-box-files'
+			this.boxPhotos.setElement 		'#feed-box-photos'
 			this.$fileUpload.show()
 			this.fileUpload()
 		else
@@ -59,13 +65,21 @@ module.exports = Template.extend
 											?id=#{window.user.get('id')}
 											&key=#{window.user.get('key')}
 											&aid=#{aid}"
-			timeout: 						10000
+			timeout: 						20000
 			dataType:						'json'
+
+			beforeSend: () =>
+				this.$uploading.show()
+				this.$tool.hide()
+
 			done: () =>
+
+				this.$uploading.hide()
+				this.$tool.show()
 
 				this.getResultFromServer aid, (data) =>
 
-					if data.file?
+					if data?.file?
 						if data.file.error?
 							switch data.file.error
 								when 'File is too big'
@@ -75,18 +89,26 @@ module.exports = Template.extend
 								else 
 									this.error(data.file.error.toString())
 						else 
-							this.boxFiles.files.add
+
+							store = if data.file.type.match /^image/ then this.boxPhotos else this.boxFiles
+
+							store.files.add
 								id:				data.file.id
 								name:			data.file.name
 								originalName:	data.file.originalName
 								type:			data.file.type
 								size:			data.file.size
+								thumbnail:		data.file.thumbnail
+								preview:		data.file.preview
 								url:			data.file.url
 
 					else
 						this.error('Ошибка при загрузке файла!')
 
+
 			error: () =>
+				this.$uploading.hide()
+				this.$tool.show()
 				this.error()
 
 
@@ -103,17 +125,24 @@ module.exports = Template.extend
 				this.$el.trigger 'not_signin'
 				isUserCanSendMessage = false
 
+			folder = []
+
+			if this.boxPhotos?.files?
+				folder.push this.boxPhotos.files.toJSON() 
+
+			if this.boxFiles?.files?
+				folder.push this.boxFiles.files.toJSON()
 
 			message = 
-				text:								this.$message.val()
-
+				text:				this.$message.val()
+			
 			attachments = 
-				files:								if this.boxFiles?.files? then this.boxFiles.files.toJSON() else []
+				files:				_.flatten folder, true
 
 			this.post.set
-				message:							message
-				attachments:						attachments
-				region:								window.sn.get('region')
+				message:			message
+				attachments:		attachments
+				region:				window.sn.get('region')
 
 
 			if message.text.length < 3 and isUserCanSendMessage is true
@@ -163,11 +192,11 @@ module.exports = Template.extend
 
 						this.getResultFromServer aid, (data) =>
 
-							if data.success is true
+							if data? and data.success is true
 								this.$message.val('')
-								this.boxFiles.files.reset()
-								if !window.isSocketReady
-									this.$el.trigger('send')
+								this.boxFiles.files.reset()								
+								this.boxPhotos.files.reset()								
+								this.$el.trigger('send') if !window.isSocketReady
 
 							else 
 								if data.notice?
