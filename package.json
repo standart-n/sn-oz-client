@@ -1,6 +1,6 @@
 {
   "name": "sn-oz-client",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "web интерфейс для Общего Заказа",
   "main": "index.js",
   "dependencies": {},
