@@ -1548,6 +1548,7 @@ module.exports = Template.extend({
                 _this.$message.val('');
                 _this.boxFiles.files.reset();
                 _this.boxPhotos.files.reset();
+                _this.areaBlur();
                 if (!window.isSocketReady) {
                   return _this.$el.trigger('send');
                 }

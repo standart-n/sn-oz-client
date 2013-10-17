@@ -196,8 +196,9 @@ module.exports = Template.extend
 
 							if data? and data.success is true
 								this.$message.val('')
-								this.boxFiles.files.reset()								
-								this.boxPhotos.files.reset()								
+								this.boxFiles.files.reset()
+								this.boxPhotos.files.reset()
+								this.areaBlur()
 								this.$el.trigger('send') if !window.isSocketReady
 
 							else 
