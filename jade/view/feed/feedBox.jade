@@ -22,8 +22,13 @@
 					button.btn.btn-primary.feed-post-send(type = "submit", tabindex = "-1") Отправить
 					&nbsp;
 					span.btn.feed-post-upload
-						//- i.icon-file
-						span Добавить файл или фото
+						i.icon-file
+						span Добавить файл
+						input.feed-post-input(type = "file", name = "files[]", tabindex = "-1")
+					&nbsp;
+					span.btn.feed-post-upload
+						i.icon-picture
+						span Добавить фото
 						input.feed-post-input(type = "file", name = "files[]", tabindex = "-1")
 
 				p

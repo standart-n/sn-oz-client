@@ -14,7 +14,9 @@ module.exports = Template.extend
 
 	events: () ->
 		'submit form'						: 'submit'
-		'keyup .feed-post-message'			: 'keyup'
+		'keyup .feed-post-message'			: 'areaKeyup'
+		'focus .feed-post-message'			: 'areaFocus'
+		'blur .feed-post-message'			: 'areaBlur'
 
 	initialize: () ->
 
@@ -42,9 +44,9 @@ module.exports = Template.extend
 	render: () ->
 		this.template()
 
-		# new Complete
-		# 	el: 			this.el
-		# 	icons:			on
+		new Complete
+			el: 			this.el
+			icons:			on
 
 
 	showFileUpload: () ->
@@ -225,9 +227,16 @@ module.exports = Template.extend
 
 
 
-	keyup: (e) ->
+	areaKeyup: (e) ->
 		if e.keyCode is 13 and e.ctrlKey
 			this.$form.submit()
+
+	areaFocus: () ->
+		this.$message.attr 'rows', 10
+
+	areaBlur: () ->
+		if this.$message.val() is ''
+			this.$message.attr 'rows', 5
 
 
 	success: () ->

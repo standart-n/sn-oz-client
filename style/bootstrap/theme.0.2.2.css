@@ -6931,6 +6931,7 @@ a.badge:hover {
   margin: 0;
   font-size: 23px;
   cursor: pointer;
+  border: #000 solid 1px;
   opacity: 0;
   filter: alpha(opacity=0);
   direction: ltr;

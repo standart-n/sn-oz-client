@@ -1390,7 +1390,9 @@ module.exports = Template.extend({
   events: function() {
     return {
       'submit form': 'submit',
-      'keyup .feed-post-message': 'keyup'
+      'keyup .feed-post-message': 'areaKeyup',
+      'focus .feed-post-message': 'areaFocus',
+      'blur .feed-post-message': 'areaBlur'
     };
   },
   initialize: function() {
@@ -1410,7 +1412,11 @@ module.exports = Template.extend({
     return this.showFileUpload();
   },
   render: function() {
-    return this.template();
+    this.template();
+    return new Complete({
+      el: this.el,
+      icons: true
+    });
   },
   showFileUpload: function() {
     if (window.user.get('signin') === true) {
@@ -1577,9 +1583,17 @@ module.exports = Template.extend({
       }
     });
   },
-  keyup: function(e) {
+  areaKeyup: function(e) {
     if (e.keyCode === 13 && e.ctrlKey) {
       return this.$form.submit();
+    }
+  },
+  areaFocus: function() {
+    return this.$message.attr('rows', 10);
+  },
+  areaBlur: function() {
+    if (this.$message.val() === '') {
+      return this.$message.attr('rows', 5);
     }
   },
   success: function() {
