@@ -1397,18 +1397,22 @@ module.exports = Template.extend({
   },
   initialize: function() {
     this.el = '#feed-box';
+    this.status = 'ready';
     this.post = new Post();
     this.boxFiles = new FeedBoxFiles();
     this.boxPhotos = new FeedBoxPhotos();
     this.render();
     this.$form = this.$el.find('form');
-    this.$message = this.$el.find('textarea');
-    this.$button = this.$el.find('button');
-    this.$alertError = this.$el.find('.alert-error');
+    this.$textarea = this.$el.find('textarea');
+    this.$buttonSend = this.$el.find('.feed-post-send');
     this.$fileUpload = this.$el.find('.feed-post-upload');
     this.$fileInput = this.$el.find('.feed-post-input');
-    this.$tool = this.$el.find('.feed-post-toolbar');
-    this.$uploading = this.$el.find('.feed-post-uploading');
+    this.$toolbar = this.$el.find('.feed-post-toolbar');
+    this.$attachments = this.$el.find('.feed-post-attachments');
+    this.$alert = this.$el.find('.alert');
+    this.$alertError = this.$el.find('.alert-error');
+    this.$alertUpload = this.$el.find('.alert-upload');
+    this.$alertSend = this.$el.find('.alert-send');
     return this.showFileUpload();
   },
   render: function() {
@@ -1417,6 +1421,74 @@ module.exports = Template.extend({
       el: this.el,
       icons: true
     });
+  },
+  state: function(status, message) {
+    if (status == null) {
+      return this.status;
+    } else {
+      switch (status) {
+        case 'upload':
+          this.$alertUpload.show();
+          this.$toolbar.hide();
+          return this.status = 'upload';
+        case 'send':
+          this.$alertSend.show();
+          this.$textarea.hide();
+          this.$toolbar.hide();
+          this.$attachments.hide();
+          return this.status = 'send';
+        case 'error':
+          if (this.status === 'upload') {
+            if (message != null) {
+              switch (message) {
+                case 'File is too big':
+                  this.error('Размер файла не должен превышать <b>10mb</b>');
+                  break;
+                case 'User not found':
+                  this.error('Вы не авторизованы');
+                  break;
+                default:
+                  this.error(message.toString());
+              }
+            } else {
+              this.error('Ошибка при загрузке файла!');
+            }
+            this.$alertUpload.hide();
+            this.$toolbar.show();
+          }
+          if (this.status === 'send') {
+            this.$alertSend.hide();
+            this.$textarea.show();
+            this.$toolbar.show();
+            this.$attachments.show();
+            if (message != null) {
+              this.error(message.toString());
+            } else {
+              this.error('Ошибка при отправке сообщения!');
+            }
+          }
+          return this.status = 'ready';
+        case 'ready':
+          if (this.status === 'upload') {
+            this.$alertUpload.hide();
+            this.$toolbar.show();
+          }
+          if (this.status === 'send') {
+            this.$alertSend.hide();
+            this.$textarea.show();
+            this.$toolbar.show();
+            this.$attachments.show();
+            this.$textarea.val('');
+            this.boxFiles.files.reset();
+            this.boxPhotos.files.reset();
+            this.areaBlur();
+            if (!window.isSocketReady) {
+              this.$el.trigger('send');
+            }
+          }
+          return this.status = 'ready';
+      }
+    }
   },
   showFileUpload: function() {
     if (window.user.get('signin') === true) {
@@ -1437,51 +1509,44 @@ module.exports = Template.extend({
       timeout: 20000,
       dataType: 'json',
       beforeSend: function() {
-        _this.$uploading.show();
-        return _this.$tool.hide();
+        return _this.state('upload');
       },
       done: function() {
-        _this.$uploading.hide();
-        _this.$tool.show();
-        return _this.getResultFromServer(aid, function(data) {
+        return _this.getResultFromServer(aid, function(err, data) {
           var store;
-          if ((data != null ? data.file : void 0) != null) {
-            if (data.file.error != null) {
-              switch (data.file.error) {
-                case 'File is too big':
-                  return _this.error('Размер файла не должен превышать <b>10mb</b>');
-                case 'User not found':
-                  return _this.error('Вы не авторизованы');
-                default:
-                  return _this.error(data.file.error.toString());
+          if (err != null) {
+            return _this.state('error', err);
+          } else {
+            if ((data != null ? data.file : void 0) != null) {
+              if (data.file.error != null) {
+                return _this.state('error', data.file.error);
+              } else {
+                _this.state('ready');
+                store = data.file.type.match(/^image/) ? _this.boxPhotos : _this.boxFiles;
+                return store.files.add({
+                  id: data.file.id,
+                  name: data.file.name,
+                  originalName: data.file.originalName,
+                  type: data.file.type,
+                  size: data.file.size,
+                  thumbnail: data.file.thumbnail,
+                  preview: data.file.preview,
+                  url: data.file.url
+                });
               }
             } else {
-              store = data.file.type.match(/^image/) ? _this.boxPhotos : _this.boxFiles;
-              return store.files.add({
-                id: data.file.id,
-                name: data.file.name,
-                originalName: data.file.originalName,
-                type: data.file.type,
-                size: data.file.size,
-                thumbnail: data.file.thumbnail,
-                preview: data.file.preview,
-                url: data.file.url
-              });
+              return _this.state('error');
             }
-          } else {
-            return _this.error('Ошибка при загрузке файла!');
           }
         });
       },
-      error: function() {
-        _this.$uploading.hide();
-        _this.$tool.show();
-        return _this.error();
+      fail: function() {
+        return _this.state('error');
       }
     });
   },
   submit: function(e) {
-    var aid, attachments, folder, isUserCanSendMessage, message, req, _ref, _ref1,
+    var aid, attachments, isUserCanSendMessage, message, req,
       _this = this;
     isUserCanSendMessage = true;
     e.preventDefault();
@@ -1490,18 +1555,11 @@ module.exports = Template.extend({
         this.$el.trigger('not_signin');
         isUserCanSendMessage = false;
       }
-      folder = [];
-      if (((_ref = this.boxPhotos) != null ? _ref.files : void 0) != null) {
-        folder.push(this.boxPhotos.files.toJSON());
-      }
-      if (((_ref1 = this.boxFiles) != null ? _ref1.files : void 0) != null) {
-        folder.push(this.boxFiles.files.toJSON());
-      }
       message = {
-        text: this.$message.val()
+        text: this.$textarea.val()
       };
       attachments = {
-        files: _.flatten(folder, true)
+        files: this.getAttachments()
       };
       this.post.set({
         message: message,
@@ -1537,32 +1595,27 @@ module.exports = Template.extend({
             }
           ],
           beforeSend: function() {
-            _this.$button.button('loading');
-            return setTimeout(function() {
-              return _this.$button.button('reset');
-            }, 400);
+            return _this.state('send');
           },
           success: function(s) {
-            return _this.getResultFromServer(aid, function(data) {
-              if ((data != null) && data.success === true) {
-                _this.$message.val('');
-                _this.boxFiles.files.reset();
-                _this.boxPhotos.files.reset();
-                _this.areaBlur();
-                if (!window.isSocketReady) {
-                  return _this.$el.trigger('send');
-                }
+            return _this.getResultFromServer(aid, function(err, data) {
+              if (err != null) {
+                return _this.state('error', err);
               } else {
-                if (data.notice != null) {
-                  return _this.error(data.notice);
+                if ((data != null) && data.success === true) {
+                  return _this.state('ready');
                 } else {
-                  return _this.error();
+                  if (data.notice != null) {
+                    return _this.state('error', data.notice);
+                  } else {
+                    return _this.state('error');
+                  }
                 }
               }
             });
           },
           error: function() {
-            return _this.error();
+            return _this.state('error');
           }
         });
       }
@@ -1576,13 +1629,26 @@ module.exports = Template.extend({
       dataType: 'jsonp',
       success: function(data) {
         if (callback) {
-          return callback(data);
+          return callback(null, data);
         }
       },
       error: function() {
-        return _this.error();
+        if (callback) {
+          return callback('Превышено время ожидания ответа от сервера!');
+        }
       }
     });
+  },
+  getAttachments: function() {
+    var folder, _ref, _ref1;
+    folder = [];
+    if (((_ref = this.boxPhotos) != null ? _ref.files : void 0) != null) {
+      folder.push(this.boxPhotos.files.toJSON());
+    }
+    if (((_ref1 = this.boxFiles) != null ? _ref1.files : void 0) != null) {
+      folder.push(this.boxFiles.files.toJSON());
+    }
+    return _.flatten(folder, true);
   },
   areaKeyup: function(e) {
     if (e.keyCode === 13 && e.ctrlKey) {
@@ -1590,15 +1656,12 @@ module.exports = Template.extend({
     }
   },
   areaFocus: function() {
-    return this.$message.attr('rows', 10);
+    return this.$textarea.attr('rows', 10);
   },
   areaBlur: function() {
-    if (this.$message.val() === '') {
-      return this.$message.attr('rows', 5);
+    if (this.$textarea.val() === '') {
+      return this.$textarea.attr('rows', 5);
     }
-  },
-  success: function() {
-    return this.$alertError.hide();
   },
   error: function(notice) {
     var _this = this;

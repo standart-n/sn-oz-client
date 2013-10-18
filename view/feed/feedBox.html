@@ -7,17 +7,18 @@
         <div class="alert alert-error hide"><strong>Ошибка!</strong>&nbsp;
           Возможно, вы неверно ввели данные.
         </div>
-        <div class="feed-post-uploading hide alert alert-info">Подождите, идет загрузка файла...</div>
+        <div class="alert alert-send alert-info hide">Подождите, идет отправка сообщения...</div>
+        <div class="alert alert-upload alert-info hide">Подождите, идет загрузка файла...</div>
         <textarea wrap="hard" rows="5" class="feed-post-message span12"></textarea>
         <div class="feed-post-toolbar">
           <button type="submit" tabindex="-1" class="btn btn-primary feed-post-send">Отправить</button>&nbsp;<span class="btn feed-post-upload"><i class="icon-file"></i><span>Добавить файл</span>
             <input type="file" name="files[]" tabindex="-1" class="feed-post-input"/></span>&nbsp;<span class="btn feed-post-upload"><i class="icon-picture"></i><span>Добавить фото</span>
             <input type="file" name="files[]" tabindex="-1" class="feed-post-input"/></span>
         </div>
-        <p>
+        <div class="feed-post-attachments">
           <div id="feed-box-photos" class="clear-both"></div>
           <ul id="feed-box-files" class="clear-both"></ul>
-        </p>
+        </div>
       </div>
     </div>
   </form>

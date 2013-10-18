@@ -22,6 +22,8 @@ module.exports = Template.extend
 
 		this.el = 							'#feed-box'
 
+		this.status = 						'ready'
+
 		this.post = 						new Post()
 
 		this.boxFiles = 					new FeedBoxFiles()
@@ -30,13 +32,18 @@ module.exports = Template.extend
 		this.render()
 
 		this.$form = 						this.$el.find('form')
-		this.$message = 					this.$el.find('textarea')
-		this.$button = 						this.$el.find('button')
-		this.$alertError = 					this.$el.find('.alert-error')
+		this.$textarea = 					this.$el.find('textarea')
+
+		this.$buttonSend = 					this.$el.find('.feed-post-send')
 		this.$fileUpload = 					this.$el.find('.feed-post-upload')
 		this.$fileInput = 					this.$el.find('.feed-post-input')
-		this.$tool = 						this.$el.find('.feed-post-toolbar')
-		this.$uploading = 					this.$el.find('.feed-post-uploading')
+		this.$toolbar = 					this.$el.find('.feed-post-toolbar')
+		this.$attachments = 				this.$el.find('.feed-post-attachments')
+
+		this.$alert = 						this.$el.find('.alert')
+		this.$alertError = 					this.$el.find('.alert-error')
+		this.$alertUpload = 				this.$el.find('.alert-upload')
+		this.$alertSend = 					this.$el.find('.alert-send')
 
 		this.showFileUpload()
 
@@ -47,6 +54,81 @@ module.exports = Template.extend
 		new Complete
 			el: 			this.el
 			icons:			on
+
+
+	state: (status, message) ->
+
+		if !status?
+			return this.status
+		else
+			switch status
+
+				when 'upload'
+					this.$alertUpload.show()
+					this.$toolbar.hide()
+					this.status = 'upload'
+
+
+				when 'send'
+					this.$alertSend.show()
+					this.$textarea.hide()
+					this.$toolbar.hide()
+					this.$attachments.hide()
+					this.status = 'send'
+
+				
+				when 'error'			
+					if this.status is 'upload'
+						if message?
+							switch message
+								when 'File is too big'
+									this.error('Размер файла не должен превышать <b>10mb</b>')
+								when 'User not found'
+									this.error('Вы не авторизованы')
+								else 
+									this.error(message.toString())
+						else
+							this.error('Ошибка при загрузке файла!')
+
+						this.$alertUpload.hide()
+						this.$toolbar.show()
+
+					if this.status is 'send'
+
+						this.$alertSend.hide()
+						this.$textarea.show()
+						this.$toolbar.show()
+						this.$attachments.show()
+
+						if message?
+							this.error(message.toString())
+						else
+							this.error('Ошибка при отправке сообщения!')
+
+					this.status = 'ready'
+
+
+				when 'ready'
+					if this.status is 'upload'
+
+						this.$alertUpload.hide()
+						this.$toolbar.show()
+
+					if this.status is 'send'
+
+						this.$alertSend.hide()
+						this.$textarea.show()
+						this.$toolbar.show()
+						this.$attachments.show()
+
+						this.$textarea.val('')
+						this.boxFiles.files.reset()
+						this.boxPhotos.files.reset()
+						this.areaBlur()
+						this.$el.trigger('send') if !window.isSocketReady
+
+
+					this.status = 'ready'
 
 
 	showFileUpload: () ->
@@ -71,47 +153,43 @@ module.exports = Template.extend
 			dataType:						'json'
 
 			beforeSend: () =>
-				this.$uploading.show()
-				this.$tool.hide()
+				this.state('upload')
 
 			done: () =>
 
-				this.$uploading.hide()
-				this.$tool.show()
+				this.getResultFromServer aid, (err, data) =>
 
-				this.getResultFromServer aid, (data) =>
-
-					if data?.file?
-						if data.file.error?
-							switch data.file.error
-								when 'File is too big'
-									this.error('Размер файла не должен превышать <b>10mb</b>')
-								when 'User not found'
-									this.error('Вы не авторизованы')
-								else 
-									this.error(data.file.error.toString())
-						else 
-
-							store = if data.file.type.match /^image/ then this.boxPhotos else this.boxFiles
-
-							store.files.add
-								id:				data.file.id
-								name:			data.file.name
-								originalName:	data.file.originalName
-								type:			data.file.type
-								size:			data.file.size
-								thumbnail:		data.file.thumbnail
-								preview:		data.file.preview
-								url:			data.file.url
+					if err? 
+						this.state('error', err) 
 
 					else
-						this.error('Ошибка при загрузке файла!')
+
+						if data?.file?
+							if data.file.error?
+								this.state('error', data.file.error)
+
+							else 
+
+								this.state('ready')
+
+								store = if data.file.type.match /^image/ then this.boxPhotos else this.boxFiles
+
+								store.files.add
+									id:				data.file.id
+									name:			data.file.name
+									originalName:	data.file.originalName
+									type:			data.file.type
+									size:			data.file.size
+									thumbnail:		data.file.thumbnail
+									preview:		data.file.preview
+									url:			data.file.url
+
+						else
+							this.state('error')
 
 
-			error: () =>
-				this.$uploading.hide()
-				this.$tool.show()
-				this.error()
+			fail: () =>
+				this.state('error')
 
 
 
@@ -127,19 +205,11 @@ module.exports = Template.extend
 				this.$el.trigger 'not_signin'
 				isUserCanSendMessage = false
 
-			folder = []
-
-			if this.boxPhotos?.files?
-				folder.push this.boxPhotos.files.toJSON() 
-
-			if this.boxFiles?.files?
-				folder.push this.boxFiles.files.toJSON()
-
 			message = 
-				text:				this.$message.val()
+				text:				this.$textarea.val()
 			
 			attachments = 
-				files:				_.flatten folder, true
+				files:				this.getAttachments()			
 
 			this.post.set
 				message:			message
@@ -185,30 +255,27 @@ module.exports = Template.extend
 					]
 
 					beforeSend: () =>
-						this.$button.button('loading')
-						setTimeout () =>
-							this.$button.button('reset')
-						, 400
+						this.state('send')
 
 					success: (s) =>
 
-						this.getResultFromServer aid, (data) =>
+						this.getResultFromServer aid, (err, data) =>
 
-							if data? and data.success is true
-								this.$message.val('')
-								this.boxFiles.files.reset()
-								this.boxPhotos.files.reset()
-								this.areaBlur()
-								this.$el.trigger('send') if !window.isSocketReady
+							if err?
+								this.state('error', err)
 
-							else 
-								if data.notice?
-									this.error(data.notice)
-								else
-									this.error()
+							else
+
+								if data? and data.success is true
+									this.state('ready')
+								else 
+									if data.notice?
+										this.state('error', data.notice)
+									else
+										this.state('error')
 
 					error: () =>
-						this.error()
+						this.state('error')
 
 
 
@@ -221,11 +288,22 @@ module.exports = Template.extend
 			dataType:			'jsonp'
 			
 			success: (data) =>
-				callback(data) if callback				
+				callback(null, data) if callback
 
 			error: () =>
-				this.error()
+				callback('Превышено время ожидания ответа от сервера!') if callback
 
+
+
+	getAttachments: () ->
+
+		folder = []
+
+		folder.push this.boxPhotos.files.toJSON() if this.boxPhotos?.files?
+
+		folder.push this.boxFiles.files.toJSON() if this.boxFiles?.files?
+
+		_.flatten folder, true
 
 
 	areaKeyup: (e) ->
@@ -233,15 +311,11 @@ module.exports = Template.extend
 			this.$form.submit()
 
 	areaFocus: () ->
-		this.$message.attr 'rows', 10
+		this.$textarea.attr 'rows', 10
 
 	areaBlur: () ->
-		if this.$message.val() is ''
-			this.$message.attr 'rows', 5
-
-
-	success: () ->
-		this.$alertError.hide()
+		if this.$textarea.val() is ''
+			this.$textarea.attr 'rows', 5
 
 
 	error: (notice = 'Произошла ошибка!') ->

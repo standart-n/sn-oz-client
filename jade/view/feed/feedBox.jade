@@ -13,7 +13,11 @@
 					&nbsp;
 					Возможно, вы неверно ввели данные.
 
-				.feed-post-uploading.hide.alert.alert-info Подождите, идет загрузка файла...
+				.alert.alert-send.alert-info.hide
+					Подождите, идет отправка сообщения...
+
+				.alert.alert-upload.alert-info.hide
+					Подождите, идет загрузка файла...
 
 				textarea.feed-post-message.span12(wrap = "hard", rows = "5")
 
@@ -31,7 +35,8 @@
 						span Добавить фото
 						input.feed-post-input(type = "file", name = "files[]", tabindex = "-1")
 
-				p
+				.feed-post-attachments
+					
 					#feed-box-photos.clear-both
 					
 					ul#feed-box-files.clear-both
