@@ -58,7 +58,7 @@ module.exports = FeedNewsSync.extend
 		$edit = 							$post.find('.post-edit')
 		$footer = 							$post.find('.post-footer')
 		$toolsEdit = 						$post.find('.post-tools-edit')
-		$area = 							$post.find('textarea')
+		$textarea = 						$post.find('textarea')
 
 		post = 								this.posts.get(id)
 		text = 								post.get('message').text
@@ -66,8 +66,8 @@ module.exports = FeedNewsSync.extend
 		$text.hide()
 		$edit.show()
 		$toolsEdit.show()
-		$area.val(text)
-		$area.focus()
+		$textarea.val(text)
+		$textarea.focus()
 		$footer.hide()
 
 
@@ -77,14 +77,14 @@ module.exports = FeedNewsSync.extend
 		post = 								this.posts.get(id)
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$area = 							$post.find('textarea')
+		$textarea = 						$post.find('textarea')
 		$button = 							$post.find('.post-tools-edit').find('.btn-success')
 
 		if window.user?
 			if window.user.get('signin') is true
 
 				message = 
-					text:					$area.val()
+					text:					$textarea.val()
 
 				post.set
 					message:				message
@@ -158,6 +158,7 @@ module.exports = FeedNewsSync.extend
 	deletePost: (id) ->
 		this.state = 'ready'
 		this.blurPost(id)
+		this.hidePost(id)
 
 		if window.user?
 			if window.user.get('signin') is true
@@ -180,8 +181,7 @@ module.exports = FeedNewsSync.extend
 
 					success: () =>
 
-						if !window.isSocketReady
-							this.fetch()
+						this.fetch() if !window.isSocketReady
 
 
 	getResultFromServer: (aid, id, callback) ->
@@ -203,7 +203,7 @@ module.exports = FeedNewsSync.extend
 		this.state = 						'ready'
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$area = 							$post.find('textarea')
+		$textarea = 						$post.find('textarea')
 		$text = 							$post.find('.post-text')
 		$edit = 							$post.find('.post-edit')
 		$files = 							$post.find('.post-files')
@@ -227,6 +227,12 @@ module.exports = FeedNewsSync.extend
 
 		$alertError.hide()
 		$alertSuccess.hide()
+
+	
+	hidePost: (id) ->
+		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
+		$post.hide()
+
 
 	error: (id, notice = 'Произошла ошибка!') ->
 		mark = moment().unix()

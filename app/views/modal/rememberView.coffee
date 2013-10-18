@@ -70,7 +70,7 @@ module.exports = Modal.extend
 		setTimeout () =>
 			if this.$alertSuccess.data('mark') is mark
 				this.$alertSuccess.hide()
-		, 2500
+		, 3000
 
 
 	error: (notice = '') ->
@@ -84,7 +84,7 @@ module.exports = Modal.extend
 		setTimeout () =>
 			if this.$alertError.data('mark') is mark
 				this.$alertError.hide()
-		, 2500
+		, 3000
 
 
 	submit: (e) ->

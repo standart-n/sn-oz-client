@@ -117,7 +117,7 @@ module.exports = Template.extend
 		setTimeout () =>
 			if this.$success.data('mark') is mark
 				this.$success.hide()
-		, 1500
+		, 3000
 
 
 

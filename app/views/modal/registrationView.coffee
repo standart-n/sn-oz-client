@@ -80,7 +80,7 @@ module.exports = Modal.extend
 		setTimeout () =>
 			if this.$alertError.data('mark') is mark
 				this.$alertError.hide()
-		, 2000
+		, 3000
 
 
 	submit: (e) ->

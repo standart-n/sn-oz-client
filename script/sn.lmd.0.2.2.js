@@ -1796,35 +1796,35 @@ module.exports = FeedNewsSync.extend({
     return $footer.hide();
   },
   editPost: function(id) {
-    var $area, $edit, $footer, $post, $text, $toolsEdit, post, text;
+    var $edit, $footer, $post, $text, $textarea, $toolsEdit, post, text;
     this.state = 'edit';
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $text = $post.find('.post-text');
     $edit = $post.find('.post-edit');
     $footer = $post.find('.post-footer');
     $toolsEdit = $post.find('.post-tools-edit');
-    $area = $post.find('textarea');
+    $textarea = $post.find('textarea');
     post = this.posts.get(id);
     text = post.get('message').text;
     $text.hide();
     $edit.show();
     $toolsEdit.show();
-    $area.val(text);
-    $area.focus();
+    $textarea.val(text);
+    $textarea.focus();
     return $footer.hide();
   },
   savePost: function(id) {
-    var $area, $button, $post, aid, message, post, req,
+    var $button, $post, $textarea, aid, message, post, req,
       _this = this;
     this.state = 'save';
     post = this.posts.get(id);
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    $area = $post.find('textarea');
+    $textarea = $post.find('textarea');
     $button = $post.find('.post-tools-edit').find('.btn-success');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
         message = {
-          text: $area.val()
+          text: $textarea.val()
         };
         post.set({
           message: message
@@ -1892,6 +1892,7 @@ module.exports = FeedNewsSync.extend({
     var _this = this;
     this.state = 'ready';
     this.blurPost(id);
+    this.hidePost(id);
     if (window.user != null) {
       if (window.user.get('signin') === true) {
         return $.ajax({
@@ -1934,10 +1935,10 @@ module.exports = FeedNewsSync.extend({
     });
   },
   blurPost: function(id) {
-    var $alertError, $alertSuccess, $area, $edit, $files, $footer, $photos, $post, $text, $toolsEdit, $toolsRemove, post, text;
+    var $alertError, $alertSuccess, $edit, $files, $footer, $photos, $post, $text, $textarea, $toolsEdit, $toolsRemove, post, text;
     this.state = 'ready';
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    $area = $post.find('textarea');
+    $textarea = $post.find('textarea');
     $text = $post.find('.post-text');
     $edit = $post.find('.post-edit');
     $files = $post.find('.post-files');
@@ -1958,6 +1959,11 @@ module.exports = FeedNewsSync.extend({
     $footer.show();
     $alertError.hide();
     return $alertSuccess.hide();
+  },
+  hidePost: function(id) {
+    var $post;
+    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    return $post.hide();
   },
   error: function(id, notice) {
     var $alertError, $alertSuccess, $post, mark,
@@ -2344,7 +2350,7 @@ module.exports = Modal.extend({
       if (_this.$alertError.data('mark') === mark) {
         return _this.$alertError.hide();
       }
-    }, 2000);
+    }, 3000);
   },
   submit: function(e) {
     var _this = this;
@@ -2441,7 +2447,7 @@ module.exports = Modal.extend({
       if (_this.$alertSuccess.data('mark') === mark) {
         return _this.$alertSuccess.hide();
       }
-    }, 2500);
+    }, 3000);
   },
   error: function(notice) {
     var mark,
@@ -2457,7 +2463,7 @@ module.exports = Modal.extend({
       if (_this.$alertError.data('mark') === mark) {
         return _this.$alertError.hide();
       }
-    }, 2500);
+    }, 3000);
   },
   submit: function(e) {
     var _this = this;
@@ -2734,7 +2740,7 @@ module.exports = Template.extend({
       if (_this.$success.data('mark') === mark) {
         return _this.$success.hide();
       }
-    }, 1500);
+    }, 3000);
   }
 });
 
@@ -2857,7 +2863,7 @@ module.exports = Template.extend({
       if (_this.$success.data('mark') === mark) {
         return _this.$success.hide();
       }
-    }, 1500);
+    }, 3000);
   }
 });
 
