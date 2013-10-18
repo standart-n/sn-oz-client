@@ -14,9 +14,9 @@ module.exports = Template.extend
 
 	events: () ->
 		'submit form'						: 'submit'
-		'keyup .feed-post-message'			: 'areaKeyup'
-		'focus .feed-post-message'			: 'areaFocus'
-		'blur .feed-post-message'			: 'areaBlur'
+		'keyup .feed-post-message'			: 'textareaKeyup'
+		'focus .feed-post-message'			: 'textareaFocus'
+		'blur .feed-post-message'			: 'textareaBlur'
 
 	initialize: () ->
 
@@ -124,7 +124,7 @@ module.exports = Template.extend
 						this.$textarea.val('')
 						this.boxFiles.files.reset()
 						this.boxPhotos.files.reset()
-						this.areaBlur()
+						this.textareaBlur()
 						this.$el.trigger('send') if !window.isSocketReady
 
 
@@ -306,14 +306,14 @@ module.exports = Template.extend
 		_.flatten folder, true
 
 
-	areaKeyup: (e) ->
+	textareaKeyup: (e) ->
 		if e.keyCode is 13 and e.ctrlKey
 			this.$form.submit()
 
-	areaFocus: () ->
+	textareaFocus: () ->
 		this.$textarea.attr 'rows', 10
 
-	areaBlur: () ->
+	textareaBlur: () ->
 		if this.$textarea.val() is ''
 			this.$textarea.attr 'rows', 5
 

@@ -1390,9 +1390,9 @@ module.exports = Template.extend({
   events: function() {
     return {
       'submit form': 'submit',
-      'keyup .feed-post-message': 'areaKeyup',
-      'focus .feed-post-message': 'areaFocus',
-      'blur .feed-post-message': 'areaBlur'
+      'keyup .feed-post-message': 'textareaKeyup',
+      'focus .feed-post-message': 'textareaFocus',
+      'blur .feed-post-message': 'textareaBlur'
     };
   },
   initialize: function() {
@@ -1481,7 +1481,7 @@ module.exports = Template.extend({
             this.$textarea.val('');
             this.boxFiles.files.reset();
             this.boxPhotos.files.reset();
-            this.areaBlur();
+            this.textareaBlur();
             if (!window.isSocketReady) {
               this.$el.trigger('send');
             }
@@ -1650,15 +1650,15 @@ module.exports = Template.extend({
     }
     return _.flatten(folder, true);
   },
-  areaKeyup: function(e) {
+  textareaKeyup: function(e) {
     if (e.keyCode === 13 && e.ctrlKey) {
       return this.$form.submit();
     }
   },
-  areaFocus: function() {
+  textareaFocus: function() {
     return this.$textarea.attr('rows', 10);
   },
-  areaBlur: function() {
+  textareaBlur: function() {
     if (this.$textarea.val() === '') {
       return this.$textarea.attr('rows', 5);
     }
