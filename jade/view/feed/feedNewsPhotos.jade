@@ -10,7 +10,7 @@
 
 [% if (attachments.files[i].type.match(/^image/)) { %]
 		
-a.thumbnail(href = "[%= attachments.files[i].url %]", target = "_blank")
+a.thumbnail(href = "[%= attachments.files[i].url %]", target = "_blank", style = "width: 200px; height: 200px;")
 
 	img(src = "[%= attachments.files[i].preview %]", style = "width: 200px; height: 200px;")
 

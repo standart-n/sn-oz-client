@@ -69,7 +69,7 @@ module.exports = Template.extend
 			if e.keyCode is 27
 
 				if $(this).data('post') and _this.news?
-					_this.news.blurPost $(this).data('post')
+					_this.news.visible $(this).data('post'), 'blur'
 
 
 
@@ -78,7 +78,7 @@ module.exports = Template.extend
 			e.preventDefault()
 
 			if $(this).data('post') and _this.news?
-				_this.news.blurPost $(this).data('post')
+				_this.news.visible $(this).data('post'), 'blur'
 
 
 

@@ -15,8 +15,6 @@ module.exports = Template.extend
 	events: () ->
 		'submit form'						: 'submit'
 		'keyup .feed-post-message'			: 'textareaKeyup'
-		'focus .feed-post-message'			: 'textareaFocus'
-		'blur .feed-post-message'			: 'textareaBlur'
 
 	initialize: () ->
 
@@ -124,7 +122,6 @@ module.exports = Template.extend
 						this.$textarea.val('')
 						this.boxFiles.files.reset()
 						this.boxPhotos.files.reset()
-						this.textareaBlur()
 						this.$el.trigger('send') if !window.isSocketReady
 
 
@@ -195,8 +192,8 @@ module.exports = Template.extend
 
 	submit: (e) ->
 
-		isUserCanSendMessage = true
-
+		aid = 						window.aid()
+		isUserCanSendMessage = 		true
 		e.preventDefault()
 
 		if window.user?
@@ -205,28 +202,22 @@ module.exports = Template.extend
 				this.$el.trigger 'not_signin'
 				isUserCanSendMessage = false
 
-			message = 
-				text:				this.$textarea.val()
-			
-			attachments = 
-				files:				this.getAttachments()			
-
 			this.post.set
-				message:			message
-				attachments:		attachments
+				message:
+					text:			this.$textarea.val()
+				attachments:
+					files:			this.getAttachments()
 				region:				window.sn.get('region')
 
 
-			if message.text.length < 3 and isUserCanSendMessage is true
+			if this.$textarea.val().length < 1 and isUserCanSendMessage is true
 				this.error('<b>Ошибка!</b> Сообщение не должно быть пустым!')
 				isUserCanSendMessage = false
 
 			if isUserCanSendMessage is true
 
-				req = 								_.pick(this.post.toJSON(), 'message', 'region', 'attachments')
-
-				aid = 								window.aid()
-
+				req = _.pick(this.post.toJSON(), 'message', 'region', 'attachments')
+				
 				this.post.reset()
 
 				$.ajax
@@ -309,13 +300,6 @@ module.exports = Template.extend
 	textareaKeyup: (e) ->
 		if e.keyCode is 13 and e.ctrlKey
 			this.$form.submit()
-
-	textareaFocus: () ->
-		this.$textarea.attr 'rows', 10
-
-	textareaBlur: () ->
-		if this.$textarea.val() is ''
-			this.$textarea.attr 'rows', 5
 
 
 	error: (notice = 'Произошла ошибка!') ->

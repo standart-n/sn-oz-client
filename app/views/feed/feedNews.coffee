@@ -32,133 +32,100 @@ module.exports = FeedNewsSync.extend
 
 
 	removePost: (id) ->
-		this.state = 						'remove'
-
-		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$text = 							$post.find('.post-text')
-		$files = 							$post.find('.post-files')
-		$photos = 							$post.find('.post-photos')
-		$footer = 							$post.find('.post-footer')
-		$toolsRemove = 						$post.find('.post-tools-remove')
-
-		post = 								this.posts.get(id)
-
-		$text.hide()
-		$files.hide()
-		$photos.hide()
-		$toolsRemove.show()
-		$footer.hide()
+		this.state = 'remove'
+		this.visible(id, 'remove')
 
 
 	editPost: (id) ->
-		this.state = 						'edit'
-
-		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$text = 							$post.find('.post-text')
-		$edit = 							$post.find('.post-edit')
-		$footer = 							$post.find('.post-footer')
-		$toolsEdit = 						$post.find('.post-tools-edit')
-		$textarea = 						$post.find('textarea')
-
-		post = 								this.posts.get(id)
-		text = 								post.get('message').text
-
-		$text.hide()
-		$edit.show()
-		$toolsEdit.show()
-		$textarea.val(text)
-		$textarea.focus()
-		$footer.hide()
-
+		this.state = 'edit'
+		this.visible(id, 'edit')
 
 
 	savePost: (id) ->
-		this.state = 						'save'
-		post = 								this.posts.get(id)
+		this.state = 		'save'
+		post = 				this.posts.get(id)
+		aid = 				window.aid()
 
-		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$textarea = 						$post.find('textarea')
-		$button = 							$post.find('.post-tools-edit').find('.btn-success')
+		$post = 			this.$el.find("[data-post-id=\"#{id}\"]")
+		$textarea = 		$post.find('textarea')
 
 		if window.user?
 			if window.user.get('signin') is true
+			
+				if $textarea.val() isnt ''
 
-				message = 
-					text:					$textarea.val()
+					this.visible(id, 'send-start')
 
-				post.set
-					message:				message
-				,
-					silent:					true
+					this.state = 'ready'
 
-				aid = window.aid()
-				
-				if message.text isnt ''
-
-					req = 								_.pick(post.toJSON(),'id','author', 'message','region')
+					post.set
+						message:
+							text: 	$textarea.val()
+					,
+						silent:		true
 
 
-					this.state = 						'ready'
-
-					post = 								this.posts.get(id)
-
-					$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-					$button = 							$post.find('.post-tools-edit').find('.btn-success')		
+					req = _.pick(post.toJSON(),'id','author', 'message','region')
 
 					$.ajax
-						url: 							window.sn.get('server').host + '/feed/post/'
-						timeout: 						10000
-						type:							'PUT'
-						dataType:						'iframe'
+						url: 				window.sn.get('server').host + '/feed/post/'
+						timeout: 			10000
+						type:				'PUT'
+						dataType:			'iframe'
 						formData: [
 							{
-								name:					'model'
-								value:					JSON.stringify(req)
+								name:		'model'
+								value:		JSON.stringify(req)
 							},
 							{
-								name:					'token'
-								value:					window.user.get('token')
+								name:		'token'
+								value:		window.user.get('token')
 							},
 							{
-								name:					'sessid'
-								value:					window.user.get('sessid')
-							}
+								name:		'sessid'
+								value:		window.user.get('sessid')
+							},
 							{
-								name:					'aid'
-								value:					aid
+								name:		'aid'
+								value:		aid
 							}
 						]
 
-						beforeSend: () ->
-							$button.button ('loading')
-							setTimeout () ->
-								$button.button('reset')
-							, 400							
-
 						success: () =>
 
-							this.getResultFromServer aid, id, (data) =>
-								
-								if data.success is true
+							this.getResultFromServer aid, id, (err, data) =>
 
-									this.blurPost(id)
-									this.fetch() if !window.isSocketReady
+								this.visible(id, 'send-finish')
 
-								else 
-									if data.notice?
-										this.error(id, data.notice)
-									else
-										this.error(id)
+								if err?	
+									this.error(id, err)
+
+								else								
+									if data.success is true
+
+										this.visible(id, 'blur')
+										this.fetch() if !window.isSocketReady
+
+									else 
+										if data.notice?
+											this.error(id, data.notice)
+										else
+											this.error(id)
 
 						error: () =>
+							this.visible(id, 'send-finish')
 							this.error(id)
 
+
+				else
+
+					this.error(id, 'Сообщение не должно быть пустым!')
 
 
 	deletePost: (id) ->
 		this.state = 'ready'
-		this.blurPost(id)
-		this.hidePost(id)
+		this.visible(id, 'blur')
+		this.visible(id, 'hide')
 
 		if window.user?
 			if window.user.get('signin') is true
@@ -180,7 +147,6 @@ module.exports = FeedNewsSync.extend
 					]
 
 					success: () =>
-
 						this.fetch() if !window.isSocketReady
 
 
@@ -192,18 +158,16 @@ module.exports = FeedNewsSync.extend
 			dataType:			'jsonp'
 			
 			success: (data) =>
-				callback(data) if callback				
+				callback(null, data) if typeof callback is 'function'
 
 			error: () =>
-				this.error(id)
+				callback('Превышено время ожидания ответа от сервера!') if typeof callback is 'function'
 
 
-
-	blurPost: (id) ->
-		this.state = 						'ready'
+	visible: (id, command = 'blur') ->
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$textarea = 						$post.find('textarea')
+		textarea = 							$post.find('textarea')
 		$text = 							$post.find('.post-text')
 		$edit = 							$post.find('.post-edit')
 		$files = 							$post.find('.post-files')
@@ -211,49 +175,80 @@ module.exports = FeedNewsSync.extend
 		$footer = 							$post.find('.post-footer')
 		$toolsEdit = 						$post.find('.post-tools-edit')
 		$toolsRemove = 						$post.find('.post-tools-remove')
-		$alertError = 						$post.find('.alert-error')
-		$alertSuccess = 					$post.find('.alert-success')
+		$alert = 							$post.find('.alert')
+		$alertSend = 						$post.find('.alert-send')
 
 		post = 								this.posts.get(id)
 		text = 								post.get('message').text
 
-		$text.show()
-		$files.show()
-		$photos.show()
-		$edit.hide()
-		$toolsEdit.hide()
-		$toolsRemove.hide()
-		$footer.show()
+		switch command	
 
-		$alertError.hide()
-		$alertSuccess.hide()
+			when 'hide'
+				$post.hide()
+			
+			when 'blur'
+				$text.show()
+				$files.show()
+				$photos.show()
+				$footer.show()
+				$edit.hide()
+				$toolsEdit.hide()
+				$toolsRemove.hide()
+				$alert.hide()
 
-	
-	hidePost: (id) ->
-		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		$post.hide()
+			when 'remove'
+				$text.hide()
+				$files.hide()
+				$photos.hide()
+				$toolsRemove.show()
+				$footer.hide()
+
+			when 'edit'
+				$text.hide()
+				$edit.show()
+				$toolsEdit.show()
+				$textarea.val(text)
+				$textarea.focus()
+				$footer.hide()
+
+			when 'send-start'
+				$edit.hide()
+				$files.hide()
+				$photos.hide()
+				$footer.hide()
+				$toolsEdit.hide()
+				$alert.hide()
+				$alertSend.show()
+
+			when 'send-finish'
+				$edit.show()
+				$files.show()
+				$photos.show()
+				$footer.show()
+				$toolsEdit.show()
+				$alert.hide()
 
 
 	error: (id, notice = 'Произошла ошибка!') ->
 		mark = moment().unix()
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
+		$alert = 							$post.find('.alert')
 		$alertError = 						$post.find('.alert-error')
-		$alertSuccess = 					$post.find('.alert-success')
 
+		$alert.hide()
 		$alertError.show().html 			notice
 		$alertError.data 'mark',			mark
-		$alertSuccess.hide()
 
 		setTimeout () =>
 			if $alertError.data('mark') is mark
 				$alertError.hide()
-		, 2000
+		, 3000
 
 
 
 	checking: () ->
-		this.state = 						'ready'
+		this.state = 'ready'
 
 
 	down: () ->
@@ -295,7 +290,6 @@ module.exports = FeedNewsSync.extend
 
 				data:
 					limit:					this.limit
-
 
 				beforeSend: () ->
 					this.state = 			'loading'

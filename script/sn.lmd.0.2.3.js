@@ -1303,14 +1303,14 @@ module.exports = Template.extend({
       }
       if (e.keyCode === 27) {
         if ($(this).data('post') && (_this.news != null)) {
-          return _this.news.blurPost($(this).data('post'));
+          return _this.news.visible($(this).data('post'), 'blur');
         }
       }
     });
     $(document).on('click', '[data-action="blur post"]', function(e) {
       e.preventDefault();
       if ($(this).data('post') && (_this.news != null)) {
-        return _this.news.blurPost($(this).data('post'));
+        return _this.news.visible($(this).data('post'), 'blur');
       }
     });
     $(document).on('click', '[data-action="remove post"]', function(e) {
@@ -1390,9 +1390,7 @@ module.exports = Template.extend({
   events: function() {
     return {
       'submit form': 'submit',
-      'keyup .feed-post-message': 'textareaKeyup',
-      'focus .feed-post-message': 'textareaFocus',
-      'blur .feed-post-message': 'textareaBlur'
+      'keyup .feed-post-message': 'textareaKeyup'
     };
   },
   initialize: function() {
@@ -1481,7 +1479,6 @@ module.exports = Template.extend({
             this.$textarea.val('');
             this.boxFiles.files.reset();
             this.boxPhotos.files.reset();
-            this.textareaBlur();
             if (!window.isSocketReady) {
               this.$el.trigger('send');
             }
@@ -1546,8 +1543,9 @@ module.exports = Template.extend({
     });
   },
   submit: function(e) {
-    var aid, attachments, isUserCanSendMessage, message, req,
+    var aid, isUserCanSendMessage, req,
       _this = this;
+    aid = window.aid();
     isUserCanSendMessage = true;
     e.preventDefault();
     if (window.user != null) {
@@ -1555,24 +1553,21 @@ module.exports = Template.extend({
         this.$el.trigger('not_signin');
         isUserCanSendMessage = false;
       }
-      message = {
-        text: this.$textarea.val()
-      };
-      attachments = {
-        files: this.getAttachments()
-      };
       this.post.set({
-        message: message,
-        attachments: attachments,
+        message: {
+          text: this.$textarea.val()
+        },
+        attachments: {
+          files: this.getAttachments()
+        },
         region: window.sn.get('region')
       });
-      if (message.text.length < 3 && isUserCanSendMessage === true) {
+      if (this.$textarea.val().length < 1 && isUserCanSendMessage === true) {
         this.error('<b>Ошибка!</b> Сообщение не должно быть пустым!');
         isUserCanSendMessage = false;
       }
       if (isUserCanSendMessage === true) {
         req = _.pick(this.post.toJSON(), 'message', 'region', 'attachments');
-        aid = window.aid();
         this.post.reset();
         return $.ajax({
           url: window.sn.get('server').host + '/feed/post/',
@@ -1653,14 +1648,6 @@ module.exports = Template.extend({
   textareaKeyup: function(e) {
     if (e.keyCode === 13 && e.ctrlKey) {
       return this.$form.submit();
-    }
-  },
-  textareaFocus: function() {
-    return this.$textarea.attr('rows', 10);
-  },
-  textareaBlur: function() {
-    if (this.$textarea.val() === '') {
-      return this.$textarea.attr('rows', 5);
     }
   },
   error: function(notice) {
@@ -1780,64 +1767,34 @@ module.exports = FeedNewsSync.extend({
     return this.posts.toJSON();
   },
   removePost: function(id) {
-    var $files, $footer, $photos, $post, $text, $toolsRemove, post;
     this.state = 'remove';
-    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    $text = $post.find('.post-text');
-    $files = $post.find('.post-files');
-    $photos = $post.find('.post-photos');
-    $footer = $post.find('.post-footer');
-    $toolsRemove = $post.find('.post-tools-remove');
-    post = this.posts.get(id);
-    $text.hide();
-    $files.hide();
-    $photos.hide();
-    $toolsRemove.show();
-    return $footer.hide();
+    return this.visible(id, 'remove');
   },
   editPost: function(id) {
-    var $edit, $footer, $post, $text, $textarea, $toolsEdit, post, text;
     this.state = 'edit';
-    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    $text = $post.find('.post-text');
-    $edit = $post.find('.post-edit');
-    $footer = $post.find('.post-footer');
-    $toolsEdit = $post.find('.post-tools-edit');
-    $textarea = $post.find('textarea');
-    post = this.posts.get(id);
-    text = post.get('message').text;
-    $text.hide();
-    $edit.show();
-    $toolsEdit.show();
-    $textarea.val(text);
-    $textarea.focus();
-    return $footer.hide();
+    return this.visible(id, 'edit');
   },
   savePost: function(id) {
-    var $button, $post, $textarea, aid, message, post, req,
+    var $post, $textarea, aid, post, req,
       _this = this;
     this.state = 'save';
     post = this.posts.get(id);
+    aid = window.aid();
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
     $textarea = $post.find('textarea');
-    $button = $post.find('.post-tools-edit').find('.btn-success');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
-        message = {
-          text: $textarea.val()
-        };
-        post.set({
-          message: message
-        }, {
-          silent: true
-        });
-        aid = window.aid();
-        if (message.text !== '') {
-          req = _.pick(post.toJSON(), 'id', 'author', 'message', 'region');
+        if ($textarea.val() !== '') {
+          this.visible(id, 'send-start');
           this.state = 'ready';
-          post = this.posts.get(id);
-          $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-          $button = $post.find('.post-tools-edit').find('.btn-success');
+          post.set({
+            message: {
+              text: $textarea.val()
+            }
+          }, {
+            silent: true
+          });
+          req = _.pick(post.toJSON(), 'id', 'author', 'message', 'region');
           return $.ajax({
             url: window.sn.get('server').host + '/feed/post/',
             timeout: 10000,
@@ -1858,32 +1815,34 @@ module.exports = FeedNewsSync.extend({
                 value: aid
               }
             ],
-            beforeSend: function() {
-              $button.button('loading');
-              return setTimeout(function() {
-                return $button.button('reset');
-              }, 400);
-            },
             success: function() {
-              return _this.getResultFromServer(aid, id, function(data) {
-                if (data.success === true) {
-                  _this.blurPost(id);
-                  if (!window.isSocketReady) {
-                    return _this.fetch();
-                  }
+              return _this.getResultFromServer(aid, id, function(err, data) {
+                _this.visible(id, 'send-finish');
+                if (err != null) {
+                  return _this.error(id, err);
                 } else {
-                  if (data.notice != null) {
-                    return _this.error(id, data.notice);
+                  if (data.success === true) {
+                    _this.visible(id, 'blur');
+                    if (!window.isSocketReady) {
+                      return _this.fetch();
+                    }
                   } else {
-                    return _this.error(id);
+                    if (data.notice != null) {
+                      return _this.error(id, data.notice);
+                    } else {
+                      return _this.error(id);
+                    }
                   }
                 }
               });
             },
             error: function() {
+              _this.visible(id, 'send-finish');
               return _this.error(id);
             }
           });
+        } else {
+          return this.error(id, 'Сообщение не должно быть пустым!');
         }
       }
     }
@@ -1891,8 +1850,8 @@ module.exports = FeedNewsSync.extend({
   deletePost: function(id) {
     var _this = this;
     this.state = 'ready';
-    this.blurPost(id);
-    this.hidePost(id);
+    this.visible(id, 'blur');
+    this.visible(id, 'hide');
     if (window.user != null) {
       if (window.user.get('signin') === true) {
         return $.ajax({
@@ -1925,20 +1884,24 @@ module.exports = FeedNewsSync.extend({
       timeout: 10000,
       dataType: 'jsonp',
       success: function(data) {
-        if (callback) {
-          return callback(data);
+        if (typeof callback === 'function') {
+          return callback(null, data);
         }
       },
       error: function() {
-        return _this.error(id);
+        if (typeof callback === 'function') {
+          return callback('Превышено время ожидания ответа от сервера!');
+        }
       }
     });
   },
-  blurPost: function(id) {
-    var $alertError, $alertSuccess, $edit, $files, $footer, $photos, $post, $text, $textarea, $toolsEdit, $toolsRemove, post, text;
-    this.state = 'ready';
+  visible: function(id, command) {
+    var $alert, $alertSend, $edit, $files, $footer, $photos, $post, $text, $toolsEdit, $toolsRemove, post, text, textarea;
+    if (command == null) {
+      command = 'blur';
+    }
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    $textarea = $post.find('textarea');
+    textarea = $post.find('textarea');
     $text = $post.find('.post-text');
     $edit = $post.find('.post-edit');
     $files = $post.find('.post-files');
@@ -1946,43 +1909,70 @@ module.exports = FeedNewsSync.extend({
     $footer = $post.find('.post-footer');
     $toolsEdit = $post.find('.post-tools-edit');
     $toolsRemove = $post.find('.post-tools-remove');
-    $alertError = $post.find('.alert-error');
-    $alertSuccess = $post.find('.alert-success');
+    $alert = $post.find('.alert');
+    $alertSend = $post.find('.alert-send');
     post = this.posts.get(id);
     text = post.get('message').text;
-    $text.show();
-    $files.show();
-    $photos.show();
-    $edit.hide();
-    $toolsEdit.hide();
-    $toolsRemove.hide();
-    $footer.show();
-    $alertError.hide();
-    return $alertSuccess.hide();
-  },
-  hidePost: function(id) {
-    var $post;
-    $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    return $post.hide();
+    switch (command) {
+      case 'hide':
+        return $post.hide();
+      case 'blur':
+        $text.show();
+        $files.show();
+        $photos.show();
+        $footer.show();
+        $edit.hide();
+        $toolsEdit.hide();
+        $toolsRemove.hide();
+        return $alert.hide();
+      case 'remove':
+        $text.hide();
+        $files.hide();
+        $photos.hide();
+        $toolsRemove.show();
+        return $footer.hide();
+      case 'edit':
+        $text.hide();
+        $edit.show();
+        $toolsEdit.show();
+        $textarea.val(text);
+        $textarea.focus();
+        return $footer.hide();
+      case 'send-start':
+        $edit.hide();
+        $files.hide();
+        $photos.hide();
+        $footer.hide();
+        $toolsEdit.hide();
+        $alert.hide();
+        return $alertSend.show();
+      case 'send-finish':
+        $edit.show();
+        $files.show();
+        $photos.show();
+        $footer.show();
+        $toolsEdit.show();
+        return $alert.hide();
+    }
   },
   error: function(id, notice) {
-    var $alertError, $alertSuccess, $post, mark,
+    var $alert, $alertError, $post, mark,
       _this = this;
     if (notice == null) {
       notice = 'Произошла ошибка!';
     }
     mark = moment().unix();
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
+    $alert = $post.find('.alert');
     $alertError = $post.find('.alert-error');
-    $alertSuccess = $post.find('.alert-success');
+    $alert.hide();
     $alertError.show().html(notice);
     $alertError.data('mark', mark);
-    $alertSuccess.hide();
     return setTimeout(function() {
       if ($alertError.data('mark') === mark) {
         return $alertError.hide();
       }
-    }, 2000);
+    }, 3000);
   },
   checking: function() {
     return this.state = 'ready';

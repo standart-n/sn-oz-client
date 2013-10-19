@@ -5,7 +5,7 @@
     <h4 class="media-heading">
       [%= author.company %]
       &nbsp;<small class="muted">[%= author.firstname %] [%= author.lastname %]</small></h4>
-    <div class="alert alert-success hide"></div>
+    <div class="alert alert-send alert-info hide">Пожалуйста подождите, идет загрузка данных...</div>
     <div class="alert alert-error hide"></div>
     <div class="post-text">[%= formatting %]</div>
     <div class="post-edit hide">
@@ -16,7 +16,7 @@
       [% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
       [% if (attachments.files.length !== null && attachments.files.length > 0) { %]
       [% for (i = 0; i < attachments.files.length; i++) { %]
-      [% if (attachments.files[i].type.match(/^image/)) { %]<a href="[%= attachments.files[i].url %]" target="_blank" class="thumbnail"><img src="[%= attachments.files[i].preview %]" style="width: 200px; height: 200px;"/></a>[% } %]
+      [% if (attachments.files[i].type.match(/^image/)) { %]<a href="[%= attachments.files[i].url %]" target="_blank" style="width: 200px; height: 200px;" class="thumbnail"><img src="[%= attachments.files[i].preview %]" style="width: 200px; height: 200px;"/></a>[% } %]
       [% } %]
       [% } %]
       [% } %]

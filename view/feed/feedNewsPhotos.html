@@ -3,7 +3,7 @@
 [% if (typeof attachments.files !== 'undefined' && attachments.files !== null) { %]
 [% if (attachments.files.length !== null && attachments.files.length > 0) { %]
 [% for (i = 0; i < attachments.files.length; i++) { %]
-[% if (attachments.files[i].type.match(/^image/)) { %]<a href="[%= attachments.files[i].url %]" target="_blank" class="thumbnail"><img src="[%= attachments.files[i].preview %]" style="width: 200px; height: 200px;"/></a>[% } %]
+[% if (attachments.files[i].type.match(/^image/)) { %]<a href="[%= attachments.files[i].url %]" target="_blank" style="width: 200px; height: 200px;" class="thumbnail"><img src="[%= attachments.files[i].preview %]" style="width: 200px; height: 200px;"/></a>[% } %]
 [% } %]
 [% } %]
 [% } %]
