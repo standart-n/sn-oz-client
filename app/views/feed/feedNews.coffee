@@ -167,7 +167,7 @@ module.exports = FeedNewsSync.extend
 	visible: (id, command = 'blur') ->
 
 		$post = 							this.$el.find("[data-post-id=\"#{id}\"]")
-		textarea = 							$post.find('textarea')
+		$textarea = 						$post.find('textarea')
 		$text = 							$post.find('.post-text')
 		$edit = 							$post.find('.post-edit')
 		$files = 							$post.find('.post-files')

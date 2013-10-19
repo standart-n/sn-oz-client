@@ -1896,12 +1896,12 @@ module.exports = FeedNewsSync.extend({
     });
   },
   visible: function(id, command) {
-    var $alert, $alertSend, $edit, $files, $footer, $photos, $post, $text, $toolsEdit, $toolsRemove, post, text, textarea;
+    var $alert, $alertSend, $edit, $files, $footer, $photos, $post, $text, $textarea, $toolsEdit, $toolsRemove, post, text;
     if (command == null) {
       command = 'blur';
     }
     $post = this.$el.find("[data-post-id=\"" + id + "\"]");
-    textarea = $post.find('textarea');
+    $textarea = $post.find('textarea');
     $text = $post.find('.post-text');
     $edit = $post.find('.post-edit');
     $files = $post.find('.post-files');
