@@ -7,7 +7,6 @@ module.exports = Content.extend
 
 	el: 									'#side'
 	file:									''
-	# file:									'side_main.html'
 	autorender: 							off
 
 	switch: (part, page) ->
