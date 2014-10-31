@@ -5,18 +5,19 @@
   "main": "index.js",
   "dependencies": {},
   "devDependencies": {
-    "grunt-cli": "~0.1.9",
-    "grunt": "~0.4.1",
-    "grunt-contrib-uglify": "~0.2.2",
-    "grunt-contrib-coffee": "~0.7.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-jade": "~0.7.0",
-    "grunt-recess": "~0.3.3",
-    "grunt-lmd": "~0.1.12",
     "bower": "~1.2.5",
     "colors": "~0.6.2",
     "express": "~3.4.0",
-    "grunt-cleanx": "~0.5.3"
+    "grunt": "~0.4.1",
+    "grunt-cleanx": "~0.5.3",
+    "grunt-cli": "~0.1.9",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jade": "~0.7.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-lmd": "~0.1.12",
+    "grunt-recess": "~0.3.3"
   },
   "scripts": {
     "build": "./node_modules/.bin/grunt",

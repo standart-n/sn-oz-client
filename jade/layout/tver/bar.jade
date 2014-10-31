@@ -1,0 +1,28 @@
+
+#bar.navbar.navbar-fixed-top
+	.navbar-inner
+		.container-fluid
+			.row-fluid
+				.span1
+				.span11
+					.pull-left
+						a.brand(href = "#main/text/main") [%= region.caption %]
+
+						a.bar-signin.btn.btn-primary(href = "#signin") 
+							i.icon-home.icon-white
+							&nbsp;
+							Войти
+
+						&nbsp;
+
+						.btn-group
+							a.bar-registration.btn(href = "#registration") Регистрация
+							a.bar-remember.btn(href = "#remember") Забыли пароль?
+
+					.pull-right
+						ul.nav
+							li.bar-logout.hide
+								a(href = "#logout") 
+									i.icon-off
+									&nbsp;
+									Выйти
